@@ -6,9 +6,9 @@ public class GameRunner : MonoBehaviour
 
     private void Awake()
     {
-        EntryPoint _entyPoint = FindFirstObjectByType<EntryPoint>();
+        EntryPoint entyPoint = FindFirstObjectByType<EntryPoint>();
 
-        if (_entyPoint == null )
-            Instantiate(_entyPoint);
+        if (entyPoint == null)
+            _entyPoint = Instantiate(_entyPoint);
     }
 }
