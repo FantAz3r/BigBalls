@@ -6,7 +6,7 @@ public class EntryPoint : MonoBehaviour, ICoroutineRunner
 
     private void Start()
     {
-        _gameStateMachine = new GameStateMachine(new SceneLoader(this), this);
+        _gameStateMachine = new GameStateMachine(new SceneLoader(this));
         _gameStateMachine.EnterIn<BootstrapState>();
         DontDestroyOnLoad(this); 
     }

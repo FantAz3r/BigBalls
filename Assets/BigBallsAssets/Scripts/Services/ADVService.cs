@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using YG;
 
 public class ADVService : IADVServise
 {
@@ -54,8 +53,8 @@ public class ADVService : IADVServise
             nextLevel != LevelID.None.ToString() &&
             nextLevel != LevelID.LoadScene.ToString())
         {
-            YG2.InterstitialAdvShow();
-            YG2.onCloseAnyAdv += OnCloseADV;
+            //YG2.InterstitialAdvShow();
+            //YG2.onCloseAnyAdv += OnCloseADV;
            // _soundService.StopAll();
         }
     }
@@ -63,6 +62,6 @@ public class ADVService : IADVServise
     private void OnCloseADV()
     {
         //_soundService.ContinueAll();
-        YG2.onCloseAnyAdv -= OnCloseADV;
+        //YG2.onCloseAnyAdv -= OnCloseADV;
     }
 }

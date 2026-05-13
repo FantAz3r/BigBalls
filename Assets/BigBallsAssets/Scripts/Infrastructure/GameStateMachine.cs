@@ -6,11 +6,11 @@ public class GameStateMachine : IGameStateMachine
     private Dictionary<Type, IExitableState> _states;
     private IExitableState _currentState;
 
-    public GameStateMachine(SceneLoader sceneLoader, ICoroutineRunner coroutineRunner)
+    public GameStateMachine(SceneLoader sceneLoader)
     {
         _states = new Dictionary<Type, IExitableState>();
-        _states[typeof(BootstrapState)] = new BootstrapState(this, coroutineRunner);
-        _states[typeof(LoadingLevelState)] = new LoadingLevelState(coroutineRunner);
+        _states[typeof(BootstrapState)] = new BootstrapState(this);
+        _states[typeof(LoadingLevelState)] = new LoadingLevelState(sceneLoader);
         _states[typeof(PersistentProgressState)] = new PersistentProgressState();
     }
 
