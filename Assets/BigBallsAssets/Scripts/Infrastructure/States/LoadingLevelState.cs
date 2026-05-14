@@ -1,13 +1,15 @@
 using System;
+using UnityEngine;
 
 public class LoadingLevelState : IPayloadedState<LevelID>
 {
-    private SceneLoader _sceneLoader;
+    private readonly ISceneLoader _sceneLoader;
     private LevelID _currentLevel;
     private LevelID _previousLevel;
 
-    public LoadingLevelState(SceneLoader sceneLoader)
+    public LoadingLevelState(ISceneLoader sceneLoader)
     {
+        _sceneLoader = sceneLoader;
     }
 
     public void Enter(LevelID level)
@@ -59,6 +61,7 @@ public class LoadingLevelState : IPayloadedState<LevelID>
 
     private void InitMainMenu()
     {
+        Debug.Log("InitMainMenu");
     }
 
     private void InitGameLevel()

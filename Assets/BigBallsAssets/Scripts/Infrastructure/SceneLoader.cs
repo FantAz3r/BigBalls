@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader
+public class SceneLoader : ISceneLoader
 {
     private readonly ICoroutineRunner _coroutineRunner;
     private float _minLoadTime = 1;
@@ -20,10 +20,17 @@ public class SceneLoader
 
     private IEnumerator LoadScene(string nextScene, System.Action onLoaded, bool hasLoading)
     {
+        if (SceneManager.GetSceneByName(LevelID.LoadScene.ToString()).isLoaded == false)
+        {
+            hasLoading = false;
+
+        }
+
         AsyncOperation asyncLoad = null;
 
         Scene currentActiveScene = SceneManager.GetActiveScene();
         Scene loadingScene = default;
+
 
         if (hasLoading)
         {

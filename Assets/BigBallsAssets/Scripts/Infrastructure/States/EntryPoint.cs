@@ -1,13 +1,20 @@
+using System;
 using UnityEngine;
+using VContainer.Unity;
 
-public class EntryPoint : MonoBehaviour, ICoroutineRunner
+public class EntryPoint : IStartable 
 {
-    private GameStateMachine _gameStateMachine;
+    private IGameStateMachine _gameStateMachine;
 
-    private void Start()
+    public EntryPoint(IGameStateMachine gameStateMachine)
     {
-        _gameStateMachine = new GameStateMachine(new SceneLoader(this));
-        _gameStateMachine.EnterIn<BootstrapState>();
-        DontDestroyOnLoad(this); 
+        _gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+
+        Debug.Log(_gameStateMachine);
+    }
+
+    public void Start()
+    {
+        _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.MainMenu);
     }
 }

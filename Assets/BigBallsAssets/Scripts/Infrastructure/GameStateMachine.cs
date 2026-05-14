@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GameStateMachine : IGameStateMachine
 {
     private Dictionary<Type, IExitableState> _states;
     private IExitableState _currentState;
 
-    public GameStateMachine(SceneLoader sceneLoader)
+    public GameStateMachine(ISceneLoader sceneLoader)
     {
+        Debug.Log("GameStateMachine");
         _states = new Dictionary<Type, IExitableState>();
         _states[typeof(BootstrapState)] = new BootstrapState(this);
         _states[typeof(LoadingLevelState)] = new LoadingLevelState(sceneLoader);

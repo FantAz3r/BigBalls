@@ -1,3 +1,4 @@
+using UnityEngine;
 
 public class BootstrapState : IState
 {
@@ -5,12 +6,13 @@ public class BootstrapState : IState
 
     public BootstrapState(IGameStateMachine stateMachine)
     {
+        Debug.Log("BootstrapState");
         _stateMachine = stateMachine;
     }
 
     public void Enter()
     {
-        _stateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.MainMenu);
+        Debug.Log("sm,dgkodfmgh");
     }
 
     public void Exit()
