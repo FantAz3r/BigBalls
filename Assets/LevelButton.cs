@@ -1,17 +1,22 @@
 using UnityEngine;
 using VContainer;
+using BigBalls.Services;
+using BigBalls.Infrastructure;
 
-public class LevelButton : ButtonClickHandler
+namespace BigBalls.UI
 {
-    [SerializeField] private LevelID _levelID;
-    private ILevelLoadingService _loadingService; 
-
-    [Inject]
-    public void Construct(ILevelLoadingService levelLoadingService)
+    public class LevelButton : ButtonClickHandler
     {
-        _loadingService = levelLoadingService;
-    }
+        [SerializeField] private LevelID _levelID;
 
-    protected override void OnClick() => _loadingService.Load(_levelID);
-    
+        private ILevelLoadingService _loadingService;
+
+        [Inject]
+        public void Construct(ILevelLoadingService levelLoadingService)
+        {
+            _loadingService = levelLoadingService;
+        }
+
+        protected override void OnClick() => _loadingService.Load(_levelID);
+    }
 }

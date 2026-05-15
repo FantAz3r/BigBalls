@@ -2,19 +2,22 @@ using System;
 using UnityEngine;
 using VContainer.Unity;
 
-public class EntryPoint : IStartable 
+namespace BigBalls.Infrastructure
 {
-    private IGameStateMachine _gameStateMachine;
-
-    public EntryPoint(IGameStateMachine gameStateMachine)
+    public class EntryPoint : IStartable
     {
-        _gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
+        private IGameStateMachine _gameStateMachine;
 
-        Debug.Log(_gameStateMachine);
-    }
+        public EntryPoint(IGameStateMachine gameStateMachine)
+        {
+            _gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
 
-    public void Start()
-    {
-        _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.MainMenu);
+            Debug.Log(_gameStateMachine);
+        }
+
+        public void Start()
+        {
+            _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.MainMenu);
+        }
     }
 }

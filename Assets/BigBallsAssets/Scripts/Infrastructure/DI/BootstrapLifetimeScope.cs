@@ -1,13 +1,13 @@
-using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-public class BootstrapLifetimeScope : LifetimeScope
+namespace BigBalls.Infrastructure.DI
 {
-    protected override void Configure(IContainerBuilder builder)
+    public class BootstrapLifetimeScope : LifetimeScope
     {
-        Debug.Log("1");
-
-        Debug.Log("2");
+        protected override void Configure(IContainerBuilder builder)
+        {
+        } 
     }
+
 }

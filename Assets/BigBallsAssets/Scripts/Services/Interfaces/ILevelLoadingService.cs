@@ -1,4 +1,10 @@
-public interface ILevelLoadingService : IService
+using BigBalls.Infrastructure;
+
+namespace BigBalls.Services
 {
-    void Load(LevelID level);
+    public interface ILevelLoadingService : IService
+
+    {
+        void Load(LevelID level);
+    }
 }

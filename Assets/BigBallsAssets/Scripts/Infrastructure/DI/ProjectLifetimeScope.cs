@@ -1,23 +1,31 @@
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using BigBalls.Services;
+using BigBalls.Factories;
 
-public class ProjectLifetimeScope : LifetimeScope
+namespace BigBalls.Infrastructure.DI
 {
-    [SerializeField] private CoroutineRunner _coroutineRunner;
-
-    protected override void Configure(IContainerBuilder builder)
+    public class ProjectLifetimeScope : LifetimeScope
     {
+        [SerializeField] private CoroutineRunner _coroutineRunner;
 
-        builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
+        protected override void Configure(IContainerBuilder builder)
+        {
+            builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
 
-        builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
+            builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
 
-        builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
+            builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
+            builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
 
-        builder.RegisterComponent(_coroutineRunner)
-               .As<ICoroutineRunner>();
+            builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
 
-        builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
+            builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
+
+            builder.Register<IUIFactory, UIFactory>(Lifetime.Singleton);
+            builder.Register<IWindowService, WindowService>(Lifetime.Singleton);
+
+        }
     }
 }

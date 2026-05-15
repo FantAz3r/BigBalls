@@ -1,14 +1,18 @@
 using UnityEngine;
+using BigBalls.Infrastructure;
 
-public class LevelLoadingService : ILevelLoadingService
+namespace BigBalls.Services
 {
-    private readonly IGameStateMachine _stateMachine;
-
-    public LevelLoadingService(IGameStateMachine stateMachine)
+    public class LevelLoadingService : ILevelLoadingService
     {
-        _stateMachine = stateMachine;
-        Debug.Log("LevelLoadingService");
-    }
+        private readonly IGameStateMachine _stateMachine;
 
-    public void Load(LevelID level) => _stateMachine.EnterIn<LoadingLevelState, LevelID>(level);
+        public LevelLoadingService(IGameStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+            Debug.Log("LevelLoadingService");
+        }
+
+        public void Load(LevelID level) => _stateMachine.EnterIn<LoadingLevelState, LevelID>(level);
+    }
 }

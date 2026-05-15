@@ -1,3 +1,7 @@
-public interface IUIFactory : IService
+namespace BigBalls.Services
 {
+    public interface IUIFactory : IService
+    {
+
+    }
 }

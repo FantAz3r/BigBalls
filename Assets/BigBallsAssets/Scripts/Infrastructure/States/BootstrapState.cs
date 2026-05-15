@@ -1,27 +1,30 @@
 using UnityEngine;
 
-public class BootstrapState : IState
+namespace BigBalls.Infrastructure
 {
-    private IGameStateMachine _stateMachine;
-
-    public BootstrapState(IGameStateMachine stateMachine)
+    public class BootstrapState : IState
     {
-        Debug.Log("BootstrapState");
-        _stateMachine = stateMachine;
-    }
+        private IGameStateMachine _stateMachine;
 
-    public void Enter()
-    {
-        Debug.Log("sm,dgkodfmgh");
-    }
+        public BootstrapState(IGameStateMachine stateMachine)
+        {
+            Debug.Log("BootstrapState");
+            _stateMachine = stateMachine;
+        }
 
-    public void Exit()
-    {
+        public void Enter()
+        {
+            Debug.Log("sm,dgkodfmgh");
+        }
 
-    }
+        public void Exit()
+        {
 
-    private void RegisterServices()
-    {
-       
+        }
+
+        private void RegisterServices()
+        {
+
+        }
     }
 }

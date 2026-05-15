@@ -1,24 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
 
-public class ButtonClickHandler : MonoBehaviour
+namespace BigBalls.UI
 {
-    private Button _button;
+    [RequireComponent(typeof(Button))]
 
-    private void Awake()
+    public class ButtonClickHandler : MonoBehaviour
     {
-        _button = GetComponent<Button>();
-        _button.onClick.AddListener(OnClick);
-    }
-    private void OnDestroy()
-    {
-        _button.onClick.RemoveListener(OnClick);
-    }
+        private Button _button;
 
-    protected virtual void OnClick()
-    {
+        private void Awake()
+        {
+            _button = GetComponent<Button>();
+            _button.onClick.AddListener(OnClick);
+        }
+        private void OnDestroy()
+        {
+            _button.onClick.RemoveListener(OnClick);
+        }
 
+        protected virtual void OnClick()
+        {
+
+        }
     }
 }

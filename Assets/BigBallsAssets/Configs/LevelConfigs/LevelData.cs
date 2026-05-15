@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Datas", menuName = "Datas/LevelData")]
-
-public class LevelData : ScriptableObject
+namespace BigBalls.Configs
 {
-    public List<LevelConfig> LevelConfigs = new List<LevelConfig>();
+    [CreateAssetMenu(fileName = "Datas", menuName = "Datas/LevelData")]
+
+    public class LevelData : ScriptableObject
+    {
+        public List<LevelConfig> LevelConfigs = new List<LevelConfig>();
+    }
 }

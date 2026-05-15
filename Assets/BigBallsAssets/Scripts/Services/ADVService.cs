@@ -1,67 +1,72 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
+using BigBalls.Infrastructure;
 
-public class ADVService : IADVServise
+namespace BigBalls.Services
 {
-    private const float CooldownSeconds = 60f;
-    private Dictionary<string, float> _lastRunTimes = new Dictionary<string, float>();
-    //private ISoundService _soundService;
-
-    //public ADVService(ISoundService soundService)
-    //{
-    //    _soundService = soundService;
-    //}
-
-    public void TryShowRewardADV(string rewardID, Action callback)
+    public class ADVService : IADVServise
     {
-        float currentTime = Time.time;
+        private const float CooldownSeconds = 60f;
+        private Dictionary<string, float> _lastRunTimes = new Dictionary<string, float>();
+        //private ISoundService _soundService;
 
-        if (_lastRunTimes.TryGetValue(rewardID, out float lastRunTime))
+        //public ADVService(ISoundService soundService)
+        //{
+        //    _soundService = soundService;
+        //}
+
+        public void TryShowRewardADV(string rewardID, Action callback)
         {
-            if (currentTime - lastRunTime < CooldownSeconds)
+            float currentTime = Time.time;
+
+            if (_lastRunTimes.TryGetValue(rewardID, out float lastRunTime))
             {
-                return;
+                if (currentTime - lastRunTime < CooldownSeconds)
+                {
+                    return;
+                }
+            }
+
+            // _lastRunTimes[rewardID] = currentTime;
+            // _soundService.StopAll();
+            //
+            // YG2.onCloseAnyAdv += OnCloseADV;
+            // YG2.RewardedAdvShow(rewardID, callback);
+        }
+
+        public bool CanShowRewardADV(string rewardID)
+        {
+            float currentTime = Time.time;
+
+            if (_lastRunTimes.TryGetValue(rewardID, out float lastRunTime))
+            {
+                if (currentTime - lastRunTime < CooldownSeconds)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void TryShowInterstitialADV(string nextLevel)
+        {
+            if (nextLevel != LevelID.MainMenu.ToString() &&
+                nextLevel != LevelID.None.ToString() &&
+                nextLevel != LevelID.LoadScene.ToString())
+            {
+                //YG2.InterstitialAdvShow();
+                //YG2.onCloseAnyAdv += OnCloseADV;
+                // _soundService.StopAll();
             }
         }
 
-       // _lastRunTimes[rewardID] = currentTime;
-       // _soundService.StopAll();
-       //
-       // YG2.onCloseAnyAdv += OnCloseADV;
-       // YG2.RewardedAdvShow(rewardID, callback);
-    }
-
-    public bool CanShowRewardADV(string rewardID)
-    {
-        float currentTime = Time.time;
-
-        if (_lastRunTimes.TryGetValue(rewardID, out float lastRunTime))
+        private void OnCloseADV()
         {
-            if (currentTime - lastRunTime < CooldownSeconds)
-            {
-                return false;
-            }
+            //_soundService.ContinueAll();
+            //YG2.onCloseAnyAdv -= OnCloseADV;
         }
-
-        return true;
-    }
-
-    public void TryShowInterstitialADV(string nextLevel)
-    {
-        if (nextLevel != LevelID.MainMenu.ToString() &&
-            nextLevel != LevelID.None.ToString() &&
-            nextLevel != LevelID.LoadScene.ToString())
-        {
-            //YG2.InterstitialAdvShow();
-            //YG2.onCloseAnyAdv += OnCloseADV;
-           // _soundService.StopAll();
-        }
-    }
-
-    private void OnCloseADV()
-    {
-        //_soundService.ContinueAll();
-        //YG2.onCloseAnyAdv -= OnCloseADV;
     }
 }

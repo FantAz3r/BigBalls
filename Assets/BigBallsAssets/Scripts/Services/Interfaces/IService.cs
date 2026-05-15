@@ -1,4 +1,7 @@
-public interface IService
+namespace BigBalls.Services
 {
+    public interface IService
+    {
 
+    }
 }
