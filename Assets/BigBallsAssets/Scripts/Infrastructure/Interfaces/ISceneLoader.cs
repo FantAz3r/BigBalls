@@ -1,4 +1,10 @@
-﻿public interface ISceneLoader
+﻿using System;
+
+namespace BigBalls.Infrastructure
 {
-    void Load(string name, System.Action onLoaded, bool hasLoading);
+    public interface ISceneLoader
+    {
+        void LoadSceneImmediately(string name, Action onLoaded);
+        void LoadSceneWithLoadingScreen(string name, Action onLoaded);
+    }
 }

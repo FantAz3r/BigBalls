@@ -16,52 +16,64 @@ namespace BigBalls.Infrastructure
             _coroutineRunner = coroutineRunner;
         }
 
-        public void Load(string name, System.Action onLoaded, bool hasLoading)
+        public void LoadSceneImmediately(string name, System.Action onLoaded)
         {
-            _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded, hasLoading));
+            _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded, false));
+        }
+
+        public void LoadSceneWithLoadingScreen(string name, System.Action onLoaded)
+        {
+            _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded, true));
         }
 
         private IEnumerator LoadScene(string nextScene, System.Action onLoaded, bool hasLoading)
         {
-            if (SceneManager.GetSceneByName(LevelID.LoadScene.ToString()).isLoaded == false)
-            {
-                hasLoading = false;
-
-            }
-
             AsyncOperation asyncLoad = null;
-
-            Scene currentActiveScene = SceneManager.GetActiveScene();
+            Scene initialScene = SceneManager.GetActiveScene();
             Scene loadingScene = default;
-
 
             if (hasLoading)
             {
-                asyncLoad = SceneManager.LoadSceneAsync(LevelID.LoadScene.ToString(), LoadSceneMode.Additive);
-                yield return asyncLoad;
+                string loadingName = LevelID.LoadScene.ToString();
 
-                loadingScene = SceneManager.GetSceneByName(LevelID.LoadScene.ToString());
-                SceneManager.SetActiveScene(loadingScene);
+                if (loadingName != initialScene.name)
+                {
+                    asyncLoad = SceneManager.LoadSceneAsync(loadingName, LoadSceneMode.Additive);
+                }
+
+                while (asyncLoad != null && asyncLoad.isDone == false)
+                    yield return null;
+
+                loadingScene = SceneManager.GetSceneByName(loadingName);
+
+                if (loadingScene.IsValid() && loadingScene != initialScene)
+                {
+                    SceneManager.SetActiveScene(loadingScene);
+                }
 
                 yield return new WaitForSecondsRealtime(Random.Range(_minLoadTime, _maxLoadTime));
             }
 
             asyncLoad = SceneManager.LoadSceneAsync(nextScene, LoadSceneMode.Additive);
-            yield return asyncLoad;
+
+            while (asyncLoad != null && !asyncLoad.isDone)
+                yield return null;
 
             Scene newScene = SceneManager.GetSceneByName(nextScene);
 
             if (newScene.IsValid())
             {
                 SceneManager.SetActiveScene(newScene);
-                asyncLoad = SceneManager.UnloadSceneAsync(currentActiveScene);
-                yield return asyncLoad;
-            }
 
-            if (loadingScene != default && loadingScene.IsValid())
-            {
-                asyncLoad = SceneManager.UnloadSceneAsync(loadingScene);
-                yield return asyncLoad;
+                if (initialScene.IsValid())
+                {
+                    yield return SceneManager.UnloadSceneAsync(initialScene);
+                }
+
+                if (hasLoading && loadingScene.IsValid() && loadingScene != initialScene)
+                {
+                    yield return SceneManager.UnloadSceneAsync(loadingScene);
+                }
             }
 
             onLoaded?.Invoke();

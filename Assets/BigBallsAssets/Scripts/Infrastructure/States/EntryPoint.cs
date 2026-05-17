@@ -11,8 +11,6 @@ namespace BigBalls.Infrastructure
         public EntryPoint(IGameStateMachine gameStateMachine)
         {
             _gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
-
-            Debug.Log(_gameStateMachine);
         }
 
         public void Start()

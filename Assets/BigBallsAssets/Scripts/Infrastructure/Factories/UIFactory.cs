@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using YG;
+//using YG;
 using BigBalls.UI;
 using BigBalls.Services;
 using BigBalls.Configs;
@@ -59,10 +59,10 @@ namespace BigBalls.Factories
 
         public void CreateJoystick()
         {
-            if (YG2.envir.isDesktop == false)
-            {
-
-            }
+            //if (YG2.envir.isDesktop == false)
+            //{
+            //
+            //}
         }
 
         private WindowBase CreateWindow(WindowType windowType, Transform parent = null)

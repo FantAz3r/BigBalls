@@ -1,16 +1,22 @@
+using BigBalls.Services;
 using System;
 using UnityEngine;
+using YG;
 
 namespace BigBalls.Infrastructure
 {
     public class LoadingLevelState : IPayloadedState<LevelID>
     {
         private readonly ISceneLoader _sceneLoader;
+        private readonly IUpdateService _updateService;
         private LevelID _currentLevel;
         private LevelID _previousLevel;
 
-        public LoadingLevelState(ISceneLoader sceneLoader)
+        public LoadingLevelState(
+            IUpdateService updateService,
+            ISceneLoader sceneLoader)
         {
+            _updateService = updateService;
             _sceneLoader = sceneLoader;
         }
 
@@ -21,6 +27,7 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            _updateService.Clear();
         }
 
 
@@ -32,28 +39,28 @@ namespace BigBalls.Infrastructure
             switch (level)
             {
                 case LevelID.MainMenu:
-                    _sceneLoader.Load(level.ToString(), InitMainMenu, false);
-                    //YG2.GameReadyAPI();
+                    _sceneLoader.LoadSceneImmediately(level.ToString(), InitMainMenu);
+                    YG2.GameReadyAPI();
                     break;
 
                 case LevelID.Level1:
-                    _sceneLoader.Load(level.ToString(), InitGameLevel, true);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
                     break;
 
                 case LevelID.Level2:
-                    _sceneLoader.Load(level.ToString(), InitGameLevel, true);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
                     break;
 
                 case LevelID.Level3:
-                    _sceneLoader.Load(level.ToString(), InitGameLevel, true);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
                     break;
 
                 case LevelID.Level4:
-                    _sceneLoader.Load(level.ToString(), InitGameLevel, true);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
                     break;
 
                 case LevelID.Level5:
-                    _sceneLoader.Load(level.ToString(), InitGameLevel, true);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
                     break;
 
                 default:
@@ -63,13 +70,13 @@ namespace BigBalls.Infrastructure
 
         private void InitMainMenu()
         {
-            Debug.Log("InitMainMenu");
+            Debug.Log("main Menu");
         }
+
 
         private void InitGameLevel()
         {
-
-
+            Debug.Log("InitGameLevel");
         }
 
         private void CommonInit()

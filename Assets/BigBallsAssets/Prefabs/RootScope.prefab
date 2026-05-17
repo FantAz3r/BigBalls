@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3638693592531932338}
   - component: {fileID: 775818266901349186}
   - component: {fileID: 3096292812075253187}
+  - component: {fileID: -1666832365042914088}
   m_Layer: 0
   m_Name: RootScope
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _coroutineRunner: {fileID: 3096292812075253187}
+  _updateService: {fileID: -1666832365042914088}
 --- !u!114 &3096292812075253187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,5 +62,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a5f754e93abcc24c9cbd65f93ac136b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1666832365042914088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29248054585762820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57de05f8abdedff4aa79a4fd059578e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

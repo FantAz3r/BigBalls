@@ -8,13 +8,11 @@ namespace BigBalls.Infrastructure
 
         public BootstrapState(IGameStateMachine stateMachine)
         {
-            Debug.Log("BootstrapState");
             _stateMachine = stateMachine;
         }
 
         public void Enter()
         {
-            Debug.Log("sm,dgkodfmgh");
         }
 
         public void Exit()

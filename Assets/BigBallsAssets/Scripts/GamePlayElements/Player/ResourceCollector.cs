@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ResourceCollector : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //if (other.TryGetComponent(out ResourcePiece resource))
+        //{
+        //    if (_activeResources.Contains(resource) == false)
+        //    {
+        //        resource.OnTake();
+        //        _activeResources.Add(resource);
+        //        StartCoroutine(RelocateResource(resource));
+        //    }
+        //}
     }
 }

@@ -34,7 +34,6 @@ namespace BigBalls.GameplayObjects
             foreach (var stat in PlayerConfig.Stats)
             {
                 _statHolder.Add(new Stat(stat.Key, stat.Value));
-
             }
         }
     }

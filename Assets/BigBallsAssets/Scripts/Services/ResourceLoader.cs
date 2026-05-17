@@ -1,4 +1,5 @@
 using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,8 @@ namespace BigBalls.Services
 
         private Dictionary<Type, string> _staticObjects = new()
         {
-            { typeof(WindowData), "Data/WindowData"}
+            { typeof(WindowData), "Data/WindowData"},
+            { typeof(Player), "Player/Player"}
         };
 
         public T Load<T>() where T : Object
@@ -26,6 +28,10 @@ namespace BigBalls.Services
                 _cashedObjects.Add(type, @object);
             }
 
+            if((T)@object == null)
+            {
+                throw new ArgumentNullException(nameof(T));
+            }
             return (T)@object;
         }
     }

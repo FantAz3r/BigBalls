@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Health
+    public class Health: IDemageable
     {
         private readonly Stat _health;
 

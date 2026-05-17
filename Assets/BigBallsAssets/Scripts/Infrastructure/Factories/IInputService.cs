@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Numerics;
+using UnityEngine;
 
 namespace BigBalls.Services
 {
     public interface IInputService
     {
-        event Action<Vector2> MovePerformed;
-        event Action<Vector2> RotatePerformed;
+        event Action<Vector2> MoveDirectionSeted;
+        event Action<Vector2> RotateDirectionSeted;
 
         IInputService GetSelf();
         void EnableInput();

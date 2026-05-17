@@ -1,6 +1,6 @@
+using BigBalls.Services;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BigBalls.Infrastructure
 {
@@ -9,12 +9,11 @@ namespace BigBalls.Infrastructure
         private Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
-        public GameStateMachine(ISceneLoader sceneLoader)
+        public GameStateMachine(ISceneLoader sceneLoader, IUpdateService updateService)
         {
-            Debug.Log("GameStateMachine");
             _states = new Dictionary<Type, IExitableState>();
             _states[typeof(BootstrapState)] = new BootstrapState(this);
-            _states[typeof(LoadingLevelState)] = new LoadingLevelState(sceneLoader);
+            _states[typeof(LoadingLevelState)] = new LoadingLevelState(updateService, sceneLoader);
             _states[typeof(PersistentProgressState)] = new PersistentProgressState();
         }
 

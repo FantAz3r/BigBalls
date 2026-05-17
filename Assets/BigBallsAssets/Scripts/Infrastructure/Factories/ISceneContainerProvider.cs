@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using BigBalls.GameplayObjects;
+using System.Collections.Generic;
 
 namespace BigBalls.Providers
 {
     public interface ISceneContainerProvider
     {
-        Transform PlayerSpawnPoint { get; }
+        List<PlayerSpawnPoint> PlayerSpawnPoints { get; }
     }
 }
