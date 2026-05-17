@@ -1,17 +1,20 @@
 using BigBalls.Factories;
 using VContainer.Unity;
 
-public class LevelEntryPoint : IStartable
+namespace BigBalls.Infrastructure
 {
-    private readonly IPlayerFactory _playerFactory;
-
-    public LevelEntryPoint(IPlayerFactory playerFactory)
+    public class LevelEntryPoint : IStartable
     {
-        _playerFactory = playerFactory;
-    }
+        private readonly IPlayerFactory _playerFactory;
 
-    public void Start()
-    {
-        _playerFactory.Create();
+        public LevelEntryPoint(IPlayerFactory playerFactory)
+        {
+            _playerFactory = playerFactory;
+        }
+
+        public void Start()
+        {
+            _playerFactory.Create();
+        }
     }
 }

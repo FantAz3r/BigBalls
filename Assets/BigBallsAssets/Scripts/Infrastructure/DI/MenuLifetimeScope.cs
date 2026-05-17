@@ -7,6 +7,7 @@ namespace BigBalls.Infrastructure.DI
     {
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterEntryPoint<MenuEntryPoint>(Lifetime.Scoped);
         }
     }
 }
