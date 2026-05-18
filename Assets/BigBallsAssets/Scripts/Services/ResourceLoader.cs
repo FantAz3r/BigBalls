@@ -14,7 +14,8 @@ namespace BigBalls.Services
         private Dictionary<Type, string> _staticObjects = new()
         {
             { typeof(WindowData), "Data/WindowData"},
-            { typeof(Player), "Player/Player"}
+            { typeof(Player), "Player/Player"},
+            { typeof(UIRoot), "UI/UIRoot"}
         };
 
         public T Load<T>() where T : Object
@@ -32,6 +33,7 @@ namespace BigBalls.Services
             {
                 throw new ArgumentNullException(nameof(T));
             }
+
             return (T)@object;
         }
     }

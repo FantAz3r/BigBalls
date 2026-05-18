@@ -39,7 +39,7 @@ namespace BigBalls.Infrastructure
             switch (level)
             {
                 case LevelID.MainMenu:
-                    _sceneLoader.LoadSceneImmediately(level.ToString(), InitMainMenu);
+                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitMainMenu);
                     YG2.GameReadyAPI();
                     break;
 

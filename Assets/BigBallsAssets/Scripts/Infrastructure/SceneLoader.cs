@@ -29,51 +29,41 @@ namespace BigBalls.Infrastructure
         private IEnumerator LoadScene(string nextScene, System.Action onLoaded, bool hasLoading)
         {
             AsyncOperation asyncLoad = null;
-            Scene initialScene = SceneManager.GetActiveScene();
+
+            Scene currentActiveScene = SceneManager.GetActiveScene();
             Scene loadingScene = default;
 
-            if (hasLoading)
+            if (currentActiveScene.name != LevelID.LoadScene.ToString())
             {
-                string loadingName = LevelID.LoadScene.ToString();
 
-                if (loadingName != initialScene.name)
+                if (hasLoading)
                 {
-                    asyncLoad = SceneManager.LoadSceneAsync(loadingName, LoadSceneMode.Additive);
-                }
+                    asyncLoad = SceneManager.LoadSceneAsync(LevelID.LoadScene.ToString(), LoadSceneMode.Additive);
+                    yield return asyncLoad;
 
-                while (asyncLoad != null && asyncLoad.isDone == false)
-                    yield return null;
-
-                loadingScene = SceneManager.GetSceneByName(loadingName);
-
-                if (loadingScene.IsValid() && loadingScene != initialScene)
-                {
+                    loadingScene = SceneManager.GetSceneByName(LevelID.LoadScene.ToString());
                     SceneManager.SetActiveScene(loadingScene);
-                }
 
-                yield return new WaitForSecondsRealtime(Random.Range(_minLoadTime, _maxLoadTime));
+                    yield return new WaitForSecondsRealtime(Random.Range(_minLoadTime, _maxLoadTime));
+                }
             }
 
             asyncLoad = SceneManager.LoadSceneAsync(nextScene, LoadSceneMode.Additive);
-
-            while (asyncLoad != null && !asyncLoad.isDone)
-                yield return null;
+            yield return asyncLoad;
 
             Scene newScene = SceneManager.GetSceneByName(nextScene);
 
             if (newScene.IsValid())
             {
                 SceneManager.SetActiveScene(newScene);
+                asyncLoad = SceneManager.UnloadSceneAsync(currentActiveScene);
+                yield return asyncLoad;
+            }
 
-                if (initialScene.IsValid())
-                {
-                    yield return SceneManager.UnloadSceneAsync(initialScene);
-                }
-
-                if (hasLoading && loadingScene.IsValid() && loadingScene != initialScene)
-                {
-                    yield return SceneManager.UnloadSceneAsync(loadingScene);
-                }
+            if (loadingScene != default && loadingScene.IsValid())
+            {
+                asyncLoad = SceneManager.UnloadSceneAsync(loadingScene);
+                yield return asyncLoad;
             }
 
             onLoaded?.Invoke();

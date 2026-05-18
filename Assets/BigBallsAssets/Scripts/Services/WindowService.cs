@@ -6,13 +6,13 @@ namespace BigBalls.Services
 {
     public class WindowService : IWindowService
     {
-        private readonly UIFactory _uiFactory;
+        private readonly IUIFactory _uiFactory;
 
         private WindowBase _currentWindow = null;
         private WindowType _currentWindowType = WindowType.None;
         private WindowType _previousWindowType = WindowType.None;
 
-        public WindowService(UIFactory uiFactory) => _uiFactory = uiFactory;
+        public WindowService(IUIFactory uiFactory) => _uiFactory = uiFactory;
 
         public WindowBase Open(WindowType type, GameObject payload = null)
         {

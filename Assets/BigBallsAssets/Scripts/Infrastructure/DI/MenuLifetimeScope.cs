@@ -1,3 +1,4 @@
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -7,6 +8,7 @@ namespace BigBalls.Infrastructure.DI
     {
         protected override void Configure(IContainerBuilder builder)
         {
+            Debug.Log("fgerfargiej");
             builder.RegisterEntryPoint<MenuEntryPoint>(Lifetime.Scoped);
         }
     }
