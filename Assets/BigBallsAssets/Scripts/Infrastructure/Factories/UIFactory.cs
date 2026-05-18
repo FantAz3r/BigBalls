@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using UnityEngine;
-using VContainer;
-using VContainer.Unity;
-using YG;
 using BigBalls.Configs;
 using BigBalls.Services;
 using BigBalls.UI;
 using Crystal;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using VContainer;
+using VContainer.Unity;
 
 namespace BigBalls.Factories
 {
@@ -33,24 +33,14 @@ namespace BigBalls.Factories
             _resourceLoader = resourceLoader;
             _windowData = _resourceLoader.Load<WindowData>();
         }
-        public HUD HUD { get; private set; }
 
         public void CreateUIRoot()
         {
-            _uiRoot = _objectResolver.Instantiate(_resourceLoader.Load<UIRoot>());
+            _uiRoot = Object.Instantiate(_resourceLoader.Load<UIRoot>());
             _safeAreaUIHolder = _uiRoot.GetComponentInChildren<SafeArea>();
         }
 
-        public HUD CreateHUD()
-        {
-            if (HUD != null)
-            {
-                return HUD;
-            }
-
-            HUD = GetOrCreateWindow(WindowType.HUD) as HUD;
-            return HUD;
-        }
+        public HUD CreateHUD() => GetOrCreateWindow(WindowType.HUD) as HUD;
 
         public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.MainSettings) as SettingsView;
 
@@ -67,7 +57,6 @@ namespace BigBalls.Factories
         public void ClearCache()
         {
             _windowCache.Clear();
-            HUD = null;
         }
 
         private WindowBase GetOrCreateWindow(WindowType windowType, Transform parent = null)
