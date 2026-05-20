@@ -10,5 +10,6 @@ namespace BigBalls.Services
         void CreateUIRoot();
         MainMenu CreateMainMenu();
         SettingsView CreateSettings();
+        LevelSelectionPanel CreateLevelSelect();
     }
 }

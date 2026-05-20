@@ -15,8 +15,14 @@ namespace BigBalls.UI
         public void Construct(ILevelLoadingService levelLoadingService)
         {
             _loadingService = levelLoadingService;
+            Debug.Log(_loadingService);
         }
 
-        protected override void OnClick() => _loadingService.Load(_levelID);
+        protected override void OnClick()
+        {
+            Debug.Log("123");
+             _loadingService.Load(_levelID);
+
+        }
     }
 }

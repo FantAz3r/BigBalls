@@ -17,7 +17,7 @@ namespace BigBalls.GameplayObjects
         {
             _updateService = updateService;
             _rotatebleObject = rotatebleObject;
-            _rotationSpeed = statholder.Stats.Where(s => s.StatType == StatType.MoveSpeed).FirstOrDefault();
+            _rotationSpeed = statholder.Get(StatType.RotationSpeed);
             _updateService.Register(this);
         }
 

@@ -4,7 +4,6 @@ using BigBalls.UI;
 using Crystal;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using VContainer;
 using VContainer.Unity;
 
@@ -12,8 +11,6 @@ namespace BigBalls.Factories
 {
     public class UIFactory : IUIFactory
     {
-        private readonly ITimeService _timeService;
-        private readonly ILevelLoadingService _levelLoadingService;
         private readonly IObjectResolver _objectResolver;
         private readonly IResourceLoader _resourceLoader;
         private readonly Dictionary<WindowType, WindowBase> _windowCache = new Dictionary<WindowType, WindowBase>();
@@ -22,13 +19,10 @@ namespace BigBalls.Factories
         private SafeArea _safeAreaUIHolder;
         private UIRoot _uiRoot;
 
-        public UIFactory(ITimeService timeService,
-            ILevelLoadingService levelLoadingService,
+        public UIFactory(
             IObjectResolver objectResolver,
             IResourceLoader resourceLoader)
         {
-            _timeService = timeService;
-            _levelLoadingService = levelLoadingService;
             _objectResolver = objectResolver;
             _resourceLoader = resourceLoader;
             _windowData = _resourceLoader.Load<WindowData>();
@@ -42,7 +36,7 @@ namespace BigBalls.Factories
 
         public HUD CreateHUD() => GetOrCreateWindow(WindowType.HUD) as HUD;
 
-        public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.MainSettings) as SettingsView;
+        public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.Settings) as SettingsView;
 
         public MainMenu CreateMainMenu() => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
 
@@ -54,6 +48,8 @@ namespace BigBalls.Factories
             //}
         }
 
+        public LevelSelectionPanel CreateLevelSelect() => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
+
         public void ClearCache()
         {
             _windowCache.Clear();
@@ -63,6 +59,8 @@ namespace BigBalls.Factories
         {
             if (_windowCache.TryGetValue(windowType, out var cachedWindow))
             {
+                Debug.Log("from cach");
+                cachedWindow.Open();
                 return cachedWindow;
             }
 
