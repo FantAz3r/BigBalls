@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Linq;
 using BigBalls.Services;
 using System;
 
@@ -18,7 +17,7 @@ namespace BigBalls.GameplayObjects
         {
             _updateService = updateService;
             _movebleObject = transform;
-            _moveSpeed = statholder.Stats.Where(s => s.StatType == StatType.MoveSpeed).FirstOrDefault();
+            _moveSpeed = statholder.Get(StatType.MoveSpeed);
             _updateService.Register(this);
         }
 

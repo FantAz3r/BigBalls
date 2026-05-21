@@ -9,11 +9,11 @@ namespace BigBalls.Infrastructure
         private Dictionary<Type, IExitableState> _states;
         private IExitableState _currentState;
 
-        public GameStateMachine(ISceneLoader sceneLoader, IUpdateService updateService)
+        public GameStateMachine(ISceneLoader sceneLoader, IUpdateService updateService, IUIFactory uIFactory)
         {
             _states = new Dictionary<Type, IExitableState>();
             _states[typeof(BootstrapState)] = new BootstrapState(this);
-            _states[typeof(LoadingLevelState)] = new LoadingLevelState(updateService, sceneLoader);
+            _states[typeof(LoadingLevelState)] = new LoadingLevelState(updateService, sceneLoader, uIFactory);
             _states[typeof(PersistentProgressState)] = new PersistentProgressState();
         }
 

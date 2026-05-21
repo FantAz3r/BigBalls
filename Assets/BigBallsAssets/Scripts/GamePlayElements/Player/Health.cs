@@ -10,7 +10,7 @@ namespace BigBalls.GameplayObjects
 
         public Health(IStatContainer statContainer)
         {
-            _health = statContainer.Stats.Where(s => s.StatType == StatType.Health).FirstOrDefault();
+            _health = statContainer.Get(StatType.Health);
         }
 
         public float MaxHealth { get; private set; }

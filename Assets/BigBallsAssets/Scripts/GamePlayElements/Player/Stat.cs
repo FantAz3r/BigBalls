@@ -2,11 +2,11 @@
 {
     public class Stat
     {
-        public readonly StatType StatType;
+        public readonly StatType Type;
 
         public Stat(StatType statType, float value)
         {
-            StatType = statType;
+            Type = statType;
             Value = value;
         }
 

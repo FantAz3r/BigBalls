@@ -47,6 +47,7 @@ namespace BigBalls.Factories
 
             new PlayerMover(_inputService, rotator, mover);
             new Health(player);
+            new Shooter(player, player.transform);
 
             _playerProvider.Set(player);
             return player;

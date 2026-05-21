@@ -8,16 +8,19 @@ namespace BigBalls.Infrastructure
     public class LoadingLevelState : IPayloadedState<LevelID>
     {
         private readonly ISceneLoader _sceneLoader;
+        private readonly IUIFactory _uIFactory;
         private readonly IUpdateService _updateService;
         private LevelID _currentLevel;
         private LevelID _previousLevel;
 
         public LoadingLevelState(
             IUpdateService updateService,
-            ISceneLoader sceneLoader)
+            ISceneLoader sceneLoader,
+            IUIFactory uIFactory)
         {
             _updateService = updateService;
             _sceneLoader = sceneLoader;
+            _uIFactory = uIFactory; 
         }
 
         public void Enter(LevelID level)
@@ -28,6 +31,7 @@ namespace BigBalls.Infrastructure
         public void Exit()
         {
             _updateService.Clear();
+            _uIFactory.ClearCache();
         }
 
 
@@ -39,7 +43,7 @@ namespace BigBalls.Infrastructure
             switch (level)
             {
                 case LevelID.MainMenu:
-                    _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitMainMenu);
+                    _sceneLoader.LoadSceneImmediately(level.ToString(), InitMainMenu);
                     YG2.GameReadyAPI();
                     break;
 

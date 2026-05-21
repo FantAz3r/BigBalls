@@ -14,5 +14,6 @@ namespace BigBalls.StaticData
         [SerializeField] private AYellowpaper.SerializedCollections.SerializedDictionary<StatType, float> _stats;
 
         public IReadOnlyDictionary<StatType, float> Stats => _stats; 
+
     }
 }

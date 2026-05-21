@@ -1,5 +1,6 @@
 using BigBalls.StaticData;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -36,5 +37,9 @@ namespace BigBalls.GameplayObjects
                 _statHolder.Add(new Stat(stat.Key, stat.Value));
             }
         }
+
+        public Stat Get(StatType statType) => _statHolder.Where(stat => stat.Type == statType).FirstOrDefault();
+
+
     }
 }
