@@ -1,5 +1,6 @@
 using BigBalls.Services;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.UI
 {
@@ -10,6 +11,7 @@ namespace BigBalls.UI
 
         private ITimeService _timeService;
 
+        [Inject]
         public void Construct(ITimeService timeService)
         {
             _timeService = timeService;
@@ -19,7 +21,6 @@ namespace BigBalls.UI
         {
             base.Open();
             _timeService.StopGame();
-            Debug.Log(Time.timeScale);
 
             //transform.localScale = Vector3.zero;
         }

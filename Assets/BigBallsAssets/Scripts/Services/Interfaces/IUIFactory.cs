@@ -11,5 +11,6 @@ namespace BigBalls.Services
         MainMenu CreateMainMenu();
         SettingsView CreateSettings();
         LevelSelectionPanel CreateLevelSelect();
+        PauseWindow CreatePauseWindow();
     }
 }

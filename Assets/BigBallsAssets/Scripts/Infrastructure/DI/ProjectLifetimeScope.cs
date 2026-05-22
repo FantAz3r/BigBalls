@@ -19,7 +19,6 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
             builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
 
-
             BindStates(builder);
             BindServices(builder);
         }
@@ -27,6 +26,7 @@ namespace BigBalls.Infrastructure.DI
         private void BindStates(IContainerBuilder builder)
         {
             builder.Register<LoadingLevelState>(Lifetime.Singleton);
+            builder.Register<MainMenuState>(Lifetime.Singleton);
         }
 
         private void BindServices(IContainerBuilder builder)

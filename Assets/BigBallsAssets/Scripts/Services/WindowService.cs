@@ -22,6 +22,7 @@ namespace BigBalls.Services
                 [typeof(SettingsView)] = uiFactory.CreateSettings,
                 [typeof(MainMenu)] = uiFactory.CreateMainMenu,
                 [typeof(LevelSelectionPanel)] = uiFactory.CreateLevelSelect,
+                [typeof(PauseWindow)] = uiFactory.CreatePauseWindow,
             };
         }
 

@@ -14,14 +14,7 @@ namespace BigBalls.Services
 
         public void Load(LevelID level)
         {
-            if(level == LevelID.MainMenu)
-            {
-                _stateMachine.EnterIn<MainMenuState>();
-            }
-            else
-            {
-                _stateMachine.EnterIn<LoadingLevelState, LevelID>(level);
-            }
+            _stateMachine.EnterIn<LoadingLevelState, LevelID>(level);
         }
     }
 }

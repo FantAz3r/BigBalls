@@ -5,7 +5,6 @@ using BigBalls.UI;
 using Crystal;
 using System.Collections.Generic;
 using UnityEngine;
-using VContainer;
 using VContainer.Unity;
 
 namespace BigBalls.Factories
@@ -40,6 +39,8 @@ namespace BigBalls.Factories
         public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.Settings) as SettingsView;
 
         public MainMenu CreateMainMenu() => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
+
+        public PauseWindow CreatePauseWindow()=> GetOrCreateWindow(WindowType.Pause) as PauseWindow;
 
         public void CreateJoystick()
         {

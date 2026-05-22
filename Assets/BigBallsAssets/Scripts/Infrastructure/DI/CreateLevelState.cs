@@ -10,18 +10,21 @@ namespace BigBalls.Infrastructure
         private readonly IWindowService _windowService;
         private readonly IUpdateService _updateService;
         private readonly IUIFactory _uIFactory;
+        private readonly ITimeService _timeService;
 
         public CreateLevelState(
             IPlayerFactory playerFactory,
             IWindowService windowService,
             IUpdateService updateService,
-            IUIFactory uIFactory
+            IUIFactory uIFactory,
+            ITimeService timeService
             )
         {
             _playerFactory = playerFactory;
             _windowService = windowService;
             _updateService = updateService;
             _uIFactory = uIFactory;
+            _timeService = timeService;
         }
 
         public void Enter()
@@ -35,6 +38,8 @@ namespace BigBalls.Infrastructure
         {
             _uIFactory.ClearCache();
             _updateService.Clear();
+            _timeService.ResumeGame();
+
         }
     }
 }

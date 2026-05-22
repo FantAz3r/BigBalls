@@ -20,7 +20,6 @@ namespace BigBalls.Infrastructure
 
         public void Enter(LevelID level)
         {
-            Debug.Log("123");
             InitCurrentLevel(level);
         }
 
@@ -49,7 +48,6 @@ namespace BigBalls.Infrastructure
 
         private void InitMainMenu()
         {
-            Debug.Log("124");
             _gameStateMachine.EnterIn<MainMenuState>();
         }
     }

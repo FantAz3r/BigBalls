@@ -32,8 +32,6 @@ namespace BigBalls.Infrastructure
             if (_currentState is IExitableState exitableState)
                 exitableState.Exit();
 
-            Debug.Log(_objectResolverProvider.CurrentResolver);
-            Debug.Log(_currentState);
             TState state = _objectResolverProvider.CurrentResolver.Resolve<TState>();
             _currentState = state;
             return state;

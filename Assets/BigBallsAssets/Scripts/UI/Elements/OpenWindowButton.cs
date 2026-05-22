@@ -22,8 +22,4 @@ namespace BigBalls.UI
             _windowService.Open<T>();
         }
     }
-
-    public class OpenPause : OpenWindowButton<PauseWindow> 
-    {
-    }
 }

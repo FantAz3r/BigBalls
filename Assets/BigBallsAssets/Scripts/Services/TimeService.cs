@@ -21,11 +21,13 @@ namespace BigBalls.Services
                 _coroutineRunner.StopCoroutine(_slowMotionCoroutine);
 
             Time.timeScale = 0;
+            IsPaused = true;
         }
 
         public void ResumeGame()
         {
             Time.timeScale = 1;
+            IsPaused = false;
         }
 
         public void SmoothEditTimeScalse(float targetTimeScale, float duration)

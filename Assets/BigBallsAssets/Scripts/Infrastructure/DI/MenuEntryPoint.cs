@@ -10,7 +10,6 @@ namespace BigBalls.Infrastructure
         public MenuEntryPoint(IObjectResolverProvider objectResolverProvider, IObjectResolver objectResolver)
         {
             objectResolverProvider.UpdateResolver(objectResolver);
-            Debug.Log(objectResolverProvider.CurrentResolver);
 
         }
 
