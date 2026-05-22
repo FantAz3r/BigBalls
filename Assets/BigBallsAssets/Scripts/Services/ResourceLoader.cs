@@ -1,5 +1,6 @@
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,8 @@ namespace BigBalls.Services
         {
             { typeof(WindowData), "Data/WindowData"},
             { typeof(Player), "Player/Player"},
-            { typeof(UIRoot), "UI/UIRoot"}
+            { typeof(UIRoot), "UI/UIRoot"},
+            { typeof(PlayerConfig), "Configs/PlayerConfig"}
         };
 
         public T Load<T>() where T : Object

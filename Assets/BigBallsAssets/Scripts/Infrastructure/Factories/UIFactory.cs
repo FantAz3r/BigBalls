@@ -1,4 +1,5 @@
 using BigBalls.Configs;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
 using Crystal;
@@ -11,7 +12,7 @@ namespace BigBalls.Factories
 {
     public class UIFactory : IUIFactory
     {
-        private readonly IObjectResolver _objectResolver;
+        private readonly IObjectResolverProvider _resolverProvider;
         private readonly IResourceLoader _resourceLoader;
         private readonly Dictionary<WindowType, WindowBase> _windowCache = new Dictionary<WindowType, WindowBase>();
 
@@ -20,10 +21,10 @@ namespace BigBalls.Factories
         private UIRoot _uiRoot;
 
         public UIFactory(
-            IObjectResolver objectResolver,
+            IObjectResolverProvider resolverProvider,
             IResourceLoader resourceLoader)
         {
-            _objectResolver = objectResolver;
+            _resolverProvider = resolverProvider;
             _resourceLoader = resourceLoader;
             _windowData = _resourceLoader.Load<WindowData>();
         }
@@ -76,11 +77,11 @@ namespace BigBalls.Factories
             WindowBase prefab = _windowData.Get(windowType);
 
             if (parent == null)
-                window = _objectResolver.Instantiate(prefab, _safeAreaUIHolder.transform);
+                window = _resolverProvider.CurrentResolver.Instantiate(prefab, _safeAreaUIHolder.transform);
             else
-                window = _objectResolver.Instantiate(prefab, parent);
+                window = _resolverProvider.CurrentResolver.Instantiate(prefab, parent);
 
-            _objectResolver.Inject(window);
+            _resolverProvider.CurrentResolver.Inject(window);
             return window;
         }
     }

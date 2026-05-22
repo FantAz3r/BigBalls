@@ -1152,8 +1152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c68a2244cc5c1c44819f47fd670d7ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelButton: {fileID: 0}
-  _openButtons: []
 --- !u!1 &5879015784563544950
 GameObject:
   m_ObjectHideFlags: 0
@@ -1772,7 +1770,7 @@ GameObject:
   - component: {fileID: 5368936381436891452}
   - component: {fileID: 7385081982682990459}
   - component: {fileID: 3347882442636254164}
-  - component: {fileID: 780534261366618671}
+  - component: {fileID: 6003258711516342916}
   m_Layer: 5
   m_Name: New Game Button
   m_TagString: Untagged
@@ -1882,7 +1880,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &780534261366618671
+--- !u!114 &6003258711516342916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1891,11 +1889,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8414876728427192604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e51b603390f3014d9c44e803b642676, type: 3}
+  m_Script: {fileID: 11500000, guid: ccca758a66080a246bb81583ab344245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _closeWindow: {fileID: -6955084364555636797}
-  _openWindow: 15
 --- !u!1 &8467608231823110324
 GameObject:
   m_ObjectHideFlags: 0

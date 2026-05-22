@@ -1,7 +1,10 @@
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
 using BigBalls.Services;
+using BigBalls.StaticData;
+using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -16,6 +19,13 @@ namespace BigBalls.Factories
         private readonly ISceneContainerProvider _sceneContainerProvider;
         private readonly IResourceLoader _resourceLoader;
         private readonly IUpdateService _updateService;
+        private readonly IIdentifierService _identifierService;
+
+        private PlayerConfig _playerConfig;
+
+        private List<Stat> _statHolder = new();
+
+        public IReadOnlyList<Stat> Stats => _statHolder.AsReadOnly();
 
         public PlayerFactory(
             IInputService inputService,
@@ -23,7 +33,8 @@ namespace BigBalls.Factories
             IObjectResolver objectResolver,
             ISceneContainerProvider sceneContainerProvider,
             IResourceLoader resourceLoader,
-            IUpdateService updateService)
+            IUpdateService updateService,
+            IIdentifierService identifierService)
         {
             _inputService = inputService;
             _playerProvider = playerProvider;
@@ -31,6 +42,9 @@ namespace BigBalls.Factories
             _resourceLoader = resourceLoader;
             _sceneContainerProvider = sceneContainerProvider;
             _updateService = updateService;
+            _identifierService = identifierService;
+
+            _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
         public Player Create()
@@ -39,17 +53,23 @@ namespace BigBalls.Factories
             Player prefab = _resourceLoader.Load<Player>();
 
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
-            player.Construct(new PlayerAnimator());
+            int playerID = _identifierService.ID;
 
-            Mover mover = new Mover(player, player.transform, _updateService);
-            Rotator rotator = new Rotator(player, player.transform, _updateService);
+            player.Construct(playerID, new PlayerAnimator());
 
+            StatHolder statHolder =  new StatHolder(playerID, _playerConfig);
+
+            Mover mover = new Mover(statHolder.Get(StatType.MoveSpeed), player.transform, _updateService);
+            Rotator rotator = new Rotator(statHolder.Get(StatType.RotationSpeed), player.transform, _updateService);
+
+            new Shooter(statHolder.Get(StatType.Damage), player.transform);
+            new Health(statHolder.Get(StatType.Health));
 
             new PlayerMover(_inputService, rotator, mover);
-            new Health(player);
-            new Shooter(player, player.transform);
 
             _playerProvider.Set(player);
+            _playerProvider.Set(statHolder.Stats.ToList());
+
             return player;
         }
     }

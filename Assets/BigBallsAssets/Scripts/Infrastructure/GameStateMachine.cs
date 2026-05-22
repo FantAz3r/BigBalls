@@ -1,21 +1,19 @@
-using BigBalls.Services;
-using System;
-using System.Collections.Generic;
+using BigBalls.Infrastructure.DI;
+using UnityEngine;
+using VContainer;
 
 namespace BigBalls.Infrastructure
 {
     public class GameStateMachine : IGameStateMachine
     {
-        private Dictionary<Type, IExitableState> _states;
+        private readonly IObjectResolverProvider _objectResolverProvider;
         private IExitableState _currentState;
 
-        public GameStateMachine(ISceneLoader sceneLoader, IUpdateService updateService, IUIFactory uIFactory)
+        public GameStateMachine(IObjectResolverProvider objectResolverProvider)
         {
-            _states = new Dictionary<Type, IExitableState>();
-            _states[typeof(BootstrapState)] = new BootstrapState(this);
-            _states[typeof(LoadingLevelState)] = new LoadingLevelState(updateService, sceneLoader, uIFactory);
-            _states[typeof(PersistentProgressState)] = new PersistentProgressState();
+            _objectResolverProvider = objectResolverProvider;
         }
+
 
         public void EnterIn<TState, TPayload>(TPayload levelID) where TState : class, IPayloadedState<TPayload>
         {
@@ -34,12 +32,12 @@ namespace BigBalls.Infrastructure
             if (_currentState is IExitableState exitableState)
                 exitableState.Exit();
 
-            TState state = GetState<TState>();
+            Debug.Log(_objectResolverProvider.CurrentResolver);
+            Debug.Log(_currentState);
+            TState state = _objectResolverProvider.CurrentResolver.Resolve<TState>();
             _currentState = state;
             return state;
         }
-
-        private TState GetState<TState>() where TState : class, IExitableState => _states[typeof(TState)] as TState;
     }
 }
 

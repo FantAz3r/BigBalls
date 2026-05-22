@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -8,31 +7,34 @@ namespace BigBalls.GameplayObjects
     {
         private readonly Stat _health;
 
-        public Health(IStatContainer statContainer)
+        public Health(Stat health)
         {
-            _health = statContainer.Get(StatType.Health);
+            _health = health;
         }
 
-        public float MaxHealth { get; private set; }
-        public bool IsAlive => _health.Value >= 0 ;
+        public event Action<float, float> IsValueChange;
+        public event Action<float> DamageTaken;
+        public event Action<float> Healed;
 
-        public event Action<float, float> IsValueChange, MaxHealthChanged;
-        public event Action<float> DamageTaken, Healed;
+        public float MaxHealth { get; private set; }
+        public bool IsAlive => _value >= 0 ;
+        private float _value => _health.CurrentValue;
+
 
         public void TakeDamage(float damage)
         {
             if (IsAlive == false) return;
 
-            if (_health.Value <= 0) return;
+            if (_value <= 0) return;
 
-            float damageTaken = Mathf.Min(damage, _health.Value);
+            float damageTaken = Mathf.Min(damage, _value);
 
-            _health.ChangeStat(_health.Value - damageTaken);
+            _health.ChangeCurrentStat(_value - damageTaken);
 
             DamageTaken?.Invoke(damageTaken);
-            IsValueChange?.Invoke(_health.Value, MaxHealth);
+            IsValueChange?.Invoke(_value, MaxHealth);
 
-            if (_health.Value <= 0)
+            if (_value <= 0)
             {
                 //Die
             }

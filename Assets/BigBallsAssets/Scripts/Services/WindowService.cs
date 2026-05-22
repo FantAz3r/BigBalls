@@ -1,4 +1,6 @@
 using BigBalls.UI;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Services
@@ -6,43 +8,46 @@ namespace BigBalls.Services
     public class WindowService : IWindowService
     {
         private readonly IUIFactory _uiFactory;
-
+        private readonly Dictionary<Type, Func<WindowBase>> _actionMap;
         private WindowBase _currentWindow = null;
-        private WindowType _currentWindowType = WindowType.None;
-        private WindowType _previousWindowType = WindowType.None;
+        private WindowBase _previousWindow = null;
 
-        public WindowService(IUIFactory uiFactory) => _uiFactory = uiFactory;
-
-        public WindowBase Open(WindowType type, GameObject payload = null)
+        public WindowService(IUIFactory uiFactory)
         {
-            if (type == WindowType.None && type == _currentWindowType) 
+            _uiFactory = uiFactory;
+
+            _actionMap = new Dictionary<Type, Func<WindowBase>>()
+            {
+                [typeof(HUD)] = uiFactory.CreateHUD,
+                [typeof(SettingsView)] = uiFactory.CreateSettings,
+                [typeof(MainMenu)] = uiFactory.CreateMainMenu,
+                [typeof(LevelSelectionPanel)] = uiFactory.CreateLevelSelect,
+            };
+        }
+
+        public WindowBase Open<T>(GameObject payload = null)
+            where T : WindowBase
+        {
+            return Get(typeof(T));
+        }
+
+        public WindowBase OpenPreviousWindow<T>()
+            where T : WindowBase
+        {
+            var temp = _currentWindow;
+            _currentWindow = _previousWindow;
+            _previousWindow = temp;
+
+            return Get(_currentWindow.GetType());
+        }
+
+        private WindowBase Get(Type type)
+        {
+            if(_currentWindow != null && type == _currentWindow.GetType())
                 return null;
 
-            _previousWindowType = _currentWindowType;
-            _currentWindowType = type;
-
-            switch (type)
-            {
-                case WindowType.None:
-                    break;
-
-                case WindowType.HUD:
-                    _currentWindow = _uiFactory.CreateHUD();
-                    break;
-
-                case WindowType.Settings:
-                    _currentWindow = _uiFactory.CreateSettings();
-                    break;
-
-                case WindowType.MainMenu:
-                    _currentWindow = _uiFactory.CreateMainMenu();
-                    break;
-
-                case WindowType.LevelSelect:
-
-                    _currentWindow = _uiFactory.CreateLevelSelect();
-                    break;
-            }
+            _previousWindow = _currentWindow;
+            _currentWindow = _actionMap[type].Invoke();
 
             if (_currentWindow != null)
             {
@@ -50,22 +55,6 @@ namespace BigBalls.Services
             }
 
             return _currentWindow;
-        }
-
-        public WindowBase OpenPreviousWindow()
-        {
-            if (_previousWindowType != WindowType.None)
-            {
-                var temp = _currentWindowType;
-                _currentWindowType = _previousWindowType;
-                _previousWindowType = temp;
-
-                return Open(_currentWindowType);
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public void CreateUIRoot()

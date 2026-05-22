@@ -1,5 +1,8 @@
-public interface IGameStateMachine
+namespace BigBalls.Infrastructure.DI
 {
-    void EnterIn<TState, TPayload>(TPayload levelID) where TState : class, IPayloadedState<TPayload>;
-    void EnterIn<TState>() where TState : class, IState;
+    public interface IGameStateMachine
+    {
+        void EnterIn<TState, TPayload>(TPayload levelID) where TState : class, IPayloadedState<TPayload>;
+        void EnterIn<TState>() where TState : class, IState;
+    }
 }

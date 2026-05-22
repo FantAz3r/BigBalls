@@ -1,5 +1,6 @@
+using BigBalls.Infrastructure.DI;
 using System;
-using UnityEngine;
+using VContainer;
 using VContainer.Unity;
 
 namespace BigBalls.Infrastructure
@@ -8,8 +9,9 @@ namespace BigBalls.Infrastructure
     {
         private IGameStateMachine _gameStateMachine;
 
-        public EntryPoint(IGameStateMachine gameStateMachine)
+        public EntryPoint(IGameStateMachine gameStateMachine, IObjectResolverProvider objectResolverProvider, IObjectResolver objectResolver)
         {
+            objectResolverProvider.UpdateResolver(objectResolver);
             _gameStateMachine = gameStateMachine ?? throw new ArgumentNullException(nameof(gameStateMachine));
         }
 

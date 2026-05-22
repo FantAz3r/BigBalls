@@ -15,17 +15,32 @@ namespace BigBalls.Infrastructure.DI
         {
             builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
 
+            builder.Register<IObjectResolverProvider, ObjectResolverProvider>(Lifetime.Singleton);
             builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
             builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
 
-            builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
+
+            BindStates(builder);
+            BindServices(builder);
+        }
+
+        private void BindStates(IContainerBuilder builder)
+        {
+            builder.Register<LoadingLevelState>(Lifetime.Singleton);
+        }
+
+        private void BindServices(IContainerBuilder builder)
+        {
             builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
             builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
             builder.Register<IResourceLoader, ResourceLoader>(Lifetime.Singleton);
             builder.Register<IUIFactory, UIFactory>(Lifetime.Singleton);
             builder.Register<IWindowService, WindowService>(Lifetime.Singleton);
+            builder.Register<IIdentifierService, IdentifierService>(Lifetime.Scoped);
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
+            builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
         }
+
     }
 }

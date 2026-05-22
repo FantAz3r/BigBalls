@@ -1,14 +1,13 @@
 using BigBalls.StaticData;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Player : MonoBehaviour, IStatContainer
+    public class Player : MonoBehaviour
     {
         [field: SerializeField] public PlayerConfig PlayerConfig { get; private set; }
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }
+        public int ID { get; private set; }
 
         //public Inventory Inventory { get; private set; }
         //public PlayerExperience Experience { get; private set; }
@@ -17,29 +16,13 @@ namespace BigBalls.GameplayObjects
         //public Mover Mover { get; private set; }
         //public Rotator Rotator { get; private set; }
         //public HealthRegenerator HealthRegeneration { get; private set; }
-
-        private List<Stat> _statHolder = new();
         
-        public IReadOnlyList<Stat> Stats => _statHolder.AsReadOnly();
         public PlayerAnimator PlayerAnimator { get; private set; }
 
-
-        public void Construct(PlayerAnimator playerAnimator)
+        public void Construct(int id, PlayerAnimator playerAnimator)
         {
+            ID = id;
             PlayerAnimator = playerAnimator;
-            InitStats();
         }
-
-        private void InitStats()
-        {
-            foreach (var stat in PlayerConfig.Stats)
-            {
-                _statHolder.Add(new Stat(stat.Key, stat.Value));
-            }
-        }
-
-        public Stat Get(StatType statType) => _statHolder.Where(stat => stat.Type == statType).FirstOrDefault();
-
-
     }
 }

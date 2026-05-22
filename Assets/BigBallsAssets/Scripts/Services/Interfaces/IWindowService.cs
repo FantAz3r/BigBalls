@@ -5,8 +5,12 @@ namespace BigBalls.Services
 {
     public interface IWindowService : IService
     {
-        WindowBase Open(WindowType type, GameObject payload1 = null);
-        WindowBase OpenPreviousWindow();
+        WindowBase Open<T>(GameObject payload = null)
+            where T : WindowBase;
+
+        WindowBase OpenPreviousWindow<T>()
+           where T : WindowBase;
+
         void CreateUIRoot();
         void CreateJoystick();
     }

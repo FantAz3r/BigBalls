@@ -1,22 +1,21 @@
-﻿using VContainer.Unity;
-using BigBalls.Services;
-using BigBalls.UI;
+﻿using BigBalls.Infrastructure.DI;
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace BigBalls.Infrastructure
 {
     public class MenuEntryPoint: IStartable
     {
-        private readonly IWindowService _windowService;
-        public MenuEntryPoint(IWindowService windowService)
+        public MenuEntryPoint(IObjectResolverProvider objectResolverProvider, IObjectResolver objectResolver)
         {
-            _windowService = windowService;
+            objectResolverProvider.UpdateResolver(objectResolver);
+            Debug.Log(objectResolverProvider.CurrentResolver);
+
         }
 
         public void Start()
         {
-            _windowService.CreateUIRoot();
-            _windowService.Open(WindowType.Background);
-            _windowService.Open(WindowType.MainMenu);
         }
     }
 }

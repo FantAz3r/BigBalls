@@ -6,10 +6,10 @@ namespace BigBalls.GameplayObjects
     {
         private readonly Transform _firePoint;
         private Stat _damage;
-        public Shooter(IStatContainer statContainer, Transform firePoint)
+        public Shooter(Stat damage, Transform firePoint)
         {
             _firePoint = firePoint;
-            _damage = statContainer.Get(StatType.Damage);
+            _damage = damage;
         }
     }
 }

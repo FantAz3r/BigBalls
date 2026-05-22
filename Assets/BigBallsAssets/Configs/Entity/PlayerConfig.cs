@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
-using AYellowpaper.SerializedCollections;
 using BigBalls.GameplayObjects;
+using System.Linq;
 
 namespace BigBalls.StaticData
 {
     [CreateAssetMenu(fileName = "PlayerConfig", menuName = "Configs/PlayerConfig")]
-    public class PlayerConfig : ScriptableObject
+    public class PlayerConfig : ScriptableObject, IEntityConfig
     {
         [field: SerializeField] public string Name { get; private set; }
 
-        [SerializedDictionary("StatType", "Value")] 
-        [SerializeField] private AYellowpaper.SerializedCollections.SerializedDictionary<StatType, float> _stats;
+        [SerializeField] private List <StatStruct> _stats;
 
-        public IReadOnlyDictionary<StatType, float> Stats => _stats; 
+        public IEnumerable<StatStruct> Stats => _stats;
 
+        public StatStruct Get(StatType statType) => Stats.Where(stat=>stat.StatType == statType).FirstOrDefault();
     }
 }

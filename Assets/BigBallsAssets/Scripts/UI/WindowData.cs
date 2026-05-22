@@ -6,7 +6,7 @@ using BigBalls.UI;
 
 namespace BigBalls.Configs
 {
-    [CreateAssetMenu(fileName = "Datas", menuName = "Datas/WindowData")]
+    [CreateAssetMenu(fileName = "Data", menuName = "Datas/WindowData")]
 
     public class WindowData : ScriptableObject
     {

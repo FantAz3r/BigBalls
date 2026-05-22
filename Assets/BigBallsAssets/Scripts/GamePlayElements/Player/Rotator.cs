@@ -1,6 +1,5 @@
 ﻿using BigBalls.Services;
 using System;
-using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -13,11 +12,11 @@ namespace BigBalls.GameplayObjects
         private bool _canRotate = true;
         private Stat _rotationSpeed;
 
-        public Rotator(IStatContainer statholder, Transform rotatebleObject, IUpdateService updateService)
+        public Rotator(Stat rotationSpeed, Transform rotatebleObject, IUpdateService updateService)
         {
             _updateService = updateService;
             _rotatebleObject = rotatebleObject;
-            _rotationSpeed = statholder.Get(StatType.RotationSpeed);
+            _rotationSpeed = rotationSpeed;
             _updateService.Register(this);
         }
 
@@ -48,7 +47,7 @@ namespace BigBalls.GameplayObjects
 
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float currentAngle = _rotatebleObject.eulerAngles.y;
-            float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, _rotationSpeed.Value);
+            float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, _rotationSpeed.CurrentValue);
 
             _rotatebleObject.rotation = Quaternion.Euler(0f, newAngle, 0f);
         }

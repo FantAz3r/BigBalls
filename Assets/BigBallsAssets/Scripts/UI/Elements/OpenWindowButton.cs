@@ -4,10 +4,9 @@ using VContainer;
 
 namespace BigBalls.UI
 {
-    public class OpenWindowButton : ButtonClickHandler
+    public class OpenWindowButton<T> : ButtonClickHandler where T : WindowBase
     {
         [SerializeField] private WindowBase _closeWindow;
-        [SerializeField] private WindowType _openWindow;
 
         private IWindowService _windowService;
 
@@ -20,15 +19,11 @@ namespace BigBalls.UI
         protected override void OnClick()
         {
             _closeWindow.Close();
-
-            if (_openWindow == WindowType.PreviousWindow)
-            {
-                _windowService.OpenPreviousWindow();
-            }
-            else
-            {
-                _windowService.Open(_openWindow);
-            }
+            _windowService.Open<T>();
         }
+    }
+
+    public class OpenPause : OpenWindowButton<PauseWindow> 
+    {
     }
 }

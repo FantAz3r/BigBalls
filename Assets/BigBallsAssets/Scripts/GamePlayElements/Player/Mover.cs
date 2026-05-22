@@ -13,11 +13,11 @@ namespace BigBalls.GameplayObjects
         private float _rayDistance = 1f;
         private Stat _moveSpeed;
 
-        public Mover(IStatContainer statholder, Transform transform, IUpdateService updateService)
+        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService)
         {
             _updateService = updateService;
-            _movebleObject = transform;
-            _moveSpeed = statholder.Get(StatType.MoveSpeed);
+            _movebleObject = movebleObject;
+            _moveSpeed = moveSpeed;
             _updateService.Register(this);
         }
 
@@ -57,7 +57,7 @@ namespace BigBalls.GameplayObjects
             //    return;
             //}
 
-            float moveStep = _moveSpeed.Value * Time.deltaTime;
+            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
             _movebleObject.Translate(moveDir * moveStep, Space.World);
         }
 

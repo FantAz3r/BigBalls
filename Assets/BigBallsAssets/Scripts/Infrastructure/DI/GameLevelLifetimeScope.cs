@@ -16,12 +16,13 @@ namespace BigBalls.Infrastructure.DI
         {
             builder.RegisterEntryPoint<LevelEntryPoint>(Lifetime.Scoped);
 
-            builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Scoped);
+            builder.Register<CreateLevelState>(Lifetime.Scoped);
+
+            builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);
             builder.RegisterComponent(_sceneContainer).As<ISceneContainerProvider>();
-            builder.Register<InputService>(Lifetime.Scoped)
+            builder.Register<InputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
-
         }
     }
 }

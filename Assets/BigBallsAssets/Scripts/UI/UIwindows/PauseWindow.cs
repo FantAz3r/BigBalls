@@ -19,15 +19,15 @@ namespace BigBalls.UI
         {
             base.Open();
             _timeService.StopGame();
+            Debug.Log(Time.timeScale);
 
-            transform.localScale = Vector3.zero;
+            //transform.localScale = Vector3.zero;
         }
 
         public override void Close()
         {
             base.Close();
             _timeService.ResumeGame();
-            Destroy(gameObject);
         }
     }
 }
