@@ -59,7 +59,7 @@ namespace BigBalls.Factories
 
             StatHolder statHolder =  new StatHolder(playerID, _playerConfig);
 
-            Mover mover = new Mover(statHolder.Get(StatType.MoveSpeed), player.transform, _updateService);
+            Mover mover = new Mover(statHolder.Get(StatType.MoveSpeed), player.transform, _updateService, _playerConfig);
             Rotator rotator = new Rotator(statHolder.Get(StatType.RotationSpeed), player.transform, _updateService);
 
             new Shooter(statHolder.Get(StatType.Damage), player.transform);

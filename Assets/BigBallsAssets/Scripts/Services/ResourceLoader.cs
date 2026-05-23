@@ -15,9 +15,11 @@ namespace BigBalls.Services
         private Dictionary<Type, string> _staticObjects = new()
         {
             { typeof(WindowData), "Data/WindowData"},
+            { typeof(LevelData), "Data/LevelData"},
             { typeof(Player), "Player/Player"},
             { typeof(UIRoot), "UI/UIRoot"},
-            { typeof(PlayerConfig), "Configs/PlayerConfig"}
+            { typeof(PlayerConfig), "Configs/PlayerConfig"},
+            { typeof(Camera), "Prefabs/Main Camera"}
         };
 
         public T Load<T>() where T : Object

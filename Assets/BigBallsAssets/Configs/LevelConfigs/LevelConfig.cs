@@ -1,4 +1,6 @@
+using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -8,5 +10,7 @@ namespace BigBalls.Configs
     public class LevelConfig : ScriptableObject
     {
         [field: SerializeField] public LevelID Level { get; private set; } = LevelID.Level1;
+
+        [field: SerializeField] public List<Tile> TilePrefabs { get; private set; }
     }
 }

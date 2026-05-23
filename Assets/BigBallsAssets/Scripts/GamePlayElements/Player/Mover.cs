@@ -1,23 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using BigBalls.Services;
-using System;
+using BigBalls.StaticData;
 
 namespace BigBalls.GameplayObjects
 {
     public class Mover : IUpdateble, IDisposable
     {
+        private readonly Vector3 _offset = new Vector3(0, 1, 0);
         private readonly IUpdateService _updateService;
-        private Transform _movebleObject;
 
-        private LayerMask _obstacleLayerMask; //прокинуть ссылку
+        private Transform _movableObject;
+        private LayerMask _obstacleLayerMask;
         private float _rayDistance = 1f;
         private Stat _moveSpeed;
 
-        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService)
+        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, PlayerConfig playerConfig)
         {
             _updateService = updateService;
-            _movebleObject = movebleObject;
+            _movableObject = movebleObject;
             _moveSpeed = moveSpeed;
+            _obstacleLayerMask = playerConfig.ObstacleLayers;
             _updateService.Register(this);
         }
 
@@ -30,7 +34,7 @@ namespace BigBalls.GameplayObjects
 
         public void Tick()
         {
-            if(_movebleObject == null)
+            if (_movableObject == null)
             {
                 Dispose();
             }
@@ -38,32 +42,65 @@ namespace BigBalls.GameplayObjects
             Move(Direction);
         }
 
-        private void Move(Vector2 direction)
-        {
-            if (direction.sqrMagnitude < 0.001f)
-            {
-                return;
-            }
-
-            Vector3 moveDir = new Vector3(direction.x, 0f, direction.y).normalized;
-            //Vector3 offset = new Vector3(0, 1, 0);
-            //RaycastHit hit;
-            //bool isHit = Physics.Raycast(_movbleObject.position + offset, moveDir, out hit, _rayDistance, _obstacleLayerMask);
-            //
-            //Debug.DrawRay(_movbleObject.position + offset, moveDir * _rayDistance, isHit ? Color.red : Color.green);
-            //
-            //if (isHit)
-            //{
-            //    return;
-            //}
-
-            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
-            _movebleObject.Translate(moveDir * moveStep, Space.World);
-        }
-
         public void Dispose()
         {
             _updateService.Unregister(this);
+        }
+
+        private void Move(Vector2 direction)
+        {
+            if (direction.sqrMagnitude < 0.001f)
+                return;
+
+            Vector3 moveDir = new Vector3(direction.x, 0f, direction.y).normalized;
+            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
+
+            List<Vector3> hitNormals = new List<Vector3>();
+
+            Vector3[] rayStartPoints = new Vector3[]
+            {
+                _movableObject.position + _offset,
+                _movableObject.position + _offset + _movableObject.right * 0.5f,
+                _movableObject.position + _offset - _movableObject.right * 0.5f,
+            };
+
+            bool hasCollision = false;
+
+            foreach (var startPoint in rayStartPoints)
+            {
+
+                if (Physics.Raycast(startPoint, moveDir, out RaycastHit hit, _rayDistance, _obstacleLayerMask))
+                {
+                    hasCollision = true;
+                    hitNormals.Add(hit.normal);
+                    Debug.DrawRay(startPoint, moveDir * _rayDistance, Color.red);
+                }
+                else
+                {
+                    Debug.DrawRay(startPoint, moveDir * _rayDistance, Color.green);
+                }
+            }
+
+            if (hasCollision)
+            {
+                Vector3 adjustedDir = moveDir;
+
+                foreach (var normal in hitNormals)
+                {
+                    adjustedDir = Vector3.ProjectOnPlane(adjustedDir, normal);
+                }
+
+                adjustedDir = adjustedDir.normalized;
+
+                if (adjustedDir.sqrMagnitude > 0.001f)
+                {
+                    _movableObject.Translate(adjustedDir * moveStep, Space.World);
+                }
+            }
+            else
+            {
+                _movableObject.Translate(moveDir * moveStep, Space.World);
+            }
         }
     }
 }

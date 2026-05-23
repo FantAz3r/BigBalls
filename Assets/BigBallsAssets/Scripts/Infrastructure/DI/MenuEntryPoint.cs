@@ -1,7 +1,6 @@
-﻿using BigBalls.Infrastructure.DI;
-using UnityEngine;
-using VContainer;
+﻿using VContainer;
 using VContainer.Unity;
+using BigBalls.Infrastructure.DI;
 
 namespace BigBalls.Infrastructure
 {
@@ -10,11 +9,11 @@ namespace BigBalls.Infrastructure
         public MenuEntryPoint(IObjectResolverProvider objectResolverProvider, IObjectResolver objectResolver)
         {
             objectResolverProvider.UpdateResolver(objectResolver);
-
         }
 
         public void Start()
         {
+
         }
     }
 }

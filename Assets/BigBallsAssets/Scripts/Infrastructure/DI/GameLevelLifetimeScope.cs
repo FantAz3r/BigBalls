@@ -23,6 +23,8 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_sceneContainer).As<ISceneContainerProvider>();
             builder.Register<InputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
+
+            builder.Register<TileGenerator>(Lifetime.Scoped);
         }
     }
 }

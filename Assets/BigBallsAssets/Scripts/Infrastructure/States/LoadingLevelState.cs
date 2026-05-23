@@ -43,7 +43,7 @@ namespace BigBalls.Infrastructure
 
         private void InitGameLevel()
         {
-            _gameStateMachine.EnterIn<CreateLevelState>();
+            _gameStateMachine.EnterIn<CreateLevelState,LevelID>(_currentLevel);
         }
 
         private void InitMainMenu()

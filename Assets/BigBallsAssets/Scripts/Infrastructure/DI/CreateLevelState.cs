@@ -1,37 +1,56 @@
-﻿using BigBalls.Factories;
+﻿using BigBalls.Configs;
+using BigBalls.Factories;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
+using UnityEngine;
+using VContainer.Unity;
 
 namespace BigBalls.Infrastructure
 {
-    public class CreateLevelState : IState
+    public class CreateLevelState : IPayloadedState<LevelID>
     {
+        private readonly IObjectResolverProvider _objectResolverProvider;
         private readonly IPlayerFactory _playerFactory;
         private readonly IWindowService _windowService;
         private readonly IUpdateService _updateService;
         private readonly IUIFactory _uIFactory;
         private readonly ITimeService _timeService;
+        private readonly IResourceLoader _resourceLoader;
+        private readonly TileGenerator _tileGenerator;
+
+        private LevelConfig _levelConfig;
 
         public CreateLevelState(
+            IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
             IWindowService windowService,
             IUpdateService updateService,
             IUIFactory uIFactory,
-            ITimeService timeService
+            ITimeService timeService,
+            IResourceLoader resourceLoader,
+            TileGenerator tileGenerator
             )
         {
+            _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
             _windowService = windowService;
             _updateService = updateService;
             _uIFactory = uIFactory;
             _timeService = timeService;
+            _resourceLoader = resourceLoader;
+            _tileGenerator = tileGenerator;
         }
 
-        public void Enter()
+        public void Enter(LevelID level)
         {
+            _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
+
+            _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
             _windowService.CreateUIRoot();
             _playerFactory.Create();
             _windowService.Open<HUD>();
+            _tileGenerator.StartSpawn(_levelConfig);
         }
 
         public void Exit()
@@ -39,7 +58,6 @@ namespace BigBalls.Infrastructure
             _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();
-
         }
     }
 }
