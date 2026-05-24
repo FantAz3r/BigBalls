@@ -1,4 +1,5 @@
 using BigBalls.Factories;
+using BigBalls.GameplayObjects;
 using BigBalls.Providers;
 using BigBalls.Services;
 using UnityEngine;
@@ -24,7 +25,8 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<InputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
 
-            builder.Register<TileGenerator>(Lifetime.Scoped);
+            builder.Register<TileFactory>(Lifetime.Scoped);
+            builder.Register<TileMover>(Lifetime.Scoped);
         }
     }
 }

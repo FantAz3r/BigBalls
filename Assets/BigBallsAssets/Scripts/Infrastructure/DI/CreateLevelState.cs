@@ -1,5 +1,6 @@
 ﻿using BigBalls.Configs;
 using BigBalls.Factories;
+using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
@@ -17,8 +18,8 @@ namespace BigBalls.Infrastructure
         private readonly IUIFactory _uIFactory;
         private readonly ITimeService _timeService;
         private readonly IResourceLoader _resourceLoader;
-        private readonly TileGenerator _tileGenerator;
-
+        private readonly TileFactory _tileGenerator;
+        private readonly TileMover _tileMover;
         private LevelConfig _levelConfig;
 
         public CreateLevelState(
@@ -29,7 +30,8 @@ namespace BigBalls.Infrastructure
             IUIFactory uIFactory,
             ITimeService timeService,
             IResourceLoader resourceLoader,
-            TileGenerator tileGenerator
+            TileFactory tileGenerator,
+            TileMover tileMover
             )
         {
             _objectResolverProvider = objectResolverProvider;
@@ -40,6 +42,7 @@ namespace BigBalls.Infrastructure
             _timeService = timeService;
             _resourceLoader = resourceLoader;
             _tileGenerator = tileGenerator;
+            _tileMover = tileMover;
         }
 
         public void Enter(LevelID level)
@@ -50,7 +53,9 @@ namespace BigBalls.Infrastructure
             _windowService.CreateUIRoot();
             _playerFactory.Create();
             _windowService.Open<HUD>();
+
             _tileGenerator.StartSpawn(_levelConfig);
+            _tileMover.Start();
         }
 
         public void Exit()
