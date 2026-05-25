@@ -11,8 +11,6 @@ namespace BigBalls.GameplayObjects
         private readonly TileFactory _factory;
         private readonly IUpdateService _updateService;
 
-        private int _roadWidth = 7;
-
         public TileMover(TileFactory factory, IUpdateService updateService)
         {
             _factory = factory;
@@ -46,20 +44,11 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void HandleInput()
+        private void HandleInput() // переделать по событию от WaveTimer
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _roadWidth += 2;
-                ScaleRoad();
-            }
-        }
-
-        private void ScaleRoad()
-        {
-            foreach (var tile in _factory.ActiveTiles)
-            {
-                tile.ScaleTile(_roadWidth);
+                _factory.ScaleRoad();
             }
         }
     }

@@ -49,13 +49,14 @@ namespace BigBalls.Infrastructure
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
 
-            _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
             _windowService.CreateUIRoot();
             _playerFactory.Create();
             _windowService.Open<HUD>();
 
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
+
+            _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
         }
 
         public void Exit()

@@ -3,6 +3,7 @@ using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -10,16 +11,14 @@ namespace BigBalls.Factories
 {
     public class TileFactory
     {
-        private const int StartWidth = 7;
+        private const int ScaleStep = 2;
+        public readonly int StartWidth = 7;
 
-        public readonly int TileLength = 50;
         private readonly IObjectResolverProvider _resolverProvider;
         private readonly ICoroutineRunner _coroutineRunner;
 
         private List<Tile> _tilePrefabs;
-
         private List<Tile> _activeTiles = new List<Tile>();
-        public IReadOnlyList<Tile> ActiveTiles => _activeTiles;
 
         public TileFactory(IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner)
         {
@@ -27,53 +26,54 @@ namespace BigBalls.Factories
             _coroutineRunner = coroutineRunner;
         }
 
+        public float TileLength => _tilePrefabs.First().transform.localScale.z;
+        public IReadOnlyList<Tile> ActiveTiles => _activeTiles;
+        public int RoadWidth { get; private set; }
+
         public void StartSpawn(LevelConfig levelConfig)
         {
+            RoadWidth = StartWidth;
             _tilePrefabs = levelConfig.TilePrefabs;
-            SpawnNextTile(StartWidth);
+            SpawnNextTile();
         }
 
-        public void SpawnNextTile(int currentRoadWidth)
+        public void SpawnNextTile()
         {
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
-
-            Vector3 spawnPoint;
-
-            if (_activeTiles.Count == 0)
-            {
-                spawnPoint = new Vector3(0, 0, 0);
-            }
-            else
-            {
-                spawnPoint = new Vector3(0, 0, TileLength);
-            }
+            Vector3 spawnPoint = new Vector3(0, 0, GetLNextSpawnPointZ());
 
             Tile newTile = _resolverProvider.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
-            newTile.Construct(_coroutineRunner, currentRoadWidth);
-            newTile.Finished += () => SpawnNextTile(currentRoadWidth);
+            newTile.Construct(_coroutineRunner, RoadWidth);
+            newTile.Finished += () => SpawnNextTile();
 
             _activeTiles.Add(newTile);
         }
 
-        private void CheckAndSpawn()
+        public void ScaleRoad()
         {
-            if (ActiveTiles.Count == 0 || GetLastTileZ() < TileLength * (ActiveTiles.Count - 1))
+            RoadWidth += ScaleStep;
+
+            foreach (var tile in _activeTiles)
             {
-                //SpawnNextTile(_roadWidth);
+                tile.ScaleTile(RoadWidth);
             }
         }
 
-        public float GetLastTileZ()
+        public float GetLNextSpawnPointZ()
         {
             if (_activeTiles.Count == 0)
                 return 0;
-            return _activeTiles[_activeTiles.Count - 1].transform.position.z;
+
+            Tile lastTile = _activeTiles[_activeTiles.Count - 1];
+            return lastTile.transform.position.z + lastTile.transform.localScale.z;
         }
 
         public void RemoveTile(int index)
         {
             Tile tile = _activeTiles[index];
             tile.gameObject.SetActive(false);
+            tile.Finished -= () => SpawnNextTile(RoadWidth);
+
             _activeTiles.RemoveAt(index);
         }
     }

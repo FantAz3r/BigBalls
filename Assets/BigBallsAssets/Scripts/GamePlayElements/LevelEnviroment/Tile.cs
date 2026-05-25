@@ -42,8 +42,8 @@ namespace BigBalls.GameplayObjects
             {
                 if (_isActionComplite == false)
                 {
-                    Finished?.Invoke();
                     _isActionComplite = true;
+                    Finished?.Invoke();
                 }
             }
         }
