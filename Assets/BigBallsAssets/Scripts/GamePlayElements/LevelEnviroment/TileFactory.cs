@@ -72,7 +72,7 @@ namespace BigBalls.Factories
         {
             Tile tile = _activeTiles[index];
             tile.gameObject.SetActive(false);
-            tile.Finished -= () => SpawnNextTile(RoadWidth);
+            tile.Finished -= () => SpawnNextTile();
 
             _activeTiles.RemoveAt(index);
         }
