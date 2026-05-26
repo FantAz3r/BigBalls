@@ -1,5 +1,6 @@
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,8 @@ namespace BigBalls.Services
             { typeof(Player), "Player/Player"},
             { typeof(UIRoot), "UI/UIRoot"},
             { typeof(PlayerConfig), "Configs/PlayerConfig"},
-            { typeof(Camera), "Prefabs/Main Camera"}
+            { typeof(Camera), "Prefabs/Main Camera"},
+            { typeof(ObjectContainer), "Prefabs/GameObjectContainer"}
         };
 
         public T Load<T>() where T : Object

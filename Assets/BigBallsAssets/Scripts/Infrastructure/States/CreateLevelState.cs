@@ -30,6 +30,7 @@ namespace BigBalls.Infrastructure
             IUIFactory uIFactory,
             ITimeService timeService,
             IResourceLoader resourceLoader,
+            IPoolService poolService,
             TileFactory tileGenerator,
             TileMover tileMover
             )

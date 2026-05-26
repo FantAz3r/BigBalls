@@ -1,3 +1,4 @@
+using BigBalls.UI;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,14 +9,16 @@ namespace BigBalls.Services
 {
     public class InputService : IInputService, IStartable
     {
+        private readonly IWindowService _windowService;
         private PlayerInputActions _inputActions;
 
         public event Action<Vector2> MoveDirectionSeted;
         public event Action<Vector2> RotateDirectionSeted;
 
-        public InputService()
+        public InputService(IWindowService windowService)
         {
             _inputActions = new PlayerInputActions();
+            _windowService = windowService;
         }
 
         public Vector2 CursorOrigin { get; set; }
@@ -46,7 +49,7 @@ namespace BigBalls.Services
 
         private void PauseGame(InputAction.CallbackContext context)
         {
-            //ƒодумать, надо ли нам свой тик, или используем Vcontainer
+            _windowService.Open<PauseWindow>();
         }
 
         private void OnRotatePerformed(InputAction.CallbackContext context)

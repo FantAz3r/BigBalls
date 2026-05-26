@@ -1,6 +1,6 @@
 ﻿using VContainer;
-using VContainer.Unity;
 using BigBalls.Infrastructure.DI;
+using VContainer.Unity;
 
 namespace BigBalls.Infrastructure
 {
@@ -13,7 +13,6 @@ namespace BigBalls.Infrastructure
 
         public void Start()
         {
-
         }
     }
 }

@@ -52,10 +52,5 @@ public class RoadColliderPlacer : MonoBehaviour
             return null;
         }
     }
-
-    //private void Update()
-    //{
-    //    PlaceCollidersAtRoadEdges();
-    //}
 }
 

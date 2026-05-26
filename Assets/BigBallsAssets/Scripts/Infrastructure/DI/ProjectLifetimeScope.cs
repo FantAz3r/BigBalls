@@ -40,6 +40,5 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
         }
-
     }
 }
