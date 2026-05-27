@@ -51,8 +51,8 @@ namespace BigBalls.Infrastructure
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
 
             _windowService.CreateUIRoot();
-            _playerFactory.Create();
             _windowService.Open<HUD>();
+            _playerFactory.Create();
 
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();

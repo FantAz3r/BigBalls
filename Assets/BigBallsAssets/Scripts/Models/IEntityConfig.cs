@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using BigBalls.GameplayObjects;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace BigBalls.StaticData
 {
     public interface IEntityConfig
     {
-        IEnumerable<StatStruct> Stats { get; }
+        List<StatStruct> Stats { get; }
+        LayerMask ObstacleLayers { get; }
+
+        StatStruct Get(StatType statType);
     }
 }

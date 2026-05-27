@@ -7,7 +7,7 @@ public class StatHolder
 {
     public readonly int OwnerID;
 
-    private List<Stat> _stats = new();
+    private Dictionary<StatType, Stat> _stats = new();
     private IEntityConfig _config;
 
     public StatHolder(int ownerID, IEntityConfig config)
@@ -17,15 +17,12 @@ public class StatHolder
         InitStats(_config.Stats);
     }
 
-    public IEnumerable<Stat> Stats => _stats;
+    public Dictionary<StatType, Stat> Stats => _stats;
 
-    private void InitStats(IEnumerable<StatStruct> stats)
+    private void InitStats(List<StatStruct> stats)
     {
-        foreach (var stat in stats)
-        {
-            _stats.Add(new Stat(stat.StatType, stat.MaxValue, stat.MinValue));
-        }
+        _stats = stats.ToDictionary(stat => stat.StatType, stat => new Stat(stat.StatType, stat.StartMaxValue, stat.MinValue, stat.StartCurrentValue));
     }
 
-    public Stat Get(StatType statType) => _stats.Where(stat => stat.Type == statType).FirstOrDefault();
+    public Stat this[StatType type] => _stats[type]; 
 }

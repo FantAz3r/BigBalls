@@ -1,11 +1,8 @@
 using BigBalls.GameplayObjects;
-using BigBalls.Providers;
 using DG.Tweening;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer;
 
 namespace BigBalls.UI
 {
@@ -16,13 +13,11 @@ namespace BigBalls.UI
         [SerializeField] private float _smoothSpeed = 10f;
 
         private Tween _healthTween;
-        private Stat _health;
+        private IReadonlyStat _health;
 
-
-        [Inject]
-        public void Construct(IPlayerProvider playerProvider)
+        public void Init(IReadonlyStat health)
         {
-            _health = playerProvider.Stats.Where(stat => stat.Type == StatType.Health).FirstOrDefault();
+            _health = health;
         }
 
         private void Start()
@@ -38,7 +33,7 @@ namespace BigBalls.UI
             if (_health == null)
                 return;
 
-            View(_health.CurrentValue, _health.MaxValue);
+            View(_health);
         }
 
         private void OnDestroy()
@@ -46,12 +41,12 @@ namespace BigBalls.UI
             _health.ValueChanged -= View;
         }
 
-        private void View(float currentHealth, float maxHealth)
+        private void View(IReadonlyStat stat)
         {
-            _healthText.text = $"{currentHealth:F0} / {maxHealth:F0}";
+            _healthText.text = $"{stat.CurrentValue:F0} / {stat.MaxValue:F0}";
 
             float startValue = _healthImage.value;
-            float targetValue = currentHealth / maxHealth;
+            float targetValue = stat.CurrentValue / stat.MaxValue;
             float duration = _smoothSpeed;
 
             HealthBarAnimation(startValue, targetValue, duration);

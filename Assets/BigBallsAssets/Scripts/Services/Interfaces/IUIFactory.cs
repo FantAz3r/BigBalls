@@ -12,5 +12,6 @@ namespace BigBalls.Services
         SettingsView CreateSettings();
         LevelSelectionPanel CreateLevelSelect();
         PauseWindow CreatePauseWindow();
+        T Get<T>(WindowType type) where T : WindowBase;
     }
 }

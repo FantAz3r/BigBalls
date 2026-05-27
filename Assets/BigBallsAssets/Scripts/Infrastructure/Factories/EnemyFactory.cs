@@ -1,18 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using BigBalls.Factories;
+using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
+using BigBalls.Services;
+using BigBalls.StaticData;
+using VContainer.Unity;
 
-public class EnemyFactory : MonoBehaviour
+namespace BigBalls.Factories
 {
-    // Start is called before the first frame update
-    void Start()
+    public class EnemyFactory : IEnemyFactory
     {
-        
-    }
+        private readonly IObjectResolverProvider _resolverProvider;
+        private readonly IIdentifierService _identifierService;
+        private readonly IUpdateService _updateService;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public EnemyFactory(
+            IObjectResolverProvider resolverProvider,
+            IIdentifierService identifierService,
+            IUpdateService updateService
+            )
+        {
+            _resolverProvider = resolverProvider;
+            _identifierService = identifierService;
+            _updateService = updateService;
+        }
+
+        public Enemy Create(EnemyConfig enemyConfig)
+        {
+            Enemy enemy = _resolverProvider.CurrentResolver.Instantiate(enemyConfig.Prefab);
+
+            int playerID = _identifierService.ID;
+            enemy.Construct(playerID);
+            StatHolder statHolder = new StatHolder(playerID, enemyConfig);
+            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, enemyConfig);
+
+
+            return enemy;
+        }
     }
 }

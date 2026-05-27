@@ -2,41 +2,68 @@
 
 namespace BigBalls.GameplayObjects
 {
-    public class Stat
+    public class Stat : IReadonlyStat
     {
         public readonly StatType Type;
-        private readonly float _minValue;
+        private readonly float _startMaxValue;
 
-        public Stat(StatType statType, float maxValue, float minValue)
+        public Stat(StatType statType, float startMaxValue, float minValue, float startCurrentValue)
         {
+            if (startCurrentValue > startMaxValue && startCurrentValue < minValue)
+                throw new InvalidOperationException(nameof(startCurrentValue));
+
+            if (startMaxValue < minValue)
+                throw new InvalidOperationException(nameof(startMaxValue));
+
             Type = statType;
-            MaxValue = maxValue;
-            _minValue = minValue;
-            CurrentValue = maxValue;
+
+            _startMaxValue = startMaxValue;
+            MinValue = minValue;
+            CurrentValue = startCurrentValue;
+
+            MaxValue = _startMaxValue;
         }
 
-        public event Action<float, float> ValueChanged;
+        public event Action<IReadonlyStat> ValueChanged;
+
+        public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float CurrentValue { get; private set; }
 
-        public void ChangeCurrentStat(float newValue)
+        public void AddCurrentValue(float valueToAdd)
         {
-            if (newValue < _minValue || newValue > MaxValue)
-                throw new ArgumentOutOfRangeException();
+            if (valueToAdd <= 0) return;
 
-            CurrentValue = newValue;
-            ValueChanged?.Invoke(CurrentValue, MaxValue);
+            CurrentValue = MathF.Min(CurrentValue + valueToAdd, MaxValue);
+            ValueChanged?.Invoke(this);
         }
 
-        public void ChangeMaxStat(float newValue)
+        public void ReduceCurrentValue(float valueToResuce)
         {
-            if (newValue <= _minValue)
-                throw new ArgumentOutOfRangeException();
+            if (valueToResuce >= 0) return;
 
-            float percent = (MaxValue > 0) ? CurrentValue / MaxValue : 0f; 
-            MaxValue = newValue;
+            CurrentValue = MathF.Max(CurrentValue - valueToResuce, MinValue);
+            ValueChanged?.Invoke(this);
+        }
+
+        public void AddMaxValue(float valueToAdd)
+        {
+            if (valueToAdd <= 0) return;
+
+            float percent = (MaxValue > 0) ? CurrentValue / MaxValue : 0f;
+            MaxValue += valueToAdd;
             CurrentValue = percent * MaxValue;
-            ValueChanged?.Invoke(CurrentValue, MaxValue);
+            ValueChanged?.Invoke(this);
+        }
+
+        public void ReduceMaxStat(float valueToResuce)
+        {
+            if (valueToResuce >= 0) return;
+
+            float percent = (MaxValue > 0) ? CurrentValue / MaxValue : 0f;
+            MaxValue = MathF.Max(MinValue + 1, MaxValue - valueToResuce);
+            CurrentValue = percent * MaxValue;
+            ValueChanged?.Invoke(this);
         }
     }
 }

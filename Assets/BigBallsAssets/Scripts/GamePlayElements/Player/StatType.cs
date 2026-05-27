@@ -7,6 +7,8 @@
         Damage,
         MoveSpeed,
         RotationSpeed,
-        Armor
+        Armor,
+        HealthRegen,
+        Evasion
     }
 } 

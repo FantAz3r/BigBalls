@@ -1,7 +1,6 @@
 ﻿using BigBalls.Services;
 using System;
 using UnityEngine;
-using VContainer.Unity;
 
 namespace BigBalls.GameplayObjects
 {
@@ -26,9 +25,6 @@ namespace BigBalls.GameplayObjects
         private void OnMove(Vector2 direction)
         {
             _mover.SetDirection(direction);
-
-            //if (direction != Vector2.zero)
-            //    Moved?.Invoke();
         }
 
         private void OnRotate(Vector2 direction)

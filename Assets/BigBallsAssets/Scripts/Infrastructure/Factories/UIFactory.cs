@@ -28,6 +28,11 @@ namespace BigBalls.Factories
             _windowData = _resourceLoader.Load<WindowData>();
         }
 
+        public T Get<T>(WindowType type) where T: WindowBase
+        {
+            return (T)_windowCache[type];
+        }
+
         public void CreateUIRoot()
         {
             _uiRoot = Object.Instantiate(_resourceLoader.Load<UIRoot>());

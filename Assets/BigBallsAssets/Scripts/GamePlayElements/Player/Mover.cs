@@ -16,7 +16,7 @@ namespace BigBalls.GameplayObjects
         private float _rayDistance = 0.5f;
         private Stat _moveSpeed;
 
-        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, PlayerConfig playerConfig)
+        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig)
         {
             _updateService = updateService;
             _movableObject = movebleObject;
@@ -83,24 +83,24 @@ namespace BigBalls.GameplayObjects
         {
             bool hasCollision = false;
 
-            Vector3[] rayStartPoints = new Vector3[]
+            Vector3[] rayDirections = new Vector3[]
             {
-                _movableObject.position + _offset,
-                _movableObject.position + _offset + _movableObject.right * _rayDistance,
-                _movableObject.position + _offset - _movableObject.right * _rayDistance,
+                _movableObject.forward,
+                _movableObject.forward + Quaternion.Euler(0, -30, 0) * _movableObject.forward,
+                _movableObject.position + Quaternion.Euler(0, 30, 0) * _movableObject.forward,
             };
 
-            foreach (var startPoint in rayStartPoints)
+            foreach (var directions in rayDirections)
             {
-                if (Physics.Raycast(startPoint, moveDirection, out RaycastHit hit, _rayDistance, _obstacleLayerMask))
+                if (Physics.Raycast(_movableObject.position, moveDirection, out RaycastHit hit, _rayDistance, _obstacleLayerMask))
                 {
                     hasCollision = true;
                     hitNormals.Add(hit.normal);
-                    Debug.DrawRay(startPoint, moveDirection * _rayDistance, Color.red);
+                    Debug.DrawRay(_movableObject.position, moveDirection * _rayDistance, Color.red);
                 }
                 else
                 {
-                    Debug.DrawRay(startPoint, moveDirection * _rayDistance, Color.green);
+                    Debug.DrawRay(_movableObject.position, moveDirection * _rayDistance, Color.green);
                 }
             }
 

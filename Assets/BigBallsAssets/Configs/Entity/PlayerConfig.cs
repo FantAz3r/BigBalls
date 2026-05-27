@@ -12,7 +12,7 @@ namespace BigBalls.StaticData
 
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public LayerMask ObstacleLayers { get; private set; }
-        public IEnumerable<StatStruct> Stats => _stats;
+        public List<StatStruct> Stats => _stats;
 
         public StatStruct Get(StatType statType) => Stats.Where(stat=>stat.StatType == statType).FirstOrDefault();
     }

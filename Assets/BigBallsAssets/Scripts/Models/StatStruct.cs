@@ -7,7 +7,8 @@ namespace BigBalls.StaticData
     public struct StatStruct
     {
         public StatType StatType;
-        public float MaxValue;
+        public float StartMaxValue;
+        public float StartCurrentValue;
         public float MinValue;
     }
 }
