@@ -1,12 +1,14 @@
-using BigBalls.GameplayObjects;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IEntity
+namespace BigBalls.GameplayObjects
 {
-    public int Id { get; private set; }
-
-    public void Construct(int id)
+    public class Enemy : MonoBehaviour, IEntity, IHitble
     {
-        Id = id;
+        public int Id { get; private set; }
+
+        public void Construct(int id)
+        {
+            Id = id;
+        }
     }
 }

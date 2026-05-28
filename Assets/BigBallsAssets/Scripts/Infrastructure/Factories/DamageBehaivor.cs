@@ -6,7 +6,7 @@ namespace BigBalls.GameplayObjects
     {
         private readonly IDamageService _damageService;
 
-        public DamageBehaivor(IDamageService damageService)
+        public DamageBehaivor(BehaviourType type, IDamageService damageService) : base(type) 
         {
             _damageService = damageService;
         }

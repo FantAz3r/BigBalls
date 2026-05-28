@@ -1,4 +1,6 @@
-﻿namespace BigBalls.Factories
+﻿using BigBalls.GameplayObjects;
+
+namespace BigBalls.Factories
 {
     public interface IBallBehaivorFactory
     {

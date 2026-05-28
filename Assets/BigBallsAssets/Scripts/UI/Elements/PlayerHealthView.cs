@@ -22,6 +22,9 @@ namespace BigBalls.UI
 
         private void Start()
         {
+            if (_health == null)
+                return;
+
             gameObject.SetActive(true);
             _healthImage.value = _health.CurrentValue / _health.MaxValue;
             _healthText.text = $"{_health.CurrentValue} / {_health.MaxValue}";

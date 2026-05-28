@@ -1,4 +1,6 @@
-﻿namespace BigBalls.Services
+﻿using BigBalls.GameplayObjects;
+
+namespace BigBalls.Services
 {
     public interface IDamageService
     {

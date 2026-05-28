@@ -1,8 +1,8 @@
-using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using UnityEngine;
 using VContainer.Unity;
 
 namespace BigBalls.Factories
@@ -24,15 +24,16 @@ namespace BigBalls.Factories
             _updateService = updateService;
         }
 
-        public Enemy Create(EnemyConfig enemyConfig)
+        public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
-            Enemy enemy = _resolverProvider.CurrentResolver.Instantiate(enemyConfig.Prefab);
+            Enemy enemy = _resolverProvider.CurrentResolver.Instantiate(enemyConfig.Prefab, spawnPosition, Quaternion.identity);
 
             int playerID = _identifierService.ID;
+
             enemy.Construct(playerID);
             StatHolder statHolder = new StatHolder(playerID, enemyConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, enemyConfig);
-
+            EnemyMover enemyMover = new EnemyMover(mover);
 
             return enemy;
         }

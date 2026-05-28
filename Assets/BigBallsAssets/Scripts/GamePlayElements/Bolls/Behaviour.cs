@@ -1,13 +1,22 @@
-public abstract class Behaviour
+namespace BigBalls.GameplayObjects
 {
-    private BehaviourType EffectType;
-    public Ball Host { get; protected set; }
-
-    public void Init(Ball host)
+    public abstract class Behaviour
     {
-        Host = host;
-        OnInit();
-    }
+        private BehaviourType _type;
+        public Ball Host { get; protected set; }
 
-    protected virtual void OnInit() { }
+        protected Behaviour(BehaviourType type)
+        {
+            _type = type;
+        }
+
+        public void Init(Ball host)
+        {
+            Host = host;
+
+            OnInit();
+        }
+
+        protected virtual void OnInit() { }
+    }
 }

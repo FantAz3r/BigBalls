@@ -1,10 +1,10 @@
-using UnityEngine;
-using VContainer;
-using VContainer.Unity;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
 using BigBalls.Services;
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace BigBalls.Infrastructure.DI
 {
@@ -22,14 +22,10 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_sceneContainer)
                 .As<ISceneContainerProvider>();
 
-            builder.Register<InputService>(Lifetime.Singleton)
-                .AsImplementedInterfaces();
-
-            builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
             builder.Register<TileMover>(Lifetime.Scoped);
-
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
 
+            RegisterServices(builder);
             RegisterFactories(builder);
         }
 
@@ -40,6 +36,15 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IBallBehaivorFactory, BallBehaivorFactory>(Lifetime.Scoped);
             builder.Register<IEnemyFactory, EnemyFactory>(Lifetime.Scoped);
 
+            builder.Register<EnemySpawner>(Lifetime.Scoped);
+        }
+
+        private void RegisterServices(IContainerBuilder builder)
+        {
+            builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
+            builder.Register<InputService>(Lifetime.Singleton)
+                .AsImplementedInterfaces();
+            builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
         }
     }
 }

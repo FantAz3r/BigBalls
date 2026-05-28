@@ -21,7 +21,8 @@ namespace BigBalls.Services
             { typeof(UIRoot), "UI/UIRoot"},
             { typeof(PlayerConfig), "Configs/PlayerConfig"},
             { typeof(Camera), "Prefabs/Main Camera"},
-            { typeof(ObjectContainer), "Prefabs/GameObjectContainer"}
+            { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
+            { typeof(EnemyData), "Data/EnemyData"}
         };
 
         public T Load<T>() where T : Object

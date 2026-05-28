@@ -8,12 +8,14 @@ namespace BigBalls.GameplayObjects
 {
     public class Mover : IUpdateble, IDisposable
     {
-        private readonly Vector3 _offset = new Vector3(0, 1, 0);
+        private const float ReycastAngle = 30;
+        private  const float RayDistance = 0.5f;
+
+        private readonly Vector3 _offset = new Vector3(0, 0.5f, 0);
         private readonly IUpdateService _updateService;
 
         private Transform _movableObject;
         private LayerMask _obstacleLayerMask;
-        private float _rayDistance = 0.5f;
         private Stat _moveSpeed;
 
         public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig)
@@ -82,25 +84,31 @@ namespace BigBalls.GameplayObjects
         private bool HasCollision(List<Vector3> hitNormals, Vector3 moveDirection)
         {
             bool hasCollision = false;
+            Vector3 startCastPoint = _movableObject.position + _offset;
+
+            Vector3 mainDirection = moveDirection.normalized;
+
+            Vector3 leftDirection = Quaternion.Euler(0, -ReycastAngle, 0) * mainDirection;
+            Vector3 rightDirection = Quaternion.Euler(0, ReycastAngle, 0) * mainDirection;
 
             Vector3[] rayDirections = new Vector3[]
             {
-                _movableObject.forward,
-                _movableObject.forward + Quaternion.Euler(0, -30, 0) * _movableObject.forward,
-                _movableObject.position + Quaternion.Euler(0, 30, 0) * _movableObject.forward,
+                mainDirection,
+                leftDirection,
+                rightDirection
             };
 
             foreach (var directions in rayDirections)
             {
-                if (Physics.Raycast(_movableObject.position, moveDirection, out RaycastHit hit, _rayDistance, _obstacleLayerMask))
+                if (Physics.Raycast(startCastPoint, directions, out RaycastHit hit, RayDistance, _obstacleLayerMask))
                 {
                     hasCollision = true;
                     hitNormals.Add(hit.normal);
-                    Debug.DrawRay(_movableObject.position, moveDirection * _rayDistance, Color.red);
+                    Debug.DrawRay(startCastPoint, directions * RayDistance, Color.red);
                 }
                 else
                 {
-                    Debug.DrawRay(_movableObject.position, moveDirection * _rayDistance, Color.green);
+                    Debug.DrawRay(startCastPoint, directions * RayDistance, Color.green);
                 }
             }
 

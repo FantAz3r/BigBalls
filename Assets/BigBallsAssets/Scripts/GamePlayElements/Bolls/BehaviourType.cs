@@ -1,9 +1,12 @@
-﻿public enum BehaviourType
+﻿namespace BigBalls.GameplayObjects
 {
-    None,
-    Damage,
-    Burn,
-    Freeze,
-    Stun,
-    Lazer,
+    public enum BehaviourType
+    {
+        None,
+        Damage,
+        Burn,
+        Freeze,
+        Stun,
+        Lazer,
+    }
 }

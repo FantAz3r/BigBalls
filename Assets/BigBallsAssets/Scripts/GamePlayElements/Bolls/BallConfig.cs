@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BigBalls.GameplayObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.StaticData

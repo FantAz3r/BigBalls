@@ -14,22 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stats:
   - StatType: 1
-    MaxValue: 10
+    StartMaxValue: 100
+    StartCurrentValue: 100
     MinValue: 0
   - StatType: 2
-    MaxValue: 1
+    StartMaxValue: 99999
+    StartCurrentValue: 10
     MinValue: 0
   - StatType: 3
-    MaxValue: 5
+    StartMaxValue: 99999
+    StartCurrentValue: 5
     MinValue: 0
   - StatType: 4
-    MaxValue: 90
+    StartMaxValue: 99999
+    StartCurrentValue: 30
     MinValue: 0
   - StatType: 5
-    MaxValue: 1
-    MinValue: -1
+    StartMaxValue: 99999
+    StartCurrentValue: 1
+    MinValue: -99999
   - StatType: 6
-    MaxValue: 1
+    StartMaxValue: 99999
+    StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 7
+    StartMaxValue: 100
+    StartCurrentValue: 0
     MinValue: 0
   <Name>k__BackingField: "\u0421\u0435\u0440\u0435\u0433\u0430 \u041F\u0438\u0440\u0430\u0442"
   <ObstacleLayers>k__BackingField:
