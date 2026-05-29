@@ -32,9 +32,9 @@ namespace BigBalls.Factories
 
         public void StartSpawn(LevelConfig levelConfig)
         {
-            RoadWidth = StartWidth;
-            _tilePrefabs = levelConfig.TilePrefabs;
-            SpawnNextTile();
+           //RoadWidth = StartWidth;
+           //_tilePrefabs = levelConfig.TilePrefabs;
+           //SpawnNextTile();
         }
 
         public void SpawnNextTile()

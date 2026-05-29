@@ -16,8 +16,20 @@ namespace BigBalls.StaticData
 
         public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
 
-        public int Weight => BlocksPositions.Count;
+        public int GetWidth()
+        {
+            int width = 0;
 
+            foreach(var block in BlocksPositions)
+            {
+                if(block.x > width)
+                    width = block.x;
+            }
+
+            return width;
+        }
+
+        public int Weight => BlocksPositions.Count;
         public List<Vector2Int> GetEnemyRow(int rowIndex)
         {
             List<Vector2Int> blocksPositionsInRow = new List<Vector2Int>();

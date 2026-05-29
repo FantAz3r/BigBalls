@@ -15,7 +15,7 @@ namespace BigBalls.GameplayObjects
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly IEnemyFactory _enemyFactory;
 
-        private WaitForSeconds _fiveSrconds = new WaitForSeconds(1);
+        private WaitForSeconds _fiveSrconds = new WaitForSeconds(0.5f);
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private int _fieldWidth = 7;
         private int _rowWeight = 4;
@@ -40,15 +40,14 @@ namespace BigBalls.GameplayObjects
 
             {
                 yield return _fiveSrconds;
-
-                SpawnRow(_rowIndex++);
+                SpawnRow();
+                _rowIndex++;
             }
         }
 
-        private void SpawnRow(int rowIndex)
+        private void SpawnRow()
         {
-            // Генерируем все возможные комбинации врагов по весу 4 на ширине линии с учётом занятостей
-            var allCombinations = GenerateValidCombinations(rowIndex, 0, _rowWeight);
+            var allCombinations = GenerateAllCombinations( _rowWeight, _occupiedPositions);
 
             if (allCombinations.Count == 0)
                 throw new InvalidOperationException(nameof(allCombinations));
@@ -57,92 +56,122 @@ namespace BigBalls.GameplayObjects
 
             foreach (var spawn in chosenCombination)
             {
-                SpawnEnemyAt(spawn.enemy, spawn.position + new Vector2Int(0, rowIndex));
+                SpawnEnemyAt(spawn.enemy, spawn.position);
 
-                // Помечаем занятость блоков врага
                 foreach (var block in spawn.enemy.BlocksPositions)
                 {
-                    var pos = spawn.position + block + new Vector2Int(0, rowIndex);
+                    var pos = spawn.position + block;
                     _occupiedPositions.Add(pos);
                 }
             }
         }
 
-        private List<List<(EnemyConfig enemy, Vector2Int position)>> GenerateValidCombinations(int rowIndex, int currentX, int remainingWeight)
+        private List<List<(EnemyConfig enemy, Vector2Int position)>> GenerateAllCombinations( int targetWeight, HashSet<Vector2Int> occupiedCellsInPreviousRows)
         {
             var results = new List<List<(EnemyConfig enemy, Vector2Int position)>>();
 
-            // Базовый случай: если вес достигнут или вышли за пределы ширины
-            if (remainingWeight == 0 || currentX >= _fieldWidth)
+            List<List<EnemyConfig>> enemyCombinations = new List<List<EnemyConfig>>();
+            GenerateEnemyCombinations(targetWeight, null, new List<EnemyConfig>(), enemyCombinations);
+
+            foreach (var enemyCombo in enemyCombinations)
             {
-                if (remainingWeight == 0)
-                    results.Add(new List<(EnemyConfig enemy, Vector2Int position)>());
-                return results;
-            }
 
-            bool anyPlacement = false;
+                int enemiesCount = enemyCombo.Count;
 
-            foreach (var enemy in _enemyConfigs)
-            {
-                if (enemy.Weight > remainingWeight)
-                    continue;
+                var positionPermutations = GetPositionPermutations( enemiesCount);
 
-                if (CanPlaceEnemy(enemy, new Vector2Int(currentX, rowIndex)))
+                foreach (var positions in positionPermutations)
                 {
-                    anyPlacement = true;
+                    bool validPlacement = true;
+                    var currentOccupied = new HashSet<Vector2Int>(occupiedCellsInPreviousRows);
+                    var placedEnemies = new List<(EnemyConfig enemy, Vector2Int position)>();
 
-                    var blocksInRow = enemy.BlocksPositions.Where(block => block.y == 0).ToList();
-                    if (blocksInRow.Count == 0)
-                        blocksInRow = new List<Vector2Int>() { new Vector2Int(0, 0) };
-
-                    int maxBlockXInRow = blocksInRow.Max(block => block.x);
-                    int nextX = currentX + maxBlockXInRow + 1;
-
-                    var nextCombinations = GenerateValidCombinations(rowIndex, nextX, remainingWeight - enemy.Weight);
-
-                    foreach (var comb in nextCombinations)
+                    for (int i = 0; i < enemiesCount; i++)
                     {
-                        var newList = new List<(EnemyConfig enemy, Vector2Int position)>() { (enemy, new Vector2Int(currentX, 0)) };
-                        newList.AddRange(comb);
-                        results.Add(newList);
+                        EnemyConfig enemy = enemyCombo[i];
+
+                        int xPos = positions[i];
+                        Vector2Int pos = new Vector2Int(xPos, _rowIndex);
+
+                        if (xPos + enemy.GetWidth() > _fieldWidth-1)
+                        {
+                            validPlacement = false;
+                            break;
+                        }
+
+                        var enemyCells = enemy.BlocksPositions.Select(b => b + pos);
+
+                        if (enemyCells.Any(cell => currentOccupied.Contains(cell)))
+                        {
+                            validPlacement = false;
+                            break;
+                        }
+
+                        foreach (var cell in enemyCells)
+                            currentOccupied.Add(cell);
+
+                        placedEnemies.Add((enemy, pos));
                     }
+
+                    if (validPlacement)
+                        results.Add(placedEnemies);
                 }
             }
 
-            // Если не удалось поставить ни одного врага — пропускаем клетку и идём дальше,
-            // т.к. нельзя ставить врага здесь (или нет подходящих по весу)
-            if (anyPlacement == false)
-            {
-                var skipCombs = GenerateValidCombinations(rowIndex, currentX + 1, remainingWeight);
-                foreach (var comb in skipCombs)
-                {
-                    results.Add(new List<(EnemyConfig enemy, Vector2Int position)>(comb));
-                }
-            }
-
-            Debug.Log(results.Count);
             return results;
         }
 
-        private bool CanPlaceEnemy(EnemyConfig enemy, Vector2Int headPosition)
+
+        private void GenerateEnemyCombinations(int targetWeight, EnemyConfig lastEnemy, List<EnemyConfig> currentCombo, List<List<EnemyConfig>> combinations)
         {
-            foreach (var blockOffset in enemy.BlocksPositions)
+            if (targetWeight == 0)
             {
-                var pos = headPosition + blockOffset;
-
-                if (_occupiedPositions.Contains(pos))
-                    return false;
-
-                if (pos.x < 0 || pos.x >= _fieldWidth)
-                    return false; 
+                combinations.Add(new List<EnemyConfig>(currentCombo));
+                return;
             }
-            return true;
+
+            foreach (var enemy in _enemyConfigs)
+            {
+                if (enemy.Weight > targetWeight) continue;
+                if (lastEnemy != null && enemy.Weight > lastEnemy.Weight) continue; 
+
+                currentCombo.Add(enemy);
+                GenerateEnemyCombinations(targetWeight - enemy.Weight, enemy, currentCombo, combinations);
+                currentCombo.RemoveAt(currentCombo.Count - 1);
+            }
+        }
+
+        private List<int[]> GetPositionPermutations(int enemiesCount)
+        {
+            var results = new List<int[]>();
+
+            void Backtrack(List<int> path, HashSet<int> used)
+            {
+                if (path.Count == enemiesCount)
+                {
+                    results.Add(path.ToArray());
+                    return;
+                }
+                for (int i = 0; i < _fieldWidth; i++)
+                {
+                    if (used.Contains(i)) continue;
+                    path.Add(i);
+                    used.Add(i);
+                    Backtrack(path, used);
+                    used.Remove(i);
+                    path.RemoveAt(path.Count - 1);
+                }
+            }
+
+            Backtrack(new List<int>(), new HashSet<int>());
+            return results;
         }
 
         private void SpawnEnemyAt(EnemyConfig enemy, Vector2Int position)
         {
-            float spawnOffset = Mathf.CeilToInt((_fieldWidth - 1) / 2);
-            Vector3 spawnPosition = new Vector3(position.x - spawnOffset, 0f, position.y);
+            float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
+            float spawnOffsetY = 0.5f; 
+            Vector3 spawnPosition = new Vector3(position.x, spawnOffsetY, position.y);
             _enemyFactory.Create(enemy, spawnPosition);
         }
     }
