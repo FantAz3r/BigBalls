@@ -2,10 +2,12 @@ using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VContainer.Unity;
+using Random = UnityEngine.Random;
 
 namespace BigBalls.Factories
 {
@@ -26,15 +28,18 @@ namespace BigBalls.Factories
             _coroutineRunner = coroutineRunner;
         }
 
+        public event Action<int> FieldScaled;
+
         public float TileLength => _tilePrefabs.First().transform.localScale.z;
         public IReadOnlyList<Tile> ActiveTiles => _activeTiles;
         public int RoadWidth { get; private set; }
 
         public void StartSpawn(LevelConfig levelConfig)
         {
-           //RoadWidth = StartWidth;
-           //_tilePrefabs = levelConfig.TilePrefabs;
-           //SpawnNextTile();
+            RoadWidth = StartWidth;
+            _tilePrefabs = levelConfig.TilePrefabs;
+            SpawnNextTile();
+            SpawnNextTile();
         }
 
         public void SpawnNextTile()
@@ -57,6 +62,8 @@ namespace BigBalls.Factories
             {
                 tile.ScaleTile(RoadWidth);
             }
+
+            FieldScaled?.Invoke(RoadWidth);
         }
 
         public float GetLNextSpawnPointZ()

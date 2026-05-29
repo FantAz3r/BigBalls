@@ -55,8 +55,8 @@ namespace BigBalls.GameplayObjects
                 return;
 
             Vector3 moveDirection = new Vector3(direction.x, 0f, direction.y).normalized;
-            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
-
+            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;  
+                    
             List<Vector3> hitNormals = new();
 
             if (HasCollision(hitNormals, moveDirection))
@@ -110,6 +110,7 @@ namespace BigBalls.GameplayObjects
                 {
                     Debug.DrawRay(startCastPoint, directions * RayDistance, Color.green);
                 }
+            
             }
 
             return hasCollision;

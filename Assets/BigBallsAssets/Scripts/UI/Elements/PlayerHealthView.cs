@@ -41,7 +41,8 @@ namespace BigBalls.UI
 
         private void OnDestroy()
         {
-            _health.ValueChanged -= View;
+            if(_health != null)
+                _health.ValueChanged -= View;
         }
 
         private void View(IReadonlyStat stat)
