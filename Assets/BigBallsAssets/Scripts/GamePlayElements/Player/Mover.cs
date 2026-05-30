@@ -2,31 +2,32 @@
 using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
     public class Mover : IUpdateble, IDisposable
     {
-        private const float ReycastAngle = 30;
-        private  const float RayDistance = 0.5f;
-
-        private readonly Vector3 _offset = new Vector3(0, 0.5f, 0);
         private readonly IUpdateService _updateService;
+        private readonly IRaycastService _raycastService;
 
-        private Transform _movableObject;
         private LayerMask _obstacleLayerMask;
         private Stat _moveSpeed;
 
-        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig)
+        private Vector3[] _raycastDirections;
+        private Vector3[] _raycastPoints;
+        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig, IRaycastService raycastService)
         {
             _updateService = updateService;
-            _movableObject = movebleObject;
+            _raycastService = raycastService;
+            MovableObject = movebleObject;
             _moveSpeed = moveSpeed;
             _obstacleLayerMask = playerConfig.ObstacleLayers;
             _updateService.Register(this);
         }
 
+        public Transform MovableObject { get; private set;}
         public Vector2 Direction { get; private set; }
 
         public void SetDirection(Vector2 direction)
@@ -36,7 +37,7 @@ namespace BigBalls.GameplayObjects
 
         public void Tick()
         {
-            if (_movableObject == null)
+            if (MovableObject == null)
             {
                 Dispose();
             }
@@ -49,6 +50,12 @@ namespace BigBalls.GameplayObjects
             _updateService.Unregister(this);
         }
 
+        public void SetReycastInfo(Vector3[] rarcastDirections, Vector3[] raycastPoints)
+        {
+            _raycastDirections = rarcastDirections;
+            _raycastPoints = raycastPoints;
+        }
+
         private void Move(Vector2 direction)
         {
             if (direction.sqrMagnitude < 0.001f)
@@ -56,61 +63,49 @@ namespace BigBalls.GameplayObjects
 
             Vector3 moveDirection = new Vector3(direction.x, 0f, direction.y).normalized;
             float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;  
-                    
-            List<Vector3> hitNormals = new();
 
-            if (HasCollision(hitNormals, moveDirection))
+            if (HasCollision(out List<Vector3> hitNormals, _obstacleLayerMask))
             {
-                Vector3 adjustedDir = moveDirection;
+                Vector3 adjustedDirection = moveDirection;
 
                 foreach (var normal in hitNormals)
                 {
-                    adjustedDir = Vector3.ProjectOnPlane(adjustedDir, normal);
+                    adjustedDirection = Vector3.ProjectOnPlane(adjustedDirection, normal);
                 }
 
-                adjustedDir = adjustedDir.normalized;
+                adjustedDirection = adjustedDirection.normalized;
 
-                if (adjustedDir.sqrMagnitude > 0.001f)
+                if (adjustedDirection.sqrMagnitude > 0.001f)
                 {
-                    _movableObject.Translate(adjustedDir * moveStep, Space.World);
+                    MovableObject.Translate(adjustedDirection * moveStep, Space.World);
                 }
             }
             else
             {
-                _movableObject.Translate(moveDirection * moveStep, Space.World);
+                MovableObject.Translate(moveDirection * moveStep, Space.World);
             }
         }
 
-        private bool HasCollision(List<Vector3> hitNormals, Vector3 moveDirection)
+        public bool HasCollision(out List<Vector3> hitNormals, LayerMask obstacleLayerMask)
         {
+            hitNormals = new List<Vector3>();
             bool hasCollision = false;
-            Vector3 startCastPoint = _movableObject.position + _offset;
 
-            Vector3 mainDirection = moveDirection.normalized;
-
-            Vector3 leftDirection = Quaternion.Euler(0, -ReycastAngle, 0) * mainDirection;
-            Vector3 rightDirection = Quaternion.Euler(0, ReycastAngle, 0) * mainDirection;
-
-            Vector3[] rayDirections = new Vector3[]
+            for (int i = 0; i < _raycastPoints.Length; i++)
             {
-                mainDirection,
-                leftDirection,
-                rightDirection
-            };
+                Vector3 startPoint = _raycastPoints[i] + MovableObject.position;
+                Vector3 direction = _raycastDirections[i].normalized;
 
-            foreach (var directions in rayDirections)
-            {
-                if (Physics.Raycast(startCastPoint, directions, out RaycastHit hit, RayDistance, _obstacleLayerMask))
+                if (Physics.Raycast(startPoint, direction, out RaycastHit hit, 0.5f, obstacleLayerMask))
                 {
                     hasCollision = true;
                     hitNormals.Add(hit.normal);
-                    Debug.DrawRay(startCastPoint, directions * RayDistance, Color.red);
+                    Debug.DrawRay(startPoint, direction * hit.distance, Color.red);
                 }
                 else
                 {
-                    Debug.DrawRay(startCastPoint, directions * RayDistance, Color.green);
+                    Debug.DrawRay(startPoint, direction * 0.5f, Color.green);
                 }
-            
             }
 
             return hasCollision;

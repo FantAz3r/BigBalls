@@ -6,9 +6,14 @@ namespace BigBalls.GameplayObjects
 {
     public class PlayerMover
     {
+        private readonly Vector3 Offset = new Vector3(0, 0.25f, 0);
         private readonly Rotator _rotator;
         private readonly Mover _mover;
         private readonly IInputService _inputService;
+        private readonly int ReycastAngle = 30;
+
+        private Vector3[] _raycastPoints = new Vector3[3];
+        private Vector3[] _raycastDirections = new Vector3[3];
 
         public PlayerMover(IInputService inputService, Rotator rotator, Mover mover)
         {
@@ -18,12 +23,27 @@ namespace BigBalls.GameplayObjects
 
             _inputService.MoveDirectionSeted += OnMove;
             _inputService.RotateDirectionSeted += OnRotate;
+
+            Vector3 origin = mover.MovableObject.position + Offset;
+            _raycastPoints[0] = origin;
+            _raycastPoints[1] = origin;
+            _raycastPoints[2] = origin;
         }
 
         public event Action Moved;
 
         private void OnMove(Vector2 direction)
         {
+            Vector3 mainDirection = new Vector3(direction.normalized.x, 0, direction.normalized.y);
+
+            Vector3 leftDirection = Quaternion.Euler(0, -ReycastAngle, 0) * mainDirection;
+            Vector3 rightDirection = Quaternion.Euler(0, ReycastAngle, 0) * mainDirection;
+
+            _raycastDirections[0] = mainDirection;
+            _raycastDirections[1] = leftDirection;
+            _raycastDirections[2] = rightDirection;
+
+            _mover.SetReycastInfo(_raycastDirections, _raycastPoints);
             _mover.SetDirection(direction);
         }
 

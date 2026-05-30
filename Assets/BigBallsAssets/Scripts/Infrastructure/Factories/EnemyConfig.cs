@@ -15,6 +15,7 @@ namespace BigBalls.StaticData
         [field: SerializeField] public LayerMask ObstacleLayers { get; private set; }
 
         public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
+        public int Weight => BlocksPositions.Count;
 
         public int GetWidth()
         {
@@ -29,7 +30,6 @@ namespace BigBalls.StaticData
             return width;
         }
 
-        public int Weight => BlocksPositions.Count;
         public List<Vector2Int> GetEnemyRow(int rowIndex)
         {
             List<Vector2Int> blocksPositionsInRow = new List<Vector2Int>();
@@ -41,6 +41,22 @@ namespace BigBalls.StaticData
             }
 
             return blocksPositionsInRow;
+        }
+
+        public List<Vector2Int> GetBlocksWithoutFrontNeighbor()
+        {
+            List<Vector2Int> result = new List<Vector2Int>();
+
+            foreach (var block in BlocksPositions)
+            {
+                Vector2Int frontNeighbor = new Vector2Int(block.x, block.y - 1);
+
+                if (BlocksPositions.Contains(frontNeighbor) == false)
+                {
+                    result.Add(block);
+                }
+            }
+            return result;
         }
     }
 }

@@ -179,7 +179,7 @@ namespace BigBalls.GameplayObjects
         {
             float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
             float spawnOffsetY = 0.5f;
-            float spawnOffsetZ = 9;
+            float spawnOffsetZ = 8;
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             _enemyFactory.Create(enemy, spawnPosition);

@@ -22,6 +22,7 @@ namespace BigBalls.Factories
         private readonly IIdentifierService _identifierService;
         private readonly IUIFactory _uIFactory;
         private readonly IEntityRepository _entityRepository;
+        private readonly IRaycastService _raycastService;
         private PlayerConfig _playerConfig;
 
         private List<Stat> _statHolder = new();
@@ -36,7 +37,8 @@ namespace BigBalls.Factories
             IUpdateService updateService,
             IIdentifierService identifierService,
             IUIFactory uIFactory,
-            IEntityRepository entityRepository)
+            IEntityRepository entityRepository,
+            IRaycastService raycastService)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -46,6 +48,7 @@ namespace BigBalls.Factories
             _identifierService = identifierService;
             _uIFactory = uIFactory;
             _entityRepository = entityRepository;
+            _raycastService = raycastService;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -61,7 +64,7 @@ namespace BigBalls.Factories
 
             StatHolder statHolder =  new StatHolder(playerID, _playerConfig);
 
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _playerConfig);
+            Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _playerConfig, _raycastService);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
             new Shooter(statHolder[StatType.Damage], player.transform);

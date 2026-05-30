@@ -45,6 +45,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<InputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
             builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
+            builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);
         }
     }
 }
