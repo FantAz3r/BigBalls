@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class HealthRegenerator : IUpdateble
+    public class HealthRegenerator : IUpdateble, ISubscribable
     {
         private readonly Stat _healthRegen;
         private readonly Stat _health;
@@ -15,20 +15,24 @@ namespace BigBalls.GameplayObjects
             _healthRegen = healthRegen;
             _health = health;
             _updateService = updateService;
+        }
 
+        public void Subscribe()
+        {
             EnableRegen();
-            updateService.Register(this);
+            _updateService.Register(this);
+        }
+
+        public void Unsubscribe()
+        {
+            DisableRegen();
+            _updateService.Unregister(this);
+
         }
 
         public void EnableRegen() => _canRegen = true;
         
         public void DisableRegen() => _canRegen = false;
-
-        public void Dispose()
-        {
-            DisableRegen();
-            _updateService.Unregister(this);
-        }
 
         public void Tick()
         {

@@ -19,14 +19,13 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<CreateLevelState>(Lifetime.Scoped);
 
             builder.RegisterComponent(_objectContainer);
-            builder.RegisterComponent(_sceneContainer)
-                .As<ISceneContainerProvider>();
 
             builder.Register<TileMover>(Lifetime.Scoped);
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
 
             RegisterServices(builder);
             RegisterFactories(builder);
+            RegisterProviders(builder);
         }
 
         private void RegisterFactories(IContainerBuilder builder)
@@ -46,6 +45,13 @@ namespace BigBalls.Infrastructure.DI
                 .AsImplementedInterfaces();
             builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
             builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);
+        }
+
+        private void RegisterProviders(IContainerBuilder builder)
+        {
+            builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);
+            builder.RegisterComponent(_sceneContainer)
+                .As<ISceneContainerProvider>();
         }
     }
 }

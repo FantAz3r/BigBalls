@@ -2,7 +2,7 @@
 
 namespace BigBalls.GameplayObjects
 {
-    public class Shooter
+    public class Shooter : ISubscribable
     {
         private readonly Transform _firePoint;
         private Stat _damage;
@@ -10,6 +10,14 @@ namespace BigBalls.GameplayObjects
         {
             _firePoint = firePoint;
             _damage = damage;
+        }
+
+        public void Subscribe()
+        {
+        }
+
+        public void Unsubscribe()
+        {
         }
     }
 }

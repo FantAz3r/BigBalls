@@ -1,5 +1,72 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1482402597529602832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7464626282572750244}
+  - component: {fileID: 122468203336582595}
+  - component: {fileID: 5086094046903561437}
+  m_Layer: 2
+  m_Name: EntityTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7464626282572750244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482402597529602832}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8740349068517298388}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &122468203336582595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482402597529602832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f3205b76fee98408b98005a5c53a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sphereCollider: {fileID: 5086094046903561437}
+--- !u!135 &5086094046903561437
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482402597529602832}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!1 &4357420756570031995
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1a91b871cef9c4393e7008d80850be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <EntityTrigger>k__BackingField: {fileID: 0}
 --- !u!1 &7385916368145479425
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,6 +281,7 @@ Transform:
   m_Children:
   - {fileID: 2780836085552211164}
   - {fileID: 1187383687224415823}
+  - {fileID: 7464626282572750244}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1262936685549616925
@@ -227,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1a91b871cef9c4393e7008d80850be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <EntityTrigger>k__BackingField: {fileID: 122468203336582595}
 --- !u!65 &6003510401459578431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -271,7 +341,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0

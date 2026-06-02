@@ -1,13 +1,11 @@
 ﻿using BigBalls.Services;
 using BigBalls.StaticData;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Mover : IUpdateble, IDisposable
+    public class Mover : IUpdateble, ISubscribable
     {
         private readonly IUpdateService _updateService;
         private readonly IRaycastService _raycastService;
@@ -17,6 +15,7 @@ namespace BigBalls.GameplayObjects
 
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
+
         public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig, IRaycastService raycastService)
         {
             _updateService = updateService;
@@ -24,11 +23,20 @@ namespace BigBalls.GameplayObjects
             MovableObject = movebleObject;
             _moveSpeed = moveSpeed;
             _obstacleLayerMask = playerConfig.ObstacleLayers;
-            _updateService.Register(this);
         }
 
         public Transform MovableObject { get; private set;}
         public Vector2 Direction { get; private set; }
+
+        public void Subscribe()
+        {
+            _updateService.Register(this);
+        }
+
+        public void Unsubscribe()
+        {
+            _updateService.Unregister(this);
+        }
 
         public void SetDirection(Vector2 direction)
         {
@@ -37,18 +45,9 @@ namespace BigBalls.GameplayObjects
 
         public void Tick()
         {
-            if (MovableObject == null)
-            {
-                Dispose();
-            }
-
             Move(Direction);
         }
 
-        public void Dispose()
-        {
-            _updateService.Unregister(this);
-        }
 
         public void SetReycastInfo(Vector3[] rarcastDirections, Vector3[] raycastPoints)
         {

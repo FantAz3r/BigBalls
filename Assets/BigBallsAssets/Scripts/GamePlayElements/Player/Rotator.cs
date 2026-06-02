@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Rotator : IUpdateble, IDisposable
+    public class Rotator : IUpdateble, ISubscribable
     {
         private readonly IUpdateService _updateService;
 
@@ -17,19 +17,26 @@ namespace BigBalls.GameplayObjects
             _updateService = updateService;
             _rotatebleObject = rotatebleObject;
             _rotationSpeed = rotationSpeed;
-            _updateService.Register(this);
         }
 
         public Vector2 CurrentDirection { get; private set; }
         public void SetDirection(Vector2 direction) => CurrentDirection = direction;
 
+        public void Subscribe()
+        {
+            _updateService.Register(this);
+
+        }
+
+        public void Unsubscribe()
+        {
+            _updateService.Unregister(this);
+            _rotatebleObject = null;
+
+        }
+
         public void Tick()
         {
-            if (_rotatebleObject == null)
-            {
-                Dispose();
-            }
-
             if (_canRotate)
             {
                 Rotate();
@@ -50,15 +57,6 @@ namespace BigBalls.GameplayObjects
             float newAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, _rotationSpeed.CurrentValue);
 
             _rotatebleObject.rotation = Quaternion.Euler(0f, newAngle, 0f);
-        }
-
-        public void CanRotate(bool canRotate) => _canRotate = canRotate;
-
-        public void Dispose()
-        {
-            _updateService.Unregister(this);
-            _rotatebleObject = null;
-
         }
     }
 }

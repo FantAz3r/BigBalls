@@ -1,10 +1,11 @@
 ﻿using BigBalls.Services;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class PlayerMover
+    public class PlayerMover : ISubscribable
     {
         private readonly Vector3 Offset = new Vector3(0, 0.25f, 0);
         private readonly Rotator _rotator;
@@ -21,9 +22,6 @@ namespace BigBalls.GameplayObjects
             _rotator = rotator;
             _mover = mover;
 
-            _inputService.MoveDirectionSeted += OnMove;
-            _inputService.RotateDirectionSeted += OnRotate;
-
             Vector3 origin = mover.MovableObject.position + Offset;
             _raycastPoints[0] = origin;
             _raycastPoints[1] = origin;
@@ -31,6 +29,18 @@ namespace BigBalls.GameplayObjects
         }
 
         public event Action Moved;
+
+        public void Subscribe()
+        {
+            _inputService.MoveDirectionSeted += OnMove;
+            _inputService.RotateDirectionSeted += OnRotate;
+        }
+
+        public void Unsubscribe()
+        {
+            _inputService.MoveDirectionSeted -= OnMove;
+            _inputService.RotateDirectionSeted -= OnRotate;
+        }
 
         private void OnMove(Vector2 direction)
         {

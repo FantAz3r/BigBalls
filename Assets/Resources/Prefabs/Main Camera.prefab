@@ -150,8 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37fe8db4894a8b8469fb87e91f0cc921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "_\u0441amera": {fileID: 165992718321331761}
-  _colliderPrefab: {fileID: 5186134145892481279, guid: 89bb4c1da27696e448faf5c3d7b7664d,
+  _camera: {fileID: 165992718321331761}
+  _frontWallPrefab: {fileID: 6752271607411679644, guid: 89bb4c1da27696e448faf5c3d7b7664d,
+    type: 3}
+  _backWallPrefab: {fileID: -747785095534631774, guid: 55aa6d7921a34884786035c12461edce,
     type: 3}
   _roadLayerMask:
     serializedVersion: 2

@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
 
         private void OnHit(int id)
         {
-            _damageService.ApplyDamage(Host, id, Host.Damage);
+            _damageService.ApplyDamage(id, Host.Damage);
         }
     }
 }

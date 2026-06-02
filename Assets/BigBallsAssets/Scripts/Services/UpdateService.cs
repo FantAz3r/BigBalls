@@ -18,7 +18,7 @@ namespace BigBalls.Services
 
         private void Update()
         {
-            if (_timeService.IsPaused) 
+            if (_timeService != null && _timeService.IsPaused ) 
                 return;
 
             for (int i = _tickables.Count - 1; i >= 0; i--)

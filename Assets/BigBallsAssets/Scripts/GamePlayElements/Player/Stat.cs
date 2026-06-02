@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -40,7 +41,7 @@ namespace BigBalls.GameplayObjects
 
         public void ReduceCurrentValue(float valueToResuce)
         {
-            if (valueToResuce >= 0) return;
+            if (valueToResuce <= 0) return;
 
             CurrentValue = MathF.Max(CurrentValue - valueToResuce, MinValue);
             ValueChanged?.Invoke(this);
@@ -58,7 +59,7 @@ namespace BigBalls.GameplayObjects
 
         public void ReduceMaxStat(float valueToResuce)
         {
-            if (valueToResuce >= 0) return;
+            if (valueToResuce <= 0) return;
 
             float percent = (MaxValue > 0) ? CurrentValue / MaxValue : 0f;
             MaxValue = MathF.Max(MinValue + 1, MaxValue - valueToResuce);

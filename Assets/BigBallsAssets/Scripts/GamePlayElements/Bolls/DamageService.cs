@@ -1,5 +1,6 @@
 using BigBalls.GameplayObjects;
 using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace BigBalls.Services
@@ -14,11 +15,11 @@ namespace BigBalls.Services
             _entityRepository = entityRepository;
         }
 
-        public void ApplyDamage(Ball ball, int id, float damage)
+        public void ApplyDamage(int id, float damage)
         {
             StatHolder statHolder =  _entityRepository.Get(id);
 
-            if(statHolder.Stats.ContainsKey(StatType.Evasion))
+            if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
                     return;
 
@@ -59,7 +60,8 @@ namespace BigBalls.Services
 
         private void ApplyHealthDamage(Stat health, float damage)
         {
-            if (damage <= 0) return;
+            if (damage <= 0)
+                return;
 
             health.ReduceCurrentValue(damage);
         }
