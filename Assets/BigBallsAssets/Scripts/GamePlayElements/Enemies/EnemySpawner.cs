@@ -1,13 +1,13 @@
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System;
-using Random = UnityEngine.Random;
 using Math = Utils.Math;
+using Random = UnityEngine.Random;
 
 namespace BigBalls.GameplayObjects
 {
@@ -21,6 +21,8 @@ namespace BigBalls.GameplayObjects
         private int _fieldWidth = 7;
         private int _rowWeight = 4;
         private int _rowIndex = 0;
+
+        private int _debugCounter;
 
         private WaitForSeconds _fiveSrconds = new WaitForSeconds(5);
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
@@ -60,14 +62,16 @@ namespace BigBalls.GameplayObjects
             while (true)  // добавить игровой стейт, который говорит, когда завершится уровень
             {
                 yield return _fiveSrconds;
+                _debugCounter = 0;
                 SpawnRow();
+                Debug.Log(_debugCounter);
                 _rowIndex++;
             }
         }
 
         private void SpawnRow()
         {
-            var chosenCombination = GenerateRandomValidCombination( _rowWeight, _occupiedPositions);
+            var chosenCombination = GenerateRandomValidCombination(_rowWeight, _occupiedPositions);
 
             foreach (var spawn in chosenCombination)
             {
@@ -78,7 +82,7 @@ namespace BigBalls.GameplayObjects
                     var pos = spawn.position + block;
                     _occupiedPositions.Add(pos);
                 }
-            } 
+            }
         }
 
         private List<(EnemyConfig enemy, Vector2Int position)> GenerateRandomValidCombination(int targetWeight, HashSet<Vector2Int> occupiedCellsInPreviousRows)
@@ -86,74 +90,98 @@ namespace BigBalls.GameplayObjects
             List<List<EnemyConfig>> enemyCombinations = new List<List<EnemyConfig>>();
             GenerateEnemyCombinations(targetWeight, null, new List<EnemyConfig>(), enemyCombinations);
 
-            if (enemyCombinations.Count == 0)
+            if (enemyCombinations.Count == 0) 
                 return null;
 
             var uncheckedIndices = new List<int>(Enumerable.Range(0, enemyCombinations.Count));
+            int totalCombosAttempted = 0;
 
             while (uncheckedIndices.Count > 0)
             {
+                totalCombosAttempted++;
                 int randomIndexPos = Random.Range(0, uncheckedIndices.Count-1);
-                int comboIndex = uncheckedIndices[randomIndexPos];
-                var enemyCombo = enemyCombinations[comboIndex];
-                int enemiesCount = enemyCombo.Count;
-                bool isAllEnemiesSame = enemyCombo.All(e => e == enemyCombo[0]);
+                var enemyCombo = enemyCombinations[uncheckedIndices[randomIndexPos]];
 
-                IEnumerable<int[]> positionSets;
-
-                if (isAllEnemiesSame)
-                    positionSets = Math.GetPositionCombinations(_fieldWidth, enemiesCount);
-                else
-                    positionSets = Math.GetPositionPermutations(_fieldWidth, enemiesCount);
+                Dictionary<EnemyConfig, int> enemyGroups = enemyCombo
+                    .GroupBy(e => e)
+                    .ToDictionary(g => g.Key, g => g.Count());
 
                 var validPlacements = new List<List<(EnemyConfig enemy, Vector2Int position)>>();
 
-                foreach (var positions in positionSets)
-                {
-                    bool validPlacement = true;
-                    var currentOccupied = new HashSet<Vector2Int>(occupiedCellsInPreviousRows);
-                    var placedEnemies = new List<(EnemyConfig enemy, Vector2Int position)>();
-
-                    for (int i = 0; i < enemiesCount; i++)
-                    {
-                        EnemyConfig enemy = enemyCombo[i];
-                        int xPos = positions[i];
-                        Vector2Int pos = new Vector2Int(xPos, _rowIndex);
-
-                        if (xPos + enemy.GetWidth() > _fieldWidth-1)
-                        {
-                            validPlacement = false;
-                            break;
-                        }
-
-                        var enemyCells = enemy.BlocksPositions.Select(b => b + pos);
-
-                        if (enemyCells.Any(cell => currentOccupied.Contains(cell)))
-                        {
-                            validPlacement = false;
-                            break;
-                        }
-
-                        foreach (var cell in enemyCells)
-                            currentOccupied.Add(cell);
-
-                        placedEnemies.Add((enemy, pos));
-                    }
-
-                    if (validPlacement)
-                        validPlacements.Add(placedEnemies);
-                }
+                var groupsList = enemyGroups.ToList();
+                GenerateGroupPlacements(0, groupsList, new List<(EnemyConfig enemy, Vector2Int position)>(),
+                                       new HashSet<Vector2Int>(occupiedCellsInPreviousRows),
+                                       _fieldWidth, _rowIndex, validPlacements);
 
                 if (validPlacements.Count > 0)
-                {
                     return validPlacements[Random.Range(0, validPlacements.Count-1)];
-                }
                 else
-                {
                     uncheckedIndices.RemoveAt(randomIndexPos);
+            }
+
+            return null;
+        }
+
+        private void GenerateGroupPlacements(
+             int groupIndex,
+             List<KeyValuePair<EnemyConfig, int>> groups,
+             List<(EnemyConfig enemy, Vector2Int position)> currentPlacement,
+             HashSet<Vector2Int> occupiedCells,
+             int fieldWidth,
+             int rowIndex,
+             List<List<(EnemyConfig enemy, Vector2Int position)>> results)
+        {
+            if (groupIndex >= groups.Count)
+            {
+                results.Add(new List<(EnemyConfig enemy, Vector2Int position)>(currentPlacement));
+                return;
+            }
+
+            var currentGroup = groups[groupIndex];
+            EnemyConfig enemy = currentGroup.Key;
+            int countToPlace = currentGroup.Value;
+
+            var availableX = new List<int>();
+            for (int x = 0; x <= fieldWidth-1 - enemy.GetWidth(); x++)
+            {
+                Vector2Int pos = new Vector2Int(x, rowIndex);
+                var enemyCells = enemy.BlocksPositions.Select(b => b + pos);
+
+                if (enemyCells.Any(cell => occupiedCells.Contains(cell)) == false)
+                {
+                    availableX.Add(x);
                 }
             }
-            return null;
+
+            if (availableX.Count < countToPlace)
+                return;
+
+            foreach (var xCombo in Math.GetCombinations(availableX, countToPlace))
+            {
+                var newOccupied = new HashSet<Vector2Int>(occupiedCells);
+                var newPlacement = new List<(EnemyConfig enemy, Vector2Int position)>(currentPlacement);
+                bool possible = true;
+
+                foreach (int x in xCombo)
+                {
+                    Vector2Int pos = new Vector2Int(x, rowIndex);
+                    var enemyCells = enemy.BlocksPositions.Select(b => b + pos);
+
+                    if (enemyCells.Any(cell => newOccupied.Contains(cell)))
+                    {
+                        possible = false;
+                        break;
+                    }
+
+                    foreach (var cell in enemyCells) newOccupied.Add(cell);
+                    newPlacement.Add((enemy, pos));
+                }
+
+                if (possible)
+                {
+                    GenerateGroupPlacements(groupIndex + 1, groups, newPlacement, newOccupied, fieldWidth, rowIndex, results);
+                }
+            }
         }
 
         private void GenerateEnemyCombinations(int targetWeight, EnemyConfig lastEnemy, List<EnemyConfig> currentCombo, List<List<EnemyConfig>> combinations)
@@ -167,7 +195,7 @@ namespace BigBalls.GameplayObjects
             foreach (var enemy in _enemyConfigs)
             {
                 if (enemy.Weight > targetWeight) continue;
-                if (lastEnemy != null && enemy.Weight > lastEnemy.Weight) continue; 
+                if (lastEnemy != null && enemy.Weight > lastEnemy.Weight) continue;
 
                 currentCombo.Add(enemy);
                 GenerateEnemyCombinations(targetWeight - enemy.Weight, enemy, currentCombo, combinations);

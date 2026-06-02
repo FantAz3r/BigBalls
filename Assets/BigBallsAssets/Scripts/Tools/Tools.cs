@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 
+
 namespace Utils
 {
-    public static class Utils
+    public static class Tools
     {
-       
+        
     }
 }

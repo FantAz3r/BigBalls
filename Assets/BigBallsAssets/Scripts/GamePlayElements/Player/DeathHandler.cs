@@ -30,7 +30,7 @@ namespace BigBalls.GameplayObjects
         {
             if (stat.CurrentValue <= stat.MinValue)
             {
-                Debug.Log("Die");
+                //Debug.Log("Die");
             }
         }
        

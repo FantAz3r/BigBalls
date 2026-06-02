@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Utils
 {
@@ -37,5 +38,13 @@ namespace Utils
             return results;
         }
 
+        public static IEnumerable<IEnumerable<T>> GetCombinations<T>(IEnumerable<T> list, int length)
+        {
+            if (length == 0)
+                return new[] { Enumerable.Empty<T>() };
+
+            return list.SelectMany((e, i) =>
+                GetCombinations(list.Skip(i + 1), length - 1).Select(c => (new[] { e }).Concat(c)));
+        }
     }
 }

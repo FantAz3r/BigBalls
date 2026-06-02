@@ -15,13 +15,11 @@ namespace BigBalls.GameplayObjects
             if (other.TryGetComponent<BackWall>(out _))
             {
                 WallDetected?.Invoke();
-                Debug.Log("WallDetected");
 
             }
 
             if (other.TryGetComponent<Player>(out _))
             {
-                Debug.Log("PlayerDetected");
                 PlayerDetected?.Invoke();
             }
         }
