@@ -14,7 +14,6 @@ namespace BigBalls.Infrastructure.DI
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
-
             builder.Register<IObjectResolverProvider, ObjectResolverProvider>(Lifetime.Singleton);
             builder.Register<ISceneLoader, SceneLoader>(Lifetime.Singleton);
             builder.Register<IGameStateMachine, GameStateMachine>(Lifetime.Singleton);
@@ -39,7 +38,6 @@ namespace BigBalls.Infrastructure.DI
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
-
         }
     }
 }

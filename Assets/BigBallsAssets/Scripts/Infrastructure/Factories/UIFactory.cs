@@ -45,7 +45,7 @@ namespace BigBalls.Factories
 
         public MainMenu CreateMainMenu() => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
 
-        public PauseWindow CreatePauseWindow()=> GetOrCreateWindow(WindowType.Pause) as PauseWindow;
+        public PauseWindow CreatePauseWindow() => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
 
         public void CreateJoystick()
         {

@@ -32,7 +32,7 @@ namespace BigBalls.Infrastructure.DI
         {
             builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Scoped);
             builder.Register<TileFactory>(Lifetime.Scoped);
-            builder.Register<IBallBehaivorFactory, BallBehaivorFactory>(Lifetime.Scoped);
+            builder.Register<IBallBehaivorFactory, BallBehaivourFactory>(Lifetime.Scoped);
             builder.Register<IEnemyFactory, EnemyFactory>(Lifetime.Scoped);
 
             builder.Register<EnemySpawner>(Lifetime.Scoped);
