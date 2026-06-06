@@ -11,7 +11,7 @@ namespace BigBalls.GameplayObjects
         [SerializeField] private Wall _rightWall;
         [SerializeField] private Ground _ground;
         [SerializeField] private BoxCollider _boxCollider;
-        [SerializeField] private float _duration = 1.0f;
+        [SerializeField] private float _scaleDuration = 1.0f;
 
         private ICoroutineRunner _coroutineRunner;
         private int _currentWidth;
@@ -78,10 +78,10 @@ namespace BigBalls.GameplayObjects
             Vector3 boxTarget = new Vector3(_currentWidth, boxStart.y, boxStart.z);
 
 
-            while (elapsed < _duration)
+            while (elapsed < _scaleDuration)
             {
                 elapsed += Time.deltaTime;
-                float t = Mathf.SmoothStep(0, 1, elapsed / _duration);
+                float t = Mathf.SmoothStep(0, 1, elapsed / _scaleDuration);
 
                 _leftWall.transform.localPosition = Vector3.Lerp(leftStart, leftTarget, t);
                 _rightWall.transform.localPosition = Vector3.Lerp(rightStart, rightTarget, t);

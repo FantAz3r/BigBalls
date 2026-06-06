@@ -1,18 +1,22 @@
-﻿using BigBalls.GameplayObjects;
+﻿using BigBalls.Attributes;
+using BigBalls.GameplayObjects;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using BigBalls.Attributes;
 
 namespace BigBalls.StaticData
 {
     [CustomScriptableObjectListEditor]
     [CreateAssetMenu(fileName = "BallConfig", menuName = "Configs/BallConfig")]
-    public class BallConfig : ScriptableObject
+
+    public class BallConfig : ScriptableObject, IEntityConfig
     {
+        [HideInInspector] public LayerMask ObstacleLayers { get; private set; }
         [field: SerializeField] public Ball Prefab { get; private set; }
-        [field: SerializeField] public float Speed { get; private set; }
         [field: SerializeField] public float Radius { get; private set; } = 0.2f;
         [field: SerializeField] public bool IsMaterial { get; private set; }
+        [field: SerializeField] public List<StatStruct> Stats { get; private set; }
+
 
         [field: SerializeField] public List<EffectConfig> BehaviourConfigs = new ();
 
@@ -31,5 +35,7 @@ namespace BigBalls.StaticData
 
             return false;
         }
+
+        public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
     }
 }

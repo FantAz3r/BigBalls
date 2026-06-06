@@ -9,6 +9,8 @@
         RotationSpeed,
         Armor,
         HealthRegen,
-        Evasion
+        Evasion,
+        AttackSpeed,
+        BallBag,
     }
 } 

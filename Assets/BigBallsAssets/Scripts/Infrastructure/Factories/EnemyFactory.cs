@@ -3,6 +3,7 @@ using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -16,6 +17,7 @@ namespace BigBalls.Factories
         private readonly IRaycastService _raycastService;
         private readonly IPlayerProvider _playerProvider;
         private readonly IDamageService _damageService;
+        private readonly IEntityRepository _entityRepository;
 
         public EnemyFactory(
             IObjectResolverProvider resolverProvider,
@@ -23,7 +25,8 @@ namespace BigBalls.Factories
             IUpdateService updateService,
             IRaycastService raycastService,
             IPlayerProvider playerProvider,
-            IDamageService damageService
+            IDamageService damageService,
+            IEntityRepository entityRepository
             )
         {
             _resolverProvider = resolverProvider;
@@ -32,6 +35,7 @@ namespace BigBalls.Factories
             _raycastService = raycastService;
             _playerProvider = playerProvider;
             _damageService = damageService;
+            _entityRepository = entityRepository;
         }
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
@@ -40,7 +44,7 @@ namespace BigBalls.Factories
             int playerID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(playerID, enemyConfig);
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, enemyConfig, _raycastService);
+            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, _raycastService, enemyConfig);
             Init(mover, enemyConfig);
 
             EnemyAttacker enemyAttacker = new EnemyAttacker(_playerProvider, statHolder[StatType.Damage], enemy.transform, enemy.EntityTrigger, _damageService);
@@ -51,9 +55,12 @@ namespace BigBalls.Factories
                 enemyAttacker
             };
 
-            DeathHandler deathHandler = new DeathHandler(statHolder[StatType.Health], subscribables);
-            enemy.Construct(playerID, deathHandler);
+            DeathHandler deathHandler = new DeathHandler(statHolder[StatType.Health], subscribables, enemy.transform);
+            deathHandler.Subscribe();
+            deathHandler.Died += Kill;
 
+            enemy.Construct(playerID);
+            _entityRepository.Add(enemy, statHolder);
             return enemy;
         }
 
@@ -74,6 +81,13 @@ namespace BigBalls.Factories
             }
 
             mover.SetReycastInfo(raycastDirections, raycastPoints);
+        }
+
+        private void Kill(DeathHandler deathHandler, Transform enemy)
+        {
+            deathHandler.Died -= Kill;
+            deathHandler.Unsubscribe();
+            enemy.gameObject.SetActive(false);
         }
     }
 }

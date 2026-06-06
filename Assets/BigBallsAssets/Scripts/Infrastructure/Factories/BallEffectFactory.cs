@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
-    public class BallBehaivourFactory : IBallBehaivorFactory
+    public class BallEffectFactory : IBallBehaivorFactory
     {
         private readonly IObjectResolverProvider _objectResolverProvider;
         private Dictionary<BehaviourType, Func<EffectConfig, EffectBehaviour>> _effectToFactory = new();
 
-        public BallBehaivourFactory(IObjectResolverProvider objectResolverProvider)
+        public BallEffectFactory(IObjectResolverProvider objectResolverProvider)
         {
             _objectResolverProvider = objectResolverProvider;
 
@@ -40,6 +40,5 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateDamageEffect(EffectConfig config) => new Damage(config as DamageBehaviour);
         private EffectBehaviour CreateFireEffect(EffectConfig config) => new Fire(config as FireConfig);
         private EffectBehaviour CreateIceEffect(EffectConfig config) => new Ice(config as IceConfig);
-
     }
 }

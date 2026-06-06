@@ -10,60 +10,51 @@ namespace BigBalls.GameplayObjects
         private readonly IUpdateService _updateService;
         private readonly IRaycastService _raycastService;
 
-        private LayerMask _obstacleLayerMask;
-        private Stat _moveSpeed;
+        private readonly LayerMask _obstacleLayerMask;
+        private readonly Stat _moveSpeed;
 
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
 
-        public Mover(Stat moveSpeed, Transform movebleObject, IUpdateService updateService, IEntityConfig playerConfig, IRaycastService raycastService)
+        public Transform MovableObject { get; private set; }
+        public Vector2 Direction { get; private set; }
+
+        public Mover(Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
             _updateService = updateService;
             _raycastService = raycastService;
-            MovableObject = movebleObject;
+            MovableObject = movableObject;
             _moveSpeed = moveSpeed;
-            _obstacleLayerMask = playerConfig.ObstacleLayers;
+            _obstacleLayerMask = playerConfig?.ObstacleLayers ?? 0;
         }
 
-        public Transform MovableObject { get; private set;}
-        public Vector2 Direction { get; private set; }
-
-        public void Subscribe()
+        public void Subscribe() => _updateService.Register(this);
+        public void Unsubscribe() => _updateService.Unregister(this);
+        public void SetDirection(Vector2 direction) => Direction = direction;
+        public void SetReycastInfo(Vector3[] directions, Vector3[] points)
         {
-            _updateService.Register(this);
+            _raycastDirections = directions;
+            _raycastPoints = points;
         }
 
-        public void Unsubscribe()
-        {
-            _updateService.Unregister(this);
-        }
-
-        public void SetDirection(Vector2 direction)
-        {
-            Direction = direction;
-        }
-
-        public void Tick()
-        {
-            Move(Direction);
-        }
-
-
-        public void SetReycastInfo(Vector3[] rarcastDirections, Vector3[] raycastPoints)
-        {
-            _raycastDirections = rarcastDirections;
-            _raycastPoints = raycastPoints;
-        }
+        public void Tick() => Move(Direction);
 
         private void Move(Vector2 direction)
         {
-            if (direction.sqrMagnitude < 0.001f)
-                return;
+            if (direction.sqrMagnitude < 0.001f) return;
 
+            bool hasCollision = false;
+            List<Vector3> hitNormals = new();
             Vector3 moveDirection = new Vector3(direction.x, 0f, direction.y).normalized;
-            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;  
+            float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
 
-            if (HasCollision(out List<Vector3> hitNormals, _obstacleLayerMask))
+            if (_raycastService != null)
+            {
+                hasCollision = _raycastService.CheckCollisions(MovableObject, _raycastDirections, _raycastPoints, 0.5f, _obstacleLayerMask, out List<Vector3> hitNormalsResult);
+                hitNormals = hitNormalsResult;
+            }
+
+            if (hasCollision)
             {
                 Vector3 adjustedDirection = moveDirection;
 
@@ -83,31 +74,6 @@ namespace BigBalls.GameplayObjects
             {
                 MovableObject.Translate(moveDirection * moveStep, Space.World);
             }
-        }
-
-        public bool HasCollision(out List<Vector3> hitNormals, LayerMask obstacleLayerMask)
-        {
-            hitNormals = new List<Vector3>();
-            bool hasCollision = false;
-
-            for (int i = 0; i < _raycastPoints.Length; i++)
-            {
-                Vector3 startPoint = _raycastPoints[i] + MovableObject.position;
-                Vector3 direction = _raycastDirections[i].normalized;
-
-                if (Physics.Raycast(startPoint, direction, out RaycastHit hit, 0.5f, obstacleLayerMask))
-                {
-                    hasCollision = true;
-                    hitNormals.Add(hit.normal);
-                    Debug.DrawRay(startPoint, direction * hit.distance, Color.red);
-                }
-                else
-                {
-                    Debug.DrawRay(startPoint, direction * 0.5f, Color.green);
-                }
-            }
-
-            return hasCollision;
         }
     }
 }

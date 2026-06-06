@@ -22,7 +22,9 @@ namespace BigBalls.Services
             { typeof(PlayerConfig), "Configs/PlayerConfig"},
             { typeof(Camera), "Prefabs/Main Camera"},
             { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
-            { typeof(EnemyData), "Data/EnemyData"}
+            { typeof(EnemyData), "Data/EnemyData"},
+            //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
+            { typeof(BallsData), "Data/BallsData"},
         };
 
         public T Load<T>() where T : Object

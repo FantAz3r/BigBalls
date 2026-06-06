@@ -24,6 +24,10 @@ namespace BigBalls.Factories
         private readonly IEntityRepository _entityRepository;
         private readonly IRaycastService _raycastService;
         private readonly IPlayerProvider _playerProvider;
+        private readonly IBallFactory _ballFactory;
+        private readonly ICoroutineRunner _coroutineRunner;
+
+        private PlayerBallContainer _playerBallContainer;
         private PlayerConfig _playerConfig;
 
         private List<Stat> _statHolder = new();
@@ -40,7 +44,9 @@ namespace BigBalls.Factories
             IUIFactory uIFactory,
             IEntityRepository entityRepository,
             IRaycastService raycastService,
-            IPlayerProvider playerProvider)
+            IPlayerProvider playerProvider,
+            IBallFactory ballFactory,
+            ICoroutineRunner coroutineRunner)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -52,6 +58,8 @@ namespace BigBalls.Factories
             _entityRepository = entityRepository;
             _raycastService = raycastService;
             _playerProvider = playerProvider;
+            _ballFactory = ballFactory;
+            _coroutineRunner = coroutineRunner;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -65,9 +73,13 @@ namespace BigBalls.Factories
 
             StatHolder statHolder =  new StatHolder(playerID, _playerConfig);
 
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _playerConfig, _raycastService);
+            Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
-            Shooter shooter = new Shooter(statHolder[StatType.Damage], player.transform);
+
+            _playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory);
+            _playerBallContainer.Subscribe();
+
+            Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, _playerBallContainer, _coroutineRunner);
             PlayerMover playerMover =   new PlayerMover(_inputService, rotator, mover);
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
 
@@ -80,14 +92,26 @@ namespace BigBalls.Factories
                 healthRegenerator
             };
 
-            DeathHandler playerDeathHandler = new DeathHandler( statHolder[StatType.Health], subscribables);
-            player.Construct(playerID, playerDeathHandler);
+
+            DeathHandler playerDeathHandler = new DeathHandler(statHolder[StatType.Health], subscribables, player.transform);
+            playerDeathHandler.Subscribe();
+            playerDeathHandler.Died += Kill;
+
+            player.Construct(playerID);
 
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);
 
             return player;
+        }
+
+        private void Kill(DeathHandler deathHandler, Transform player)
+        {
+            deathHandler.Died -= Kill;
+            deathHandler.Unsubscribe();
+            _playerBallContainer.Unsubscribe();
+            player.gameObject.SetActive(false);
         }
     }
 }

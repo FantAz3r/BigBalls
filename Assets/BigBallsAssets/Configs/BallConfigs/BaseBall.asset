@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
   m_Name: BaseBall
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 0}
-  <Speed>k__BackingField: 5
+  <Prefab>k__BackingField: {fileID: 1058083665175991319, guid: d13826f59a9a7a247ad9de285bab35fe,
+    type: 3}
   <Radius>k__BackingField: 0.2
   <IsMaterial>k__BackingField: 1
+  <Stats>k__BackingField:
+  - StatType: 3
+    StartMaxValue: 5
+    StartCurrentValue: 5
+    MinValue: 0
+  - StatType: 1
+    StartMaxValue: 1
+    StartCurrentValue: 1
+    MinValue: 0
   BehaviourConfigs:
   - {fileID: 11400000, guid: a94bd66777f5baa4ab3d47ad8c6b2fff, type: 2}
-  - {fileID: 11400000, guid: 2e1b0c10be42a9d4a9fb84406a76f949, type: 2}

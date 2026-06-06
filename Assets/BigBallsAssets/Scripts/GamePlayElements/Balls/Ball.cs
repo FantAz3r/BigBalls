@@ -6,37 +6,72 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Ball : MonoBehaviour
+    public class Ball : MonoBehaviour, IEntity
     {
         private List<EffectBehaviour> _effects = new();
         private Collider _collider;
+        private DeathHandler _ballDeathHandler;
         private bool _isMaterial;
+        private bool _canReturnToBag = false;
+
         public event Action<int> Hited;
+        public event Action<Ball> Disabled;
+        public event Action<Ball> Returned;
 
-        public BallConfig Config { get; private set; }
+        [field: SerializeField] public BallConfig Config { get; private set; }
+        public Mover Mover { get; private set; }
+        public int Id { get; private set; }
+        public Transform Transform => transform;
 
-        public void Construct(BallConfig ballConfig, IBallBehaivorFactory behaivorFactory)
+
+        private void OnEnable() => _ballDeathHandler?.Subscribe();
+
+        private void OnDisable()
         {
-            _isMaterial = ballConfig.IsMaterial;
+            _ballDeathHandler?.Unsubscribe();
+            Disabled?.Invoke(this);
+        }
+
+        public void Construct(IBallBehaivorFactory behaivorFactory, int id, Mover mover, DeathHandler ballDeathHandler)
+        {
+            Id = id;
+            Mover = mover;
+            _ballDeathHandler = ballDeathHandler;
+            _isMaterial = Config.IsMaterial;
             _effects = behaivorFactory.Create(Config);
+            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
 
             foreach (var effect in _effects)
             {
                 effect.Init(this);
             }
+
+            _ballDeathHandler.Subscribe();
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision)
         {
-            other.ClosestPoint(transform.position);
-            Physics.SphereCast(transform.position, Config.Radius, new Vector3(), out var hit);
-
-            if (_isMaterial == false)
+            if (_isMaterial)
             {
-                //логика Reflect;
+                ReflectBall(collision);
             }
 
-            if (other.TryGetComponent(out IEntity entity))
+            if (collision.gameObject.TryGetComponent<Player>(out _))
+            {
+                if (_canReturnToBag)
+                {
+                    Returned?.Invoke(this);
+                }
+
+                return;
+            }
+
+            if (collision.gameObject.TryGetComponent<BackWall>(out _))
+            {
+                _canReturnToBag = true;
+            }
+
+            if (collision.gameObject.TryGetComponent(out IEntity entity))
             {
                 Hited?.Invoke(entity.Id);
             }
@@ -46,6 +81,14 @@ namespace BigBalls.GameplayObjects
         {
             _isMaterial = isMaterial;
             _collider.isTrigger = _isMaterial == false;
+        }
+
+        private void ReflectBall(Collision collision)
+        {
+            Vector3 currentDirection = new Vector3(Mover.Direction.normalized.x, 0, Mover.Direction.normalized.y);
+            Vector3 normal = collision.contacts[0].normal;
+            Vector3 reflectedDirection = Vector3.Reflect(currentDirection, normal);
+            Mover.SetDirection(new Vector2(reflectedDirection.x, reflectedDirection.z));
         }
     }
 }

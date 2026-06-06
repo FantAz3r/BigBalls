@@ -1,4 +1,4 @@
-
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +8,16 @@ namespace BigBalls.GameplayObjects
     {
         private readonly Stat _health;
         private readonly List<ISubscribable> _subscribables;
+        private readonly Transform _diebleObject;
 
-        public DeathHandler( Stat health, List<ISubscribable> subscribables)
+        public DeathHandler(Stat health, List<ISubscribable> subscribables, Transform diebleObject)
         {
             _health = health;
             _subscribables = subscribables;
+            _diebleObject = diebleObject;
         }
+
+        public event Action<DeathHandler, Transform> Died;
 
         public void Subscribe()
         {
@@ -23,14 +27,13 @@ namespace BigBalls.GameplayObjects
             }
 
             _health.ValueChanged += HandleDeath;
-            
         }
 
         private void HandleDeath(IReadonlyStat stat)
         {
             if (stat.CurrentValue <= stat.MinValue)
             {
-                //Debug.Log("Die");
+                Died?.Invoke(this, _diebleObject);
             }
         }
        
@@ -42,6 +45,12 @@ namespace BigBalls.GameplayObjects
             }
 
             _health.ValueChanged -= HandleDeath;
+        }
+
+        public void Die()
+        {
+            Unsubscribe();
+            _diebleObject.gameObject.SetActive(false);
         }
     }
 }

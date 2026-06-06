@@ -14,22 +14,9 @@ namespace BigBalls.GameplayObjects
         public PlayerAnimator PlayerAnimator { get; private set; }
         public Transform Transform => transform;
 
-        public void Construct(int id, DeathHandler playerDeathHandler)
+        public void Construct(int id )
         {
             Id = id;
-            _playerDeathHandler = playerDeathHandler;
-            _playerDeathHandler.Subscribe();
-
-        }
-
-        private void OnEnable()
-        {
-            _playerDeathHandler?.Subscribe();
-        }
-
-        private void OnDisable()
-        {
-            _playerDeathHandler?.Unsubscribe();
         }
     }
 }
