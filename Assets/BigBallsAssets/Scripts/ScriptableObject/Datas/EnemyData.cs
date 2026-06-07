@@ -8,6 +8,6 @@ namespace BigBalls.GameplayObjects
 
     public class EnemyData : ScriptableObject
     {
-        [ SerializeField] public List<EnemyConfig> Configs = new List<EnemyConfig>();
+        [SerializeField] public List<EnemyConfig> Configs = new List<EnemyConfig>();
     }
 }

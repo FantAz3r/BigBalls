@@ -42,9 +42,11 @@ namespace BigBalls.Factories
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
-            //_poolService.Get<Enemy>(enemyConfig.Prefab, this);
-
-            Enemy enemy = _resolverProvider.CurrentResolver.Instantiate(enemyConfig.Prefab, spawnPosition, Quaternion.identity);
+            Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name);
+            
+            enemy.transform.position = spawnPosition;
+            enemy.transform.rotation = Quaternion.identity;
+            
             int playerID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(playerID, enemyConfig);
@@ -62,10 +64,10 @@ namespace BigBalls.Factories
 
         private void OnDied(Enemy enemy)
         {
-            //_poolService.Release<Enemy>(enemy, this);
+            
             enemy.DeathHandler.Unsubscribe();
             enemy.DeathHandler.Died -= OnDied;
-            enemy.gameObject.SetActive(false);
+            _poolService.ReleaseObject(enemy);
         }
 
         private List<ISubscribable> CreateComponents(StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)

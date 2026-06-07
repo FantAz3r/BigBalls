@@ -1,0 +1,12 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace BigBalls.Configs
+{
+    [CreateAssetMenu(menuName = "Configs/PoolServiceConfig")]
+    public class PoolServiceConfig : ScriptableObject
+    {
+        public int InitialEnemyPoolSize = 5;
+        public List<PoolInfo> Objects;
+    }
+}

@@ -25,6 +25,7 @@ namespace BigBalls.Services
             { typeof(EnemyData), "Data/EnemyData"},
             //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
             { typeof(BallsData), "Data/BallsData"},
+            {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
         };
 
         public T Load<T>() where T : Object
