@@ -12,9 +12,9 @@ namespace BigBalls.GameplayObjects
         private readonly BallsData _ballsData;
         private readonly IWeapon _weapon;
 
-        private Queue<Ball> _balls;
+        private Queue<BallConfig> _balls;
         private int _weaponConfigIndex = 0;
-        private int _createdBallsCount = 0; 
+        private int _createdBallsCount = 0;
 
         public PlayerBallContainer(Stat ballCount, IResourceLoader resourceLoader, IBallFactory ballFactory, IWeapon weapon = null)
         {
@@ -23,18 +23,12 @@ namespace BigBalls.GameplayObjects
             _ballsData = resourceLoader.Load<BallsData>();
             _weapon = weapon;
 
-            _balls = new Queue<Ball>((int)ballCount.MaxValue);
+            _balls = new Queue<BallConfig>((int)ballCount.MaxValue);
         }
 
-        public void Subscribe()
-        {
-            _ballFactory.BallReturned += ReturmBullet;
-        }
+        public void Subscribe() => _ballFactory.BallReturned += ReturmBullet;
 
-        public void Unsubscribe()
-        {
-            _ballFactory.BallReturned -= ReturmBullet;
-        }
+        public void Unsubscribe() => _ballFactory.BallReturned -= ReturmBullet;
 
         public bool TryGetNextBullet(out Ball ball)
         {
@@ -42,7 +36,7 @@ namespace BigBalls.GameplayObjects
 
             if (_balls.Count > 0)
             {
-                ball = _balls.Dequeue();
+                ball = _ballFactory.Create(_balls.Dequeue());
                 return true;
             }
 
@@ -60,17 +54,16 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        public void ReturmBullet(Ball ball)
-        {
-            _balls.Enqueue(ball);
-        }
+        public void ReturmBullet(Ball ball) => _balls.Enqueue(ball.Config);
 
         private Ball CreateNewBall()
         {
             BallConfig config = GetNextAvailableConfig();
 
             if (config == null)
+            {
                 return null;
+            }
 
             Ball ball = _ballFactory.Create(config);
             return ball;

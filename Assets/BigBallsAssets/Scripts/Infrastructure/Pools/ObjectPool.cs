@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BigBalls.Infrastructure.DI;
 using Unity.Mathematics;
@@ -13,7 +12,7 @@ public class ObjectPool<T> where  T : MonoBehaviour
     private string _nameParent;
     private GameObject _positionInHierarchy;
 
-    private Queue<T> _objectPools = new Queue<T>();
+    private Queue<T> _objectPool = new Queue<T>();
     
     public ObjectPool(int initializePoolSize, IObjectResolverProvider resolverProvider)
     {
@@ -23,10 +22,10 @@ public class ObjectPool<T> where  T : MonoBehaviour
     
     public T Get()
     {
-        if (_objectPools.Count == 0)
+        if (_objectPool.Count == 0)
             ExpandPool();
 
-        T obj = _objectPools.Dequeue();
+        T obj = _objectPool.Dequeue();
         obj.gameObject.SetActive(true);
 
         return obj;
@@ -35,7 +34,7 @@ public class ObjectPool<T> where  T : MonoBehaviour
     public void Release(T obj)
     {
         obj.gameObject.SetActive(false);
-        _objectPools.Enqueue(obj);
+        _objectPool.Enqueue(obj);
     }
 
     public void InitializePool(T prefab, Transform transformParent, string nameParent)
@@ -48,7 +47,6 @@ public class ObjectPool<T> where  T : MonoBehaviour
         for (int i = 0; i < _poolSize; i++)
         {
             ExpandPool();
-           
         }
     }
     
@@ -58,6 +56,6 @@ public class ObjectPool<T> where  T : MonoBehaviour
         obj.name = _nameParent;
         obj.transform.SetParent(_positionInHierarchy.transform);
         obj.gameObject.SetActive(false);
-        _objectPools.Enqueue(obj);
+        _objectPool.Enqueue(obj);
     }
 }

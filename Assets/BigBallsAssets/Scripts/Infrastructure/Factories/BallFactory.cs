@@ -55,8 +55,7 @@ namespace BigBalls.Factories
             ballDeathHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
-            CreateBallEffects(ballConfig);
-            ball.Construct(ballId, mover, CreateCollisionStrategies(), ballDeathHandler);
+            ball.Construct(ballId, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
             return ball;
         }
 
@@ -71,14 +70,6 @@ namespace BigBalls.Factories
             };
 
             return collisionStrategies;
-        }
-
-        private void CreateBallEffects(BallConfig ballConfig)
-        {
-            foreach (var effect in _ballEffectFactory.Create(ballConfig))
-            {
-                effect.Init(ballConfig.Prefab);
-            }
         }
 
         private void OnReturn(Ball ball)

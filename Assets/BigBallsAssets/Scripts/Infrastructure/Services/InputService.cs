@@ -54,21 +54,7 @@ namespace BigBalls.Services
 
         private void OnRotatePerformed(InputAction.CallbackContext context)
         {
-            Vector2 direction = Vector2.zero;
-
-            if (YG2.envir.isDesktop)
-            {
-                CursorOrigin = new Vector2(Screen.width / 2f, Screen.height / 2f);
-                Vector2 cursorPos = context.ReadValue<Vector2>();
-                direction = cursorPos - CursorOrigin;
-            }
-
-            if (direction.sqrMagnitude > 0f)
-                direction.Normalize();
-            else
-                direction = Vector2.zero;
-
-            RotateDirectionSeted?.Invoke(direction);
+            RotateDirectionSeted?.Invoke(context.ReadValue<Vector2>());
         }
 
         private void OnRotateCanceled(InputAction.CallbackContext context)

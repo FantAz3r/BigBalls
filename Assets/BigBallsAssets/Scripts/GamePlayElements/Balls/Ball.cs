@@ -1,3 +1,4 @@
+using BigBalls.Factories;
 using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ namespace BigBalls.GameplayObjects
     public class Ball : MonoBehaviour, IEntity
     {
         private List<ICollisionStrategy> _collisionStrategies;
+        private List<EffectBehaviour> _effectBehaviours;
+        private IBallEffectFactory _ballEffectFactory;
 
         public event Action<int> Hited;
         public event Action<Ball> Disabled;
@@ -21,6 +24,7 @@ namespace BigBalls.GameplayObjects
         public int Id { get; private set; }
         public Transform Transform => transform;
 
+
         private void OnCollisionEnter(Collision collision)
         {
             foreach (var strategy in _collisionStrategies)
@@ -30,14 +34,28 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler)
+        private void OnDisable()
+        {
+            foreach (var effect in _ballEffectFactory.Create(Config))
+            {
+                effect.Unsubscribe(this);
+            }
+        }
+
+        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IBallEffectFactory ballEffectFactory)
         {
             DeathHandler = deathHandler;
             _collisionStrategies = collisionStrategies;
             Id = id;
             Mover = mover;
+            _ballEffectFactory = ballEffectFactory;
             IsMaterial = Config.IsMaterial;
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
+
+            foreach (var effect in _ballEffectFactory.Create(Config))
+            {
+                effect.Subscribe(this);
+            }
         }
 
         public void OnHit(int id) => Hited?.Invoke(id);

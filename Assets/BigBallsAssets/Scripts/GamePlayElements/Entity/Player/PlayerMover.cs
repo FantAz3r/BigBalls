@@ -1,6 +1,5 @@
 ﻿using BigBalls.Services;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -45,7 +44,6 @@ namespace BigBalls.GameplayObjects
         private void OnMove(Vector2 direction)
         {
             Vector3 mainDirection = new Vector3(direction.normalized.x, 0, direction.normalized.y);
-
             Vector3 leftDirection = Quaternion.Euler(0, -ReycastAngle, 0) * mainDirection;
             Vector3 rightDirection = Quaternion.Euler(0, ReycastAngle, 0) * mainDirection;
 
@@ -57,8 +55,22 @@ namespace BigBalls.GameplayObjects
             _mover.SetDirection(direction);
         }
 
-        private void OnRotate(Vector2 direction)
+        private void OnRotate(Vector2 cursorScreenPos)
         {
+            if (_rotator.RotatebleObject == null || Camera.main == null || cursorScreenPos == Vector2.zero)
+            {
+                _rotator.SetDirection(Vector2.zero);
+                return;
+            }
+
+            Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(_rotator.RotatebleObject.position);
+            Vector2 direction = cursorScreenPos - new Vector2(playerScreenPos.x, playerScreenPos.y);
+
+            if (direction.sqrMagnitude > 0f)
+                direction.Normalize();
+            else
+                direction = Vector2.zero;
+
             _rotator.SetDirection(direction);
         }
     }

@@ -1,4 +1,5 @@
 using BigBalls.StaticData;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -12,17 +13,19 @@ namespace BigBalls.GameplayObjects
             Config = config;
         }
 
-        public void Init(Ball host)
+        public void Subscribe(Ball host)
         {
-            Host = host;
-            Host.Hited += OnHit;
+            host.Hited += OnHit;
         }
 
-        protected virtual void OnHit(int id) { }
-
-        protected virtual void OnDisable() 
+        protected virtual void OnHit(int id)
         {
-            Host.Hited -= OnHit;
+            Debug.Log("onHit");
+        }
+
+        public void Unsubscribe(Ball host) 
+        {
+            host.Hited -= OnHit;
         }
     }
 }

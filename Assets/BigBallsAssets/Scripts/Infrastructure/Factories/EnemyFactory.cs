@@ -64,7 +64,6 @@ namespace BigBalls.Factories
 
         private void OnDied(Enemy enemy)
         {
-            
             enemy.DeathHandler.Unsubscribe();
             enemy.DeathHandler.Died -= OnDied;
             _poolService.ReleaseObject(enemy);
