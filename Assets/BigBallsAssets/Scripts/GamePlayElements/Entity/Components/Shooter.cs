@@ -6,7 +6,7 @@ namespace BigBalls.GameplayObjects
 {
     public class Shooter : ISubscribable
     {
-        private readonly Vector3 _fireOffset = new Vector3(0,0.5f,0);
+        private readonly Vector3 _fireOffset = new Vector3(0, 0.5f, 0);
         private readonly Transform _firePoint;
         private readonly IBallContainer _ballContainer;
         private readonly ICoroutineRunner _coroutineRunner;
@@ -27,8 +27,14 @@ namespace BigBalls.GameplayObjects
 
         public void Subscribe()
         {
-            _shootRoutine = _coroutineRunner.StartCoroutine(ShootRoutine());
             _canShoot = true;
+            _shootRoutine = _coroutineRunner.StartCoroutine(ShootRoutine());
+        }
+
+        public void Unsubscribe()
+        {
+            _coroutineRunner.StopCoroutine(_shootRoutine);
+            _canShoot = false;
         }
 
         private IEnumerator ShootRoutine()
@@ -44,19 +50,13 @@ namespace BigBalls.GameplayObjects
         {
             Vector3 forward = _firePoint.forward;
 
-            if(_ballContainer.TryGetNextBullet(out Ball ball))
+            if (_ballContainer.TryGetNextBullet(out Ball ball))
             {
                 ball.transform.position = _firePoint.position + _fireOffset;
                 ball.transform.rotation = _firePoint.rotation;
                 ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
             }
             //ball.AddDamage(_damage.CurrentValue);
-        }
-
-        public void Unsubscribe()
-        {
-            _coroutineRunner.StopCoroutine(_shootRoutine);
-            _canShoot = false;
         }
     }
 }

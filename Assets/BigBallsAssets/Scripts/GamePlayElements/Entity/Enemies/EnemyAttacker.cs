@@ -1,6 +1,5 @@
 using BigBalls.Services;
-using UnityEngine;
-
+using System;
 
 namespace BigBalls.GameplayObjects
 {
@@ -9,10 +8,10 @@ namespace BigBalls.GameplayObjects
         private readonly IPlayerProvider _playerProvider;
         private readonly IDamageService _damageService;
         private readonly Stat _damage;
-        private readonly Transform _owner;
+        private readonly Enemy _owner;
         private readonly EntityTrigger _entityTrigger;
 
-        public EnemyAttacker(IPlayerProvider playerProvider, Stat damage, Transform owner, EntityTrigger entityTrigger , IDamageService damageService)
+        public EnemyAttacker(IPlayerProvider playerProvider, Stat damage, Enemy owner, EntityTrigger entityTrigger , IDamageService damageService)
         {
             _playerProvider = playerProvider;
             _damage = damage;
@@ -20,6 +19,8 @@ namespace BigBalls.GameplayObjects
             _entityTrigger = entityTrigger;
             _damageService = damageService;
         }
+
+        public event Action<Enemy> Suicided;
 
         public void Subscribe()
         {
@@ -35,9 +36,10 @@ namespace BigBalls.GameplayObjects
 
         private void Attack()
         {
-
+            //тут враг убивается об игрока
             _damageService.ApplyDamage(_playerProvider.Player.Id, _damage.CurrentValue);
-            GameObject.Destroy(_owner.gameObject);
+            Suicided?.Invoke(_owner);
+            Suicided = null;
         }
     }
 }

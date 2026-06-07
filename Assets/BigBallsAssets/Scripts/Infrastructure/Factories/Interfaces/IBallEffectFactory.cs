@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BigBalls.Factories
 {
-    public interface IBallBehaivorFactory
+    public interface IBallEffectFactory
     {
         List<EffectBehaviour> Create(BallConfig ballConfig);
     }

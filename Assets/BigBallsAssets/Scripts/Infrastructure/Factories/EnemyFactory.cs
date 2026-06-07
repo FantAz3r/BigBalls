@@ -48,10 +48,33 @@ namespace BigBalls.Factories
             int playerID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(playerID, enemyConfig);
+
+            List<ISubscribable> subscribables = CreateComponents(statHolder, enemy, enemyConfig);
+
+            DeathHandler<Enemy> deathHandler = new DeathHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
+            deathHandler.Subscribe();
+            deathHandler.Died += OnDied;
+
+            enemy.Construct(playerID, deathHandler);
+            _entityRepository.Add(enemy, statHolder);
+            return enemy;
+        }
+
+        private void OnDied(Enemy enemy)
+        {
+            //_poolService.Release<Enemy>(enemy, this);
+            enemy.DeathHandler.Unsubscribe();
+            enemy.DeathHandler.Died -= OnDied;
+            enemy.gameObject.SetActive(false);
+        }
+
+        private List<ISubscribable> CreateComponents(StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
+        {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, _raycastService, enemyConfig);
             Init(mover, enemyConfig);
 
-            EnemyAttacker enemyAttacker = new EnemyAttacker(_playerProvider, statHolder[StatType.Damage], enemy.transform, enemy.EntityTrigger, _damageService);
+            EnemyAttacker enemyAttacker = new EnemyAttacker(_playerProvider, statHolder[StatType.Damage], enemy, enemy.EntityTrigger, _damageService);
+            enemyAttacker.Suicided += OnDied;
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {
@@ -59,13 +82,7 @@ namespace BigBalls.Factories
                 enemyAttacker
             };
 
-            DeathHandler<Enemy> deathHandler = new DeathHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
-            deathHandler.Subscribe();
-            deathHandler.Died += Kill;
-
-            enemy.Construct(playerID);
-            _entityRepository.Add(enemy, statHolder);
-            return enemy;
+            return subscribables;
         }
 
         private void Init(Mover mover, EnemyConfig enemyConfig)
@@ -85,14 +102,6 @@ namespace BigBalls.Factories
             }
 
             mover.SetReycastInfo(raycastDirections, raycastPoints);
-        }
-
-        private void Kill(DeathHandler<Enemy> deathHandler, Enemy enemy)
-        {
-            deathHandler.Died -= Kill;
-            deathHandler.Unsubscribe();
-            //_poolService.Release<Enemy>(enemy, this);
-            enemy.gameObject.SetActive(false);
         }
     }
 }

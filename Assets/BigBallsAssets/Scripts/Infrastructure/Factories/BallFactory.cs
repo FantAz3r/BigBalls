@@ -4,6 +4,7 @@ using BigBalls.Services;
 using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -12,23 +13,26 @@ namespace BigBalls.Factories
     public class BallFactory : IBallFactory
     {
         private readonly IObjectResolverProvider _objectResolverProvider;
-        private readonly IBallBehaivorFactory _ballBehaivorFactory;
+        private readonly IBallEffectFactory _ballEffectFactory;
         private readonly IEntityRepository _entityRepository;
         private readonly IIdentifierService _identifierService;
         private readonly IUpdateService _updateService;
+        private readonly IPlayerProvider _playerProvider;
 
         public BallFactory(
             IObjectResolverProvider objectResolverProvider,
-            IBallBehaivorFactory ballBehaivorFactory,
+            IBallEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
             IIdentifierService identifierService,
-            IUpdateService updateService)
+            IUpdateService updateService,
+            IPlayerProvider playerProvider)
         {
             _objectResolverProvider = objectResolverProvider;
-            _ballBehaivorFactory = ballBehaivorFactory;
+            _ballEffectFactory = ballBehaivorFactory;
             _entityRepository = entityRepository;
             _identifierService = identifierService;
             _updateService = updateService;
+            _playerProvider = playerProvider;
         }
 
         public event Action<Ball> BallReturned;
@@ -42,28 +46,48 @@ namespace BigBalls.Factories
             StatHolder statHolder = new StatHolder(ballId, ballConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
 
-            List<ISubscribable> subscribables = new List<ISubscribable>() { mover };
+            List<ISubscribable> subscribables = new List<ISubscribable>()
+            {
+                mover
+            };
 
             DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
-            ballDeathHandler.Died += OnDied;
+            ballDeathHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
-            ball.Construct(_ballBehaivorFactory, ballId, mover, ballDeathHandler);
+            CreateBallEffects(ballConfig);
+            ball.Construct(ballId, mover, CreateCollisionStrategies(), ballDeathHandler);
             return ball;
         }
 
-        private void OnDied(DeathHandler<Ball> deathHandler, Ball ball)
+        private List<ICollisionStrategy> CreateCollisionStrategies()
         {
-            deathHandler.Died -= OnDied;
-            deathHandler.Unsubscribe();
-            ball.gameObject.SetActive(false);
-            BallReturned?.Invoke(ball);
+            List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
+            {
+                new PlayerCollisionStrategy(),
+                new BackWallCollisionStrategy(_playerProvider.Player),
+                new EnemyCollisionStrategy(),
+                new ReflectCollisionStrategy()
+            };
+
+            return collisionStrategies;
+        }
+
+        private void CreateBallEffects(BallConfig ballConfig)
+        {
+            foreach (var effect in _ballEffectFactory.Create(ballConfig))
+            {
+                effect.Init(ballConfig.Prefab);
+            }
         }
 
         private void OnReturn(Ball ball)
         {
+            ball.DeathHandler.Unsubscribe();
             ball.Returned -= OnReturn;
+            ball.DeathHandler.Died -= OnReturn;
             ball.gameObject.SetActive(false);
+
             BallReturned?.Invoke(ball);
         }
     }

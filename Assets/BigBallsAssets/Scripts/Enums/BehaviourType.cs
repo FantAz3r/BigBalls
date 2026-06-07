@@ -8,5 +8,6 @@
         Freeze,
         Stun,
         Lazer,
+        Tunder,
     }
 }

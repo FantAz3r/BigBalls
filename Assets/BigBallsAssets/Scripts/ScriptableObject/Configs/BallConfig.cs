@@ -18,13 +18,13 @@ namespace BigBalls.StaticData
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }
 
 
-        [field: SerializeField] public List<EffectConfig> BehaviourConfigs = new ();
+        [field: SerializeField] public List<EffectConfig> EffectConfigs = new ();
 
         public bool TryGetBehaviour(out EffectConfig behaviourConfig, BehaviourType type)
         {
             behaviourConfig = null;
 
-            foreach (var behaviour in BehaviourConfigs)
+            foreach (var behaviour in EffectConfigs)
             {
                 if (type == behaviour.Type)
                 {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
-    public class PlayerBallContainer : IBallContainer
+    public class PlayerBallContainer : IBallContainer, ISubscribable
     {
         private readonly Stat _ballCount;
         private readonly IBallFactory _ballFactory;
@@ -49,6 +49,7 @@ namespace BigBalls.GameplayObjects
             if (_createdBallsCount < _ballCount.MaxValue)
             {
                 ball = CreateNewBall();
+
                 if (ball != null)
                 {
                     _createdBallsCount++;

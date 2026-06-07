@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-
-namespace BigBalls.GameplayObjects
+﻿namespace BigBalls.GameplayObjects
 {
-    public class BackWall : MonoBehaviour
+    public class BackWall : Wall
     {
     }
 }
