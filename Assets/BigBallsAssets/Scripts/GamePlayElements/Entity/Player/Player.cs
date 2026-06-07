@@ -5,7 +5,7 @@ namespace BigBalls.GameplayObjects
 {
     public class Player : MonoBehaviour, IEntity
     {
-        private DeathHandler _playerDeathHandler;
+        private DeathHandler<Player> _playerDeathHandler;
 
         [field: SerializeField] public PlayerConfig PlayerConfig { get; private set; }
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }

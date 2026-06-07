@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Enemy : MonoBehaviour, IEntity, IHitble
+    public class Enemy : MonoBehaviour, IEntity, IHitble, IDieble
     {
         [field: SerializeField] public EntityTrigger EntityTrigger { get; private set; }
         public int Id { get; private set; }
@@ -12,5 +12,7 @@ namespace BigBalls.GameplayObjects
         {
             Id = id;
         }
+
+        public IDieble GetSelf() => this;
     }
 }

@@ -10,7 +10,7 @@ namespace BigBalls.GameplayObjects
     {
         private List<EffectBehaviour> _effects = new();
         private Collider _collider;
-        private DeathHandler _ballDeathHandler;
+        private DeathHandler<Ball> _ballDeathHandler;
         private bool _isMaterial;
         private bool _canReturnToBag = false;
 
@@ -32,7 +32,7 @@ namespace BigBalls.GameplayObjects
             Disabled?.Invoke(this);
         }
 
-        public void Construct(IBallBehaivorFactory behaivorFactory, int id, Mover mover, DeathHandler ballDeathHandler)
+        public void Construct(IBallBehaivorFactory behaivorFactory, int id, Mover mover, DeathHandler<Ball> ballDeathHandler)
         {
             Id = id;
             Mover = mover;
@@ -51,11 +51,6 @@ namespace BigBalls.GameplayObjects
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (_isMaterial)
-            {
-                ReflectBall(collision);
-            }
-
             if (collision.gameObject.TryGetComponent<Player>(out _))
             {
                 if (_canReturnToBag)
@@ -66,9 +61,16 @@ namespace BigBalls.GameplayObjects
                 return;
             }
 
+            if (_isMaterial)
+            {
+                ReflectBall(collision);
+            }
+
             if (collision.gameObject.TryGetComponent<BackWall>(out _))
             {
                 _canReturnToBag = true;
+
+                
             }
 
             if (collision.gameObject.TryGetComponent(out IEntity entity))

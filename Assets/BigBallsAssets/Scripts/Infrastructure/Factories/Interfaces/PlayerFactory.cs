@@ -93,7 +93,7 @@ namespace BigBalls.Factories
             };
 
 
-            DeathHandler playerDeathHandler = new DeathHandler(statHolder[StatType.Health], subscribables, player.transform);
+            DeathHandler<Player> playerDeathHandler = new DeathHandler<Player>(statHolder[StatType.Health], subscribables, player);
             playerDeathHandler.Subscribe();
             playerDeathHandler.Died += Kill;
 
@@ -106,7 +106,7 @@ namespace BigBalls.Factories
             return player;
         }
 
-        private void Kill(DeathHandler deathHandler, Transform player)
+        private void Kill(DeathHandler<Player> deathHandler, Player player)
         {
             deathHandler.Died -= Kill;
             deathHandler.Unsubscribe();

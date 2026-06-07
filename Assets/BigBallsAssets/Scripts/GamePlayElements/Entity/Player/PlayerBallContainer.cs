@@ -12,7 +12,7 @@ namespace BigBalls.GameplayObjects
         private readonly BallsData _ballsData;
         private readonly IWeapon _weapon;
 
-        private  Queue<Ball> _balls;
+        private Queue<Ball> _balls;
         private int _weaponConfigIndex = 0;
         private int _createdBallsCount = 0; 
 

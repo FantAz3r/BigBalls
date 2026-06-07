@@ -44,7 +44,7 @@ namespace BigBalls.Factories
 
             List<ISubscribable> subscribables = new List<ISubscribable>() { mover };
 
-            DeathHandler ballDeathHandler = new DeathHandler(statHolder[StatType.Health], subscribables, ball.transform);
+            DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
             ballDeathHandler.Died += OnDied;
             ballDeathHandler.Subscribe();
 
@@ -52,13 +52,11 @@ namespace BigBalls.Factories
             return ball;
         }
 
-        private void OnDied(DeathHandler deathHandler, Transform ballTransform)
+        private void OnDied(DeathHandler<Ball> deathHandler, Ball ball)
         {
             deathHandler.Died -= OnDied;
             deathHandler.Unsubscribe();
-            ballTransform.gameObject.SetActive(false);
-
-            ballTransform.TryGetComponent(out Ball ball);
+            ball.gameObject.SetActive(false);
             BallReturned?.Invoke(ball);
         }
 

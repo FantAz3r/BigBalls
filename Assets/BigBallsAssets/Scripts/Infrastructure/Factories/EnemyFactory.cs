@@ -3,7 +3,6 @@ using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -18,6 +17,7 @@ namespace BigBalls.Factories
         private readonly IPlayerProvider _playerProvider;
         private readonly IDamageService _damageService;
         private readonly IEntityRepository _entityRepository;
+        private readonly IPoolService _poolService;
 
         public EnemyFactory(
             IObjectResolverProvider resolverProvider,
@@ -26,7 +26,8 @@ namespace BigBalls.Factories
             IRaycastService raycastService,
             IPlayerProvider playerProvider,
             IDamageService damageService,
-            IEntityRepository entityRepository
+            IEntityRepository entityRepository,
+            IPoolService poolService
             )
         {
             _resolverProvider = resolverProvider;
@@ -36,10 +37,13 @@ namespace BigBalls.Factories
             _playerProvider = playerProvider;
             _damageService = damageService;
             _entityRepository = entityRepository;
+            _poolService = poolService;
         }
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
+            //_poolService.Get<Enemy>(enemyConfig.Prefab, this);
+
             Enemy enemy = _resolverProvider.CurrentResolver.Instantiate(enemyConfig.Prefab, spawnPosition, Quaternion.identity);
             int playerID = _identifierService.ID;
 
@@ -55,7 +59,7 @@ namespace BigBalls.Factories
                 enemyAttacker
             };
 
-            DeathHandler deathHandler = new DeathHandler(statHolder[StatType.Health], subscribables, enemy.transform);
+            DeathHandler<Enemy> deathHandler = new DeathHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
             deathHandler.Subscribe();
             deathHandler.Died += Kill;
 
@@ -83,10 +87,11 @@ namespace BigBalls.Factories
             mover.SetReycastInfo(raycastDirections, raycastPoints);
         }
 
-        private void Kill(DeathHandler deathHandler, Transform enemy)
+        private void Kill(DeathHandler<Enemy> deathHandler, Enemy enemy)
         {
             deathHandler.Died -= Kill;
             deathHandler.Unsubscribe();
+            //_poolService.Release<Enemy>(enemy, this);
             enemy.gameObject.SetActive(false);
         }
     }

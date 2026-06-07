@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class DeathHandler : ISubscribable
+    public class DeathHandler<T> : ISubscribable where T : MonoBehaviour
     {
         private readonly Stat _health;
         private readonly List<ISubscribable> _subscribables;
-        private readonly Transform _diebleObject;
+        private readonly T _diebleObject;
 
-        public DeathHandler(Stat health, List<ISubscribable> subscribables, Transform diebleObject)
+        public DeathHandler(Stat health, List<ISubscribable> subscribables, T diebleObject)
         {
             _health = health;
             _subscribables = subscribables;
             _diebleObject = diebleObject;
         }
 
-        public event Action<DeathHandler, Transform> Died;
+        public event Action<DeathHandler<T>, T> Died;
 
         public void Subscribe()
         {
@@ -36,7 +36,7 @@ namespace BigBalls.GameplayObjects
                 Died?.Invoke(this, _diebleObject);
             }
         }
-       
+
         public void Unsubscribe()
         {
             foreach (var item in _subscribables)
@@ -50,8 +50,12 @@ namespace BigBalls.GameplayObjects
         public void Die()
         {
             Unsubscribe();
-            _diebleObject.gameObject.SetActive(false);
+
+            if (_diebleObject is Transform transformObject)
+            {
+                transformObject.gameObject.SetActive(false);
+            }
+            
         }
     }
 }
-
