@@ -2,6 +2,7 @@
 using BigBalls.StaticData;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace BigBalls.GameplayObjects
 {
@@ -13,6 +14,7 @@ namespace BigBalls.GameplayObjects
         private readonly LayerMask _obstacleLayerMask;
         private readonly Stat _moveSpeed;
 
+        private Transform _target;
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
 
@@ -30,14 +32,37 @@ namespace BigBalls.GameplayObjects
 
         public void Subscribe() => _updateService.Register(this);
         public void Unsubscribe() => _updateService.Unregister(this);
-        public void SetDirection(Vector2 direction) => Direction = direction;
+        public void SetDirection(Vector2 direction)
+        {
+            _target = null;
+            Direction = direction;
+        }
+
+        public void SetTarget(Transform target) => _target = target;
+
         public void SetReycastInfo(Vector3[] directions, Vector3[] points)
         {
             _raycastDirections = directions;
             _raycastPoints = points;
         }
 
-        public void Tick() => Move(Direction);
+        public void Tick()
+        {
+            if (_target != null)
+            {
+                Vector3 dirToTarget = (_target.position - MovableObject.position);
+                dirToTarget.y = 0; 
+
+                if (dirToTarget.sqrMagnitude > 0.001f)
+                {
+                    Move(new Vector2(dirToTarget.x, dirToTarget.z).normalized);
+                }
+            }
+            else
+            {
+                Move(Direction);
+            }
+        }
 
         private void Move(Vector2 direction)
         {

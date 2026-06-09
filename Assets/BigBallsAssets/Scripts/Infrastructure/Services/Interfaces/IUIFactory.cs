@@ -14,5 +14,6 @@ namespace BigBalls.Services
         PauseWindow CreatePauseWindow();
         T Get<T>(WindowType type) where T : WindowBase;
         LouseLevelMenu CreateLouseMenu();
+        WinLevelMenu CreateWinMenu();
     }
 }

@@ -33,9 +33,9 @@ namespace BigBalls.GameplayObjects
 
         public void Unsubscribe()
         {
-            if(_shootRoutine != null)
+            if(_shootRoutine != null && _coroutineRunner != null)
             {
-                _coroutineRunner?.StopCoroutine(_shootRoutine);
+                _coroutineRunner.StopCoroutine(_shootRoutine);
                 _shootRoutine = null;
                 _canShoot = false;
             }

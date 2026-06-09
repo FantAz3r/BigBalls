@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f45d568f5eb625c4b951983a67c795d4, type: 3}
   m_Name: EnemyConfig 1.2
   m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 1262936685549616925, guid: cbf0e8c95b2dc7144a0c5712a6c48a09,
+    type: 3}
+  <CanSuiside>k__BackingField: 1
+  <HasRangeAttack>k__BackingField: 0
+  <HasMeeleAttack>k__BackingField: 1
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
@@ -28,8 +33,6 @@ MonoBehaviour:
     StartMaxValue: 40
     StartCurrentValue: 40
     MinValue: 0
-  <Prefab>k__BackingField: {fileID: 1262936685549616925, guid: cbf0e8c95b2dc7144a0c5712a6c48a09,
-    type: 3}
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 72

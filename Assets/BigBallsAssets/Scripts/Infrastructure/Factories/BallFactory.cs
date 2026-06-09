@@ -76,14 +76,14 @@ namespace BigBalls.Factories
 
         private void OnReturn(Ball ball)
         {
-            ball.DeathHandler.Unsubscribe();
-            ball.Returned -= OnReturn;
-            ball.DeathHandler.Died -= OnReturn;
-            ball.UnsubscribeEffects();
-
             _entityRepository.Remove(ball);
-            BallReturned?.Invoke(ball);
+            ball.UnsubscribeEffects();
+            ball.DeathHandler.Unsubscribe();
+            ball.DeathHandler.Died -= OnReturn;
+            ball.Returned -= OnReturn;
+
             _poolService.ReleaseObject(ball);
+            BallReturned?.Invoke(ball);
         }
     }
 }

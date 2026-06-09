@@ -12,6 +12,7 @@ namespace BigBalls.GameplayObjects
     public class EnemySpawner
     {
         private readonly IEnemyFactory _enemyFactory;
+        private readonly IWinService _winService;
 
         private int _fieldWidth = 7;
         private int _rowWeight = 4;
@@ -20,9 +21,10 @@ namespace BigBalls.GameplayObjects
         private HashSet<Vector2Int> _occupiedPositions = new HashSet<Vector2Int>();
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
 
-        public EnemySpawner(IEnemyFactory enemyFactory)
+        public EnemySpawner(IEnemyFactory enemyFactory, IWinService winService)
         {
             _enemyFactory = enemyFactory;
+            _winService = winService;
         }
 
         public void Init(List<EnemyConfig> enemies)
@@ -45,9 +47,18 @@ namespace BigBalls.GameplayObjects
             _rowWeight = (_fieldWidth + 1) / 2;
         }
 
-        public void SpawnBoss(EnemyConfig enemyConfig)
+        public Boss SpawnBoss(EnemyConfig enemyConfig)
         {
+            int centerX = (_fieldWidth - 1) / 2;
+            Vector2Int spawnPosition = new Vector2Int(centerX, 0);
+            MarkOccupied(spawnPosition, enemyConfig);
 
+            return SpawnEnemyAt(enemyConfig, spawnPosition) as Boss;
+        }
+
+        public void SpawnLevelBoss(EnemyConfig enemyConfig)
+        {
+            _winService.SetWinReason(SpawnBoss(enemyConfig) as LevelBoss);
         }
 
         public void SpawnLine()
@@ -57,15 +68,18 @@ namespace BigBalls.GameplayObjects
             foreach (var spawn in chosenCombination)
             {
                 SpawnEnemyAt(spawn.enemy, spawn.position);
-
-                foreach (var block in spawn.enemy.BlocksPositions)
-                {
-                    var pos = spawn.position + block;
-                    _occupiedPositions.Add(pos);
-                }
+                MarkOccupied(spawn.position, spawn.enemy);
             }
 
             _rowIndex++;
+        }
+
+        private void MarkOccupied(Vector2Int position, EnemyConfig config)
+        {
+            foreach (var blockPosition in config.BlocksPositions)
+            {
+                _occupiedPositions.Add(position + blockPosition);
+            }
         }
 
         private List<(EnemyConfig enemy, Vector2Int position)> GenerateRandomValidCombination(int targetWeight, HashSet<Vector2Int> occupiedCellsInPreviousRows)
@@ -177,8 +191,6 @@ namespace BigBalls.GameplayObjects
                 return;
             }
 
-            Debug.Log(_enemyConfigs.Count);
-
             foreach (var enemy in _enemyConfigs)
             {
                 if (enemy.Weight > targetWeight) continue;
@@ -190,16 +202,14 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void SpawnEnemyAt(EnemyConfig enemy, Vector2Int position)
+        private Enemy SpawnEnemyAt(EnemyConfig enemy, Vector2Int position)
         {
             float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
             float spawnOffsetY = 0.5f;
             float spawnOffsetZ = 8;
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
-            _enemyFactory.Create(enemy, spawnPosition);
+            return _enemyFactory.Create(enemy, spawnPosition);
         }
-
-        
     }
 }

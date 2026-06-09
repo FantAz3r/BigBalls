@@ -10,18 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f45d568f5eb625c4b951983a67c795d4, type: 3}
-  m_Name: EnemyConfig 2.0
+  m_Name: LevelBoss 1.0
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 1262936685549616925, guid: 0b3eadeeec0bd4c4888f27d4ad5ef168,
+  <Prefab>k__BackingField: {fileID: 9196831905899846289, guid: a0501d7ad3675794eb0ecd89e94585e2,
     type: 3}
-  <CanSuiside>k__BackingField: 1
+  <CanSuiside>k__BackingField: 0
   <HasRangeAttack>k__BackingField: 0
   <HasMeeleAttack>k__BackingField: 1
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
+  - {x: -1, y: 0}
   - {x: 1, y: 0}
+  - {x: 0, y: 1}
+  - {x: -1, y: 1}
   - {x: 1, y: 1}
   <Stats>k__BackingField:
+  - StatType: 1
+    StartMaxValue: 100
+    StartCurrentValue: 100
+    MinValue: 0
   - StatType: 3
     StartMaxValue: 2
     StartCurrentValue: 0.2
@@ -29,10 +36,6 @@ MonoBehaviour:
   - StatType: 2
     StartMaxValue: 99999
     StartCurrentValue: 1
-    MinValue: 0
-  - StatType: 1
-    StartMaxValue: 60
-    StartCurrentValue: 60
     MinValue: 0
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2

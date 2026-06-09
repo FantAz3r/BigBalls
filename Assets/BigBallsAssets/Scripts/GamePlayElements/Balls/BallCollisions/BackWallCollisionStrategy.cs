@@ -18,9 +18,8 @@ public class BackWallCollisionStrategy : ICollisionStrategy
 
             if (_player != null)
             {
-                Vector3 direction = (_player.transform.position - ball.transform.position).normalized;
-                direction.y = 0;
-                ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
+               
+                ball.Mover.SetTarget(_player.transform);
             }
 
             return true;

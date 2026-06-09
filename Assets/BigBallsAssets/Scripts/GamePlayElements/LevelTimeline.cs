@@ -3,6 +3,7 @@ using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure;
 using BigBalls.Services;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -19,13 +20,14 @@ public class LevelTimeline
     private Coroutine _timerCoroutine;
     private LevelConfig _levelConfig;
 
+    public event Action Won;
+
     public LevelTimeline(ICoroutineRunner coroutineRunner, IResourceLoader resourceLoader, EnemySpawner enemySpawner, TileFactory tileFactory)
     {
         _coroutineRunner = coroutineRunner;
         _resourceLoader = resourceLoader;
         _enemySpawner = enemySpawner;
         _tileFactory = tileFactory;
-
     }
 
     public void Start(LevelID level)
@@ -51,6 +53,12 @@ public class LevelTimeline
 
         foreach (var wave in waves)
         {
+            yield return new WaitForSeconds(wave.WaveCooldown);
+
+            if (wave.BossConfig != null)
+                _enemySpawner.SpawnBoss(wave.BossConfig);
+
+
             for (int i = 0; i < wave.LineCount; i++)
             {
                 yield return _fiveSrconds;
@@ -59,12 +67,11 @@ public class LevelTimeline
 
             _enemySpawner.Reset();
             ScaleField();
-
-            yield return new WaitForSeconds(wave.WaveCooldown);
-
-            if (wave.BossConfig != null)
-                _enemySpawner.SpawnBoss(wave.BossConfig);
         }
+
+        yield return new WaitForSeconds(20);
+
+        _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
     }
 
     private void ScaleField()

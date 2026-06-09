@@ -14,5 +14,22 @@ namespace BigBalls.Configs
         [field: SerializeField] public List<Tile> TilePrefabs { get; private set; }
         [field: SerializeField] public List<Wave> Waves { get; private set; }
         [field: SerializeField] public List<EnemyConfig> Enemies { get; private set; }
+
+        [field: SerializeField] public float BossTimeDelay { get; private set; }
+        [field: SerializeField] public EnemyConfig LevelBoss { get; private set; }
+
+        public List<EnemyConfig> GetEnemiesForPool()
+        {
+            List<EnemyConfig> enemyConfigs = Enemies;
+            enemyConfigs.Add(LevelBoss);
+
+            foreach(var wave in Waves)
+            {
+                if(wave.BossConfig != null)
+                    enemyConfigs.Add(wave.BossConfig);
+            }
+
+            return enemyConfigs;
+        }
     }
 }

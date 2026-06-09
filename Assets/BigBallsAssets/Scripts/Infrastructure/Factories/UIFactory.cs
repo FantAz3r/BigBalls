@@ -49,6 +49,8 @@ namespace BigBalls.Factories
 
         public LouseLevelMenu CreateLouseMenu() => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
 
+        public WinLevelMenu CreateWinMenu() => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
+
         public void CreateJoystick()
         {
         }
@@ -64,7 +66,6 @@ namespace BigBalls.Factories
         {
             if (_windowCache.TryGetValue(windowType, out var cachedWindow))
             {
-                Debug.Log("from cach");
                 cachedWindow.Open();
                 return cachedWindow;
             }

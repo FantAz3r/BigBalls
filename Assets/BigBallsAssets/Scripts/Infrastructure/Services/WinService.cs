@@ -20,6 +20,7 @@ public class WinService : IWinService
 
     public void OnWin()
     {
+        _winReason.Won -= OnWin;
         _timeService.StopGame();
     }
 }
