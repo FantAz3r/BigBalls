@@ -1,10 +1,6 @@
-using BigBalls.Configs;
 using BigBalls.Factories;
-using BigBalls.Infrastructure;
-using BigBalls.Services;
 using BigBalls.StaticData;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,47 +11,32 @@ namespace BigBalls.GameplayObjects
 {
     public class EnemySpawner
     {
-        private readonly ICoroutineRunner _coroutineRunner;
         private readonly IEnemyFactory _enemyFactory;
-        private readonly TileFactory _tileFactory;
-        private readonly LevelID _level;
 
-        private LevelConfig _levelConfig;
-        private Coroutine _spawnCoroutine;
         private int _fieldWidth = 7;
         private int _rowWeight = 4;
         private int _rowIndex = 0;
 
-        private WaitForSeconds _fiveSrconds = new WaitForSeconds(5);
-        private List<Wave> _waves = new List<Wave>();
-        private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private HashSet<Vector2Int> _occupiedPositions = new HashSet<Vector2Int>();
+        private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
 
-        public EnemySpawner(ICoroutineRunner coroutineRunner, IEnemyFactory enemyFactory, IResourceLoader resourceLoader, TileFactory tileFactory, LevelID level)
+        public EnemySpawner(IEnemyFactory enemyFactory)
         {
-            _coroutineRunner = coroutineRunner;
             _enemyFactory = enemyFactory;
-            _tileFactory = tileFactory;
-            _level = level;
-            _levelConfig = resourceLoader.Load<LevelData>().Get(level);
-            _waves = _levelConfig.Waves;
-            _enemyConfigs = _levelConfig.Enemies;
         }
 
-        public void Start()
+        public void Init(List<EnemyConfig> enemies)
         {
-            _spawnCoroutine = _coroutineRunner.StartCoroutine(SpawnRoutine());
-            _tileFactory.FieldScaled += OnLineScaled;
+            _enemyConfigs = enemies;
         }
 
-        public void Stop()
+        public void Reset()
         {
-            _coroutineRunner.StopCoroutine(_spawnCoroutine);
-            _spawnCoroutine = null;
-            _tileFactory.FieldScaled -= OnLineScaled;
+            _rowIndex = 0;
+            _occupiedPositions.Clear();
         }
 
-        private void OnLineScaled(int fieldWidth)
+        public void ScaleField(int fieldWidth)
         {
             if (fieldWidth <= _fieldWidth)
                 throw new InvalidOperationException();
@@ -64,31 +45,12 @@ namespace BigBalls.GameplayObjects
             _rowWeight = (_fieldWidth + 1) / 2;
         }
 
-        private IEnumerator SpawnRoutine()
-        {
-            foreach (var vawe in _waves)
-            {
-                yield return new WaitForSeconds(vawe.WaveCooldown);
-
-                if (vawe.BossConfig != null)
-                    SpawnBoss(vawe.BossConfig);
-
-                for (int i = 0; i < vawe.LineCount; i++)
-                {
-                    yield return _fiveSrconds;
-                    SpawnLine();
-                    _rowIndex++;
-
-                }
-            }
-        }
-
-        private void SpawnBoss(EnemyConfig enemyConfig)
+        public void SpawnBoss(EnemyConfig enemyConfig)
         {
 
         }
 
-        private void SpawnLine()
+        public void SpawnLine()
         {
             var chosenCombination = GenerateRandomValidCombination(_rowWeight, _occupiedPositions);
 
@@ -102,6 +64,8 @@ namespace BigBalls.GameplayObjects
                     _occupiedPositions.Add(pos);
                 }
             }
+
+            _rowIndex++;
         }
 
         private List<(EnemyConfig enemy, Vector2Int position)> GenerateRandomValidCombination(int targetWeight, HashSet<Vector2Int> occupiedCellsInPreviousRows)
@@ -213,6 +177,8 @@ namespace BigBalls.GameplayObjects
                 return;
             }
 
+            Debug.Log(_enemyConfigs.Count);
+
             foreach (var enemy in _enemyConfigs)
             {
                 if (enemy.Weight > targetWeight) continue;
@@ -233,5 +199,7 @@ namespace BigBalls.GameplayObjects
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             _enemyFactory.Create(enemy, spawnPosition);
         }
+
+        
     }
 }

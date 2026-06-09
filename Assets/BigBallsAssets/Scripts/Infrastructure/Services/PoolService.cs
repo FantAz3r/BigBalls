@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
@@ -12,7 +11,8 @@ namespace BigBalls.Services
     {
         private readonly PoolServiceConfig _config;
         private readonly ObjectContainer _objectContainer;
-        
+        private readonly IObjectResolverProvider _resolverProvider;
+
         private EnemyData _enemyData;
         private BallsData _ballsData;
 
@@ -20,13 +20,14 @@ namespace BigBalls.Services
 
         // private Dictionary<FactoryType, Dictionary<Type, ObjectPool<T>>> _objectPools;
 
-        public PoolService(ObjectContainer  objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
+        public PoolService(ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
         {
             _objectContainer = objectContainer;
+            _resolverProvider = resolverProvider;
             _enemyData = resourceLoader.Load<EnemyData>();
             _config = resourceLoader.Load<PoolServiceConfig>();
             _ballsData = resourceLoader.Load<BallsData>();
-            
+
             InitializePools(resolverProvider);
         }
 

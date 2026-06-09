@@ -17,16 +17,11 @@ namespace BigBalls.GameplayObjects
             _updateService = updateService;
         }
 
-        public void Start()
-        {
-            _updateService.Register(this);
-        }
+        public void Start() => _updateService.Register(this);
 
-        public void Tick()
-        {
-            MoveTiles();
-            HandleInput();
-        }
+        public void Stop() => _updateService.Unregister(this);
+
+        public void Tick() => MoveTiles();
 
         private void MoveTiles()
         {
@@ -41,14 +36,6 @@ namespace BigBalls.GameplayObjects
                 {
                     _factory.RemoveTile(i);
                 }
-            }
-        }
-
-        private void HandleInput() // переделать по событию от WaveTimer
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _factory.ScaleRoad();
             }
         }
     }

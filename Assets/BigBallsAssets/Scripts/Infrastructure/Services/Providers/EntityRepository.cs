@@ -22,11 +22,9 @@ public class EntityRepository : IEntityRepository
         }
     }
 
-
     public StatHolder Get(int id)
     {
         _entities.TryGetValue(id, out StatHolder statHolder);
         return statHolder;
     }
-
 }

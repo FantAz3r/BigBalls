@@ -54,7 +54,7 @@ namespace BigBalls.Factories
             _activeTiles.Add(newTile);
         }
 
-        public void ScaleRoad()
+        public int ScaleRoad()
         {
             RoadWidth += ScaleStep;
 
@@ -63,7 +63,7 @@ namespace BigBalls.Factories
                 tile.ScaleTile(RoadWidth);
             }
 
-            FieldScaled?.Invoke(RoadWidth);
+            return RoadWidth;
         }
 
         public float GetLNextSpawnPointZ()

@@ -19,7 +19,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<CreateLevelState>(Lifetime.Scoped);
 
             builder.RegisterComponent(_objectContainer);
-
+            builder.Register<LevelTimeline>(Lifetime.Scoped);
             builder.Register<TileMover>(Lifetime.Scoped);
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
 

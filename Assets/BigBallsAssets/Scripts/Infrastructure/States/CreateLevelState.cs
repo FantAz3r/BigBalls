@@ -22,6 +22,8 @@ namespace BigBalls.Infrastructure
         private readonly TileFactory _tileGenerator;
         private readonly TileMover _tileMover;
         private readonly EnemySpawner _enemySpawner;
+        private readonly LevelTimeline _levelTimeline;
+
         private LevelConfig _levelConfig;
 
         public CreateLevelState(
@@ -36,7 +38,8 @@ namespace BigBalls.Infrastructure
             ILevelLoadingService levelLoadingService,
             TileFactory tileGenerator,
             TileMover tileMover,
-            EnemySpawner enemySpawner
+            EnemySpawner enemySpawner,
+            LevelTimeline levelTimeline
             )
         {
             _objectResolverProvider = objectResolverProvider;
@@ -50,26 +53,26 @@ namespace BigBalls.Infrastructure
             _tileGenerator = tileGenerator;
             _tileMover = tileMover;
             _enemySpawner = enemySpawner;
+            _levelTimeline = levelTimeline;
         }
 
         public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
-
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _playerFactory.Create();
 
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
-            _enemySpawner.Start();
+            _levelTimeline.Start(level);
 
             _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
         }
 
         public void Exit()
         {
-            _enemySpawner.Stop();
+            _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();

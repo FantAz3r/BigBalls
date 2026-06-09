@@ -28,13 +28,17 @@ namespace BigBalls.GameplayObjects
         public void Subscribe()
         {
             _canShoot = true;
-            _shootRoutine = _coroutineRunner.StartCoroutine(ShootRoutine());
+            _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
         }
 
         public void Unsubscribe()
         {
-            _coroutineRunner.StopCoroutine(_shootRoutine);
-            _canShoot = false;
+            if(_shootRoutine != null)
+            {
+                _coroutineRunner?.StopCoroutine(_shootRoutine);
+                _shootRoutine = null;
+                _canShoot = false;
+            }
         }
 
         private IEnumerator ShootRoutine()
