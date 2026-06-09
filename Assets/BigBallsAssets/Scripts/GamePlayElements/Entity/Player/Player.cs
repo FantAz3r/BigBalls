@@ -1,3 +1,4 @@
+using System;
 using BigBalls.StaticData;
 using UnityEngine;
 
@@ -12,6 +13,11 @@ namespace BigBalls.GameplayObjects
         public int Id { get; private set; }
         public PlayerAnimator PlayerAnimator { get; private set; }
         public Transform Transform => transform;
+
+        private void OnDestroy()
+        {
+            DeathHandler.Unsubscribe();
+        }
 
         public void Construct(int id, DeathHandler<Player> playerDeathHandler)
         {

@@ -26,9 +26,9 @@ namespace BigBalls.GameplayObjects
             _balls = new Queue<BallConfig>((int)ballCount.MaxValue);
         }
 
-        public void Subscribe() => _ballFactory.BallReturned += ReturmBullet;
+        public void Subscribe() => _ballFactory.BallReturned += ReturnBullet;
 
-        public void Unsubscribe() => _ballFactory.BallReturned -= ReturmBullet;
+        public void Unsubscribe() => _ballFactory.BallReturned -= ReturnBullet;
 
         public bool TryGetNextBullet(out Ball ball)
         {
@@ -54,7 +54,7 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        public void ReturmBullet(Ball ball) => _balls.Enqueue(ball.Config);
+        public void ReturnBullet(Ball ball) => _balls.Enqueue(ball.Config);
 
         private Ball CreateNewBall()
         {

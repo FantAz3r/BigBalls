@@ -11,10 +11,16 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
 
         public event Action<Enemy> Disabled;
+        
         public void Construct(int id, DeathHandler<Enemy> deathHandler)
         {
             DeathHandler = deathHandler;
             Id = id;
+        }
+        
+        private void OnDestroy()
+        {
+            DeathHandler?.Unsubscribe();
         }
     }
 }

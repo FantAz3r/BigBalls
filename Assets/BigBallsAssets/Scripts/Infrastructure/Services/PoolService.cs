@@ -76,11 +76,19 @@ namespace BigBalls.Services
             enemyPool.transform.SetParent(_objectContainer.transform);
             bollPool.transform.SetParent(_objectContainer.transform);
             
-            foreach (var config in _enemyData.Configs)
+            foreach (EnemyConfig config in _enemyData.Configs)
             {
                 IObjectPool<Enemy> pool = new ObjectPool<Enemy>(_config.InitialEnemyPoolSize, resolverProvider);
                 string nameParent = config.name;
                 pool.InitializePool(config.Prefab, enemyPool.transform, nameParent);
+                _objectPools[nameParent] = pool;
+            }
+
+            foreach (BallConfig config in _ballsData.BallConfigs.Values)
+            {
+                IObjectPool<Ball> pool = new ObjectPool<Ball>(_config.InitialBallPoolSize, resolverProvider);
+                string nameParent = config.name;
+                pool.InitializePool(config.Prefab, bollPool.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }
         }

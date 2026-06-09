@@ -33,12 +33,17 @@ namespace BigBalls.GameplayObjects
                     break;
             }
         }
+        
+        private void OnDestroy()
+        {
+            UnsubscribeEffects();
+        }
 
-        private void OnDisable()
+        public void UnsubscribeEffects()
         {
             foreach (var effect in _ballEffectFactory.Create(Config))
             {
-                effect.Unsubscribe(this);
+                effect?.Unsubscribe(this);
             }
         }
 
@@ -59,6 +64,7 @@ namespace BigBalls.GameplayObjects
         }
 
         public void OnHit(int id) => Hited?.Invoke(id);
+        
         public void OnReturn(Ball ball)
         {
             Returned?.Invoke(ball);

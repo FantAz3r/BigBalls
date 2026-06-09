@@ -18,6 +18,7 @@ namespace BigBalls.Factories
         private readonly IIdentifierService _identifierService;
         private readonly IUpdateService _updateService;
         private readonly IPlayerProvider _playerProvider;
+        private readonly IPoolService _poolService;
 
         public BallFactory(
             IObjectResolverProvider objectResolverProvider,
@@ -25,7 +26,8 @@ namespace BigBalls.Factories
             IEntityRepository entityRepository,
             IIdentifierService identifierService,
             IUpdateService updateService,
-            IPlayerProvider playerProvider)
+            IPlayerProvider playerProvider,
+            IPoolService poolService)
         {
             _objectResolverProvider = objectResolverProvider;
             _ballEffectFactory = ballBehaivorFactory;
@@ -33,6 +35,7 @@ namespace BigBalls.Factories
             _identifierService = identifierService;
             _updateService = updateService;
             _playerProvider = playerProvider;
+            _poolService = poolService;
         }
 
         public event Action<Ball> BallReturned;
@@ -40,7 +43,8 @@ namespace BigBalls.Factories
         public Ball Create(BallConfig ballConfig, Transform parent = null)
         {
             int ballId = _identifierService.ID;
-            Ball ball = _objectResolverProvider.CurrentResolver.Instantiate(ballConfig.Prefab, parent);
+            Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
+            // Ball ball = _objectResolverProvider.CurrentResolver.Instantiate(ballConfig.Prefab, parent);
             ball.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ballId, ballConfig);
@@ -77,9 +81,10 @@ namespace BigBalls.Factories
             ball.DeathHandler.Unsubscribe();
             ball.Returned -= OnReturn;
             ball.DeathHandler.Died -= OnReturn;
-            ball.gameObject.SetActive(false);
+            ball.UnsubscribeEffects();
 
             BallReturned?.Invoke(ball);
+            _poolService.ReleaseObject(ball);
         }
     }
 }
