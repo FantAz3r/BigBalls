@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
@@ -57,6 +58,16 @@ namespace BigBalls.Services
             }
         }
 
+        public void ClearAllPools()
+        {
+            foreach (ObjectPoolBase obj in _objectPools.Values)
+            {
+                obj.Clear();
+            }
+            
+            _objectPools.Clear();
+        }
+
         private void InitializePools(IObjectResolverProvider resolverProvider)
         {
             GameObject enemyPool = new GameObject("EnemyPool");
@@ -67,7 +78,7 @@ namespace BigBalls.Services
             
             foreach (var config in _enemyData.Configs)
             {
-                ObjectPool<Enemy> pool = new ObjectPool<Enemy>(_config.InitialEnemyPoolSize, resolverProvider);
+                IObjectPool<Enemy> pool = new ObjectPool<Enemy>(_config.InitialEnemyPoolSize, resolverProvider);
                 string nameParent = config.name;
                 pool.InitializePool(config.Prefab, enemyPool.transform, nameParent);
                 _objectPools[nameParent] = pool;

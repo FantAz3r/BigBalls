@@ -21,6 +21,7 @@ namespace BigBalls.Infrastructure
         private readonly TileFactory _tileGenerator;
         private readonly TileMover _tileMover;
         private readonly EnemySpawner _enemySpawner;
+        private readonly IPoolService _poolService;
         private LevelConfig _levelConfig;
 
         public CreateLevelState(
@@ -44,6 +45,7 @@ namespace BigBalls.Infrastructure
             _uIFactory = uIFactory;
             _timeService = timeService;
             _resourceLoader = resourceLoader;
+            _poolService = poolService;
             _tileGenerator = tileGenerator;
             _tileMover = tileMover;
             _enemySpawner = enemySpawner;
@@ -69,6 +71,7 @@ namespace BigBalls.Infrastructure
             _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();
+            _poolService.ClearAllPools();
         }
     }
 }

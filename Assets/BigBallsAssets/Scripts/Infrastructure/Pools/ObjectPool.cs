@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using VContainer.Unity;
 
-public class ObjectPool<T> where  T : MonoBehaviour
+public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where  T : MonoBehaviour
 {
     private T _prefab;
     private IObjectResolverProvider _resolverProvider;
@@ -35,6 +35,17 @@ public class ObjectPool<T> where  T : MonoBehaviour
     {
         obj.gameObject.SetActive(false);
         _objectPool.Enqueue(obj);
+    }
+    
+    public override void Clear()
+    {
+        foreach (T obj in _objectPool)
+        {
+            if(obj != null)
+                GameObject.Destroy(obj.gameObject);
+        }
+        
+        _objectPool.Clear();
     }
 
     public void InitializePool(T prefab, Transform transformParent, string nameParent)
