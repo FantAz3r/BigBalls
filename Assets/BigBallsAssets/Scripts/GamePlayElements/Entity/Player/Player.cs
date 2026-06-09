@@ -19,7 +19,7 @@ namespace BigBalls.GameplayObjects
 
         private void OnDestroy()
         {
-            DeathHandler.Unsubscribe();
+            DeathHandler?.Unsubscribe();
         }
 
         public void Construct(int id, DeathHandler<Player> playerDeathHandler)
