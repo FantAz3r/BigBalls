@@ -6,7 +6,6 @@ using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
-using VContainer.Unity;
 using Random = UnityEngine.Random;
 
 namespace BigBalls.Factories
@@ -29,8 +28,6 @@ namespace BigBalls.Factories
             _coroutineRunner = coroutineRunner;
             _poolService = poolService;
         }
-
-        public event Action<int> FieldScaled;
 
         public float TileLength => _tilePrefabs.First().transform.localScale.z;
         public IReadOnlyList<Tile> ActiveTiles => _activeTiles;
