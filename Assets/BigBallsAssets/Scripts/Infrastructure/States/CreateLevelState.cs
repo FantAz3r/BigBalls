@@ -59,6 +59,8 @@ namespace BigBalls.Infrastructure
         public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
+            _poolService.SetCurrentLevelConfig(_levelConfig);
+            _poolService.InitializePools();
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _playerFactory.Create();
