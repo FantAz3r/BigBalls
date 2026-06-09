@@ -55,6 +55,8 @@ namespace BigBalls.Infrastructure
         public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
+            _poolService.SetCurrentLevelConfig(_levelConfig);
+            _poolService.InitializePools();
 
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
@@ -63,6 +65,7 @@ namespace BigBalls.Infrastructure
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
             _enemySpawner.Start();
+            
 
             _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
         }

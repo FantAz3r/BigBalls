@@ -18,14 +18,16 @@ namespace BigBalls.Factories
 
         private readonly IObjectResolverProvider _resolverProvider;
         private readonly ICoroutineRunner _coroutineRunner;
+        private readonly IPoolService _poolService;
 
         private List<Tile> _tilePrefabs;
         private List<Tile> _activeTiles = new List<Tile>();
 
-        public TileFactory(IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner)
+        public TileFactory(IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner, IPoolService poolService)
         {
             _resolverProvider = resolverProvider;
             _coroutineRunner = coroutineRunner;
+            _poolService = poolService;
         }
 
         public event Action<int> FieldScaled;
@@ -47,7 +49,10 @@ namespace BigBalls.Factories
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
             Vector3 spawnPoint = new Vector3(0, 0, GetLNextSpawnPointZ());
 
-            Tile newTile = _resolverProvider.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
+            Tile newTile = _poolService.GetObject<Tile>(prefab.name);
+            newTile.transform.position = spawnPoint;
+            newTile.transform.rotation = Quaternion.identity;
+            
             newTile.Construct(_coroutineRunner, RoadWidth);
             newTile.Finished += () => SpawnNextTile();
 
@@ -78,7 +83,7 @@ namespace BigBalls.Factories
         public void RemoveTile(int index)
         {
             Tile tile = _activeTiles[index];
-            tile.gameObject.SetActive(false);
+            _poolService.ReleaseObject(tile);
             tile.Finished -= () => SpawnNextTile();
 
             _activeTiles.RemoveAt(index);

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
@@ -8,5 +10,6 @@ namespace BigBalls.StaticData
     public class BallsData : ScriptableObject
     {
         public SerializedDictionary<BallType, BallConfig> BallConfigs = new();
+        public List<BallConfig> BallConfigsList => BallConfigs.Values.ToList();
     }
 }

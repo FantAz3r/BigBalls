@@ -12,13 +12,13 @@ namespace BigBalls.Services
     {
         private readonly PoolServiceConfig _config;
         private readonly ObjectContainer _objectContainer;
+        private readonly IObjectResolverProvider _resolverProvider;
         
         private EnemyData _enemyData;
         private BallsData _ballsData;
+        private LevelConfig _levelConfig;
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
-
-        // private Dictionary<FactoryType, Dictionary<Type, ObjectPool<T>>> _objectPools;
 
         public PoolService(ObjectContainer  objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
         {
@@ -26,8 +26,12 @@ namespace BigBalls.Services
             _enemyData = resourceLoader.Load<EnemyData>();
             _config = resourceLoader.Load<PoolServiceConfig>();
             _ballsData = resourceLoader.Load<BallsData>();
-            
-            InitializePools(resolverProvider);
+            _resolverProvider = resolverProvider;
+        }
+
+        public void SetCurrentLevelConfig(LevelConfig levelConfig)
+        {
+            _levelConfig = levelConfig;
         }
 
         public T GetObject<T>(string nameObject) where T : MonoBehaviour
@@ -68,29 +72,42 @@ namespace BigBalls.Services
             _objectPools.Clear();
         }
 
-        private void InitializePools(IObjectResolverProvider resolverProvider)
+        public void InitializePools()
         {
-            GameObject enemyPool = new GameObject("EnemyPool");
-            GameObject bollPool = new GameObject("BollPool");
-            
-            enemyPool.transform.SetParent(_objectContainer.transform);
-            bollPool.transform.SetParent(_objectContainer.transform);
+            CreatePoolContainer("EnemyPool", out Transform enemyPoolContainer);
+            CreatePoolContainer("BallPool", out Transform ballPoolContainer);
+            CreatePoolContainer("TilePool", out Transform tilePoolContainer);
             
             foreach (EnemyConfig config in _enemyData.Configs)
             {
-                IObjectPool<Enemy> pool = new ObjectPool<Enemy>(_config.InitialEnemyPoolSize, resolverProvider);
+                IObjectPool<Enemy> pool = new ObjectPool<Enemy>(_config.InitialEnemyPoolSize, _resolverProvider);
                 string nameParent = config.name;
-                pool.InitializePool(config.Prefab, enemyPool.transform, nameParent);
+                pool.InitializePool(config.Prefab, enemyPoolContainer.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }
 
-            foreach (BallConfig config in _ballsData.BallConfigs.Values)
+            foreach (BallConfig config in _ballsData.BallConfigsList)
             {
-                IObjectPool<Ball> pool = new ObjectPool<Ball>(_config.InitialBallPoolSize, resolverProvider);
+                IObjectPool<Ball> pool = new ObjectPool<Ball>(_config.InitialBallPoolSize, _resolverProvider);
                 string nameParent = config.name;
-                pool.InitializePool(config.Prefab, bollPool.transform, nameParent);
+                pool.InitializePool(config.Prefab, ballPoolContainer.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }
+
+            foreach (Tile tile in _levelConfig.TilePrefabs)
+            {
+                IObjectPool<Tile> pool = new ObjectPool<Tile>(_config.InitialTilePoolSize, _resolverProvider);
+                string nameParent = tile.name;
+                pool.InitializePool(tile, tilePoolContainer.transform, nameParent);
+                _objectPools[nameParent] = pool;
+            }
+        }
+        
+        private void CreatePoolContainer(string name, out Transform container)
+        {
+            GameObject go = new GameObject(name);
+            go.transform.SetParent(_objectContainer.transform);
+            container = go.transform;
         }
     }
 }
