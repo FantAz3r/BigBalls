@@ -26,12 +26,8 @@ namespace BigBalls.Factories
         private readonly IPlayerProvider _playerProvider;
         private readonly IBallFactory _ballFactory;
         private readonly ICoroutineRunner _coroutineRunner;
-
+        private readonly ILouseService _louseService;
         private PlayerConfig _playerConfig;
-
-        private List<Stat> _statHolder = new();
-
-        public IReadOnlyList<Stat> Stats => _statHolder.AsReadOnly();
 
         public PlayerFactory(
             IInputService inputService,
@@ -45,7 +41,8 @@ namespace BigBalls.Factories
             IRaycastService raycastService,
             IPlayerProvider playerProvider,
             IBallFactory ballFactory,
-            ICoroutineRunner coroutineRunner)
+            ICoroutineRunner coroutineRunner,
+            ILouseService louseService)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -59,6 +56,7 @@ namespace BigBalls.Factories
             _playerProvider = playerProvider;
             _ballFactory = ballFactory;
             _coroutineRunner = coroutineRunner;
+            _louseService = louseService;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -75,6 +73,7 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             deathHandler.Died += OnDied;
 
+            _louseService.SetLouseReason(deathHandler);
             player.Construct(playerID, deathHandler);
 
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);

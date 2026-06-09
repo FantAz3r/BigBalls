@@ -45,6 +45,8 @@ namespace BigBalls.Infrastructure.DI
                 .AsImplementedInterfaces();
             builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
             builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);
+            builder.Register<ILouseService, LouseService>(Lifetime.Scoped);
+            builder.Register<IWinService, WinService>(Lifetime.Scoped);
         }
 
         private void RegisterProviders(IContainerBuilder builder)

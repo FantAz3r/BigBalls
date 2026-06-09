@@ -1,4 +1,6 @@
+using BigBalls.Configs;
 using BigBalls.Factories;
+using BigBalls.Infrastructure;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using System;
@@ -16,37 +18,44 @@ namespace BigBalls.GameplayObjects
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly IEnemyFactory _enemyFactory;
         private readonly TileFactory _tileFactory;
+        private readonly LevelID _level;
 
+        private LevelConfig _levelConfig;
         private Coroutine _spawnCoroutine;
         private int _fieldWidth = 7;
         private int _rowWeight = 4;
         private int _rowIndex = 0;
 
         private WaitForSeconds _fiveSrconds = new WaitForSeconds(5);
+        private List<Wave> _waves = new List<Wave>();
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private HashSet<Vector2Int> _occupiedPositions = new HashSet<Vector2Int>();
 
-        public EnemySpawner(ICoroutineRunner coroutineRunner, IEnemyFactory enemyFactory, IResourceLoader resourceLoader, TileFactory tileFactory)
+        public EnemySpawner(ICoroutineRunner coroutineRunner, IEnemyFactory enemyFactory, IResourceLoader resourceLoader, TileFactory tileFactory, LevelID level)
         {
             _coroutineRunner = coroutineRunner;
             _enemyFactory = enemyFactory;
             _tileFactory = tileFactory;
-            _enemyConfigs = resourceLoader.Load<EnemyData>().Configs;
+            _level = level;
+            _levelConfig = resourceLoader.Load<LevelData>().Get(level);
+            _waves = _levelConfig.Waves;
+            _enemyConfigs = _levelConfig.Enemies;
         }
 
         public void Start()
         {
             _spawnCoroutine = _coroutineRunner.StartCoroutine(SpawnRoutine());
-            _tileFactory.FieldScaled += SetFieldWidth;
+            _tileFactory.FieldScaled += OnLineScaled;
         }
 
         public void Stop()
         {
             _coroutineRunner.StopCoroutine(_spawnCoroutine);
-            _tileFactory.FieldScaled -= SetFieldWidth;
+            _spawnCoroutine = null;
+            _tileFactory.FieldScaled -= OnLineScaled;
         }
 
-        private void SetFieldWidth(int fieldWidth)
+        private void OnLineScaled(int fieldWidth)
         {
             if (fieldWidth <= _fieldWidth)
                 throw new InvalidOperationException();
@@ -57,15 +66,29 @@ namespace BigBalls.GameplayObjects
 
         private IEnumerator SpawnRoutine()
         {
-            while (true)  // добавить игровой стейт, который говорит, когда завершится уровень
+            foreach (var vawe in _waves)
             {
-                yield return _fiveSrconds;
-                SpawnRow();
-                _rowIndex++;
+                yield return new WaitForSeconds(vawe.WaveCooldown);
+
+                if (vawe.BossConfig != null)
+                    SpawnBoss(vawe.BossConfig);
+
+                for (int i = 0; i < vawe.LineCount; i++)
+                {
+                    yield return _fiveSrconds;
+                    SpawnLine();
+                    _rowIndex++;
+
+                }
             }
         }
 
-        private void SpawnRow()
+        private void SpawnBoss(EnemyConfig enemyConfig)
+        {
+
+        }
+
+        private void SpawnLine()
         {
             var chosenCombination = GenerateRandomValidCombination(_rowWeight, _occupiedPositions);
 
@@ -86,7 +109,7 @@ namespace BigBalls.GameplayObjects
             List<List<EnemyConfig>> enemyCombinations = new List<List<EnemyConfig>>();
             GenerateEnemyCombinations(targetWeight, null, new List<EnemyConfig>(), enemyCombinations);
 
-            if (enemyCombinations.Count == 0) 
+            if (enemyCombinations.Count == 0)
                 return null;
 
             var uncheckedIndices = new List<int>(Enumerable.Range(0, enemyCombinations.Count));
@@ -95,7 +118,7 @@ namespace BigBalls.GameplayObjects
             while (uncheckedIndices.Count > 0)
             {
                 totalCombosAttempted++;
-                int randomIndexPos = Random.Range(0, uncheckedIndices.Count-1);
+                int randomIndexPos = Random.Range(0, uncheckedIndices.Count - 1);
                 var enemyCombo = enemyCombinations[uncheckedIndices[randomIndexPos]];
 
                 Dictionary<EnemyConfig, int> enemyGroups = enemyCombo
@@ -110,7 +133,7 @@ namespace BigBalls.GameplayObjects
                                        _fieldWidth, _rowIndex, validPlacements);
 
                 if (validPlacements.Count > 0)
-                    return validPlacements[Random.Range(0, validPlacements.Count-1)];
+                    return validPlacements[Random.Range(0, validPlacements.Count - 1)];
                 else
                     uncheckedIndices.RemoveAt(randomIndexPos);
             }
@@ -138,7 +161,7 @@ namespace BigBalls.GameplayObjects
             int countToPlace = currentGroup.Value;
             var availableX = new List<int>();
 
-            for (int x = 0; x <= fieldWidth-1 - enemy.GetWidth(); x++)
+            for (int x = 0; x <= fieldWidth - 1 - enemy.GetWidth(); x++)
             {
                 Vector2Int pos = new Vector2Int(x, rowIndex);
                 var enemyCells = enemy.BlocksPositions.Select(b => b + pos);
@@ -169,7 +192,7 @@ namespace BigBalls.GameplayObjects
                         break;
                     }
 
-                    foreach (var cell in enemyCells) 
+                    foreach (var cell in enemyCells)
                         newOccupied.Add(cell);
 
                     newPlacement.Add((enemy, pos));

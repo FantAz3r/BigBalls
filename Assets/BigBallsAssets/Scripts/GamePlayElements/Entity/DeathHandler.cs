@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class DeathHandler<T> : ISubscribable where T : MonoBehaviour, IEntity
+    public class DeathHandler<T> : ISubscribable, ILouser
+        where T : MonoBehaviour, IEntity
     {
         private readonly Stat _health;
         private readonly List<ISubscribable> _subscribables;
@@ -18,6 +19,7 @@ namespace BigBalls.GameplayObjects
         }
 
         public event Action<T> Died;
+        public event Action Lost;
 
         public void Subscribe()
         {
@@ -44,6 +46,7 @@ namespace BigBalls.GameplayObjects
             if (stat.CurrentValue <= stat.MinValue)
             {
                 Died?.Invoke(_diebleObject);
+                Lost?.Invoke();
             }
         }
     }

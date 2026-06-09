@@ -18,10 +18,10 @@ namespace BigBalls.Infrastructure
         private readonly IUIFactory _uIFactory;
         private readonly ITimeService _timeService;
         private readonly IResourceLoader _resourceLoader;
+        private readonly IPoolService _poolService;
         private readonly TileFactory _tileGenerator;
         private readonly TileMover _tileMover;
         private readonly EnemySpawner _enemySpawner;
-        private readonly IPoolService _poolService;
         private LevelConfig _levelConfig;
 
         public CreateLevelState(
@@ -33,6 +33,7 @@ namespace BigBalls.Infrastructure
             ITimeService timeService,
             IResourceLoader resourceLoader,
             IPoolService poolService,
+            ILevelLoadingService levelLoadingService,
             TileFactory tileGenerator,
             TileMover tileMover,
             EnemySpawner enemySpawner

@@ -60,7 +60,7 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where  T : MonoBehav
             ExpandPool();
         }
     }
-    
+
     private void ExpandPool()
     {
         T obj = _resolverProvider.CurrentResolver.Instantiate(_prefab, Vector3.zero, quaternion.identity);

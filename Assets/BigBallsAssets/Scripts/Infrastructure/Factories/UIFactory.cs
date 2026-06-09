@@ -47,12 +47,10 @@ namespace BigBalls.Factories
 
         public PauseWindow CreatePauseWindow() => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
 
+        public LouseLevelMenu CreateLouseMenu() => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
+
         public void CreateJoystick()
         {
-            //if (YG2.envir.isDesktop == false)
-            //{
-            //
-            //}
         }
 
         public LevelSelectionPanel CreateLevelSelect() => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
