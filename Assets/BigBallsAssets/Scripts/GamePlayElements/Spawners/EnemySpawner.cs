@@ -40,7 +40,7 @@ namespace BigBalls.GameplayObjects
             _tileFactory.FieldScaled += SetFieldWidth;
         }
 
-        public void Dispose()
+        public void Stop()
         {
             _coroutineRunner.StopCoroutine(_spawnCoroutine);
             _tileFactory.FieldScaled -= SetFieldWidth;

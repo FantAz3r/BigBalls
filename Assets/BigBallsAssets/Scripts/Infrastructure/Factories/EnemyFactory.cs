@@ -47,9 +47,9 @@ namespace BigBalls.Factories
             enemy.transform.position = spawnPosition;
             enemy.transform.rotation = Quaternion.identity;
             
-            int playerID = _identifierService.ID;
+            int enemyID = _identifierService.ID;
 
-            StatHolder statHolder = new StatHolder(playerID, enemyConfig);
+            StatHolder statHolder = new StatHolder(enemyID, enemyConfig);
 
             List<ISubscribable> subscribables = CreateComponents(statHolder, enemy, enemyConfig);
 
@@ -57,7 +57,7 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             deathHandler.Died += OnDied;
 
-            enemy.Construct(playerID, deathHandler);
+            enemy.Construct(enemyID, deathHandler);
             _entityRepository.Add(enemy, statHolder);
             return enemy;
         }
@@ -67,6 +67,7 @@ namespace BigBalls.Factories
             enemy.DeathHandler.Unsubscribe();
             enemy.DeathHandler.Died -= OnDied;
             _poolService.ReleaseObject(enemy);
+            _entityRepository.Remove(enemy);
         }
 
         private List<ISubscribable> CreateComponents(StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)

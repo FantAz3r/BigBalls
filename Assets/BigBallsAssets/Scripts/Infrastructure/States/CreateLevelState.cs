@@ -68,6 +68,7 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            _enemySpawner.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();

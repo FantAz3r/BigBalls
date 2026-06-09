@@ -18,7 +18,6 @@ namespace BigBalls.GameplayObjects
         public void Construct(IDamageService damageService)
         {
             _damageService = damageService;
-
         }
 
         protected override void OnHit(int id)

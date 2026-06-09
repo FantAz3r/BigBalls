@@ -20,7 +20,6 @@ namespace BigBalls.UI
         protected override void OnClick()
         {
              _loadingService.Load(_levelID);
-
         }
     }
 }

@@ -4,9 +4,7 @@ using BigBalls.Services;
 using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using VContainer.Unity;
 
 namespace BigBalls.Factories
 {
@@ -44,7 +42,6 @@ namespace BigBalls.Factories
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
-            // Ball ball = _objectResolverProvider.CurrentResolver.Instantiate(ballConfig.Prefab, parent);
             ball.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ballId, ballConfig);
@@ -60,6 +57,7 @@ namespace BigBalls.Factories
             ballDeathHandler.Subscribe();
 
             ball.Construct(ballId, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
+            _entityRepository.Add(ball, statHolder);
             return ball;
         }
 
@@ -83,6 +81,7 @@ namespace BigBalls.Factories
             ball.DeathHandler.Died -= OnReturn;
             ball.UnsubscribeEffects();
 
+            _entityRepository.Remove(ball);
             BallReturned?.Invoke(ball);
             _poolService.ReleaseObject(ball);
         }

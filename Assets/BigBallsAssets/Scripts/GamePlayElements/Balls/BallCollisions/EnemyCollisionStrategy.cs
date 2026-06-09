@@ -9,7 +9,6 @@ public class EnemyCollisionStrategy : ICollisionStrategy
         {
             ball.SetCanReturnToBag(true);
             ball.OnHit(entity.Id);
-            Debug.Log(entity.Id);
         }
 
         return false;

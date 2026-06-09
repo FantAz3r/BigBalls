@@ -41,10 +41,17 @@ namespace BigBalls.GameplayObjects
 
         public void UnsubscribeEffects()
         {
-            foreach (var effect in _ballEffectFactory.Create(Config))
+            CanReturnToBag = false;
+
+            if (_ballEffectFactory == null)
+                return;
+
+            foreach (var effect in _effectBehaviours)
             {
                 effect?.Unsubscribe(this);
             }
+
+            _effectBehaviours.Clear();
         }
 
         public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IBallEffectFactory ballEffectFactory)
@@ -57,7 +64,9 @@ namespace BigBalls.GameplayObjects
             IsMaterial = Config.IsMaterial;
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
 
-            foreach (var effect in _ballEffectFactory.Create(Config))
+            _effectBehaviours = _ballEffectFactory.Create(Config);
+
+            foreach (var effect in _effectBehaviours)
             {
                 effect.Subscribe(this);
             }
