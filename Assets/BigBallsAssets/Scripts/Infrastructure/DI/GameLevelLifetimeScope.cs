@@ -34,8 +34,10 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IBallEffectFactory, BallEffectFactory>(Lifetime.Scoped);
             builder.Register<IEnemyFactory, EnemyFactory>(Lifetime.Scoped);
             builder.Register<IBallFactory, BallFactory>(Lifetime.Scoped);
+            builder.Register<ILootFactory, LootFactory>(Lifetime.Scoped);
             builder.Register<TileFactory>(Lifetime.Scoped);
             builder.Register<EnemySpawner>(Lifetime.Scoped);
+            builder.Register<LootSpawner>(Lifetime.Scoped);
         }
 
         private void RegisterServices(IContainerBuilder builder)
@@ -47,6 +49,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);
             builder.Register<ILouseService, LouseService>(Lifetime.Scoped);
             builder.Register<IWinService, WinService>(Lifetime.Scoped);
+            builder.Register<IDropService, DropService>(Lifetime.Scoped);
         }
 
         private void RegisterProviders(IContainerBuilder builder)

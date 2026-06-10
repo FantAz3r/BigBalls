@@ -23,6 +23,7 @@ namespace BigBalls.Infrastructure
         private readonly TileMover _tileMover;
         private readonly EnemySpawner _enemySpawner;
         private readonly LevelTimeline _levelTimeline;
+        private readonly IDropService _dropService;
 
         private LevelConfig _levelConfig;
 
@@ -39,7 +40,8 @@ namespace BigBalls.Infrastructure
             TileFactory tileGenerator,
             TileMover tileMover,
             EnemySpawner enemySpawner,
-            LevelTimeline levelTimeline
+            LevelTimeline levelTimeline,
+            IDropService dropService
             )
         {
             _objectResolverProvider = objectResolverProvider;
@@ -54,6 +56,7 @@ namespace BigBalls.Infrastructure
             _tileMover = tileMover;
             _enemySpawner = enemySpawner;
             _levelTimeline = levelTimeline;
+            _dropService = dropService;
         }
 
         public void Enter(LevelID level)
@@ -65,6 +68,7 @@ namespace BigBalls.Infrastructure
             _windowService.Open<HUD>();
             _playerFactory.Create();
 
+            _dropService.SetCurrentLevelConfig(_levelConfig);
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
             _levelTimeline.Start(level);

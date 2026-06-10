@@ -17,6 +17,12 @@ namespace BigBalls.StaticData
         [field: SerializeField] public List<Vector2Int> BlocksPositions { get; private set; } = new();
         [field: SerializeField] public List<StatStruct> Stats { get; private set; } = new ();
         [field: SerializeField] public LayerMask ObstacleLayers { get; private set; }
+        
+        [Header("Loot Settings")]
+        [field: SerializeField] public List<LootInfo> PossibleLoot = new List<LootInfo>();
+        [field: SerializeField] public int BaseExperience = 10;
+        [field: SerializeField] public int BaseCoins = 5;
+        
         public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
         public int Weight => BlocksPositions.Count;
 

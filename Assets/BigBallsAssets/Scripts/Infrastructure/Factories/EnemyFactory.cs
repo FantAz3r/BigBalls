@@ -17,6 +17,7 @@ namespace BigBalls.Factories
         private readonly IDamageService _damageService;
         private readonly IEntityRepository _entityRepository;
         private readonly IPoolService _poolService;
+        private readonly IDropService _dropService;
 
         public EnemyFactory(
             IObjectResolverProvider resolverProvider,
@@ -26,7 +27,8 @@ namespace BigBalls.Factories
             IPlayerProvider playerProvider,
             IDamageService damageService,
             IEntityRepository entityRepository,
-            IPoolService poolService
+            IPoolService poolService,
+            IDropService dropService
             )
         {
             _resolverProvider = resolverProvider;
@@ -37,6 +39,7 @@ namespace BigBalls.Factories
             _damageService = damageService;
             _entityRepository = entityRepository;
             _poolService = poolService;
+            _dropService = dropService;
         }
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
@@ -63,6 +66,7 @@ namespace BigBalls.Factories
 
         private void OnDied(Enemy enemy)
         {
+            _dropService.DropLoot(enemy.transform.position, enemy);
             enemy.DeathHandler.Unsubscribe();
             enemy.DeathHandler.Died -= OnDied;
             _poolService.ReleaseObject(enemy);
