@@ -18,11 +18,13 @@ namespace BigBalls.Configs
         [field: SerializeField] public float BossTimeDelay { get; private set; }
         [field: SerializeField] public EnemyConfig LevelBoss { get; private set; }
 
-        public List<EnemyConfig> GetEnemiesForPool()
+        public List<EnemyConfig> GetCurrentEnemyConfigToLevel()
         {
-            List<EnemyConfig> enemyConfigs = Enemies;
-            enemyConfigs.Add(LevelBoss);
-
+            List<EnemyConfig> enemyConfigs = new List<EnemyConfig>(Enemies);
+            
+            // Зачам мы добавляем два раза боссов для пулла. Достаточно одного
+            // enemyConfigs.Add(LevelBoss);
+            
             foreach(var wave in Waves)
             {
                 if(wave.BossConfig != null)

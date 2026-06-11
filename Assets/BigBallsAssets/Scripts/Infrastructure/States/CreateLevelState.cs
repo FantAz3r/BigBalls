@@ -1,8 +1,10 @@
-﻿using BigBalls.Configs;
+﻿using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
+using BigBalls.StaticData;
 using BigBalls.UI;
 using UnityEngine;
 using VContainer.Unity;
@@ -26,6 +28,7 @@ namespace BigBalls.Infrastructure
         private readonly IDropService _dropService;
 
         private LevelConfig _levelConfig;
+        private List<EnemyConfig> _currentEnemyConfig;
 
         public CreateLevelState(
             IObjectResolverProvider objectResolverProvider,
@@ -62,13 +65,15 @@ namespace BigBalls.Infrastructure
         public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
-            _poolService.SetCurrentLevelConfig(_levelConfig);
+            _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
+            
+            _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _playerFactory.Create();
 
-            _dropService.SetCurrentLevelConfig(_levelConfig);
+            _dropService.SetCurrentLevelConfig(_currentEnemyConfig);
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
             _levelTimeline.Start(level);

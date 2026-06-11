@@ -19,10 +19,11 @@ public class LootSpawner
         // Получаем объект из пула
         Loot loot = _lootFactory.Create(lootInfo);
         
-        loot.transform.position = position + Random.insideUnitSphere * 0.5f;
+        Vector3 randomOffset = Random.insideUnitCircle * 0.5f;
+        loot.transform.position = position + new Vector3(randomOffset.x, 0, randomOffset.y);
         
         // Инициализируем компонент лута
-        // loot.Initialize(lootInfo.LootType, GetValueForLootType(lootInfo));
+        loot.Initialize(lootInfo.LootType, GetValueForLootType(lootInfo));
     }
     
     public void DropBaseRewards(Vector3 position, EnemyConfig config)
@@ -30,15 +31,8 @@ public class LootSpawner
         Debug.Log($"Игроку назначено {config.BaseCoins} очков опыта");
         
         // Опыт автоматически даётся игроку
-        // var player = GameObject.FindGameObjectWithTag("Player");
-        // player?.GetComponent<ILevelable>()?.AddExperience(config.BaseExperience);
         
-        // Монеты спавнятся как объекты
-        for (int i = 0; i < config.BaseCoins; i++)
-        {
-            // Спавн монеты с небольшим разбросом
-            // SpawnCoin(position + Random.insideUnitSphere * 0.3f);
-        }
+        // Монеты спавнятся как объекты - дополнительно рандомно с каждого убитого противника?
     }
     
     private int GetValueForLootType(LootInfo info)
@@ -50,7 +44,7 @@ public class LootSpawner
             case LootType.Experience:
                 return Random.Range(10, 30);
             case LootType.HealthPotion:
-                return 25; // восстанавливает 25 HP
+                return 25;                     // восстанавливает 25 HP
             default:
                 return 1;
         }

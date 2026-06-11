@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using BigBalls.Services;
-using UnityEngine;
 
 public class LootFactory : ILootFactory
 {
@@ -18,6 +15,15 @@ public class LootFactory : ILootFactory
 
         Loot loot = _poolService.GetObject<Loot>(lootName);
 
+        loot.OnLoot += OnLootHandler;
+
         return loot;
+    }
+
+    private void OnLootHandler(Loot loot)
+    {
+        loot.OnLoot -= OnLootHandler;
+        
+        _poolService.ReleaseObject(loot);
     }
 }

@@ -34,10 +34,10 @@ namespace BigBalls.Services
             _resolverProvider = resolverProvider;
         }
 
-        public void SetCurrentLevelConfig(LevelConfig levelConfig)
+        public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
         {
+            _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
-            _enemyConfigs = _levelConfig.GetEnemiesForPool();
 
             Dictionary<string, LootInfo> lootInfos = new Dictionary<string, LootInfo>();
             

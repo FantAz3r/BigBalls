@@ -8,5 +8,5 @@ using UnityEngine;
 public interface IDropService
 {
     void DropLoot(Vector3 position, Enemy enemy);
-    void SetCurrentLevelConfig(LevelConfig levelConfig);
+    void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfig);
 }

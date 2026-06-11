@@ -40,11 +40,9 @@ public class DropService : IDropService
         _lootSpawner.DropBaseRewards(position, config);
     }
 
-    public void SetCurrentLevelConfig(LevelConfig levelConfig)
+    public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfigs)
     {
-        List<EnemyConfig> enemyConfigs = levelConfig.GetEnemiesForPool();
-
-        foreach (EnemyConfig config in enemyConfigs)
+        foreach (EnemyConfig config in currentEnemyConfigs)
         {
             _enemyConfigs.TryAdd(config.name, config);
         }
