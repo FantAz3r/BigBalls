@@ -40,3 +40,24 @@ MonoBehaviour:
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 72
+  PossibleLoot:
+  - LootPrefab: {fileID: 5907430580069753232, guid: 7850d0d4b55586a4bbefbbc8307ee768,
+      type: 3}
+    DropChance: 0.25
+    MinAmount: 1
+    MaxAmount: 1
+    LootType: 3
+  - LootPrefab: {fileID: 3258537970558730023, guid: 82b395a1eaf410e469c360a614cd2cc5,
+      type: 3}
+    DropChance: 0.7
+    MinAmount: 1
+    MaxAmount: 3
+    LootType: 0
+  - LootPrefab: {fileID: 8462508370152562949, guid: 4efce150dda86da459328e2ed646e44f,
+      type: 3}
+    DropChance: 0.5
+    MinAmount: 1
+    MaxAmount: 2
+    LootType: 2
+  BaseExperience: 15
+  BaseCoins: 8
