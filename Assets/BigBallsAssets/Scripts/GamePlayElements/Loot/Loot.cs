@@ -7,7 +7,7 @@ public class Loot : MonoBehaviour
     private LootType _type;
     private int _value;
     
-    public event Action <Loot> OnLoot;
+    public event Action <Loot> Collected;
     
     public void Initialize(LootType type, int value)
     {
@@ -21,7 +21,7 @@ public class Loot : MonoBehaviour
         {
             ApplyLoot(player);
             
-            OnLoot?.Invoke(this);
+            Collected?.Invoke(this);
         }
     }
     

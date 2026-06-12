@@ -6,6 +6,7 @@ using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using BigBalls.UI;
+using log4net.Core;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -23,7 +24,6 @@ namespace BigBalls.Infrastructure
         private readonly IPoolService _poolService;
         private readonly TileFactory _tileGenerator;
         private readonly TileMover _tileMover;
-        private readonly EnemySpawner _enemySpawner;
         private readonly LevelTimeline _levelTimeline;
         private readonly IDropService _dropService;
 
@@ -42,7 +42,6 @@ namespace BigBalls.Infrastructure
             ILevelLoadingService levelLoadingService,
             TileFactory tileGenerator,
             TileMover tileMover,
-            EnemySpawner enemySpawner,
             LevelTimeline levelTimeline,
             IDropService dropService
             )
@@ -57,7 +56,6 @@ namespace BigBalls.Infrastructure
             _poolService = poolService;
             _tileGenerator = tileGenerator;
             _tileMover = tileMover;
-            _enemySpawner = enemySpawner;
             _levelTimeline = levelTimeline;
             _dropService = dropService;
         }
@@ -69,16 +67,24 @@ namespace BigBalls.Infrastructure
             
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();
-            _windowService.CreateUIRoot();
-            _windowService.Open<HUD>();
+
+            CreateUI();
+
             _playerFactory.Create();
 
             _dropService.SetCurrentLevelConfig(_currentEnemyConfig);
             _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
-            _levelTimeline.Start(level);
+            _levelTimeline.Start(_levelConfig);
 
             _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
+        }
+
+        private void CreateUI()
+        {
+            _windowService.CreateUIRoot();
+            _windowService.Open<HUD>();
+            _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
         }
 
         public void Exit()

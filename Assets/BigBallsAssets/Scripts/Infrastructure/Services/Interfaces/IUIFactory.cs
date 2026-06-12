@@ -15,5 +15,6 @@ namespace BigBalls.Services
         T Get<T>(WindowType type) where T : WindowBase;
         LouseLevelMenu CreateLouseMenu();
         WinLevelMenu CreateWinMenu();
+        WaveViewer CreateWaveViewer();
     }
 }

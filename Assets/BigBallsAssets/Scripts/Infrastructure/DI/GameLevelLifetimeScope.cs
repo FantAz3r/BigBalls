@@ -21,7 +21,6 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_objectContainer);
             builder.Register<LevelTimeline>(Lifetime.Scoped);
             builder.Register<TileMover>(Lifetime.Scoped);
-            builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
 
             RegisterServices(builder);
             RegisterFactories(builder);
@@ -54,6 +53,7 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterProviders(IContainerBuilder builder)
         {
+            builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);
             builder.RegisterComponent(_sceneContainer)
                 .As<ISceneContainerProvider>();

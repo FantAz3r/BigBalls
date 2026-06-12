@@ -15,14 +15,14 @@ public class LootFactory : ILootFactory
 
         Loot loot = _poolService.GetObject<Loot>(lootName);
 
-        loot.OnLoot += OnLootHandler;
+        loot.Collected += OnLootHandler;
 
         return loot;
     }
 
     private void OnLootHandler(Loot loot)
     {
-        loot.OnLoot -= OnLootHandler;
+        loot.Collected -= OnLootHandler;
         
         _poolService.ReleaseObject(loot);
     }
