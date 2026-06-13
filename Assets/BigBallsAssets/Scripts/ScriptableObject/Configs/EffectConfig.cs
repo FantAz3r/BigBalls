@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace BigBalls.StaticData
+namespace BigBalls.Configs
 {
     [Serializable]
     public abstract class EffectConfig: ScriptableObject

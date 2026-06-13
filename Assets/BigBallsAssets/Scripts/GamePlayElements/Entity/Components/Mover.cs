@@ -1,8 +1,7 @@
-﻿using BigBalls.Services;
-using BigBalls.StaticData;
+﻿using BigBalls.Configs;
+using BigBalls.Services;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace BigBalls.GameplayObjects
 {

@@ -1,6 +1,5 @@
 using System;
 using BigBalls.StaticData;
-using System;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -26,7 +25,6 @@ namespace BigBalls.GameplayObjects
         {
             Id = id;
             DeathHandler = playerDeathHandler;
-
         }
     }
 }

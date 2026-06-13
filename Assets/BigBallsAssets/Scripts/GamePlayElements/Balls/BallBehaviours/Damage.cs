@@ -1,5 +1,5 @@
-﻿using BigBalls.Services;
-using BigBalls.StaticData;
+﻿using BigBalls.Configs;
+using BigBalls.Services;
 using VContainer;
 
 namespace BigBalls.GameplayObjects

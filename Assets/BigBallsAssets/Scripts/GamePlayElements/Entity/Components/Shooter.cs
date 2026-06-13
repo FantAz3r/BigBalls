@@ -60,7 +60,6 @@ namespace BigBalls.GameplayObjects
                 ball.transform.rotation = _firePoint.rotation;
                 ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
             }
-            //ball.AddDamage(_damage.CurrentValue);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BigBalls.StaticData
+namespace BigBalls.Configs
 {
     [CreateAssetMenu(fileName = "EnemyConfig", menuName = "Configs/EnemyConfig")]
 

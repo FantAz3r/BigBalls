@@ -13,12 +13,12 @@ namespace BigBalls.UI
         [SerializeField] private RectTransform _flagsContainer;
         [SerializeField] private WaveFlag _flagPrefab;
 
-        private LevelConfig _levelConfig;
         private List<Wave> _waves;
         private List<float> _waveDurationsAccumulated = new List<float>();
         private List<WaveFlag> _flags = new List<WaveFlag>();
         private float _totalDuration;
         private LevelTimeline _levelTimeline;
+        private LevelConfig _levelConfig;
 
         [Inject]
         public void Construct(LevelTimeline levelTimeline)

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
 using UnityEngine;
 
 public class DropService : IDropService
@@ -26,7 +26,6 @@ public class DropService : IDropService
             
             int amount = Random.Range(lootInfo.MinAmount, lootInfo.MaxAmount + 1);
             
-            Debug.Log($"Игроку выпало {lootInfo.LootPrefab} в количестве {amount}");
             
             for (int i = 0; i < amount; i++)
             {

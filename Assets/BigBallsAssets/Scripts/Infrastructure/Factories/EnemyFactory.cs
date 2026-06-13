@@ -1,7 +1,7 @@
+using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using BigBalls.StaticData;
 using System.Collections.Generic;
 using UnityEngine;
 

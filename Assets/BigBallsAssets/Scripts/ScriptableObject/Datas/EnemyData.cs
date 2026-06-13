@@ -1,8 +1,8 @@
-﻿using BigBalls.StaticData;
+﻿using BigBalls.Configs;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BigBalls.GameplayObjects
+namespace BigBalls.StaticData
 {
     [CreateAssetMenu(fileName = "EnemyData", menuName = "Datas/EnemyData")]
 

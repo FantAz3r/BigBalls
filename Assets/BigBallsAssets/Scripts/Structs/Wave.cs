@@ -1,4 +1,4 @@
-using BigBalls.StaticData;
+using BigBalls.Configs;
 using System;
 
 [Serializable]

@@ -11,7 +11,6 @@ public class LevelTimeline
     private const float UpdateIntervalSeconds = 0.5f;
 
     private readonly ICoroutineRunner _coroutineRunner;
-    private readonly IResourceLoader _resourceLoader;
     private readonly EnemySpawner _enemySpawner;
     private readonly TileFactory _tileFactory;
 

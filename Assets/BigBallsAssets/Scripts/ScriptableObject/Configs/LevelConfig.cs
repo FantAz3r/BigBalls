@@ -41,7 +41,7 @@ namespace BigBalls.Configs
 
             waveTime += Waves[waveId].LineCount * LineSpawnDelay + Waves[waveId].WaveCooldown;
 
-            if(waveId == Waves.Count -1)
+            if (waveId == Waves.Count -1)
             {
                 waveTime += BossTimeDelay;
             }

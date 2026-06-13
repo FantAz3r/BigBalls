@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
+using BigBalls.Configs;
 
 namespace BigBalls.StaticData
 {

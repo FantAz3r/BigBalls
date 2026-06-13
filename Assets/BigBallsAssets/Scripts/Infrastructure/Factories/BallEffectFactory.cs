@@ -1,3 +1,4 @@
+using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
@@ -25,11 +26,11 @@ namespace BigBalls.GameplayObjects
             };
         }
 
-        public List<EffectBehaviour> Create(BallConfig ballConfig)
+        public List<EffectBehaviour> Create(List<EffectConfig> effectConfigs)
         {
             List<EffectBehaviour> effectBehaviours = new List<EffectBehaviour>();
 
-            foreach (var effectConfig in ballConfig.EffectConfigs)
+            foreach (var effectConfig in effectConfigs)
             {
                 EffectBehaviour effectBehaviour = _effectToFactory[effectConfig.Type](effectConfig);
                 _objectResolverProvider.CurrentResolver.Inject(effectBehaviour);

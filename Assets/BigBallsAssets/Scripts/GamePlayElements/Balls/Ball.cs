@@ -1,7 +1,7 @@
-using BigBalls.Factories;
-using BigBalls.StaticData;
 using System;
 using System.Collections.Generic;
+using BigBalls.Configs;
+using BigBalls.Factories;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -24,7 +24,6 @@ namespace BigBalls.GameplayObjects
         public int Id { get; private set; }
         public Transform Transform => transform;
 
-
         private void OnCollisionEnter(Collision collision)
         {
             foreach (var strategy in _collisionStrategies)
@@ -33,10 +32,39 @@ namespace BigBalls.GameplayObjects
                     break;
             }
         }
-        
+
         private void OnDestroy()
         {
             UnsubscribeEffects();
+        }
+
+        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IBallEffectFactory ballEffectFactory)
+        {
+            DeathHandler = deathHandler;
+            Id = id;
+            Mover = mover;
+            _collisionStrategies = collisionStrategies;
+            _ballEffectFactory = ballEffectFactory;
+
+            IsMaterial = Config.IsMaterial;
+            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
+
+            _effectBehaviours = _ballEffectFactory.Create(Config.EffectConfigs);
+
+            foreach (var effect in _effectBehaviours)
+            {
+                effect.Subscribe(this);
+            }
+        }
+
+        public void AddEffects(List<EffectConfig> effects)
+        {
+            List<EffectBehaviour> effectsBehaviour = _ballEffectFactory.Create(effects);
+
+            foreach (var effect in effectsBehaviour)
+                effect.Subscribe(this);
+
+            _effectBehaviours.AddRange(effectsBehaviour);
         }
 
         public void UnsubscribeEffects()
@@ -54,26 +82,8 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.Clear();
         }
 
-        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IBallEffectFactory ballEffectFactory)
-        {
-            DeathHandler = deathHandler;
-            _collisionStrategies = collisionStrategies;
-            Id = id;
-            Mover = mover;
-            _ballEffectFactory = ballEffectFactory;
-            IsMaterial = Config.IsMaterial;
-            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
-
-            _effectBehaviours = _ballEffectFactory.Create(Config);
-
-            foreach (var effect in _effectBehaviours)
-            {
-                effect.Subscribe(this);
-            }
-        }
-
         public void OnHit(int id) => Hited?.Invoke(id);
-        
+
         public void OnReturn(Ball ball)
         {
             Returned?.Invoke(ball);
@@ -82,13 +92,5 @@ namespace BigBalls.GameplayObjects
 
         public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
         public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
-
-        public void ReflectBall(Collision collision)
-        {
-            Vector3 currentDirection = new Vector3(Mover.Direction.normalized.x, 0, Mover.Direction.normalized.y);
-            Vector3 normal = collision.contacts[0].normal;
-            Vector3 reflectedDirection = Vector3.Reflect(currentDirection, normal);
-            Mover.SetDirection(new Vector2(reflectedDirection.x, reflectedDirection.z));
-        }
     }
 }

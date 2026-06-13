@@ -1,4 +1,5 @@
-﻿using BigBalls.GameplayObjects;
+﻿using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using System.Collections.Generic;
 using UnityEngine;
 

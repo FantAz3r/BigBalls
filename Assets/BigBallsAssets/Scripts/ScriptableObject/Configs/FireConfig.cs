@@ -1,7 +1,8 @@
 ﻿using System;
+using BigBalls.Configs;
 using UnityEngine;
 
-namespace BigBalls.StaticData
+namespace BigBalls.Configs
 {
     [CreateAssetMenu(fileName = "FireConfig", menuName = "Configs/BahaviourConfig/FireConfig")]
     [Serializable]

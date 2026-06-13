@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 
-namespace BigBalls.StaticData
+
+namespace BigBalls.Configs
 {
     [CreateAssetMenu(fileName = "DamageConfig", menuName = "Configs/BahaviourConfig/DamageConfig")]
     [Serializable]

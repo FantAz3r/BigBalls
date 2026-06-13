@@ -1,10 +1,11 @@
 ﻿using BigBalls.Attributes;
 using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BigBalls.StaticData
+namespace BigBalls.Configs
 {
     [CustomScriptableObjectListEditor]
     [CreateAssetMenu(fileName = "BallConfig", menuName = "Configs/BallConfig")]

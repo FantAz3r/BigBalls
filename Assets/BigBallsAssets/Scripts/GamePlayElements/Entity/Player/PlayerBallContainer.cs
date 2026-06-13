@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -10,21 +11,25 @@ namespace BigBalls.GameplayObjects
         private readonly Stat _ballCount;
         private readonly IBallFactory _ballFactory;
         private readonly BallsData _ballsData;
-        private readonly IWeapon _weapon;
+
+        private IWeapon _weapon;
+        private IBuffer _buffer;
 
         private Queue<BallConfig> _balls;
         private int _weaponConfigIndex = 0;
         private int _createdBallsCount = 0;
 
-        public PlayerBallContainer(Stat ballCount, IResourceLoader resourceLoader, IBallFactory ballFactory, IWeapon weapon = null)
+        public PlayerBallContainer(Stat ballCount, IResourceLoader resourceLoader, IBallFactory ballFactory)
         {
             _ballCount = ballCount;
             _ballFactory = ballFactory;
             _ballsData = resourceLoader.Load<BallsData>();
-            _weapon = weapon;
 
-            _balls = new Queue<BallConfig>((int)ballCount.MaxValue);
+            _balls = new Queue<BallConfig>((int) ballCount.MaxValue);
         }
+
+        public void Set(IWeapon weapon = null) => _weapon = weapon;
+        public void Set(IBuffer buffer = null) => _buffer = buffer;
 
         public void Subscribe() => _ballFactory.BallReturned += ReturnBullet;
 
@@ -66,6 +71,12 @@ namespace BigBalls.GameplayObjects
             }
 
             Ball ball = _ballFactory.Create(config);
+
+            if(_buffer != null)
+            {
+                ball.AddEffects(_buffer.EffectConfigs);
+            }
+
             return ball;
         }
 

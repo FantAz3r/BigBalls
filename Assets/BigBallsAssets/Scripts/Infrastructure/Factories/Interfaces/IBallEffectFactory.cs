@@ -1,11 +1,11 @@
-﻿using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
+﻿using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using System.Collections.Generic;
 
 namespace BigBalls.Factories
 {
     public interface IBallEffectFactory
     {
-        List<EffectBehaviour> Create(BallConfig ballConfig);
+        List<EffectBehaviour> Create(List<EffectConfig> effectConfigs);
     }
 }

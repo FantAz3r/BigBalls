@@ -27,6 +27,7 @@ namespace BigBalls.Factories
         private readonly IBallFactory _ballFactory;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly ILouseService _louseService;
+        private readonly IItemConainerProvider _itemConainerProvider;
         private PlayerConfig _playerConfig;
 
         public PlayerFactory(
@@ -42,7 +43,8 @@ namespace BigBalls.Factories
             IPlayerProvider playerProvider,
             IBallFactory ballFactory,
             ICoroutineRunner coroutineRunner,
-            ILouseService louseService)
+            ILouseService louseService,
+            IItemConainerProvider itemConainerProvider)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -57,6 +59,7 @@ namespace BigBalls.Factories
             _ballFactory = ballFactory;
             _coroutineRunner = coroutineRunner;
             _louseService = louseService;
+            _itemConainerProvider = itemConainerProvider;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -94,7 +97,11 @@ namespace BigBalls.Factories
         {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
+
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory);
+            playerBallContainer.Set(_itemConainerProvider.Gun);
+            playerBallContainer.Set(_itemConainerProvider.Helmet);
+
             Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer, _coroutineRunner);
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BigBalls.GameplayObjects;
 using System.Linq;
+using BigBalls.Configs;
 
 namespace BigBalls.StaticData
 {

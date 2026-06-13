@@ -1,9 +1,8 @@
-﻿using BigBalls.StaticData;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace BigBalls.GameplayObjects
+namespace BigBalls.Configs
 {
-    public interface IWeapon
+    public interface IWeapon : IItem
     {
         List<BallConfig> UniqueBalls { get; }
     }

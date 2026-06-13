@@ -1,5 +1,5 @@
-﻿using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
+﻿using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using UnityEngine;
 
 namespace BigBalls.Factories
