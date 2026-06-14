@@ -10,7 +10,7 @@ namespace BigBalls.GameplayObjects
     {
         private List<ICollisionStrategy> _collisionStrategies;
         private List<EffectBehaviour> _effectBehaviours;
-        private IBallEffectFactory _ballEffectFactory;
+        private IEffectFactory _ballEffectFactory;
 
         public event Action<int> Hited;
         public event Action<Ball> Disabled;
@@ -38,7 +38,7 @@ namespace BigBalls.GameplayObjects
             UnsubscribeEffects();
         }
 
-        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IBallEffectFactory ballEffectFactory)
+        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
         {
             DeathHandler = deathHandler;
             Id = id;

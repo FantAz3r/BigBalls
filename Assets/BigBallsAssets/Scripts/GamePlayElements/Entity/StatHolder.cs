@@ -1,22 +1,37 @@
+using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
+using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
 
 public class StatHolder
 {
     public readonly int OwnerID;
-    private readonly IArmor _armor;
+    private readonly IEffectFactory _effectFactory;
 
+    private List<EffectBehaviour> _effectBehaviours;
     private Dictionary<StatType, Stat> _stats = new();
     private IEntityConfig _config;
+    private IArmor _armor;
 
-    public StatHolder(int ownerID, IEntityConfig config, IArmor armor = null)
+    public StatHolder(int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
+        EntityType = entityType;
         OwnerID = ownerID;
         _config = config;
-        _armor = armor;
+        _effectFactory = effectFactory;
         InitStats(_config.Stats);
+    }
+
+    public EntityType EntityType { get; private set; }
+    public void Set(IArmor armor = null) => _armor = armor;
+    public void Set(IBuffer helmet = null)
+    {
+        if (_effectFactory == null)
+            throw new ArgumentNullException(nameof(_effectFactory));
+
+        _effectBehaviours = _effectFactory.Create(helmet.EffectConfigs);
     }
 
     public Dictionary<StatType, Stat> Stats => _stats;

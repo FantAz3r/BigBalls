@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BigBalls.Factories
 {
-    public interface IBallEffectFactory
+    public interface IEffectFactory
     {
         List<EffectBehaviour> Create(List<EffectConfig> effectConfigs);
     }

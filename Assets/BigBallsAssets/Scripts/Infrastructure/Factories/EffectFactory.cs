@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
-    public class BallEffectFactory : IBallEffectFactory
+    public class EffectFactory : IEffectFactory
     {
         private readonly IObjectResolverProvider _objectResolverProvider;
 
         private Dictionary<BehaviourType, Func<EffectConfig, EffectBehaviour>> _effectToFactory = new();
 
-        public BallEffectFactory(IObjectResolverProvider objectResolverProvider)
+        public EffectFactory(IObjectResolverProvider objectResolverProvider)
         {
             _objectResolverProvider = objectResolverProvider;
 

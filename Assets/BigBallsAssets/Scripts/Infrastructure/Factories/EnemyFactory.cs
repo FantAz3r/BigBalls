@@ -51,7 +51,7 @@ namespace BigBalls.Factories
             
             int enemyID = _identifierService.ID;
 
-            StatHolder statHolder = new StatHolder(enemyID, enemyConfig);
+            StatHolder statHolder = new StatHolder(enemyID, enemyConfig.Type, enemyConfig);
 
             List<ISubscribable> subscribables = CreateComponents(statHolder, enemy, enemyConfig);
 

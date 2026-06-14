@@ -28,6 +28,7 @@ namespace BigBalls.Factories
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly ILouseService _louseService;
         private readonly IItemConainerProvider _itemConainerProvider;
+        private readonly IEffectFactory _effectFactory;
         private PlayerConfig _playerConfig;
 
         public PlayerFactory(
@@ -44,7 +45,8 @@ namespace BigBalls.Factories
             IBallFactory ballFactory,
             ICoroutineRunner coroutineRunner,
             ILouseService louseService,
-            IItemConainerProvider itemConainerProvider)
+            IItemConainerProvider itemConainerProvider,
+            IEffectFactory effectFactory)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -60,6 +62,7 @@ namespace BigBalls.Factories
             _coroutineRunner = coroutineRunner;
             _louseService = louseService;
             _itemConainerProvider = itemConainerProvider;
+            _effectFactory = effectFactory;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -70,7 +73,7 @@ namespace BigBalls.Factories
             Player prefab = _resourceLoader.Load<Player>();
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
-            StatHolder statHolder = new StatHolder(playerID, _playerConfig);
+            StatHolder statHolder = new StatHolder(playerID,EntityType.Player, _playerConfig, _effectFactory);
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
             deathHandler.Subscribe();

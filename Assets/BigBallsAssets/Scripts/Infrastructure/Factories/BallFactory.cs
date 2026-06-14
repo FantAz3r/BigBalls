@@ -11,7 +11,7 @@ namespace BigBalls.Factories
     public class BallFactory : IBallFactory
     {
         private readonly IObjectResolverProvider _objectResolverProvider;
-        private readonly IBallEffectFactory _ballEffectFactory;
+        private readonly IEffectFactory _ballEffectFactory;
         private readonly IEntityRepository _entityRepository;
         private readonly IIdentifierService _identifierService;
         private readonly IUpdateService _updateService;
@@ -20,7 +20,7 @@ namespace BigBalls.Factories
 
         public BallFactory(
             IObjectResolverProvider objectResolverProvider,
-            IBallEffectFactory ballBehaivorFactory,
+            IEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
             IIdentifierService identifierService,
             IUpdateService updateService,
@@ -44,7 +44,7 @@ namespace BigBalls.Factories
             Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
             ball.Returned += OnReturn;
 
-            StatHolder statHolder = new StatHolder(ballId, ballConfig);
+            StatHolder statHolder = new StatHolder(ballId, ballConfig.Type, ballConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()

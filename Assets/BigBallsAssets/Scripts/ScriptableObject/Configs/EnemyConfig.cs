@@ -11,10 +11,11 @@ namespace BigBalls.Configs
     public class EnemyConfig : ScriptableObject, IEntityConfig
     {
         [field: SerializeField] public Enemy Prefab { get; private set; }
+        [field: SerializeField] public EntityType Type { get; private set; }
         [field: SerializeField] public bool CanSuiside { get; private set; }
         [field: SerializeField] public bool HasRangeAttack { get; private set; }
         [field: SerializeField] public bool HasMeeleAttack { get; private set; }
-
+        
         [field: SerializeField] public List<Vector2Int> BlocksPositions { get; private set; } = new();
         [field: SerializeField] public List<StatStruct> Stats { get; private set; } = new ();
         [field: SerializeField] public LayerMask ObstacleLayers { get; private set; }
