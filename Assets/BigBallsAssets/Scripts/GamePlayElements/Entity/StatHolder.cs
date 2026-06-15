@@ -25,13 +25,20 @@ public class StatHolder
     }
 
     public EntityType EntityType { get; private set; }
-    public void Set(IArmor armor = null) => _armor = armor;
-    public void Set(IBuffer helmet = null)
-    {
-        if (_effectFactory == null)
-            throw new ArgumentNullException(nameof(_effectFactory));
 
-        _effectBehaviours = _effectFactory.Create(helmet.EffectConfigs);
+    public void Set(ItemStruct item = default)
+    {
+        if(item.Config is IBuffer buffer)
+        {
+            if (_effectFactory == null)
+                throw new ArgumentNullException(nameof(_effectFactory));
+
+            _effectBehaviours = _effectFactory.Create(buffer.EffectConfigs, item.Level);
+        }
+        else if (item.Config is IArmor)
+        {
+            _armor = (IArmor) item.Config;
+        }
     }
 
     public Dictionary<StatType, Stat> Stats => _stats;

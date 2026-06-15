@@ -11,13 +11,13 @@ namespace BigBalls.GameplayObjects
     {
         private readonly IObjectResolverProvider _objectResolverProvider;
 
-        private Dictionary<BehaviourType, Func<EffectConfig, EffectBehaviour>> _effectToFactory = new();
+        private Dictionary<BehaviourType, Func<EffectConfig, int, EffectBehaviour>> _effectToFactory = new();
 
         public EffectFactory(IObjectResolverProvider objectResolverProvider)
         {
             _objectResolverProvider = objectResolverProvider;
 
-            _effectToFactory = new Dictionary<BehaviourType, Func<EffectConfig, EffectBehaviour>>()
+            _effectToFactory = new Dictionary<BehaviourType, Func<EffectConfig, int, EffectBehaviour>>()
             {
                 [BehaviourType.Damage] = CreateDamageEffect,
                 [BehaviourType.Burn] = CreateFireEffect,
@@ -26,13 +26,13 @@ namespace BigBalls.GameplayObjects
             };
         }
 
-        public List<EffectBehaviour> Create(List<EffectConfig> effectConfigs)
+        public List<EffectBehaviour> Create(List<EffectConfig> effectConfigs, int level)
         {
             List<EffectBehaviour> effectBehaviours = new List<EffectBehaviour>();
 
             foreach (var effectConfig in effectConfigs)
             {
-                EffectBehaviour effectBehaviour = _effectToFactory[effectConfig.Type](effectConfig);
+                EffectBehaviour effectBehaviour = _effectToFactory[effectConfig.Type](effectConfig, level);
                 _objectResolverProvider.CurrentResolver.Inject(effectBehaviour);
                 effectBehaviours.Add(effectBehaviour);
             }
@@ -40,9 +40,9 @@ namespace BigBalls.GameplayObjects
             return effectBehaviours;
         }
 
-        private EffectBehaviour CreateDamageEffect(EffectConfig config) => new Damage(config as DamageBehaviour);
-        private EffectBehaviour CreateFireEffect(EffectConfig config) => new Fire(config as FireConfig);
-        private EffectBehaviour CreateIceEffect(EffectConfig config) => new Ice(config as IceConfig);
+        private EffectBehaviour CreateDamageEffect(EffectConfig config, int level) => new Damage(config as DamageConfig, level);
+        private EffectBehaviour CreateFireEffect(EffectConfig config, int level) => new Fire(config as FireConfig, level);
+        private EffectBehaviour CreateIceEffect(EffectConfig config, int level) => new Ice(config as IceConfig, level);
         //private EffectBehaviour CreateTunderEffect(EffectConfig config) => new Tunder(config as TunderConfig);
     }
 }

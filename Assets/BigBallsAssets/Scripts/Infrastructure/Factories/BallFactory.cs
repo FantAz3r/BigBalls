@@ -36,9 +36,9 @@ namespace BigBalls.Factories
             _poolService = poolService;
         }
 
-        public event Action<Ball> BallReturned;
+        public event Action BallReturned;
 
-        public Ball Create(BallConfig ballConfig, Transform parent = null)
+        public Ball Create(BallConfig ballConfig, int level = 0)
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
@@ -83,7 +83,7 @@ namespace BigBalls.Factories
             ball.Returned -= OnReturn;
 
             _poolService.ReleaseObject(ball);
-            BallReturned?.Invoke(ball);
+            BallReturned?.Invoke();
         }
     }
 }

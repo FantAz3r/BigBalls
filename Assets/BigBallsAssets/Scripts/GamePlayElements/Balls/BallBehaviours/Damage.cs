@@ -6,10 +6,10 @@ namespace BigBalls.GameplayObjects
 {
     public class Damage : EffectBehaviour
     {
-        private readonly DamageBehaviour _config;
+        private readonly DamageConfig _config;
         private IDamageService _damageService;
 
-        public Damage(DamageBehaviour config) : base(config)
+        public Damage(DamageConfig config, int level) : base(config, level)
         {
             _config = config;
         }
@@ -22,7 +22,7 @@ namespace BigBalls.GameplayObjects
 
         protected override void OnHit(int id)
         {
-            _damageService.ApplyDamage(id, _config.Damage);
+            _damageService.ApplyDamage(id, _config.GetDamage(Level));
         }
     }
 }

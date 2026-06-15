@@ -1,7 +1,6 @@
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
-using BigBalls.StaticData;
 using System.Collections;
 using UnityEngine;
 using VContainer;
@@ -16,7 +15,7 @@ namespace BigBalls.GameplayObjects
         private IParticleFactory _particleFactory;
         private WaitForSeconds _oneSecond = new WaitForSeconds(1);
 
-        public Fire(FireConfig config) : base(config)
+        public Fire(FireConfig config, int level) : base(config, level)
         {
             _config = config;
         }

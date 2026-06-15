@@ -1,31 +1,30 @@
 ﻿using BigBalls.Configs;
-using BigBalls.Factories;
-using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
 
 namespace BigBalls.Providers
 {
     public class ItemConainerProvider : IItemConainerProvider
     {
-        public IWeapon Gun { get; private set; }
+        public ItemStruct Gun { get; private set; }
 
-        public IBuffer Helmet { get; private set; }
+        public ItemStruct Helmet { get; private set; }
 
-        public IArmor Armor { get; private set; }
+        public ItemStruct Armor { get; private set; }
 
-        public void Set(IWeapon gun)
+        public void Set(ItemStruct item)
         {
-            Gun = gun;
-        }
-
-        public void Set(IBuffer helmet)
-        {
-            Helmet = helmet;
-        }
-
-        public void Set(IArmor armor)
-        {
-            Armor = armor;
+            if(item.Config is WeaponConfig)
+            {
+                Gun = item;
+            }
+            else if(item.Config is HelmetConfig)
+            {
+                Helmet = item;
+            }
+            else if(item.Config is ArmorConfig)
+            {
+                Armor = item;
+            }
         }
     }
 }

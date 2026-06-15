@@ -1,12 +1,11 @@
-﻿using BigBalls.Configs;
-using BigBalls.StaticData;
+﻿using BigBalls.StaticData;
 
 namespace BigBalls.Providers
 {
     public interface IItemConainerProvider
     {
-        IWeapon Gun { get; }
-        IBuffer Helmet { get; }
-        IArmor Armor { get; }
+        ItemStruct Gun { get; }
+        ItemStruct Helmet { get; }
+        ItemStruct Armor { get; }
     }
 }

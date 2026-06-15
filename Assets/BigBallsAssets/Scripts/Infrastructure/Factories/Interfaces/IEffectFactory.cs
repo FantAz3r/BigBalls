@@ -6,6 +6,6 @@ namespace BigBalls.Factories
 {
     public interface IEffectFactory
     {
-        List<EffectBehaviour> Create(List<EffectConfig> effectConfigs);
+        List<EffectBehaviour> Create(List<EffectConfig> effectConfigs, int level);
     }
 }

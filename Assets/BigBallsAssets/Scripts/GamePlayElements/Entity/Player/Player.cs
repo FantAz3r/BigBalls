@@ -1,4 +1,3 @@
-using System;
 using BigBalls.StaticData;
 using UnityEngine;
 
@@ -8,8 +7,6 @@ namespace BigBalls.GameplayObjects
     {
         [field: SerializeField] public PlayerConfig PlayerConfig { get; private set; }
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }
-
-        public event Action Lost;
 
         public DeathHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }

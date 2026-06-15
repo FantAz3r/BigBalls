@@ -9,7 +9,7 @@ public class Ice : EffectBehaviour
     private ICoroutineRunner _coroutineRunner;
     private IEntityRepository _entityRepository;
 
-    public Ice(IceConfig config) : base(config)
+    public Ice(IceConfig config, int level) : base(config, level)
     {
         _config = config;
     }

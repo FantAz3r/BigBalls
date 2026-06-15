@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Ball : MonoBehaviour, IEntity
+    public class Ball : MonoBehaviour, IEntity, IUpgradable
     {
         private List<ICollisionStrategy> _collisionStrategies;
         private List<EffectBehaviour> _effectBehaviours;
@@ -22,7 +22,9 @@ namespace BigBalls.GameplayObjects
         public bool CanReturnToBag { get; private set; } = false;
         public Mover Mover { get; private set; }
         public int Id { get; private set; }
+        public int Level { get; private set; }
         public Transform Transform => transform;
+
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -49,7 +51,7 @@ namespace BigBalls.GameplayObjects
             IsMaterial = Config.IsMaterial;
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
 
-            _effectBehaviours = _ballEffectFactory.Create(Config.EffectConfigs);
+            _effectBehaviours = _ballEffectFactory.Create(Config.EffectConfigs, Level);
 
             foreach (var effect in _effectBehaviours)
             {
@@ -57,22 +59,17 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void AddEffects(List<EffectConfig> effects)
+        public void AddEffects(List<EffectBehaviour> effects)
         {
-            List<EffectBehaviour> effectsBehaviour = _ballEffectFactory.Create(effects);
-
-            foreach (var effect in effectsBehaviour)
+            foreach (var effect in effects)
                 effect.Subscribe(this);
 
-            _effectBehaviours.AddRange(effectsBehaviour);
+            _effectBehaviours.AddRange(effects);
         }
 
         public void UnsubscribeEffects()
         {
             CanReturnToBag = false;
-
-            if (_ballEffectFactory == null)
-                return;
 
             foreach (var effect in _effectBehaviours)
             {
@@ -92,5 +89,15 @@ namespace BigBalls.GameplayObjects
 
         public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
         public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
+
+        public void Upgrade()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ResetLevel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

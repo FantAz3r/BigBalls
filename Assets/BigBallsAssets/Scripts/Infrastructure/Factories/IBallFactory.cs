@@ -7,7 +7,7 @@ namespace BigBalls.Factories
 {
     public interface IBallFactory
     {
-        event Action<Ball> BallReturned;
-        Ball Create(BallConfig ballConfig, Transform parent = null);
+        event Action BallReturned;
+        Ball Create(BallConfig ballConfig, int level = 0);
     }
 }

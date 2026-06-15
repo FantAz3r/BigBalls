@@ -4,6 +4,6 @@ namespace BigBalls.Configs
 {
     public interface IWeapon : IItem
     {
-        List<BallConfig> UniqueBalls { get; }
+        List<BallStruct> UniqueBalls { get; }
     }
 }
