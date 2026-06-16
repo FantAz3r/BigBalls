@@ -9,7 +9,7 @@ public class PlayerCollisionStrategy : ICollisionStrategy
         {
             if (ball.CanReturnToBag)
             {
-                ball.OnReturn(ball);
+                ball.EventHandler.Return(ball);
             }
 
             return true;

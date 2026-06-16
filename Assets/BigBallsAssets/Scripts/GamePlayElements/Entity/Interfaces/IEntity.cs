@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -6,5 +7,6 @@ namespace BigBalls.GameplayObjects
     {
         int Id { get; }
         Transform Transform { get; }
+        EntityEventHandler EventHandler { get; }
     }
 }

@@ -14,11 +14,11 @@ namespace BigBalls.GameplayObjects
         private readonly IIdentifierService _identifierService;
         private readonly BallsData _ballsData;
 
-        private ItemStruct _weapon;
-        private ItemStruct _buffer;
+        private ItemModel _weapon;
+        private ItemModel _buffer;
         private int _currentBallCount = 0;
 
-        private Queue<BallStruct> _balls;
+        private Queue<BallModel> _balls;
         private int _weaponConfigIndex = 0;
         private int _createdBallsCount = 0;
 
@@ -30,16 +30,18 @@ namespace BigBalls.GameplayObjects
             _identifierService = identifierService;
             _ballsData = resourceLoader.Load<BallsData>();
 
-            _balls = new Queue<BallStruct>((int) ballCount.MaxValue);
+            _balls = new Queue<BallModel>((int) ballCount.MaxValue);
         }
 
-        public void Set(ItemStruct item = default)
+        public IEnumerable<BallModel> Balls => _balls;
+
+        public void Set(ItemModel item = default)
         {
-            if(item.Config is IWeapon)
+            if (item.Config is IWeapon)
             {
                 _weapon = item;
             }
-            else if(item.Config is IBuffer)
+            else if (item.Config is IBuffer)
             {
                 _buffer = item;
             }
@@ -55,7 +57,7 @@ namespace BigBalls.GameplayObjects
 
             if (_currentBallCount > 0)
             {
-                BallStruct ballStruct = _balls.Dequeue();
+                BallModel ballStruct = _balls.Dequeue();
                 _balls.Enqueue(ballStruct);
                 _currentBallCount--;
 
@@ -81,24 +83,31 @@ namespace BigBalls.GameplayObjects
 
         private Ball CreateNewBall()
         {
-           BallStruct ballStruct = GetNextAvailableConfig();
+            BallModel ballStruct = GetNextAvailableConfig();
 
             if (ballStruct.Config == null)
                 return null;
 
             Ball ball = _ballFactory.Create(ballStruct.Config);
 
-            if(_buffer.Config != null)
+            if (_buffer.Config != null)
             {
-                IBuffer buffer = _buffer.Config as HelmetConfig;
-                var effectConfigs = _effectFactory.Create(buffer.EffectConfigs, _buffer.Level);
-                ball.AddEffects(effectConfigs);
+                IBuffer buffer = _weapon.Config as HelmetConfig;
+
+                List<EffectBehaviour> effects = new();
+
+                foreach (var artefact in buffer.Artefacts)
+                {
+                     effects.AddRange(_effectFactory.Create(artefact.Config.Effects, _buffer.Level));
+                }
+
+                ball.AddEffects(effects);
             }
 
             return ball;
         }
 
-        private BallStruct GetNextAvailableConfig()
+        private BallModel GetNextAvailableConfig()
         {
             IWeapon weaponConfig = _buffer.Config as WeaponConfig;
 
@@ -109,7 +118,48 @@ namespace BigBalls.GameplayObjects
                 return ballStruct;
             }
 
-            return new BallStruct(_identifierService.ID, _ballsData.BallConfigs[BallType.Base]);
+            return new BallModel(_identifierService.ID, _ballsData.BallConfigs[BallType.Base]);
+        }
+
+        public bool ReplaceOneBallWithUnique(BallModel uniqueBall)
+        {
+            if (uniqueBall.Config == null)
+                return false;
+
+            if (_balls.Count == 0)
+            {
+                _balls.Enqueue(uniqueBall);
+                _currentBallCount++;
+                return true;
+            }
+
+            var tempQueue = new Queue<BallModel>();
+            bool replaced = false;
+
+            while (_balls.Count > 0)
+            {
+                var ball = _balls.Dequeue();
+
+                if (replaced == false && ball.Config.IsUnique == false)
+                {
+                    tempQueue.Enqueue(uniqueBall);
+                    replaced = true;
+                }
+                else
+                {
+                    tempQueue.Enqueue(ball);
+                }
+            }
+
+            if (replaced == false)
+            {
+                tempQueue.Enqueue(uniqueBall);
+                replaced = true;
+            }
+
+            _balls = tempQueue;
+            _currentBallCount = _balls.Count;
+            return replaced;
         }
     }
 }

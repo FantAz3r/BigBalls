@@ -38,8 +38,7 @@ namespace BigBalls.GameplayObjects
         {
             //тут враг убивается об игрока
             _damageService.ApplyDamage(_playerProvider.Player.Id, _damage.CurrentValue);
-            Suicided?.Invoke(_owner);
-            Suicided = null;
+            _owner.EventHandler.Suiside(_owner);
         }
     }
 }

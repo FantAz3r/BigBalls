@@ -1,6 +1,7 @@
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
+using System;
 using System.Collections;
 using UnityEngine;
 using VContainer;
@@ -28,10 +29,11 @@ namespace BigBalls.GameplayObjects
             _particleFactory = particleFactory;
         }
 
-        protected override void OnHit(int id)
+        private void OnHit(int id)
         {
             _coroutineRunner.StartCoroutine(Burn(id));
         }
+
 
         private IEnumerator Burn(int targetId)
         {
@@ -43,6 +45,13 @@ namespace BigBalls.GameplayObjects
                 elapsed += Time.deltaTime;
                 yield return _oneSecond;
             }
+        }
+
+        protected override IDisposable SubscribeInternal(IEntity host)
+        {
+            host.EventHandler.Hited += OnHit;
+
+            return new DisposableObject(() => host.EventHandler.Hited -= OnHit);
         }
     }
 }

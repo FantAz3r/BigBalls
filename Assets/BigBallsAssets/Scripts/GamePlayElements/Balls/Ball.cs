@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
@@ -6,15 +5,11 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Ball : MonoBehaviour, IEntity, IUpgradable
+    public class Ball : MonoBehaviour, IEntity
     {
         private List<ICollisionStrategy> _collisionStrategies;
         private List<EffectBehaviour> _effectBehaviours;
         private IEffectFactory _ballEffectFactory;
-
-        public event Action<int> Hited;
-        public event Action<Ball> Disabled;
-        public event Action<Ball> Returned;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
@@ -24,7 +19,7 @@ namespace BigBalls.GameplayObjects
         public int Id { get; private set; }
         public int Level { get; private set; }
         public Transform Transform => transform;
-
+        public EntityEventHandler EventHandler { get; private set; }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -79,25 +74,7 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.Clear();
         }
 
-        public void OnHit(int id) => Hited?.Invoke(id);
-
-        public void OnReturn(Ball ball)
-        {
-            Returned?.Invoke(ball);
-            Returned = null;
-        }
-
         public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
         public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
-
-        public void Upgrade()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ResetLevel()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

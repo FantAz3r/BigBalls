@@ -1,18 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ItemSaveData : MonoBehaviour
+public struct ItemSaveData 
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int ItemType;
+    public int CardCount;
+    public bool HasPlayer;
 }

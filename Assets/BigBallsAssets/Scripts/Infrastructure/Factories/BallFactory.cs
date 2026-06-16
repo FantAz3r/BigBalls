@@ -4,7 +4,6 @@ using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using UnityEngine;
 
 namespace BigBalls.Factories
 {
@@ -42,7 +41,7 @@ namespace BigBalls.Factories
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
-            ball.Returned += OnReturn;
+            ball.EventHandler.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ballId, ballConfig.Type, ballConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
@@ -74,13 +73,16 @@ namespace BigBalls.Factories
             return collisionStrategies;
         }
 
-        private void OnReturn(Ball ball)
+        private void OnReturn(IEntity entity)
         {
+            if (entity is not Ball ball)
+                return;
+
             _entityRepository.Remove(ball);
             ball.UnsubscribeEffects();
             ball.DeathHandler.Unsubscribe();
             ball.DeathHandler.Died -= OnReturn;
-            ball.Returned -= OnReturn;
+            ball.EventHandler.Returned -= OnReturn;
 
             _poolService.ReleaseObject(ball);
             BallReturned?.Invoke();

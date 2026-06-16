@@ -45,10 +45,8 @@ namespace BigBalls.Factories
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
             Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name);
-            
             enemy.transform.position = spawnPosition;
             enemy.transform.rotation = Quaternion.identity;
-            
             int enemyID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(enemyID, enemyConfig.Type, enemyConfig);
@@ -57,18 +55,24 @@ namespace BigBalls.Factories
 
             DeathHandler<Enemy> deathHandler = new DeathHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
             deathHandler.Subscribe();
-            deathHandler.Died += OnDied;
+            enemy.EventHandler.Died += OnDied;
 
             enemy.Construct(enemyID, deathHandler);
             _entityRepository.Add(enemy, statHolder);
             return enemy;
         }
 
-        private void OnDied(Enemy enemy)
+        private void OnDied(IEntity entity)
         {
+            if (entity is not Enemy enemy)
+                return;
+
             _dropService.DropLoot(enemy.transform.position, enemy);
+
             enemy.DeathHandler.Unsubscribe();
-            enemy.DeathHandler.Died -= OnDied;
+            enemy.EventHandler.Died -= OnDied;
+            enemy.EventHandler.Suisided -= OnDied;
+
             _poolService.ReleaseObject(enemy);
             _entityRepository.Remove(enemy);
         }
@@ -79,7 +83,7 @@ namespace BigBalls.Factories
             Init(mover, enemyConfig);
 
             EnemyAttacker enemyAttacker = new EnemyAttacker(_playerProvider, statHolder[StatType.Damage], enemy, enemy.EntityTrigger, _damageService);
-            enemyAttacker.Suicided += OnDied;
+            enemy.EventHandler.Suisided += OnDied;
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {

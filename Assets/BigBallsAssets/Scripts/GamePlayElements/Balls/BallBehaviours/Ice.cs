@@ -1,3 +1,4 @@
+using System;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
 using BigBalls.StaticData;
@@ -19,5 +20,16 @@ public class Ice : EffectBehaviour
     {
         _coroutineRunner = coroutineRunner;
         _entityRepository = entityRepository;
+    }
+
+    public void OnHit(int id)
+    {
+
+    }
+
+    protected override IDisposable SubscribeInternal(IEntity host)
+    {
+        host.EventHandler.Hited += OnHit;
+        return new DisposableObject(() => host.EventHandler.Hited -= OnHit);
     }
 }

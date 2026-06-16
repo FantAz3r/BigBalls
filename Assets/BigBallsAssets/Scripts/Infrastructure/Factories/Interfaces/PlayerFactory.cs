@@ -28,6 +28,7 @@ namespace BigBalls.Factories
         private readonly ILouseService _louseService;
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
+
         private PlayerConfig _playerConfig;
 
         public PlayerFactory(
@@ -76,7 +77,7 @@ namespace BigBalls.Factories
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
             deathHandler.Subscribe();
-            deathHandler.Died += OnDied;
+            player.EventHandler.Died += OnDied;
 
             _louseService.SetLouseReason(deathHandler);
             player.Construct(playerID, deathHandler);
@@ -88,10 +89,13 @@ namespace BigBalls.Factories
             return player;
         }
 
-        private void OnDied(Player player)
+        private void OnDied(IEntity entity)
         {
+            if (entity is not Player player)
+                return;
+
             player.DeathHandler.Unsubscribe();
-            player.DeathHandler.Died -= OnDied;
+            player.EventHandler.Died -= OnDied;
             player.gameObject.SetActive(false);
         }
 

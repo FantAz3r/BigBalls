@@ -26,22 +26,26 @@ public class StatHolder
 
     public EntityType EntityType { get; private set; }
 
-    public void Set(ItemStruct item = default)
+    public Dictionary<StatType, Stat> Stats => _stats;
+    public Stat this[StatType type] => _stats[type];
+
+    public void Set(ItemModel item = default)
     {
-        if(item.Config is IBuffer buffer)
+        if (item.Config is IBuffer buffer)
         {
             if (_effectFactory == null)
                 throw new ArgumentNullException(nameof(_effectFactory));
 
-            _effectBehaviours = _effectFactory.Create(buffer.EffectConfigs, item.Level);
+            foreach (var artefact in buffer.Artefacts)
+            {
+                _effectBehaviours.AddRange(_effectFactory.Create(artefact.Config.Effects, item.Level));
+            }
         }
         else if (item.Config is IArmor)
         {
             _armor = (IArmor) item.Config;
         }
     }
-
-    public Dictionary<StatType, Stat> Stats => _stats;
 
     private void InitStats(List<StatStruct> stats)
     {
@@ -60,6 +64,4 @@ public class StatHolder
             _stats.Add(stat.StatType, new Stat(stat.StatType, maxValue, stat.MinValue, currentValue));
         }
     }
-
-    public Stat this[StatType type] => _stats[type];
 }

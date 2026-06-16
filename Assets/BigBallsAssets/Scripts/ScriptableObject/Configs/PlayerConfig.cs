@@ -7,6 +7,7 @@ using BigBalls.Configs;
 namespace BigBalls.StaticData
 {
     [CreateAssetMenu(fileName = "PlayerConfig", menuName = "Configs/PlayerConfig")]
+
     public class PlayerConfig : ScriptableObject, IEntityConfig
     {
         [SerializeField] private List <StatStruct> _stats;

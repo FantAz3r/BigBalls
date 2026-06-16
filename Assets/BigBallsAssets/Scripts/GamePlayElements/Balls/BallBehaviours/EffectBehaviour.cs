@@ -1,3 +1,4 @@
+using System;
 using BigBalls.Configs;
 using UnityEngine;
 
@@ -5,10 +6,10 @@ namespace BigBalls.GameplayObjects
 {
     public abstract class EffectBehaviour
     {
-        protected EffectConfig Config;
         protected readonly int Level;
-
-        public Ball Host { get; protected set; }
+        protected EffectConfig Config;
+        private IDisposable _disposable;
+        public IEntity Host { get; protected set; }
 
         protected EffectBehaviour(EffectConfig config, int level)
         {
@@ -16,20 +17,21 @@ namespace BigBalls.GameplayObjects
             Level = level;
         }
 
-        public void Subscribe(Ball host)
+        protected abstract IDisposable SubscribeInternal(IEntity host);
+
+        public void Subscribe(IEntity host)
         {
+            if (_disposable != null)
+                throw new ArgumentNullException(nameof(host));
+
             Host = host;
-            host.Hited += OnHit;
+            _disposable = SubscribeInternal(host);
         }
 
-        protected virtual void OnHit(int id)
+        public void Unsubscribe(IEntity host)
         {
-            Debug.Log("onHit");
-        }
-
-        public void Unsubscribe(Ball host) 
-        {
-            host.Hited -= OnHit;
+            _disposable.Dispose();
+            _disposable = null;
             Host = null;
         }
     }

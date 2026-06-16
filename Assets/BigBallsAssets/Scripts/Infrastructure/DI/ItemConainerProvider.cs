@@ -5,13 +5,13 @@ namespace BigBalls.Providers
 {
     public class ItemConainerProvider : IItemConainerProvider
     {
-        public ItemStruct Gun { get; private set; }
+        public ItemModel Gun { get; private set; }
 
-        public ItemStruct Helmet { get; private set; }
+        public ItemModel Helmet { get; private set; }
 
-        public ItemStruct Armor { get; private set; }
+        public ItemModel Armor { get; private set; }
 
-        public void Set(ItemStruct item)
+        public void Set(ItemModel item)
         {
             if(item.Config is WeaponConfig)
             {

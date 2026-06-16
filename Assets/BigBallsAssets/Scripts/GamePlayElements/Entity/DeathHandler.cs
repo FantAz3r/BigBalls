@@ -45,8 +45,7 @@ namespace BigBalls.GameplayObjects
         {
             if (stat.CurrentValue <= stat.MinValue)
             {
-                Died?.Invoke(_diebleObject);
-                Lost?.Invoke();
+                _diebleObject.EventHandler.Die(_diebleObject);
             }
         }
     }

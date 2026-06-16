@@ -7,8 +7,8 @@ namespace BigBalls.Configs
 
     public class WeaponConfig : ItemConfig, IWeapon
     {
-        [SerializeField] private List<BallStruct> _uniqueBalls;
+        [SerializeField] private List<BallModel> _uniqueBalls;
 
-        public List<BallStruct> UniqueBalls => _uniqueBalls;
+        public List<BallModel> UniqueBalls => _uniqueBalls;
     }
 }

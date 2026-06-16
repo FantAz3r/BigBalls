@@ -1,4 +1,5 @@
-﻿using BigBalls.Configs;
+﻿using System;
+using BigBalls.Configs;
 using BigBalls.Services;
 using VContainer;
 
@@ -20,9 +21,16 @@ namespace BigBalls.GameplayObjects
             _damageService = damageService;
         }
 
-        protected override void OnHit(int id)
+        private void OnHit(int id)
         {
             _damageService.ApplyDamage(id, _config.GetDamage(Level));
+        }
+
+        protected override IDisposable SubscribeInternal(IEntity host)
+        {
+            host.EventHandler.Hited += OnHit;
+
+            return new DisposableObject(() => host.EventHandler.Hited -= OnHit);
         }
     }
 }

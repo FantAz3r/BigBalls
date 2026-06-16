@@ -14,15 +14,17 @@ namespace BigBalls.Configs
     {
         [HideInInspector] public LayerMask ObstacleLayers { get; private set; }
         [field: SerializeField] public Ball Prefab { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public EntityType Type { get; private set; }
         [field: SerializeField] public float Radius { get; private set; } = 0.2f;
         [field: SerializeField] public bool IsMaterial { get; private set; }
+        [field: SerializeField] public bool IsUnique { get; private set; } = true;
+
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }
 
+        [field: SerializeField] public List<EffectConfig> EffectConfigs { get; private set; }
 
-        [field: SerializeField] public List<EffectConfig> EffectConfigs = new ();
-
-        public bool TryGetBehaviour(out EffectConfig behaviourConfig, BehaviourType type)
+        public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)
         {
             behaviourConfig = null;
 

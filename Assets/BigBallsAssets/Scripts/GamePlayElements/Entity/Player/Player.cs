@@ -12,6 +12,7 @@ namespace BigBalls.GameplayObjects
         public int Id { get; private set; }
         public PlayerAnimator PlayerAnimator { get; private set; }
         public Transform Transform => transform;
+        public EntityEventHandler EventHandler { get; private set; }
 
         private void OnDestroy()
         {

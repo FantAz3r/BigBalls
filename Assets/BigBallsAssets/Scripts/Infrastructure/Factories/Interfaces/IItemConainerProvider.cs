@@ -4,8 +4,8 @@ namespace BigBalls.Providers
 {
     public interface IItemConainerProvider
     {
-        ItemStruct Gun { get; }
-        ItemStruct Helmet { get; }
-        ItemStruct Armor { get; }
+        ItemModel Gun { get; }
+        ItemModel Helmet { get; }
+        ItemModel Armor { get; }
     }
 }
