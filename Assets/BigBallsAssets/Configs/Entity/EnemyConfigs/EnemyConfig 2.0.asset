@@ -39,17 +39,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 72
   PossibleLoot:
-  - LootPrefab: {fileID: 3258537970558730023, guid: 82b395a1eaf410e469c360a614cd2cc5,
+  - LootPrefab: {fileID: -7175670180899759876, guid: 82b395a1eaf410e469c360a614cd2cc5,
       type: 3}
     DropChance: 0.4
-    MinAmount: 1
-    MaxAmount: 2
+    MinAmount: 5
+    MaxAmount: 15
     LootType: 0
-  - LootPrefab: {fileID: 8462508370152562949, guid: 4efce150dda86da459328e2ed646e44f,
+  - LootPrefab: {fileID: 5078020938223925664, guid: 4efce150dda86da459328e2ed646e44f,
       type: 3}
     DropChance: 0.3
-    MinAmount: 1
-    MaxAmount: 1
+    MinAmount: 10
+    MaxAmount: 20
     LootType: 2
+  - LootPrefab: {fileID: 7755661948603910049, guid: a1c71bd3d62ccde4691eef79ca692bb0,
+      type: 3}
+    DropChance: 0.3
+    MinAmount: 10
+    MaxAmount: 20
+    LootType: 1
   BaseExperience: 10
   BaseCoins: 5
