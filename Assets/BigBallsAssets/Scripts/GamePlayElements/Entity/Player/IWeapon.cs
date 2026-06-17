@@ -2,7 +2,7 @@
 
 namespace BigBalls.Configs
 {
-    public interface IWeapon : IItem
+    public interface IWeapon : IItemConfig
     {
         List<BallModel> UniqueBalls { get; }
     }

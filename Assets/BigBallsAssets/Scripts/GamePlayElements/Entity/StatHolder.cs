@@ -38,7 +38,7 @@ public class StatHolder
 
             foreach (var artefact in buffer.Artefacts)
             {
-                _effectBehaviours.AddRange(_effectFactory.Create(artefact.Config.Effects, item.Level));
+                _effectBehaviours.AddRange(_effectFactory.Create(artefact.ArtefactConfig.Effects, item.Level));
             }
         }
         else if (item.Config is IArmor)

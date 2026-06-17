@@ -8,10 +8,9 @@ namespace BigBalls.Configs
     [CustomScriptableObjectListEditor]
     [CreateAssetMenu(fileName = "Artefact", menuName = "Configs/Item/WeaponConfigs")]
 
-    public class ArtefactConfig : ScriptableObject
+    public class ArtefactConfig : ItemConfig
     {
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
-        [field: SerializeField] public Sprite Icon { get; private set; }
 
         public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)
         {

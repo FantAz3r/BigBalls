@@ -10,11 +10,10 @@ namespace BigBalls.Configs
     [CustomScriptableObjectListEditor]
     [CreateAssetMenu(fileName = "BallConfig", menuName = "Configs/BallConfig")]
 
-    public class BallConfig : ScriptableObject, IEntityConfig
+    public class BallConfig : ItemConfig, IEntityConfig
     {
         [HideInInspector] public LayerMask ObstacleLayers { get; private set; }
         [field: SerializeField] public Ball Prefab { get; private set; }
-        [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public EntityType Type { get; private set; }
         [field: SerializeField] public float Radius { get; private set; } = 0.2f;
         [field: SerializeField] public bool IsMaterial { get; private set; }

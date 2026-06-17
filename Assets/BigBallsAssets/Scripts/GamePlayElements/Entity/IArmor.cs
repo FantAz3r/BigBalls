@@ -4,7 +4,7 @@ using BigBalls.StaticData;
 
 namespace BigBalls.Configs
 {
-    public interface IArmor : IItem
+    public interface IArmor : IItemConfig
     {
         Dictionary<StatType, StatStruct> Stats { get; }
     }
