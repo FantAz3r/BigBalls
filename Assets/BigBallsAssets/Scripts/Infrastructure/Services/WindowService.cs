@@ -25,7 +25,6 @@ namespace BigBalls.Services
                 [typeof(PauseWindow)] = uiFactory.CreatePauseWindow,
                 [typeof(LouseLevelMenu)] = uiFactory.CreateLouseMenu,
                 [typeof(WinLevelMenu)] = uiFactory.CreateWinMenu,
-                [typeof(WaveViewer)] = uiFactory.CreateWaveViewer,
             };
         }
 

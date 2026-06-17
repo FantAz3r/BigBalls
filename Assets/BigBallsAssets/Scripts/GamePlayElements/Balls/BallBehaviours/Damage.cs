@@ -24,8 +24,6 @@ namespace BigBalls.GameplayObjects
 
         private void OnHit(int id)
         {
-            Debug.Log(Level);
-            Debug.Log(_config.GetDamage(Level));
             _damageService.ApplyDamage(id, _config.GetDamage(Level));
         }
 

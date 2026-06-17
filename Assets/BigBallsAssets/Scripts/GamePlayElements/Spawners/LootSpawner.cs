@@ -1,4 +1,3 @@
-using BigBalls.Configs;
 using UnityEngine;
 
 public class LootSpawner

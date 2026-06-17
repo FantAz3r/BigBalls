@@ -51,8 +51,6 @@ namespace BigBalls.Factories
 
         public WinLevelMenu CreateWinMenu() => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
 
-        public WaveViewer CreateWaveViewer() => GetOrCreateWindow(WindowType.WaveViewer) as WaveViewer;
-
         public void CreateJoystick()
         {
         }

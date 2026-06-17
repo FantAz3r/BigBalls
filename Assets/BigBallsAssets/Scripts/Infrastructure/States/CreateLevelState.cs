@@ -4,9 +4,7 @@ using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using BigBalls.StaticData;
 using BigBalls.UI;
-using log4net.Core;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -30,7 +28,7 @@ namespace BigBalls.Infrastructure
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
 
-        public CreateLevelState(
+        public CreateLevelState (
             IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
             IWindowService windowService,
@@ -60,11 +58,10 @@ namespace BigBalls.Infrastructure
             _dropService = dropService;
         }
 
-        public void Enter(LevelID level)
+        public void Enter (LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
-            
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();
 
@@ -80,14 +77,15 @@ namespace BigBalls.Infrastructure
             _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
         }
 
-        private void CreateUI()
+        private void CreateUI ()
         {
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
+            _uIFactory.Get<HUD>(WindowType.HUD).WalletViewer.Init();
         }
 
-        public void Exit()
+        public void Exit ()
         {
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
