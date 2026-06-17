@@ -77,11 +77,11 @@ namespace BigBalls.Factories
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
             deathHandler.Subscribe();
-            player.EventHandler.Died += OnDied;
 
             _louseService.SetLouseReason(deathHandler);
             player.Construct(playerID, deathHandler);
 
+            player.EventHandler.Died += OnDied;
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);

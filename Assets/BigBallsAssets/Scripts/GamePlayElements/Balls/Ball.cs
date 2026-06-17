@@ -21,7 +21,12 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
-        private void OnCollisionEnter(Collision collision)
+        private void Awake ()
+        {
+            EventHandler = new EntityEventHandler();
+        }
+
+        private void OnCollisionEnter (Collision collision)
         {
             foreach (var strategy in _collisionStrategies)
             {
@@ -30,12 +35,12 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void OnDestroy()
+        private void OnDestroy ()
         {
             UnsubscribeEffects();
         }
 
-        public void Construct(int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
+        public void Construct (int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
         {
             DeathHandler = deathHandler;
             Id = id;
@@ -54,7 +59,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void AddEffects(List<EffectBehaviour> effects)
+        public void AddEffects (List<EffectBehaviour> effects)
         {
             foreach (var effect in effects)
                 effect.Subscribe(this);
@@ -62,7 +67,7 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.AddRange(effects);
         }
 
-        public void UnsubscribeEffects()
+        public void UnsubscribeEffects ()
         {
             CanReturnToBag = false;
 
@@ -74,7 +79,7 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.Clear();
         }
 
-        public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
-        public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
+        public void SetCanReturnToBag (bool canReturnToBag) => CanReturnToBag = canReturnToBag;
+        public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
     }
 }

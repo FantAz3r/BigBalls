@@ -12,6 +12,11 @@ namespace BigBalls.GameplayObjects
 
         public EntityEventHandler EventHandler { get; private set; }
 
+        private void Awake ()
+        {
+            EventHandler = new EntityEventHandler();
+        }
+
         public void Construct(int id, DeathHandler<Enemy> deathHandler)
         {
             DeathHandler = deathHandler;

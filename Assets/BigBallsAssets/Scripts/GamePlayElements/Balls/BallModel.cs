@@ -23,8 +23,5 @@ public class BallModel : ICard
 
     int ICard.Level => Level;
 
-    public void Upgrade()
-    {
-        Level++;
-    }
+    public void Upgrade() => Level++;
 }

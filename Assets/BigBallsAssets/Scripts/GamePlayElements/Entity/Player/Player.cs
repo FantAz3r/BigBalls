@@ -14,6 +14,11 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
+        private void Awake ()
+        {
+            EventHandler = new EntityEventHandler();
+        }
+
         private void OnDestroy()
         {
             DeathHandler?.Unsubscribe();

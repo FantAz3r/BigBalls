@@ -1,5 +1,6 @@
 ﻿using System;
 using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -11,5 +12,7 @@ namespace BigBalls.Configs
     {
         public float BurnDuration = 3f;
         public float DamagePerSecond = 5f;
+
+        public override BehaviourType Type => BehaviourType.Burn;
     }
 }

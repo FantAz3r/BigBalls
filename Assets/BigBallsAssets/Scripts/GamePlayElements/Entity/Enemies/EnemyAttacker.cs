@@ -1,5 +1,4 @@
 using BigBalls.Services;
-using System;
 
 namespace BigBalls.GameplayObjects
 {
@@ -19,8 +18,6 @@ namespace BigBalls.GameplayObjects
             _entityTrigger = entityTrigger;
             _damageService = damageService;
         }
-
-        public event Action<Enemy> Suicided;
 
         public void Subscribe()
         {

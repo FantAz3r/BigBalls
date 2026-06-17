@@ -1,6 +1,5 @@
 using System;
 using BigBalls.Configs;
-using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {

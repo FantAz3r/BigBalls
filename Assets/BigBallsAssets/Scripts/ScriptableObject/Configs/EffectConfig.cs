@@ -6,9 +6,9 @@ using UnityEngine;
 namespace BigBalls.Configs
 {
     [Serializable]
-    public abstract class EffectConfig: ScriptableObject
+    public abstract class EffectConfig : ScriptableObject
     {
         public List<EntityType> OwnersType;
-        public BehaviourType Type;
+        public abstract BehaviourType Type { get; }
     }
 }

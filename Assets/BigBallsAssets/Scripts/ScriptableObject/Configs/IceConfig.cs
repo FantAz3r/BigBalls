@@ -1,5 +1,6 @@
 using System;
 using BigBalls.Configs;
+using BigBalls.GameplayObjects;
 using UnityEngine;
 
 namespace BigBalls.StaticData
@@ -11,5 +12,7 @@ namespace BigBalls.StaticData
     {
         public float FreezeDuration = 3;
         public float SlowPercent = 0.1f;
+
+        public override BehaviourType Type => BehaviourType.Freeze;
     }
 }
