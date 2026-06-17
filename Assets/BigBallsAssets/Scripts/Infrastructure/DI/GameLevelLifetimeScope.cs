@@ -61,6 +61,11 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_sceneContainer)
                 .As<ISceneContainerProvider>();
         }
+
+        // private void RegisterModels(IContainerBuilder builder)
+        // {
+        //     
+        // }
     }
 }
 

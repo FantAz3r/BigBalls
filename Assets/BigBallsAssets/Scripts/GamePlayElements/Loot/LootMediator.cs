@@ -1,10 +1,16 @@
+using BigBalls.GameplayObjects;
+using BigBalls.Services;
+
 public class LootMediator : ILootMediator
 {
     private IWalletModel _walletModel;
+    private Stat _health;
+    private IPlayerProvider _iPlayerProvider;
     
-    public LootMediator(IWalletModel walletModel)
+    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider )
     {
         _walletModel = walletModel;
+        _iPlayerProvider = playerProvider;
     }
 
     public void RegisterLoot(Loot loot)
