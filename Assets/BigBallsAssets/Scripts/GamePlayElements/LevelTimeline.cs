@@ -63,7 +63,11 @@ public class LevelTimeline
 
     private IEnumerator WaveRoutine()
     {
+
+        
         var waves = _levelConfig.Waves;
+        
+        Debug.Log(waves.Count);
 
         for (int i = 0; i < waves.Count; i++)
         {
@@ -75,7 +79,7 @@ public class LevelTimeline
 
             if (wave.BossConfig != null)
                 _enemySpawner.SpawnBoss(wave.BossConfig);
-
+            
             for (int line = 0; line < wave.LineCount; line++)
             {
                 yield return _lineSpawnDelay;
@@ -87,7 +91,8 @@ public class LevelTimeline
         }
 
         yield return new WaitForSeconds(_levelConfig.BossTimeDelay);
-
+        
+        
         _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
         _mainCoroutine = null;
     }

@@ -4,5 +4,4 @@ public enum LootType
     Experience,    // опыт
     HealthPotion,  // лечение
     Ball,          // шары (возможно новые)
-    Armor,         // броня
 }

@@ -3,27 +3,27 @@ using BigBalls.Services;
 public class LootFactory : ILootFactory
 {
     private IPoolService _poolService;
+    private ILootMediator _lootMediator;
     
-    public LootFactory(IPoolService poolService)
+    public LootFactory(IPoolService poolService, ILootMediator lootMediator)
     {
         _poolService = poolService;
+        _lootMediator = lootMediator;
     }
 
-    public Loot Create(LootInfo lootInfo)
+    public Loot Create(string name)
     {
-        string lootName = lootInfo.LootPrefab.name;
-
-        Loot loot = _poolService.GetObject<Loot>(lootName);
-
-        loot.Collected += OnLootHandler;
+        Loot loot = _poolService.GetObject<Loot>(name);
+        loot.OnCollected += OnCollectedHandler;
 
         return loot;
     }
 
-    private void OnLootHandler(Loot loot)
+    private void OnCollectedHandler(Loot loot)
     {
-        loot.Collected -= OnLootHandler;
+        loot.OnCollected -= OnCollectedHandler;
         
+        _lootMediator.RegisterLoot(loot);
         _poolService.ReleaseObject(loot);
     }
 }

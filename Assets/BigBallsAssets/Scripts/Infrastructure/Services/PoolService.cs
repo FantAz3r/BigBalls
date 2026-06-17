@@ -128,6 +128,7 @@ namespace BigBalls.Services
             {
                 IObjectPool<Loot> pool = new ObjectPool<Loot>(_poolConfig.IinitialLootPoolSize, _resolverProvider);
                 string nameParent = lootInfo.LootPrefab.name;
+                
                 pool.InitializePool(lootInfo.LootPrefab, lootPoolContainer.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }

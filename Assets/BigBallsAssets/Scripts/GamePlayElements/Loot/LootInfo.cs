@@ -19,8 +19,4 @@ public class LootInfo
     
     [Tooltip("Тип лута")]
     public LootType LootType;
-    
-    // Нужно обсудить имеет ли сумка размер по весу или слотам
-    // [Tooltip("Вес лута (если несколько типов сработают одновременно)")]
-    // public int Weight = 10;
 }

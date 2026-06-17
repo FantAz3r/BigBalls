@@ -23,8 +23,7 @@ namespace BigBalls.Configs
         {
             List<EnemyConfig> enemyConfigs = new List<EnemyConfig>(Enemies);
 
-            // Зачам мы добавляем два раза боссов для пулла. Достаточно одного
-            // enemyConfigs.Add(LevelBoss);
+            enemyConfigs.Add(LevelBoss);
 
             foreach (var wave in Waves)
             {

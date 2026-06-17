@@ -20,21 +20,11 @@ public class DropService : IDropService
         
         foreach (var lootInfo in config.PossibleLoot)
         {
-            // Проверка шанса
             if (Random.value > lootInfo.DropChance)
                 continue;
             
-            int amount = Random.Range(lootInfo.MinAmount, lootInfo.MaxAmount + 1);
-            
-            
-            for (int i = 0; i < amount; i++)
-            {
-                _lootSpawner.SpawnLootItem(position, lootInfo);
-            }
+            _lootSpawner.SpawnLootItem(position, lootInfo);
         }
-        
-        // Базовый дроп всегда выпадает
-        _lootSpawner.DropBaseRewards(position, config);
     }
 
     public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfigs)
