@@ -2,7 +2,7 @@
 
 namespace BigBalls.Configs
 {
-    public interface IBuffer : IItem
+    public interface IBuffer : IItemConfig
     {
         List<ArtefactModel> Artefacts { get; }
     }
