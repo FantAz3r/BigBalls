@@ -1,5 +1,5 @@
-using BigBalls.GameplayObjects;
 using System;
+using BigBalls.GameplayObjects;
 using Random = UnityEngine.Random;
 
 namespace BigBalls.Services
@@ -9,14 +9,14 @@ namespace BigBalls.Services
         private const float ArmorMultiplyer = 0.06f;
         private readonly IEntityRepository _entityRepository;
 
-        public DamageService(IEntityRepository entityRepository)
+        public DamageService (IEntityRepository entityRepository)
         {
             _entityRepository = entityRepository;
         }
 
-        public void ApplyDamage(int id, float damage)
+        public void ApplyDamage (int id, float damage)
         {
-            StatHolder statHolder =  _entityRepository.Get(id);
+            StatHolder statHolder = _entityRepository.Get(id);
 
             if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
@@ -35,7 +35,7 @@ namespace BigBalls.Services
             }
         }
 
-        private bool ApplyEvasion(Stat evasion)
+        private bool ApplyEvasion (Stat evasion)
         {
             if (evasion.CurrentValue <= evasion.MinValue)
                 return false;
@@ -46,7 +46,7 @@ namespace BigBalls.Services
             return roll <= evasionChance;
         }
 
-        private float ApplyArmor(Stat armor, float damage)
+        private float ApplyArmor (Stat armor, float damage)
         {
             if (armor.CurrentValue <= 0) return damage;
 
@@ -57,7 +57,7 @@ namespace BigBalls.Services
             return MathF.Max(0f, finalDamage);
         }
 
-        private void ApplyHealthDamage(Stat health, float damage)
+        private void ApplyHealthDamage (Stat health, float damage)
         {
             if (damage <= 0)
                 return;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
+using log4net.Core;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -17,7 +18,7 @@ namespace BigBalls.GameplayObjects
         public bool CanReturnToBag { get; private set; } = false;
         public Mover Mover { get; private set; }
         public int Id { get; private set; }
-        public int Level { get; private set; }
+        public int Level { get; private set; } = 1;
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
@@ -40,10 +41,11 @@ namespace BigBalls.GameplayObjects
             UnsubscribeEffects();
         }
 
-        public void Construct (int id, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
+        public void Construct (int id, int level, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
         {
             DeathHandler = deathHandler;
             Id = id;
+            Level = level;
             Mover = mover;
             _collisionStrategies = collisionStrategies;
             _ballEffectFactory = ballEffectFactory;
@@ -81,5 +83,7 @@ namespace BigBalls.GameplayObjects
 
         public void SetCanReturnToBag (bool canReturnToBag) => CanReturnToBag = canReturnToBag;
         public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
+
+
     }
 }

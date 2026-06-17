@@ -27,6 +27,7 @@ public class StatHolder
     public EntityType EntityType { get; private set; }
 
     public Dictionary<StatType, Stat> Stats => _stats;
+
     public Stat this[StatType type] => _stats[type];
 
     public void Set(ItemModel item = default)

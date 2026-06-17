@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
@@ -17,7 +16,7 @@ namespace BigBalls.Factories
         private readonly IPlayerProvider _playerProvider;
         private readonly IPoolService _poolService;
 
-        public BallFactory(
+        public BallFactory (
             IObjectResolverProvider objectResolverProvider,
             IEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
@@ -37,13 +36,13 @@ namespace BigBalls.Factories
 
         public event Action BallReturned;
 
-        public Ball Create(BallConfig ballConfig, int level = 0)
+        public Ball Create (BallModel ballModel)
         {
             int ballId = _identifierService.ID;
-            Ball ball = _poolService.GetObject<Ball>(ballConfig.Prefab.name);
+            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
             ball.EventHandler.Returned += OnReturn;
 
-            StatHolder statHolder = new StatHolder(ballId, ballConfig.Type, ballConfig);
+            StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.Type, ballModel.BallConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
@@ -55,12 +54,12 @@ namespace BigBalls.Factories
             ballDeathHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
-            ball.Construct(ballId, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
+            ball.Construct(ballId, ballModel.Level, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
             _entityRepository.Add(ball, statHolder);
             return ball;
         }
 
-        private List<ICollisionStrategy> CreateCollisionStrategies()
+        private List<ICollisionStrategy> CreateCollisionStrategies ()
         {
             List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
             {
@@ -73,7 +72,7 @@ namespace BigBalls.Factories
             return collisionStrategies;
         }
 
-        private void OnReturn(IEntity entity)
+        private void OnReturn (IEntity entity)
         {
             if (entity is not Ball ball)
                 return;

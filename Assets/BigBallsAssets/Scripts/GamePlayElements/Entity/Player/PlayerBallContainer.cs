@@ -39,10 +39,12 @@ namespace BigBalls.GameplayObjects
 
         public void Set (ItemModel item)
         {
-            if (item == null) return;
+            if (item == null)
+                return;
 
             if (item.Config is IWeapon)
                 _weapon = item;
+
             else if (item.Config is IBuffer)
                 _buffer = item;
         }
@@ -60,13 +62,14 @@ namespace BigBalls.GameplayObjects
                 _balls.Enqueue(ballModel);
                 _currentBallCount--;
 
-                ball = _ballFactory.Create(ballModel.BallConfig, ballModel.Level);
+                ball = _ballFactory.Create(ballModel);
                 return true;
             }
 
             if (_createdBallsCount < _ballCount.MaxValue)
             {
                 ball = CreateNewBall();
+
                 if (ball != null)
                 {
                     _createdBallsCount++;
@@ -82,9 +85,11 @@ namespace BigBalls.GameplayObjects
         private Ball CreateNewBall ()
         {
             var ballModel = GetNextAvailableConfig();
-            if (ballModel?.Config == null) return null;
 
-            var ball = _ballFactory.Create(ballModel.BallConfig);
+            if (ballModel?.Config == null)
+                return null;
+
+            var ball = _ballFactory.Create(ballModel);
             ApplyBufferEffects(ball);
 
             _balls.Enqueue(ballModel);
@@ -93,7 +98,8 @@ namespace BigBalls.GameplayObjects
 
         private void ApplyBufferEffects (Ball ball)
         {
-            if (_buffer?.Config is not IBuffer buffer) return;
+            if (_buffer?.Config is not IBuffer buffer)
+                return;
 
             var effects = new List<EffectBehaviour>();
 
@@ -108,9 +114,7 @@ namespace BigBalls.GameplayObjects
 
         private BallModel GetNextAvailableConfig ()
         {
-            if (_weapon?.Config is IWeapon weapon &&
-                weapon.UniqueBalls != null &&
-                _weaponConfigIndex < weapon.UniqueBalls.Count)
+            if (_weapon?.Config is IWeapon weapon && weapon.UniqueBalls != null && _weaponConfigIndex < weapon.UniqueBalls.Count)
             {
                 return weapon.UniqueBalls[_weaponConfigIndex++];
             }
@@ -120,7 +124,8 @@ namespace BigBalls.GameplayObjects
 
         public bool ReplaceOneBallWithUnique (BallModel uniqueBall)
         {
-            if (uniqueBall?.Config == null) return false;
+            if (uniqueBall?.Config == null)
+                return false;
 
             if (_balls.Count == 0)
             {
