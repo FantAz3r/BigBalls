@@ -4,13 +4,14 @@ using BigBalls.Services;
 public class LootMediator : ILootMediator
 {
     private IWalletModel _walletModel;
-    private Stat _health;
     private IPlayerProvider _iPlayerProvider;
+    private readonly IPlayerExperience _playerExperience;
     
-    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider )
+    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience)
     {
         _walletModel = walletModel;
         _iPlayerProvider = playerProvider;
+        _playerExperience = playerExperience;
     }
 
     public void RegisterLoot(Loot loot)
@@ -26,7 +27,7 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.Experience:
-                // _experienceModel.AddExperience(loot.Value);
+                _playerExperience.AddExperience(loot.Value);
                 break;
 
             case LootType.Ball:

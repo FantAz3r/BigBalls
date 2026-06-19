@@ -28,6 +28,7 @@ namespace BigBalls.Factories
         private readonly ILouseService _louseService;
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
+        private readonly IPlayerExperience _playerExperience;
 
         private PlayerConfig _playerConfig;
 
@@ -46,7 +47,8 @@ namespace BigBalls.Factories
             ICoroutineRunner coroutineRunner,
             ILouseService louseService,
             IItemConainerProvider itemConainerProvider,
-            IEffectFactory effectFactory)
+            IEffectFactory effectFactory,
+            IPlayerExperience playerExperience)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -63,6 +65,7 @@ namespace BigBalls.Factories
             _louseService = louseService;
             _itemConainerProvider = itemConainerProvider;
             _effectFactory = effectFactory;
+            _playerExperience = playerExperience;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -74,6 +77,7 @@ namespace BigBalls.Factories
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
             StatHolder statHolder = new StatHolder(playerID,EntityType.Player, _playerConfig, _effectFactory);
+            _playerExperience.Init(statHolder[StatType.Experience]);
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
             deathHandler.Subscribe();
@@ -83,6 +87,7 @@ namespace BigBalls.Factories
 
             player.EventHandler.Died += OnDied;
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
+            _uIFactory.Get<HUD>(WindowType.HUD).PlayerExperienceViewer.Init(_playerExperience);
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);
 

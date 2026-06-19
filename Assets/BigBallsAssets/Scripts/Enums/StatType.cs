@@ -12,5 +12,6 @@
         Evasion,
         AttackSpeed,
         BallBag,
+        Experience,
     }
 } 

@@ -25,6 +25,7 @@ namespace BigBalls.Infrastructure.DI
             RegisterServices(builder);
             RegisterFactories(builder);
             RegisterProviders(builder);
+            RegisterModels(builder);
         }
 
         private void RegisterFactories(IContainerBuilder builder)
@@ -49,8 +50,6 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<ILouseService, LouseService>(Lifetime.Scoped);
             builder.Register<IWinService, WinService>(Lifetime.Scoped);
             builder.Register<IDropService, DropService>(Lifetime.Scoped);
-            builder.Register<IWalletModel, WalletModel>(Lifetime.Scoped);
-            builder.Register<ILootMediator, LootMediator>(Lifetime.Scoped);
         }
 
         private void RegisterProviders(IContainerBuilder builder)
@@ -62,10 +61,12 @@ namespace BigBalls.Infrastructure.DI
                 .As<ISceneContainerProvider>();
         }
 
-        // private void RegisterModels(IContainerBuilder builder)
-        // {
-        //     
-        // }
+        private void RegisterModels(IContainerBuilder builder)
+        {
+            builder.Register<IWalletModel, WalletModel>(Lifetime.Scoped);
+            builder.Register<ILootMediator, LootMediator>(Lifetime.Scoped);
+            builder.Register<IPlayerExperience, PlayerExperienceModel>(Lifetime.Scoped);
+        }
     }
 }
 
