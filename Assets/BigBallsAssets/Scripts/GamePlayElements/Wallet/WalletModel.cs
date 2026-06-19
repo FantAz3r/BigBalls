@@ -1,9 +1,13 @@
-using UnityEngine;
+using System;
 
 public class WalletModel : IWalletModel
 {
+    public float CurrentValue { get; private set; }
+    public event Action<IWalletModel> OnValueChanged;
+
     public void AddCoins(int value)
     {
-        Debug.Log($"Добавлено {value} золота");
+        CurrentValue += value;
+        OnValueChanged?.Invoke(this);
     }
 }

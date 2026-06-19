@@ -82,8 +82,6 @@ namespace BigBalls.Infrastructure
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
-           
-            // _uIFactory.Get<HUD>(WindowType.HUD).WalletViewer.Init();
         }
 
         public void Exit ()
