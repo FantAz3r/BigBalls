@@ -2,6 +2,6 @@
 {
     public interface IDamageService
     {
-        void ApplyDamage(int id, float damage);
+        float ApplyDamage(int id, float damage);
     }
 }

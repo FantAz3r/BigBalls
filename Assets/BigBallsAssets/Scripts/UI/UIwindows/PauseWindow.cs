@@ -1,5 +1,4 @@
 using BigBalls.Services;
-using UnityEngine;
 using VContainer;
 
 namespace BigBalls.UI
@@ -12,7 +11,7 @@ namespace BigBalls.UI
         private ITimeService _timeService;
 
         [Inject]
-        public void Construct(ITimeService timeService)
+        public void Construct (ITimeService timeService)
         {
             _timeService = timeService;
         }

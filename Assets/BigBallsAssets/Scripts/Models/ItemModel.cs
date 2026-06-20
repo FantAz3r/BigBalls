@@ -1,28 +1,45 @@
+using System;
 using BigBalls.Configs;
-using UnityEngine;
 
 namespace BigBalls.StaticData
 {
     public class ItemModel : ICard
     {
-        public int Id;
-        public ItemConfig Config;
-        public int Level { get; private set; }
+        private const int ItemMaxLevel = 10;
+        private int _id;
 
         public ItemModel (int id, ItemConfig config, int level = 1)
         {
-            Id = id;
+            _id = id;
             Config = config;
             Level = level;
         }
 
-        public Sprite Icon => Icon;
+        public event Action<ICard> Upgraded;
 
-        public string Name => Config.NameRU;
+        public ItemConfig Config { get; private set; }
+        public float ItemEXP { get; private set; }
+        public bool IsOpen { get; private set; } = false;
+        public int Level { get; private set; }
 
-        public string Description => Config.DescriptionRU;
+        public CardSaveData CreateItemSave () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
+        public void Upgrade ()
+        {
+            if (Level < ItemMaxLevel)
+            {
+                Level++;
+                Upgraded?.Invoke(this);
+            }
+        }
 
+        public void OpenItem () => IsOpen = true;
 
-        public void Upgrade () => Level++;
+        public void InitFromData (CardSaveData data)
+        {
+            _id = data.Id;
+            Level = data.Level;
+            IsOpen = data.IsOpen;
+            ItemEXP = data.ItemExp;
+        }
     }
 }

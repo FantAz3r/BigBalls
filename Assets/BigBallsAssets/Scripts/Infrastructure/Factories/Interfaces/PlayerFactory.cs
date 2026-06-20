@@ -29,7 +29,7 @@ namespace BigBalls.Factories
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
         private readonly IPlayerExperience _playerExperience;
-
+        private readonly IBallRepository _ballRepository;
         private PlayerConfig _playerConfig;
 
         public PlayerFactory(
@@ -48,7 +48,8 @@ namespace BigBalls.Factories
             ILouseService louseService,
             IItemConainerProvider itemConainerProvider,
             IEffectFactory effectFactory,
-            IPlayerExperience playerExperience)
+            IPlayerExperience playerExperience,
+            IBallRepository ballRepository)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -66,6 +67,7 @@ namespace BigBalls.Factories
             _itemConainerProvider = itemConainerProvider;
             _effectFactory = effectFactory;
             _playerExperience = playerExperience;
+            _ballRepository = ballRepository;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -109,7 +111,7 @@ namespace BigBalls.Factories
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
-            PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService);
+            PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
             playerBallContainer.Set(_itemConainerProvider.Gun);
             playerBallContainer.Set(_itemConainerProvider.Helmet);
 

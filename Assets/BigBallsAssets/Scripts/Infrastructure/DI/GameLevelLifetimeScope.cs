@@ -54,6 +54,7 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterProviders(IContainerBuilder builder)
         {
+            builder.Register<IBallRepository, BallsRepository>(Lifetime.Scoped); // не уверен на счёт этого скоупа
             builder.Register<IItemConainerProvider, ItemConainerProvider>(Lifetime.Scoped);
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);

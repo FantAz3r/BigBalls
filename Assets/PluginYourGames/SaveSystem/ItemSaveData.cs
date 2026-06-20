@@ -1,4 +1,7 @@
-public struct ItemSaveData 
+using System;
+
+[Serializable]
+public class ItemSaveData
 {
     public int ItemType;
     public int CardCount;

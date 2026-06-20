@@ -14,13 +14,13 @@ namespace BigBalls.Services
             _entityRepository = entityRepository;
         }
 
-        public void ApplyDamage (int id, float damage)
+        public float ApplyDamage (int id, float damage)
         {
             StatHolder statHolder = _entityRepository.Get(id);
 
             if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
-                    return;
+                    return 0;
 
             float finalDamage = damage;
 
@@ -33,6 +33,8 @@ namespace BigBalls.Services
             {
                 ApplyHealthDamage(statHolder[StatType.Health], finalDamage);
             }
+
+            return finalDamage;
         }
 
         private bool ApplyEvasion (Stat evasion)

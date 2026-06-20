@@ -23,8 +23,13 @@ namespace BigBalls.GameplayObjects
 
         private Queue<BallModel> _balls;
 
-        public PlayerBallContainer (Stat ballCount, IResourceLoader resourceLoader, IBallFactory ballFactory,
-            IEffectFactory effectFactory, IIdentifierService identifierService)
+        public PlayerBallContainer (
+            Stat ballCount,
+            IResourceLoader resourceLoader,
+            IBallFactory ballFactory,
+            IEffectFactory effectFactory,
+            IIdentifierService identifierService,
+            IBallRepository ballRepository)
         {
             _ballCount = ballCount;
             _ballFactory = ballFactory;
@@ -32,6 +37,7 @@ namespace BigBalls.GameplayObjects
             _identifierService = identifierService;
             _ballsData = resourceLoader.Load<BallsData>();
             _baseBallConfig = _ballsData.BallConfigs[BallType.Base];
+
             _balls = new Queue<BallModel>((int) ballCount.MaxValue);
         }
 

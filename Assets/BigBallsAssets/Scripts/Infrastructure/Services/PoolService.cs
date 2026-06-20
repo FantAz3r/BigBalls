@@ -14,7 +14,7 @@ namespace BigBalls.Services
         private const string BallPool = "BallPool";
         private const string TilePool = "TilePool";
         private const string LootPool = "LootPoo";
-        
+
         private readonly PoolServiceConfig _poolConfig;
         private readonly ObjectContainer _objectContainer;
         private readonly IObjectResolverProvider _resolverProvider;
@@ -26,7 +26,7 @@ namespace BigBalls.Services
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
 
-        public PoolService(ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
+        public PoolService (ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
         {
             _objectContainer = objectContainer;
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
@@ -34,18 +34,18 @@ namespace BigBalls.Services
             _resolverProvider = resolverProvider;
         }
 
-        public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
+        public void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
         {
             _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
 
             Dictionary<string, LootInfo> lootInfos = new Dictionary<string, LootInfo>();
-            
+
             foreach (EnemyConfig config in _enemyConfigs)
             {
                 foreach (LootInfo lootInfo in config.PossibleLoot)
                 {
-                    if (lootInfo?.LootPrefab != null)  
+                    if (lootInfo?.LootPrefab != null)
                     {
                         lootInfos.TryAdd(lootInfo.LootPrefab.name, lootInfo);
                     }
@@ -55,7 +55,7 @@ namespace BigBalls.Services
             _lootInfos = lootInfos.Values.ToList();
         }
 
-        public T GetObject<T>(string nameObject) where T : MonoBehaviour
+        public T GetObject<T> (string nameObject) where T : MonoBehaviour
         {
             if (_objectPools.TryGetValue(nameObject, out object poolObj))
             {
@@ -70,7 +70,7 @@ namespace BigBalls.Services
             return null;
         }
 
-        public void ReleaseObject<T>(T obj) where T : MonoBehaviour
+        public void ReleaseObject<T> (T obj) where T : MonoBehaviour
         {
             if (_objectPools.TryGetValue(obj.name, out object poolObj))
             {
@@ -83,7 +83,7 @@ namespace BigBalls.Services
             }
         }
 
-        public void ClearAllPools()
+        public void ClearAllPools ()
         {
             foreach (ObjectPoolBase obj in _objectPools.Values)
             {
@@ -93,7 +93,7 @@ namespace BigBalls.Services
             _objectPools.Clear();
         }
 
-        public void InitializePools()
+        public void InitializePools ()
         {
             CreatePoolContainer(EnemyPool, out Transform enemyPoolContainer);
             CreatePoolContainer(BallPool, out Transform ballPoolContainer);
@@ -128,13 +128,13 @@ namespace BigBalls.Services
             {
                 IObjectPool<Loot> pool = new ObjectPool<Loot>(_poolConfig.IinitialLootPoolSize, _resolverProvider);
                 string nameParent = lootInfo.LootPrefab.name;
-                
+
                 pool.InitializePool(lootInfo.LootPrefab, lootPoolContainer.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }
         }
 
-        private void CreatePoolContainer(string name, out Transform container)
+        private void CreatePoolContainer (string name, out Transform container)
         {
             GameObject go = new GameObject(name);
             go.transform.SetParent(_objectContainer.transform);

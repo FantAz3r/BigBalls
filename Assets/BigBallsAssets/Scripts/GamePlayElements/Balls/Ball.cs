@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
-using log4net.Core;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -22,6 +21,8 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
+        public float ApplyedDamage { get; private set; }
+
         private void Awake ()
         {
             EventHandler = new EntityEventHandler();
@@ -41,8 +42,15 @@ namespace BigBalls.GameplayObjects
             UnsubscribeEffects();
         }
 
-        public void Construct (int id, int level, Mover mover, List<ICollisionStrategy> collisionStrategies, DeathHandler<Ball> deathHandler, IEffectFactory ballEffectFactory)
+        public void Construct (
+            int id,
+            int level,
+            Mover mover,
+            List<ICollisionStrategy> collisionStrategies,
+            DeathHandler<Ball> deathHandler,
+            IEffectFactory ballEffectFactory)
         {
+            ApplyedDamage = 0;
             DeathHandler = deathHandler;
             Id = id;
             Level = level;
@@ -84,6 +92,9 @@ namespace BigBalls.GameplayObjects
         public void SetCanReturnToBag (bool canReturnToBag) => CanReturnToBag = canReturnToBag;
         public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
 
-
+        public void AddDamage (float damage)
+        {
+            ApplyedDamage += damage;
+        }
     }
 }

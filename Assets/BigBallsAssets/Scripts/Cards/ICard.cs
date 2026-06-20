@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using BigBalls.Configs;
+using BigBalls.StaticData;
 
 public interface ICard
 {
-    Sprite Icon { get; }
-    string Name { get; }
-    string Description { get; }
+    ItemConfig Config { get; }
     int Level { get; }
+    float ItemEXP { get; }
+    bool IsOpen { get; }
 
-    void Upgrade();
+    CardSaveData CreateItemSave ();
+    void InitFromData (CardSaveData data);
+    void OpenItem ();
+    void Upgrade ();
 }

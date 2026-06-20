@@ -42,7 +42,7 @@ namespace BigBalls.Factories
             Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
             ball.EventHandler.Returned += OnReturn;
 
-            StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.Type, ballModel.BallConfig);
+            StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.EntityType, ballModel.BallConfig);
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
@@ -51,7 +51,7 @@ namespace BigBalls.Factories
             };
 
             DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
-            ballDeathHandler.Died += OnReturn;
+            ball.EventHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
             ball.Construct(ballId, ballModel.Level, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
@@ -80,11 +80,12 @@ namespace BigBalls.Factories
             _entityRepository.Remove(ball);
             ball.UnsubscribeEffects();
             ball.DeathHandler.Unsubscribe();
-            ball.DeathHandler.Died -= OnReturn;
+            ball.EventHandler.Died -= OnReturn;
             ball.EventHandler.Returned -= OnReturn;
 
             _poolService.ReleaseObject(ball);
             BallReturned?.Invoke();
+            //BallData.SaveDamage(ball, ball.ApplyedDamage);
         }
     }
 }

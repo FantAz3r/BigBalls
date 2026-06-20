@@ -1,7 +1,6 @@
 ﻿using System;
 using BigBalls.Configs;
 using BigBalls.Services;
-using UnityEngine;
 using VContainer;
 
 namespace BigBalls.GameplayObjects
@@ -24,7 +23,11 @@ namespace BigBalls.GameplayObjects
 
         private void OnHit(int id)
         {
-            _damageService.ApplyDamage(id, _config.GetDamage(Level));
+            if (Host is Ball ball)
+            {
+                float damage = _damageService.ApplyDamage(id, _config.GetDamage(Level));
+                ball.AddDamage(damage);
+            }
         }
 
         protected override IDisposable SubscribeInternal(IEntity host)

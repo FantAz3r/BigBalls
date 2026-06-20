@@ -12,20 +12,22 @@ public class CardView : ButtonClickHandler
     [SerializeField] private TMP_Text _stats;
     [SerializeField] private TMP_Text _level;
 
+    private ITranslateService _translateService;
     private PlayerBallContainer _playerBallContainer;
     private ICard _card;
 
-    public void Construct(PlayerBallContainer playerBallContainer)
+    public void Construct (PlayerBallContainer playerBallContainer, ITranslateService translateService)
     {
+        _translateService = translateService;
         _playerBallContainer = playerBallContainer;
     }
 
-    public void Render(ICard card)
+    public void Render (ICard card)
     {
         _card = card;
-        _image.sprite = card.Icon;
-        _name.text = card.Name;
-        _description.text = card.Description;
+        _image.sprite = card.Config.Icon;
+        _name.text = card.Config.GetName(_translateService.CurrentLanguage);
+        _description.text = card.Config.GetDescription(_translateService.CurrentLanguage);
         _stats.text = RenderStats();
         _level.text = card.Level.ToString();
     }
@@ -37,9 +39,9 @@ public class CardView : ButtonClickHandler
 
     protected override void OnClick()
     {
-        if(_card is BallModel model)
+        if (_card is BallModel model)
         {
-            if(_card.Level == 1)
+            if (_card.Level == 1)
             {
                 _playerBallContainer.ReplaceOneBallWithUnique(model);
             }
@@ -53,6 +55,5 @@ public class CardView : ButtonClickHandler
         {
 
         }
-
     }
 }

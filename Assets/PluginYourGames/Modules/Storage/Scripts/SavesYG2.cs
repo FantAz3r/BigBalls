@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using BigBalls.Saves;
 
 namespace YG
 {
@@ -7,9 +7,6 @@ namespace YG
     public partial class SavesYG
     {
         public int IdSave;
-        public int Gold;
-
-        public List<ItemSaveData> Items;
-        public List<BallSaveData> Balls;
+        public GameProgress GameProgress = new();
     }
 }

@@ -35,6 +35,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IUIFactory, UIFactory>(Lifetime.Singleton);
             builder.Register<IWindowService, WindowService>(Lifetime.Singleton);
             builder.Register<IIdentifierService, IdentifierService>(Lifetime.Scoped);
+            builder.Register<ISaveService, YGSaveService>(Lifetime.Singleton);
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();

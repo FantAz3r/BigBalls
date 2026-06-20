@@ -3,6 +3,7 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
+using BigBalls.Saves;
 using BigBalls.Services;
 using BigBalls.UI;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace BigBalls.Infrastructure
         private readonly TileMover _tileMover;
         private readonly LevelTimeline _levelTimeline;
         private readonly IDropService _dropService;
+        private readonly IBallRepository _ballRepository;
 
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
@@ -41,7 +43,8 @@ namespace BigBalls.Infrastructure
             TileFactory tileGenerator,
             TileMover tileMover,
             LevelTimeline levelTimeline,
-            IDropService dropService
+            IDropService dropService,
+            IBallRepository ballRepository
             )
         {
             _objectResolverProvider = objectResolverProvider;
@@ -56,10 +59,12 @@ namespace BigBalls.Infrastructure
             _tileMover = tileMover;
             _levelTimeline = levelTimeline;
             _dropService = dropService;
+            _ballRepository = ballRepository;
         }
 
         public void Enter (LevelID level)
         {
+            _ballRepository.LoadBallData();
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
@@ -86,6 +91,7 @@ namespace BigBalls.Infrastructure
 
         public void Exit ()
         {
+            _ballRepository.SaveBallData();
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();

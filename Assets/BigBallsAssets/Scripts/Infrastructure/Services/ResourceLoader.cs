@@ -39,12 +39,12 @@ namespace BigBalls.Services
                 _cashedObjects.Add(type, @object);
             }
 
-            if((T)@object == null)
+            if ((T)@object == null)
             {
                 throw new ArgumentNullException(nameof(T));
             }
 
-            return (T)@object;
+            return (T) @object;
         }
     }
 }

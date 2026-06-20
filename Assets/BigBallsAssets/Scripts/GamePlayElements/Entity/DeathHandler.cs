@@ -11,14 +11,13 @@ namespace BigBalls.GameplayObjects
         private readonly List<ISubscribable> _subscribables;
         private readonly T _diebleObject;
 
-        public DeathHandler(Stat health, List<ISubscribable> subscribables, T diebleObject)
+        public DeathHandler (Stat health, List<ISubscribable> subscribables, T diebleObject)
         {
             _health = health;
             _subscribables = subscribables;
             _diebleObject = diebleObject;
         }
 
-        public event Action<T> Died;
         public event Action Lost;
 
         public void Subscribe()
@@ -46,6 +45,7 @@ namespace BigBalls.GameplayObjects
             if (stat.CurrentValue <= stat.MinValue)
             {
                 _diebleObject.EventHandler.Die(_diebleObject);
+                Lost?.Invoke();
             }
         }
     }
