@@ -3,10 +3,12 @@ using BigBalls.GameplayObjects;
 
 public interface IPlayerExperience
 {
-    float MaxValue { get; }
-    float CurrentValue { get; }
-    event Action<IPlayerExperience> ValueChanged;
+    Stat Stat { get; }
+    float EXPForNextLevel { get; }
+    float CurrentEXP { get; }
+
+    event Action ValueChanged;
     event Action LevelUpped;
-    void Init(Stat stat);
+    void Init (Stat stat);
     void AddExperience(float value);
 }

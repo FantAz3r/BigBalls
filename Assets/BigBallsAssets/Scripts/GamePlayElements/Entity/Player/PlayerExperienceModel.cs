@@ -4,42 +4,39 @@ namespace BigBalls.GameplayObjects
 {
     public class PlayerExperienceModel : IPlayerExperience
     {
-        private const float BaseEXPForLevelUp = 1.2f;
+        private const float UpgradeMultipler = 1.2f;
 
-        private float _eXPForNextLevel;
-        private float _startValueEXP = 0;
+        public Stat Stat { get; private set; }
+        public float CurrentEXP { get; private set; } = 0;
+        public float EXPForNextLevel { get; private set; } = 100;
 
-        public float MaxValue { get; private set; }
-        public float CurrentValue { get; private set; }
 
-        public event Action<IPlayerExperience> ValueChanged;
+        public event Action ValueChanged;
         public event Action LevelUpped;
 
-        public void Init(Stat stat)
+        public void Init (Stat stat)
         {
-            MaxValue = stat.MaxValue;
-            _eXPForNextLevel = stat.MaxValue;
-            CurrentValue = _startValueEXP;
+            EXPForNextLevel = stat.MaxValue;
         }
 
-        public void AddExperience(float value)
+        public void AddExperience (float value)
         {
-            CurrentValue += value;
+            CurrentEXP += value;
 
-            if (CurrentValue >= _eXPForNextLevel)
+            if (Stat.CurrentValue >= EXPForNextLevel)
             {
                 LevelUp();
             }
 
-            ValueChanged?.Invoke(this);
+            ValueChanged?.Invoke();
         }
 
-        private void LevelUp()
+        private void LevelUp ()
         {
-            MaxValue = BaseEXPForLevelUp * _eXPForNextLevel;
-            _eXPForNextLevel = MaxValue;
+            Stat.AddCurrentValue(1);
             LevelUpped?.Invoke();
-            CurrentValue = _startValueEXP;
+            EXPForNextLevel = EXPForNextLevel * UpgradeMultipler;
+            CurrentEXP = 0;
         }
     }
 }

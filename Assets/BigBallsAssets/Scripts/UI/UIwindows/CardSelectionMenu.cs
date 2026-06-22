@@ -28,7 +28,7 @@ public class CardSelectionMenu : PauseWindow
     private PlayerCardHolder _playerCardHolder;
 
     [Inject]
-    private void Construct(
+    private void Construct (
         IWindowService windowService,
         IResourceLoader resourceLoader,
         CardSelector cardSelector,
@@ -66,7 +66,7 @@ public class CardSelectionMenu : PauseWindow
 
     public void OpenMenu ()
     {
-        _levelText.text = (_playerExperience.CurrentLevel + 1).ToString();
+        _levelText.text = (_playerExperience.Stat.CurrentValue + 1).ToString();
 
         if (_currentCards == null)
         {
@@ -85,17 +85,8 @@ public class CardSelectionMenu : PauseWindow
     public void CloseMenu ()
     {
         _selector.SaveCurrentCards(null);
-        _playerExperience.RemoveUpgradePoint(1);
         DestroyCards();
-
-        if (_playerExperience.UpgradePoints > 0)
-        {
-            OpenMenu();
-        }
-        else
-        {
-            CloseCardMenu();
-        }
+        CloseCardMenu();
     }
 
     public void PostponeChoise ()
@@ -149,7 +140,7 @@ public class CardSelectionMenu : PauseWindow
         _currentCards = null;
     }
 
-    private void CloseCardMenu()
+    private void CloseCardMenu ()
     {
         Close();
         _timeService.SmoothEditTimeScalse(0, 0);

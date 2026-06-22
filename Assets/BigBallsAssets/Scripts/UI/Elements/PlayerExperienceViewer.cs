@@ -12,9 +12,9 @@ public class PlayerExperienceViewer : MonoBehaviour
     public void Init (IPlayerExperience experience)
     {
         _experience = experience;
-        _slider.maxValue = experience.MaxValue;
+        _slider.maxValue = experience.EXPForNextLevel;
 
-        OnValueChanged(_experience);
+        OnValueChanged();
 
         _experience.ValueChanged += OnValueChanged;
     }
@@ -32,9 +32,9 @@ public class PlayerExperienceViewer : MonoBehaviour
         _experience.ValueChanged -= OnValueChanged;
     }
 
-    private void OnValueChanged (IPlayerExperience experience)
+    private void OnValueChanged ()
     {
-        _slider.value = experience.CurrentValue;
-        _valueText.text = $"{experience.CurrentValue} / {experience.MaxValue}";
+        _slider.value = _experience.CurrentEXP;
+        _valueText.text = $"{_experience.CurrentEXP} / {_experience.EXPForNextLevel}";
     }
 }
