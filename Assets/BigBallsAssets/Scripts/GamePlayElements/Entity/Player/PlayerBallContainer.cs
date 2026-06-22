@@ -6,7 +6,7 @@ using BigBalls.StaticData;
 
 namespace BigBalls.GameplayObjects
 {
-    public class PlayerBallContainer : IBallContainer, ISubscribable
+    public class PlayerBallContainer : IBallContainer, ISubscribable, IArtefactUser
     {
         private readonly Stat _ballCount;
         private readonly IBallFactory _ballFactory;
@@ -23,6 +23,7 @@ namespace BigBalls.GameplayObjects
         private int _weaponConfigIndex = 0;
 
         private Queue<BallModel> _balls;
+        private List<EffectBehaviour> _effectBehaviours = new();
 
         public PlayerBallContainer (
             Stat ballCount,
@@ -43,18 +44,6 @@ namespace BigBalls.GameplayObjects
         }
 
         public IEnumerable<BallModel> Balls => _balls;
-
-        public void Set (ItemModel item)
-        {
-            if (item == null)
-                return;
-
-            if (item.Config is IWeapon)
-                _weapon = item;
-
-            else if (item.Config is IBuffer)
-                _buffer = item;
-        }
 
         public void Subscribe () => _ballFactory.BallReturned += ReturnBullet;
         public void Unsubscribe () => _ballFactory.BallReturned -= ReturnBullet;
@@ -89,47 +78,18 @@ namespace BigBalls.GameplayObjects
 
         public void ReturnBullet () => _currentBallCount++;
 
-        private Ball CreateNewBall ()
+        public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
+
+        public void AddUniqueBall(ItemModel item)
         {
-            var ballModel = GetNextAvailableConfig();
-
-            if (ballModel?.Config == null)
-                return null;
-
-            var ball = _ballFactory.Create(ballModel);
-            ApplyBufferEffects(ball);
-
-            _balls.Enqueue(ballModel);
-            return ball;
-        }
-
-        private void ApplyBufferEffects (Ball ball)
-        {
-            if (_buffer?.Config is not IBuffer buffer)
+            if (item is not IWeapon weapon)
                 return;
 
-            var effects = new List<EffectBehaviour>();
-
-            foreach (var artefact in buffer.Artefacts)
-            {
-                effects.AddRange(_effectFactory.Create(artefact.ArtefactConfig.Effects, _buffer.Level));
-            }
-
-            if (effects.Count > 0)
-                ball.AddEffects(effects);
+            foreach(var ball in weapon.UniqueBalls)
+                AddUniqueBall(ball);
         }
 
-        private BallModel GetNextAvailableConfig ()
-        {
-            if (_weapon?.Config is IWeapon weapon && weapon.UniqueBalls != null && _weaponConfigIndex < weapon.UniqueBalls.Count)
-            {
-                return weapon.UniqueBalls[_weaponConfigIndex++];
-            }
-
-            return new BallModel(_identifierService.ID, _baseBallConfig);
-        }
-
-        public bool ReplaceOneBallWithUnique (BallModel uniqueBall)
+        public bool AddUniqueBall (BallModel uniqueBall)
         {
             if (uniqueBall?.Config == null)
                 return false;
@@ -167,6 +127,32 @@ namespace BigBalls.GameplayObjects
             _balls = tempQueue;
             _currentBallCount = _balls.Count;
             return true;
+        }
+
+        private Ball CreateNewBall ()
+        {
+            var ballModel = GetNextAvailableConfig();
+
+            if (ballModel?.Config == null)
+                return null;
+
+            var ball = _ballFactory.Create(ballModel);
+
+            if (_effectBehaviours.Count > 0)
+                ball.AddEffects(_effectBehaviours);
+
+            _balls.Enqueue(ballModel);
+            return ball;
+        }
+
+        private BallModel GetNextAvailableConfig ()
+        {
+            if (_weapon?.Config is IWeapon weapon && weapon.UniqueBalls != null && _weaponConfigIndex < weapon.UniqueBalls.Count)
+            {
+                return weapon.UniqueBalls[_weaponConfigIndex++];
+            }
+
+            return new BallModel(_identifierService.ID, _baseBallConfig);
         }
     }
 }

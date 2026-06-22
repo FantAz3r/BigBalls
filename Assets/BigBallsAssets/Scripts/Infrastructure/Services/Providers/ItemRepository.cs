@@ -7,7 +7,7 @@ using BigBalls.StaticData;
 
 public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData>
     where TKey : Enum
-    where TModel : ICard
+    where TModel : ICardModel
     where TConfig : ItemConfig
     where TSaveData : CardSaveData
 { 

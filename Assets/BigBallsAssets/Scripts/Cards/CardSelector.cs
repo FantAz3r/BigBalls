@@ -17,7 +17,7 @@ public class CardSelector
         { Rarity.Legendary, 5f }
     };
 
-    private List<ICard> _currentCards = new();
+    private List<ICardModel> _currentCards = new();
 
     public CardSelector (BallsRepository ballsRepository, ArtefactsRepository artefactsRepository)
     {
@@ -25,14 +25,14 @@ public class CardSelector
         _artefactsRepository = artefactsRepository;
     }
 
-    public IEnumerable<ICard> GetCardsForSelection ()
+    public IEnumerable<ICardModel> GetCardsForSelection ()
     {
         if (_currentCards != null && _currentCards.Count > 0)
         {
             return _currentCards;
         }
 
-        List<ICard> availableCards = GetAvailableModels();
+        List<ICardModel> availableCards = GetAvailableModels();
 
         if (availableCards.Count == 0)
         {
@@ -46,9 +46,14 @@ public class CardSelector
         return _currentCards;
     }
 
-    private List<ICard> GetAvailableModels ()
+    public void SaveCurrentCards(List<ICardModel> cardModels)
     {
-        var allModels = new List<ICard>();
+        _currentCards = cardModels;
+    }
+
+    private List<ICardModel> GetAvailableModels ()
+    {
+        var allModels = new List<ICardModel>();
         allModels.AddRange(_ballsRepository.AllModels.Values);
         allModels.AddRange(_artefactsRepository.AllModels.Values);
 
@@ -64,13 +69,13 @@ public class CardSelector
         _currentCards.Clear();
     }
 
-    private List<ICard> SelectCardsByRarityChance (List<ICard> cards, int count)
+    private List<ICardModel> SelectCardsByRarityChance (List<ICardModel> cards, int count)
     {
-        var selectedCards = new List<ICard>();
+        var selectedCards = new List<ICardModel>();
         var random = new Random();
 
         var groupedByRarity = cards.GroupBy(c => c.Config.Rarity).ToDictionary(g => g.Key, g => g.ToList());
-        var weightedList = new List<(ICard card, float weight)>();
+        var weightedList = new List<(ICardModel card, float weight)>();
 
         foreach (var rarityGroup in groupedByRarity)
         {

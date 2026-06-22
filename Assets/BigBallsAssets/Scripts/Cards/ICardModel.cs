@@ -2,7 +2,7 @@
 using BigBalls.Saves;
 using BigBalls.StaticData;
 
-public interface ICard
+public interface ICardModel
 {
     ItemConfig Config { get; }
     int Level { get; }

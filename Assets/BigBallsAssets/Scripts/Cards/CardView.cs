@@ -1,8 +1,9 @@
-using BigBalls.GameplayObjects;
+using System;
 using BigBalls.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 public class CardView : ButtonClickHandler
 {
@@ -13,16 +14,23 @@ public class CardView : ButtonClickHandler
     [SerializeField] private TMP_Text _level;
 
     private ITranslateService _translateService;
-    private PlayerBallContainer _playerBallContainer;
-    private ICard _card;
+    private PlayerCardHolder _playerCardHolder;
+    private ICardModel _card;
 
-    public void Construct (PlayerBallContainer playerBallContainer, ITranslateService translateService)
+    public event Action Selected;
+
+    [Inject]
+    public void Construct (ITranslateService translateService)
     {
         _translateService = translateService;
-        _playerBallContainer = playerBallContainer;
     }
 
-    public void Render (ICard card)
+    public void Init (PlayerCardHolder playerCardHolder)
+    {
+        _playerCardHolder = playerCardHolder;
+    }
+
+    public void Render (ICardModel card)
     {
         _card = card;
         _image.sprite = card.Config.Icon;
@@ -32,28 +40,22 @@ public class CardView : ButtonClickHandler
         _level.text = card.Level.ToString();
     }
 
-    private string RenderStats()
+    private string RenderStats ()
     {
         return string.Empty;
     }
 
-    protected override void OnClick()
+    protected override void OnClick ()
     {
-        if (_card is BallModel model)
+        if (_card.Level == 1)
         {
-            if (_card.Level == 1)
-            {
-                _playerBallContainer.ReplaceOneBallWithUnique(model);
-            }
-            else
-            {
-                model.Upgrade();
-            }
-
+            _playerCardHolder.Add(_card);
         }
-        else if (_card is ArtefactModel artefact)
+        else
         {
-
+            _card.Upgrade();
         }
+
+        Selected?.Invoke();
     }
 }

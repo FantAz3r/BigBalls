@@ -10,18 +10,18 @@ namespace BigBalls.GameplayObjects
         private readonly DamageConfig _config;
         private IDamageService _damageService;
 
-        public Damage(DamageConfig config, int level) : base(config, level)
+        public Damage (DamageConfig config, int level) : base(config, level)
         {
             _config = config;
         }
 
         [Inject]
-        public void Construct(IDamageService damageService)
+        public void Construct (IDamageService damageService)
         {
             _damageService = damageService;
         }
 
-        private void OnHit(int id)
+        private void OnHit (int id)
         {
             if (Host is Ball ball)
             {
@@ -30,7 +30,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        protected override IDisposable SubscribeInternal(IEntity host)
+        protected override IDisposable SubscribeInternal (IEntity host)
         {
             host.EventHandler.Hited += OnHit;
 

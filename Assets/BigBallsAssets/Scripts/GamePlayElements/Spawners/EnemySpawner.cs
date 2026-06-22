@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace BigBalls.GameplayObjects
 {
-    public class EnemySpawner
+    public class EnemySpawner : IArtefactUser
     {
         private readonly IEnemyFactory _enemyFactory;
         private readonly IWinService _winService;
@@ -210,6 +210,11 @@ namespace BigBalls.GameplayObjects
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             return _enemyFactory.Create(enemy, spawnPosition);
+        }
+
+        public void AddEffects (List<EffectBehaviour> effects)
+        {
+            throw new NotImplementedException();
         }
     }
 }

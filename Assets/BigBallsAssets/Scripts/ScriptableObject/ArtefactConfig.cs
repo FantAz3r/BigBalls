@@ -10,6 +10,7 @@ namespace BigBalls.Configs
 
     public class ArtefactConfig : ItemConfig
     {
+        [field: SerializeField] public UserType UserType { get; private set; }
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
 
         public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)

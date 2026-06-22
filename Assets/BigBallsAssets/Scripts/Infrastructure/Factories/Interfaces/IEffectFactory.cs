@@ -7,5 +7,6 @@ namespace BigBalls.Factories
     public interface IEffectFactory
     {
         List<EffectBehaviour> Create(List<EffectConfig> effectConfigs, int level);
+        List<EffectBehaviour> Create (ArtefactModel artefact);
     }
 }

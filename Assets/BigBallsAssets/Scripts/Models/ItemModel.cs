@@ -4,7 +4,7 @@ using BigBalls.Saves;
 
 namespace BigBalls.StaticData
 {
-    public class ItemModel : ICard
+    public class ItemModel : ICardModel
     {
         private const int ItemMaxLevel = 10;
         private int _id;
@@ -16,7 +16,7 @@ namespace BigBalls.StaticData
             Level = level;
         }
 
-        public event Action<ICard> Upgraded;
+        public event Action<ICardModel> Upgraded;
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; } = false;

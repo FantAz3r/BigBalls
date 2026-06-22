@@ -50,6 +50,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<ILouseService, LouseService>(Lifetime.Scoped);
             builder.Register<IWinService, WinService>(Lifetime.Scoped);
             builder.Register<IDropService, DropService>(Lifetime.Scoped);
+            builder.Register<CardSelector>(Lifetime.Scoped);
         }
 
         private void RegisterProviders(IContainerBuilder builder)

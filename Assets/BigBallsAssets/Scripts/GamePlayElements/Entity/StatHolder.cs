@@ -5,7 +5,7 @@ using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
 
-public class StatHolder
+public class StatHolder : IArtefactUser
 {
     public readonly int OwnerID;
     private readonly IEffectFactory _effectFactory;
@@ -15,7 +15,7 @@ public class StatHolder
     private IEntityConfig _config;
     private IArmor _armor;
 
-    public StatHolder(int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
+    public StatHolder (int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
         EntityType = entityType;
         OwnerID = ownerID;
@@ -30,25 +30,15 @@ public class StatHolder
 
     public Stat this[StatType type] => _stats[type];
 
-    public void Set(ItemModel item = default)
+    public void Set (ItemModel item)
     {
-        if (item.Config is IBuffer buffer)
-        {
-            if (_effectFactory == null)
-                throw new ArgumentNullException(nameof(_effectFactory));
+        if (item is not IArmor armor)
+            return;
 
-            foreach (var artefact in buffer.Artefacts)
-            {
-                _effectBehaviours.AddRange(_effectFactory.Create(artefact.ArtefactConfig.Effects, item.Level));
-            }
-        }
-        else if (item.Config is IArmor)
-        {
-            _armor = (IArmor) item.Config;
-        }
+        _armor = armor;
     }
 
-    private void InitStats(List<StatStruct> stats)
+    private void InitStats (List<StatStruct> stats)
     {
         foreach (var stat in stats)
         {
@@ -64,5 +54,10 @@ public class StatHolder
 
             _stats.Add(stat.StatType, new Stat(stat.StatType, maxValue, stat.MinValue, currentValue));
         }
+    }
+
+    public void AddEffects (List<EffectBehaviour> effects)
+    {
+        throw new NotImplementedException();
     }
 }

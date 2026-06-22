@@ -29,7 +29,9 @@ namespace BigBalls.Factories
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
         private readonly IPlayerExperience _playerExperience;
+        private readonly EnemySpawner _enemySpawner;
         private readonly BallsRepository _ballRepository;
+
         private PlayerConfig _playerConfig;
 
         public PlayerFactory (
@@ -49,6 +51,7 @@ namespace BigBalls.Factories
             IItemConainerProvider itemConainerProvider,
             IEffectFactory effectFactory,
             IPlayerExperience playerExperience,
+            EnemySpawner enemySpawner,
             BallsRepository ballRepository)
         {
             _inputService = inputService;
@@ -67,6 +70,7 @@ namespace BigBalls.Factories
             _itemConainerProvider = itemConainerProvider;
             _effectFactory = effectFactory;
             _playerExperience = playerExperience;
+            _enemySpawner = enemySpawner;
             _ballRepository = ballRepository;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
@@ -79,17 +83,22 @@ namespace BigBalls.Factories
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
             StatHolder statHolder = new StatHolder(playerID, EntityType.Player, _playerConfig, _effectFactory);
+            statHolder.Set(_itemConainerProvider.Armor);
+
             _playerExperience.Init(statHolder[StatType.Experience]);
 
-            DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
+            DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(out PlayerCardHolder cardHolder, statHolder, player), player);
             deathHandler.Subscribe();
 
             _louseService.SetLouseReason(deathHandler);
             player.Construct(playerID, deathHandler);
 
             player.EventHandler.Died += OnDied;
+
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerExperienceViewer.Init(_playerExperience);
+            _uIFactory.Get<HUD>(WindowType.HUD).CardSelectionMenu.Init(cardHolder);
+
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);
 
@@ -106,14 +115,18 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents (StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents (out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
         {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
-            playerBallContainer.Set(_itemConainerProvider.Gun);
-            playerBallContainer.Set(_itemConainerProvider.Helmet);
+            playerBallContainer.AddUniqueBall(_itemConainerProvider.Gun);
+
+            ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder);
+            artefactContainer.Set(_itemConainerProvider.Helmet);
+
+            cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);
 
             Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer, _coroutineRunner);
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);

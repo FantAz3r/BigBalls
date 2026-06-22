@@ -6,7 +6,7 @@ using BigBalls.Saves;
 public class CardContainer
 {
     private readonly IResourceLoader _resourceLoader;
-    private List<ICard> _cards = new List<ICard>();
+    private List<ICardModel> _cards = new List<ICardModel>();
     private GameProgress _gameProgress;
     public CardContainer (IResourceLoader resourceLoader, GameProgress gameProgress)
     {
@@ -26,7 +26,7 @@ public class CardContainer
         }
     }
 
-    private List<ICard> LoadStartCards ()
+    private List<ICardModel> LoadStartCards ()
     {
         throw new NotImplementedException();
     }
@@ -35,7 +35,7 @@ public class CardContainer
     {
     }
 
-    private List<ICard> LoadCards ()
+    private List<ICardModel> LoadCards ()
     {
         return null;
     }
