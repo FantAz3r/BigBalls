@@ -12,6 +12,7 @@ namespace BigBalls.Saves
 
         public List<ItemSaveData> Items = new();
         public List<BallSaveData> Balls = new();
+        public List<ArtefactSaveData> Artefacts = new();
         public List<SoundSaveData> Sounds = new();
     }
 }

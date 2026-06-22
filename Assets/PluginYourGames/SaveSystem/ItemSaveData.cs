@@ -1,9 +1,13 @@
 using System;
 
-[Serializable]
-public class ItemSaveData
+namespace BigBalls.Saves
 {
-    public int ItemType;
-    public int CardCount;
-    public bool HasPlayer;
+    [Serializable]
+
+    public class ItemSaveData
+    {
+        public int ItemType;
+        public int CardCount;
+        public bool HasPlayer;
+    }
 }

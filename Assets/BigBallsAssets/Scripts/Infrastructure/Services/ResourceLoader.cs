@@ -23,8 +23,8 @@ namespace BigBalls.Services
             { typeof(Camera), "Prefabs/Main Camera"},
             { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
             { typeof(EnemyData), "Data/EnemyData"},
+            { typeof(CardsData), "Data/CardsData"},
             //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
-            { typeof(BallsData), "Data/BallsData"},
             {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
         };
 

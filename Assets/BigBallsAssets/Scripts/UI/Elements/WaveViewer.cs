@@ -39,7 +39,6 @@ namespace BigBalls.UI
             for (int i = 0; i < _waves.Count - 1; i++)
             {
                 _waveDurationsAccumulated.Add(levelConfig.GetWaveTime(i));
-                Debug.Log(levelConfig.GetWaveTime(i));
             }
 
             _waveSlider.minValue = 0;

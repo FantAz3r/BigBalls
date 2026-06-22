@@ -1,4 +1,5 @@
 ﻿using BigBalls.Configs;
+using BigBalls.Saves;
 using BigBalls.StaticData;
 
 public interface ICard
@@ -8,7 +9,7 @@ public interface ICard
     float ItemEXP { get; }
     bool IsOpen { get; }
 
-    CardSaveData CreateItemSave ();
+    CardSaveData CraeateSaveData ();
     void InitFromData (CardSaveData data);
     void OpenItem ();
     void Upgrade ();

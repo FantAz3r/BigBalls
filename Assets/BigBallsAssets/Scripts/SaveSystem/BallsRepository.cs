@@ -1,88 +1,29 @@
 using System.Collections.Generic;
-using System.Linq;
+using BigBalls.Configs;
 using BigBalls.Saves;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using UnityEngine;
 
-public class BallsRepository : IBallRepository
+public class BallsRepository : ItemRepository<BallType, BallModel, BallConfig, BallSaveData>
 {
-    private readonly GameProgress _gameProgress;
-    private readonly BallsData _ballsData;
-    private readonly ISaveService _saveService;
+    private readonly Dictionary<BallType, BallConfig> _ballsData;
 
-    private Dictionary<BallType, CardSaveData> _saveDatas = new();
-    private Dictionary<BallType, BallModel> _ballModels = new();
     public BallsRepository (IResourceLoader resourceLoader, ISaveService saveService)
+        : base(resourceLoader, saveService)
     {
-        _gameProgress = saveService.GameProgress;
-        _ballsData = resourceLoader.Load<BallsData>();
-        _saveService = saveService;
-
-        foreach (var ball in _ballsData.BallConfigs.Values)
-        {
-            Debug.Log(ball.BallType);
-            _saveDatas.Add(ball.BallType, new CardSaveData((int) ball.BallType, false, 0));
-        }
+        _ballsData = resourceLoader.Load<CardsData>().Balls;
+        Initialize();
     }
 
-    public Dictionary<BallType, BallModel> BallModels => _ballModels;
+    protected override Dictionary<BallType, BallConfig> LoadConfigs ()
+        => _ballsData;
 
-    public void SaveBallData ()
-    {
-        _gameProgress.Balls = new List<BallSaveData>();
+    protected override BallModel CreateModel (BallType type, BallConfig config, CardSaveData saveData)
+        => new BallModel((int) type, config, saveData.Level);
 
-        foreach (var ballModel in _ballModels.Values)
-        {
-            BallSaveData ballSave = ballModel.CreateBallSave();
-            _gameProgress.Balls.Add(ballSave);
-        }
+    protected override List<BallSaveData> GetSaveDataFromProgress ()
+        => GameProgress.Balls;
 
-        _saveService.Save(_gameProgress);
-    }
-
-    public BallModel GetBallModel (BallType type)
-    {
-        _ballModels.TryGetValue(type, out var model);
-        return model;
-    }
-
-    public void AddOrUpdateBallModel (BallModel ballModel) => _ballModels[ballModel.BallConfig.BallType] = ballModel;
-
-    public void LoadBallData ()
-    {
-        if (_gameProgress.Balls == null || _gameProgress.Balls.Count == 0)
-            return;
-
-        foreach (var ballSave in _gameProgress.Balls)
-        {
-            var ballTypeKey = (BallType) ballSave.BallType;
-
-            _saveDatas[ballTypeKey] = new CardSaveData(
-                ballSave.BallType,
-                ballSave.IsOpen,
-                ballSave.Damage,
-                ballSave.Level
-            );
-        }
-
-        LoadModels();
-    }
-
-    private void LoadModels ()
-    {
-        foreach (var kvp in _saveDatas)
-        {
-            BallType type = kvp.Key;
-            CardSaveData saveData = kvp.Value;
-
-            if (_ballsData.BallConfigs.TryGetValue(type, out var ballConfig))
-            {
-                var ballModel = new BallModel((int) type, ballConfig, saveData.Level);
-                ballModel.InitFromData(saveData);
-
-                _ballModels[type] = ballModel;
-            }
-        }
-    }
+    protected override void UpdateGameProgress (List<BallSaveData> saveData)
+        => GameProgress.Balls = saveData;
 }

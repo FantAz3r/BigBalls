@@ -1,18 +1,13 @@
 using System;
 
-[Serializable]
-public class BallSaveData
+namespace BigBalls.Saves
 {
-    public int BallType;
-    public float Damage;
-    public bool IsOpen;
-    public int Level;
-
-    public BallSaveData(int ballType, float damage, bool isOpen, int level = 1)
+    [Serializable]
+    public class BallSaveData : CardSaveData
     {
-        BallType = ballType;
-        Damage = damage;
-        IsOpen = isOpen;
-        Level = level;
+
+        public BallSaveData (int ballType, float damage, bool isOpen, int level = 1) : base(ballType, isOpen, damage, level)
+        {
+        }
     }
 }

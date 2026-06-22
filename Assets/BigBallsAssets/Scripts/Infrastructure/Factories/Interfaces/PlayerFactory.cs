@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using BigBalls.UI;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -29,10 +29,10 @@ namespace BigBalls.Factories
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
         private readonly IPlayerExperience _playerExperience;
-        private readonly IBallRepository _ballRepository;
+        private readonly BallsRepository _ballRepository;
         private PlayerConfig _playerConfig;
 
-        public PlayerFactory(
+        public PlayerFactory (
             IInputService inputService,
             IObjectResolver objectResolver,
             ISceneContainerProvider sceneContainerProvider,
@@ -49,7 +49,7 @@ namespace BigBalls.Factories
             IItemConainerProvider itemConainerProvider,
             IEffectFactory effectFactory,
             IPlayerExperience playerExperience,
-            IBallRepository ballRepository)
+            BallsRepository ballRepository)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -71,14 +71,14 @@ namespace BigBalls.Factories
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
-        public Player Create()
+        public Player Create ()
         {
             int playerID = _identifierService.ID;
             Vector3 spawnPoint = _sceneContainerProvider.PlayerSpawnPoints.First().transform.position;
             Player prefab = _resourceLoader.Load<Player>();
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
-            StatHolder statHolder = new StatHolder(playerID,EntityType.Player, _playerConfig, _effectFactory);
+            StatHolder statHolder = new StatHolder(playerID, EntityType.Player, _playerConfig, _effectFactory);
             _playerExperience.Init(statHolder[StatType.Experience]);
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(statHolder, player), player);
@@ -96,7 +96,7 @@ namespace BigBalls.Factories
             return player;
         }
 
-        private void OnDied(IEntity entity)
+        private void OnDied (IEntity entity)
         {
             if (entity is not Player player)
                 return;
@@ -106,7 +106,7 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents(StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents (StatHolder statHolder, Player player)
         {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);

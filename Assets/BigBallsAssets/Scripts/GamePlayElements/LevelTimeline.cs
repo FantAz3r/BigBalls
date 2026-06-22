@@ -24,14 +24,14 @@ public class LevelTimeline
     public event Action<int> NewWaveStarted;
     public event Action<float> TimeElapsed;
 
-    public LevelTimeline(ICoroutineRunner coroutineRunner, EnemySpawner enemySpawner, TileFactory tileFactory)
+    public LevelTimeline (ICoroutineRunner coroutineRunner, EnemySpawner enemySpawner, TileFactory tileFactory)
     {
         _coroutineRunner = coroutineRunner;
         _enemySpawner = enemySpawner;
         _tileFactory = tileFactory;
     }
 
-    public void Start(LevelConfig levelConfig)
+    public void Start (LevelConfig levelConfig)
     {
         _lineSpawnDelay = new WaitForSeconds(levelConfig.LineSpawnDelay);
         _levelConfig = levelConfig;
@@ -44,7 +44,7 @@ public class LevelTimeline
             _timeCoroutine = _coroutineRunner.StartCoroutine(TimeRoutine());
     }
 
-    public void Stop()
+    public void Stop ()
     {
         _isLevelEnded = false;
 
@@ -61,13 +61,9 @@ public class LevelTimeline
         }
     }
 
-    private IEnumerator WaveRoutine()
+    private IEnumerator WaveRoutine ()
     {
-
-        
         var waves = _levelConfig.Waves;
-        
-        Debug.Log(waves.Count);
 
         for (int i = 0; i < waves.Count; i++)
         {
@@ -79,7 +75,7 @@ public class LevelTimeline
 
             if (wave.BossConfig != null)
                 _enemySpawner.SpawnBoss(wave.BossConfig);
-            
+
             for (int line = 0; line < wave.LineCount; line++)
             {
                 yield return _lineSpawnDelay;
@@ -91,19 +87,17 @@ public class LevelTimeline
         }
 
         yield return new WaitForSeconds(_levelConfig.BossTimeDelay);
-        
-        
+
         _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
         _mainCoroutine = null;
     }
 
-
-    private void ScaleField()
+    private void ScaleField ()
     {
         _enemySpawner.ScaleField(_tileFactory.ScaleRoad());
     }
 
-    private IEnumerator TimeRoutine()
+    private IEnumerator TimeRoutine ()
     {
         float elapsed = 0f;
         TimeElapsed?.Invoke(elapsed);

@@ -13,7 +13,7 @@ namespace BigBalls.Services
         private const string EnemyPool = "EnemyPool";
         private const string BallPool = "BallPool";
         private const string TilePool = "TilePool";
-        private const string LootPool = "LootPoo";
+        private const string LootPool = "LootPool";
 
         private readonly PoolServiceConfig _poolConfig;
         private readonly ObjectContainer _objectContainer;
@@ -21,7 +21,7 @@ namespace BigBalls.Services
 
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private List<LootInfo> _lootInfos = new List<LootInfo>();
-        private BallsData _ballsData;
+        private CardsData _cardsData;
         private LevelConfig _levelConfig;
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
@@ -30,7 +30,7 @@ namespace BigBalls.Services
         {
             _objectContainer = objectContainer;
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
-            _ballsData = resourceLoader.Load<BallsData>();
+            _cardsData = resourceLoader.Load<CardsData>();
             _resolverProvider = resolverProvider;
         }
 
@@ -108,7 +108,7 @@ namespace BigBalls.Services
                 _objectPools[nameParent] = pool;
             }
 
-            foreach (BallConfig config in _ballsData.BallConfigsList)
+            foreach (BallConfig config in _cardsData.Balls.Values)
             {
                 IObjectPool<Ball> pool = new ObjectPool<Ball>(_poolConfig.InitialBallPoolSize, _resolverProvider);
                 string nameParent = config.name;

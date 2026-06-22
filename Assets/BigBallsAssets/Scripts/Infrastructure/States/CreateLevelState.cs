@@ -3,7 +3,6 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
-using BigBalls.Saves;
 using BigBalls.Services;
 using BigBalls.UI;
 using UnityEngine;
@@ -25,7 +24,8 @@ namespace BigBalls.Infrastructure
         private readonly TileMover _tileMover;
         private readonly LevelTimeline _levelTimeline;
         private readonly IDropService _dropService;
-        private readonly IBallRepository _ballRepository;
+        private readonly BallsRepository _ballsRepository;
+        private readonly ArtefactsRepository _artefactsRepository;
 
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
@@ -44,8 +44,8 @@ namespace BigBalls.Infrastructure
             TileMover tileMover,
             LevelTimeline levelTimeline,
             IDropService dropService,
-            IBallRepository ballRepository
-            )
+            BallsRepository ballsRepository,
+            ArtefactsRepository artefactsRepository)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -59,12 +59,12 @@ namespace BigBalls.Infrastructure
             _tileMover = tileMover;
             _levelTimeline = levelTimeline;
             _dropService = dropService;
-            _ballRepository = ballRepository;
+            _ballsRepository = ballsRepository;
+            _artefactsRepository = artefactsRepository;
         }
 
         public void Enter (LevelID level)
         {
-            _ballRepository.LoadBallData();
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
@@ -91,7 +91,8 @@ namespace BigBalls.Infrastructure
 
         public void Exit ()
         {
-            _ballRepository.SaveBallData();
+            _ballsRepository.Save();
+            _artefactsRepository.Save();
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();

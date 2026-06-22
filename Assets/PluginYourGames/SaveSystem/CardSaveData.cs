@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BigBalls.StaticData
+namespace BigBalls.Saves
 {
     [Serializable]
     public class CardSaveData

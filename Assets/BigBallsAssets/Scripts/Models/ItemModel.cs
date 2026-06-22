@@ -1,5 +1,6 @@
 using System;
 using BigBalls.Configs;
+using BigBalls.Saves;
 
 namespace BigBalls.StaticData
 {
@@ -16,13 +17,12 @@ namespace BigBalls.StaticData
         }
 
         public event Action<ICard> Upgraded;
-
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; } = false;
         public int Level { get; private set; }
 
-        public CardSaveData CreateItemSave () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
+        public CardSaveData CraeateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
         public void Upgrade ()
         {
             if (Level < ItemMaxLevel)

@@ -12,11 +12,12 @@ namespace BigBalls.GameplayObjects
         private readonly IBallFactory _ballFactory;
         private readonly IEffectFactory _effectFactory;
         private readonly IIdentifierService _identifierService;
-        private readonly BallsData _ballsData;
+        private readonly CardsData _cardsData;
         private readonly BallConfig _baseBallConfig;
 
         private ItemModel _weapon;
         private ItemModel _buffer;
+
         private int _currentBallCount = 0;
         private int _createdBallsCount = 0;
         private int _weaponConfigIndex = 0;
@@ -29,14 +30,14 @@ namespace BigBalls.GameplayObjects
             IBallFactory ballFactory,
             IEffectFactory effectFactory,
             IIdentifierService identifierService,
-            IBallRepository ballRepository)
+            BallsRepository ballRepository)
         {
             _ballCount = ballCount;
             _ballFactory = ballFactory;
             _effectFactory = effectFactory;
             _identifierService = identifierService;
-            _ballsData = resourceLoader.Load<BallsData>();
-            _baseBallConfig = _ballsData.BallConfigs[BallType.Base];
+            _cardsData = resourceLoader.Load<CardsData>();
+            _baseBallConfig = _cardsData.Balls[BallType.Base];
 
             _balls = new Queue<BallModel>((int) ballCount.MaxValue);
         }
