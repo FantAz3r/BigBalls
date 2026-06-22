@@ -12,7 +12,7 @@ namespace BigBalls.GameplayObjects
         float CurrentEXP = 0;
 
         public event Action<IPlayerExperience> ValueChanged;
-        public event Action LevelUp;
+        public event Action LevelUped;
 
         public void Init (Stat stat)
         {
@@ -36,7 +36,7 @@ namespace BigBalls.GameplayObjects
         {
             _stat.AddCurrentValue(1);
             EXPForNextLevel = BaseEXPForLevelUp * _stat.CurrentValue;
-            LevelUp?.Invoke(this);
+            LevelUped?.Invoke();
         }
     }
 }
