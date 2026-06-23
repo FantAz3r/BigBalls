@@ -1,8 +1,8 @@
+using BigBalls.Factories;
+using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using BigBalls.Services;
-using BigBalls.Factories;
 
 namespace BigBalls.Infrastructure.DI
 {
@@ -11,7 +11,7 @@ namespace BigBalls.Infrastructure.DI
         [SerializeField] private CoroutineRunner _coroutineRunner;
         [SerializeField] private UpdateService _updateService;
 
-        protected override void Configure(IContainerBuilder builder)
+        protected override void Configure (IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
             builder.Register<IObjectResolverProvider, ObjectResolverProvider>(Lifetime.Singleton);
@@ -22,12 +22,12 @@ namespace BigBalls.Infrastructure.DI
             BindServices(builder);
         }
 
-        private void BindStates(IContainerBuilder builder)
+        private void BindStates (IContainerBuilder builder)
         {
             builder.Register<LoadingLevelState>(Lifetime.Singleton);
         }
 
-        private void BindServices(IContainerBuilder builder)
+        private void BindServices (IContainerBuilder builder)
         {
             builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
             builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
@@ -39,6 +39,16 @@ namespace BigBalls.Infrastructure.DI
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
+
+            //................
+            builder.Register<BallsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
+            builder.Register<ArtefactsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
+
+            builder.Register<BallTreeController>(Lifetime.Singleton);
+            builder.Register<BallTreeModel>(Lifetime.Singleton);
+            builder.Register<GlobalWallet>(Lifetime.Singleton);
+            builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
+
         }
     }
 }

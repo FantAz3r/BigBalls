@@ -19,7 +19,8 @@ namespace BigBalls.UI
         BossHealth,
         LevelSelect,
         CardMenu,
-        PreviousWindow
+        PreviousWindow,
+        BallTree
     }
 }
 

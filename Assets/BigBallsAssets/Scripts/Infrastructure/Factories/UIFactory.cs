@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
 using Crystal;
-using System.Collections.Generic;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -19,7 +19,7 @@ namespace BigBalls.Factories
         private SafeArea _safeAreaUIHolder;
         private UIRoot _uiRoot;
 
-        public UIFactory(
+        public UIFactory (
             IObjectResolverProvider resolverProvider,
             IResourceLoader resourceLoader)
         {
@@ -28,41 +28,43 @@ namespace BigBalls.Factories
             _windowData = _resourceLoader.Load<WindowData>();
         }
 
-        public T Get<T>(WindowType type) where T: WindowBase
+        public T Get<T> (WindowType type) where T : WindowBase
         {
-            return (T)_windowCache[type];
+            return (T) _windowCache[type];
         }
 
-        public void CreateUIRoot()
+        public void CreateUIRoot ()
         {
             _uiRoot = Object.Instantiate(_resourceLoader.Load<UIRoot>());
             _safeAreaUIHolder = _uiRoot.GetComponentInChildren<SafeArea>();
         }
 
-        public HUD CreateHUD() => GetOrCreateWindow(WindowType.HUD) as HUD;
+        public HUD CreateHUD () => GetOrCreateWindow(WindowType.HUD) as HUD;
 
-        public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.Settings) as SettingsView;
+        public SettingsView CreateSettings () => GetOrCreateWindow(WindowType.Settings) as SettingsView;
 
-        public MainMenu CreateMainMenu() => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
+        public MainMenu CreateMainMenu () => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
 
-        public PauseWindow CreatePauseWindow() => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
+        public PauseWindow CreatePauseWindow () => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
 
-        public LouseLevelMenu CreateLouseMenu() => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
+        public LouseLevelMenu CreateLouseMenu () => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
 
-        public WinLevelMenu CreateWinMenu() => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
+        public WinLevelMenu CreateWinMenu () => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
 
-        public void CreateJoystick()
+        public BallTreeUI CreateBallTree () => GetOrCreateWindow(WindowType.BallTree) as BallTreeUI;
+
+        public void CreateJoystick ()
         {
         }
 
-        public LevelSelectionPanel CreateLevelSelect() => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
+        public LevelSelectionPanel CreateLevelSelect () => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
 
-        public void ClearCache()
+        public void ClearCache ()
         {
             _windowCache.Clear();
         }
 
-        private WindowBase GetOrCreateWindow(WindowType windowType, Transform parent = null)
+        private WindowBase GetOrCreateWindow (WindowType windowType, Transform parent = null)
         {
             if (_windowCache.TryGetValue(windowType, out var cachedWindow))
             {
@@ -76,7 +78,7 @@ namespace BigBalls.Factories
             return newWindow;
         }
 
-        private WindowBase CreateWindow(WindowType windowType, Transform parent = null)
+        private WindowBase CreateWindow (WindowType windowType, Transform parent = null)
         {
             WindowBase window;
             WindowBase prefab = _windowData.Get(windowType);

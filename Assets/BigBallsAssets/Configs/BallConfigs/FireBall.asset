@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
-  m_Name: BaseBall
+  m_Name: FireBall
   m_EditorClassIdentifier: 
   _nameEN: 
   _nameRU: 
@@ -20,14 +20,14 @@ MonoBehaviour:
   _descriptionTR: 
   <Rarity>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 0}
-  <IsOpen>k__BackingField: 1
-  <Prefab>k__BackingField: {fileID: 1058083665175991319, guid: d13826f59a9a7a247ad9de285bab35fe,
+  <IsOpen>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 1058083665175991319, guid: 3bd1499553686734f9e5b2d7a18b4c39,
     type: 3}
-  <EntityType>k__BackingField: 5
-  <BallType>k__BackingField: 1
+  <EntityType>k__BackingField: 6
+  <BallType>k__BackingField: 2
   <Radius>k__BackingField: 0.2
   <IsMaterial>k__BackingField: 1
-  <IsUnique>k__BackingField: 0
+  <IsUnique>k__BackingField: 1
   <Stats>k__BackingField:
   - StatType: 3
     StartMaxValue: 99999
@@ -38,8 +38,9 @@ MonoBehaviour:
     StartCurrentValue: 1
     MinValue: 0
   <EffectConfigs>k__BackingField:
+  - {fileID: 11400000, guid: 71c00c3defe07ad4dbd44ca739c171e8, type: 2}
   - {fileID: 11400000, guid: a94bd66777f5baa4ab3d47ad8c6b2fff, type: 2}
-  <ParentTypes>k__BackingField: 
-  <UnlockPrice>k__BackingField: 0
-  <RequiredEXP>k__BackingField: 0
-  <Position>k__BackingField: {x: 0, y: 0}
+  <ParentTypes>k__BackingField: 01000000
+  <UnlockPrice>k__BackingField: 1
+  <RequiredEXP>k__BackingField: 1
+  <Position>k__BackingField: {x: 200, y: 200}

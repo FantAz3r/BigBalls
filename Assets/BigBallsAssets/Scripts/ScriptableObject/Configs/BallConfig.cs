@@ -1,8 +1,8 @@
-﻿using BigBalls.Attributes;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BigBalls.Attributes;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -19,12 +19,17 @@ namespace BigBalls.Configs
         [field: SerializeField] public float Radius { get; private set; } = 0.2f;
         [field: SerializeField] public bool IsMaterial { get; private set; }
         [field: SerializeField] public bool IsUnique { get; private set; } = true;
-
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }
-
         [field: SerializeField] public List<EffectConfig> EffectConfigs { get; private set; }
 
-        public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)
+
+        [field: SerializeField] public List<BallType> ParentTypes { get; private set; }
+        [field: SerializeField] public int UnlockPrice { get; private set; }
+        [field: SerializeField] public int RequiredEXP { get; private set; }
+        [field: SerializeField] public Vector2 Position { get; set; }
+        public bool IsRoot => ParentTypes == null || ParentTypes.Count == 0;
+
+        public bool TryGetEffect (out EffectConfig behaviourConfig, BehaviourType type)
         {
             behaviourConfig = null;
 
@@ -40,6 +45,6 @@ namespace BigBalls.Configs
             return false;
         }
 
-        public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
+        public StatStruct Get (StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
     }
 }

@@ -14,6 +14,8 @@ namespace BigBalls.StaticData
             _id = id;
             Config = config;
             Level = level;
+
+            IsOpen = config.IsOpen;
         }
 
         public event Action<ICardModel> Upgraded;
@@ -40,6 +42,11 @@ namespace BigBalls.StaticData
             Level = data.Level;
             IsOpen = data.IsOpen;
             ItemEXP = data.ItemExp;
+        }
+
+        public void AddItemEXP(float value)
+        {
+            ItemEXP += value;
         }
     }
 }
