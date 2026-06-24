@@ -1,29 +1,30 @@
 ﻿using System;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
     public class PlayerExperienceModel : IPlayerExperience
     {
-        private const float UpgradeMultipler = 1.2f;
-
+        private const float UpgradeMultiplier = 1.2f;
+        
         public Stat Stat { get; private set; }
         public float CurrentEXP { get; private set; } = 0;
-        public float EXPForNextLevel { get; private set; } = 100;
-
+        public float EXPForNextLevel { get; private set; }
 
         public event Action ValueChanged;
         public event Action LevelUpped;
 
         public void Init (Stat stat)
         {
-            EXPForNextLevel = stat.MaxValue;
+            Stat = stat;
+            EXPForNextLevel = Stat.MaxValue;
         }
 
         public void AddExperience (float value)
         {
             CurrentEXP += value;
 
-            if (Stat.CurrentValue >= EXPForNextLevel)
+            if (CurrentEXP >= EXPForNextLevel)
             {
                 LevelUp();
             }
@@ -35,7 +36,7 @@ namespace BigBalls.GameplayObjects
         {
             Stat.AddCurrentValue(1);
             LevelUpped?.Invoke();
-            EXPForNextLevel = EXPForNextLevel * UpgradeMultipler;
+            EXPForNextLevel = Mathf.Round(EXPForNextLevel * UpgradeMultiplier);
             CurrentEXP = 0;
         }
     }

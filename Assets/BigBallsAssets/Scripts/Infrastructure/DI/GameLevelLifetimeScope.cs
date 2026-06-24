@@ -1,3 +1,4 @@
+using System;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
@@ -26,6 +27,14 @@ namespace BigBalls.Infrastructure.DI
             RegisterFactories(builder);
             RegisterProviders(builder);
             RegisterModels(builder);
+        }
+
+        protected override void OnDestroy()
+        {
+            var factory = Container.Resolve<ILootFactory>() as IDisposable;
+            factory?.Dispose();
+            
+            base.OnDestroy();
         }
 
         private void RegisterFactories(IContainerBuilder builder)

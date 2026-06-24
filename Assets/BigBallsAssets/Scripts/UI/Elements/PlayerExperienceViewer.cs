@@ -12,7 +12,7 @@ public class PlayerExperienceViewer : MonoBehaviour
     public void Init (IPlayerExperience experience)
     {
         _experience = experience;
-        _slider.maxValue = experience.EXPForNextLevel;
+        _slider.maxValue = _experience.EXPForNextLevel;
 
         OnValueChanged();
 
