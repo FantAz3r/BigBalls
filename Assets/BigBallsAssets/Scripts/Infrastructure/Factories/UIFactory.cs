@@ -30,6 +30,13 @@ namespace BigBalls.Factories
 
         public T Get<T> (WindowType type) where T : WindowBase
         {
+            if (_windowCache.ContainsKey(type) == false)
+            {
+                WindowBase window = CreateWindow(type);
+                window.gameObject.SetActive(false);
+                return (T) window;
+            }
+
             return (T) _windowCache[type];
         }
 
@@ -52,6 +59,8 @@ namespace BigBalls.Factories
         public WinLevelMenu CreateWinMenu () => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
 
         public BallTreeUI CreateBallTree () => GetOrCreateWindow(WindowType.BallTree) as BallTreeUI;
+
+        public CardSelectionMenu CreateCardMenu () => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
 
         public void CreateJoystick ()
         {

@@ -1,82 +1,127 @@
+using UI_Spline_Renderer;
 using UnityEngine;
 
 public class BallTreeConnectionUI : MonoBehaviour
 {
-    [SerializeField] private LineRenderer _lineRenderer;
+    [Header("References")]
+    [SerializeField] private UISplineRenderer _splineRenderer;
+
+    [Header("Visual Settings")]
     [SerializeField] private float _lineWidth = 2f;
     [SerializeField] private Color _lockedColor = Color.gray;
     [SerializeField] private Color _unlockedColor = Color.green;
-    [SerializeField] private float _zPosition = 0f; // Z-позиция для LineRenderer
 
     private RectTransform _from;
     private RectTransform _to;
     private Canvas _canvas;
+    private RectTransform _canvasRect;
     private bool _isUnlocked;
+
+    public bool IsUnlocked => _isUnlocked;
 
     private void Awake ()
     {
         _canvas = GetComponentInParent<Canvas>();
         if (_canvas == null)
         {
-            Debug.LogError("BallTreeConnectionUI: Canvas not found in parents!");
+            Debug.LogError("BallTreeConnectionUI: Canvas not found!");
+            return;
         }
+        _canvasRect = _canvas.transform as RectTransform;
+
+        if (_splineRenderer == null)
+        {
+            Debug.LogError("BallTreeConnectionUI: UISplineRenderer not assigned!");
+            return;
+        }
+
+        // Инициализация сплайна с двумя точками
+        InitializeSpline();
+
+        // Настройка ширины
+        _splineRenderer.width = _lineWidth;
+    }
+
+    private void InitializeSpline ()
+    {
+       // // Получаем доступ к SplineContainer
+       // var spline = _splineRenderer.splineContainer;
+       // if (spline == null)
+       // {
+       //     Debug.LogError("SplineContainer is null!");
+       //     return;
+       // }
+       //
+       // _splineRenderer.splineContainer.Create();
+       //
+       // // Очищаем существующие точки
+       // spline.Clear();
+       //
+       // // Добавляем две точки (используем float2 из Unity.Mathematics)
+       // spline.Create; Add(new float2(0f, 0f));
+       // spline.Add(new float2(100f, 100f)); // Временные координаты
+       //
+       // // Обновляем сплайн
+       // spline.UpdateSpline();
     }
 
     public void SetConnection (RectTransform from, RectTransform to)
     {
         _from = from;
         _to = to;
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.startWidth = _lineWidth;
-        _lineRenderer.endWidth = _lineWidth;
-
-        // Убеждаемся, что LineRenderer использует мировые координаты
-        _lineRenderer.useWorldSpace = true;
-
         UpdatePositions();
     }
 
     public void UpdatePositions ()
     {
-        if (_from == null || _to == null || _canvas == null)
+        if (_from == null || _to == null || _canvasRect == null || _splineRenderer == null)
             return;
 
-        // Получаем мировые позиции RectTransform
-        var fromWorldPos = GetWorldPosition(_from);
-        var toWorldPos = GetWorldPosition(_to);
+        // Получаем локальные позиции в координатах Canvas
+        Vector2 fromLocal = GetLocalPosition(_from);
+        Vector2 toLocal = GetLocalPosition(_to);
 
-        // Устанавливаем позиции с учетом Z
-        fromWorldPos.z = _zPosition;
-        toWorldPos.z = _zPosition;
-
-        _lineRenderer.SetPosition(0, fromWorldPos);
-        _lineRenderer.SetPosition(1, toWorldPos);
+        // Обновляем позиции точек в сплайне
+        UpdateSplinePoints(fromLocal, toLocal);
     }
 
-    private Vector3 GetWorldPosition (RectTransform rectTransform)
+    private void UpdateSplinePoints (Vector2 from, Vector2 to)
     {
-        // Способ 1: Через RectTransformUtility
-        Vector3 worldPos;
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            _canvas.transform as RectTransform,
-            rectTransform.position,
+       // var spline = _splineRenderer.splineContainer;
+       // if (spline == null || spline.Count < 2)
+       // {
+       //     // Если точек меньше 2, пересоздаём сплайн
+       //     InitializeSpline();
+       //     spline = _splineRenderer.splineContainer;
+       // }
+       //
+       // // Устанавливаем позиции точек (конвертируем Vector2 в float2)
+       // spline[0] = new float2(from.x, from.y);
+       // spline[1] = new float2(to.x, to.y);
+       //
+       // // Обновляем сплайн для применения изменений
+       // spline.UpdateSpline();
+    }
+
+    private Vector2 GetLocalPosition (RectTransform target)
+    {
+        Vector2 localPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            _canvasRect,
+            target.position,
             _canvas.worldCamera,
-            out worldPos
+            out localPos
         );
-        return worldPos;
-
-        // Способ 2: Альтернативный - через Transform
-        // return rectTransform.TransformPoint(rectTransform.rect.center);
-
-        // Способ 3: Через RectTransformUtility с экранными координатами
-        // Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(_canvas.worldCamera, rectTransform.position);
-        // return _canvas.worldCamera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
+        return localPos;
     }
 
     public void SetUnlocked (bool unlocked)
     {
         _isUnlocked = unlocked;
-        _lineRenderer.startColor = unlocked ? _unlockedColor : _lockedColor;
-        _lineRenderer.endColor = unlocked ? _unlockedColor : _lockedColor;
+
+        if (_splineRenderer != null)
+        {
+            _splineRenderer.color = unlocked ? _unlockedColor : _lockedColor;
+        }
     }
 }

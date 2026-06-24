@@ -25,6 +25,11 @@ public class BallTreeModel
         CalculatePositions(treeData);
     }
 
+    public void CreateTree()
+    {
+
+    }
+
     private void BuildHierarchy ()
     {
         _children = new Dictionary<BallType, List<BallType>>();

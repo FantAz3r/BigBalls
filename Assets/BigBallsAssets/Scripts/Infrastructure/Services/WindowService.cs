@@ -26,6 +26,7 @@ namespace BigBalls.Services
                 [typeof(LouseLevelMenu)] = uiFactory.CreateLouseMenu,
                 [typeof(WinLevelMenu)] = uiFactory.CreateWinMenu,
                 [typeof(BallTreeUI)] = uiFactory.CreateBallTree,
+                [typeof(CardSelectionMenu)] = uiFactory.CreateCardMenu,
             };
         }
 

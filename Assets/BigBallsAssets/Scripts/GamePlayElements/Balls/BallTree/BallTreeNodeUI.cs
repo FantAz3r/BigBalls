@@ -39,7 +39,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         if (_unlockButton != null)
             _unlockButton.onClick.AddListener(OnUnlockClick);
 
-        gameObject.SetActive(true);
         UpdateState();
     }
 
@@ -63,16 +62,16 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
             _priceText.text = canUnlock ? $"{_node.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
 
-            if (_unlockButton != null)
-                _unlockButton.gameObject.SetActive(canUnlock);
+            //if (_unlockButton != null)
+            //    _unlockButton.gameObject.SetActive(canUnlock);
         }
         else
         {
             _background.color = _unlockedColor;
             _priceText.gameObject.SetActive(false);
 
-            if (_unlockButton != null)
-                _unlockButton.gameObject.SetActive(false);
+            //if (_unlockButton != null)
+            //    _unlockButton.gameObject.SetActive(false);
         }
     }
 

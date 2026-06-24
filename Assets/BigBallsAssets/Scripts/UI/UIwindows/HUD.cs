@@ -9,9 +9,7 @@ namespace BigBalls.UI
         [field: SerializeField] public PlayerExperienceViewer PlayerExperienceViewer { get; private set; }
         [field: SerializeField] public PlayerWalletViewer PlayerWalletViewer { get; private set; }
         [field: SerializeField] public PlayerLevelViewer PlayerLevelViewer { get; private set; }
-        
         [field: SerializeField] public WaveViewer WaveViewer { get; private set; }
-        [field: SerializeField] public CardSelectionMenu CardSelectionMenu { get; private set; }
 
         public override void Open()
         {

@@ -28,7 +28,7 @@ public class CardSelectionMenu : PauseWindow
     private PlayerCardHolder _playerCardHolder;
 
     [Inject]
-    private void Construct (
+    public void Construct (
         IWindowService windowService,
         IResourceLoader resourceLoader,
         CardSelector cardSelector,
@@ -49,6 +49,9 @@ public class CardSelectionMenu : PauseWindow
 
     private void OnDisable ()
     {
+        if (_cardsButtons == null)
+            return;
+
         _cardsButtons.Clear();
 
         foreach (var button in _cardsButtons)
