@@ -8,8 +8,6 @@ public class LootFactory : ILootFactory, IDisposable
     private ILootMediator _lootMediator;
     private IUpdateService _updateService;
 
-    private List<Loot> _activLoots = new List<Loot>();
-
     private LootMover _lootMover;
     
     public LootFactory(IPoolService poolService, ILootMediator lootMediator, IUpdateService updateService)
@@ -18,14 +16,13 @@ public class LootFactory : ILootFactory, IDisposable
         _lootMediator = lootMediator;
         _updateService = updateService;
 
-        _lootMover = new LootMover(_updateService, _activLoots);
+        _lootMover = new LootMover(_updateService);
         _lootMover.Start();
         _lootMover.OnLootMissed += OnLootMissedHandler;
     }
 
     public void Dispose()
     {
-        _activLoots.Clear();
         _lootMover.OnLootMissed -= OnLootMissedHandler;
         _lootMover.Stop();
     }
@@ -34,8 +31,7 @@ public class LootFactory : ILootFactory, IDisposable
     {
         Loot loot = _poolService.GetObject<Loot>(name);
         loot.OnCollected += OnCollectedHandler;
-        _activLoots.Add(loot);
-
+        _lootMover.AddObject(loot);
         return loot;
     }
 
@@ -43,7 +39,6 @@ public class LootFactory : ILootFactory, IDisposable
     {
         loot.OnCollected -= OnCollectedHandler;
         
-        _activLoots.Remove(loot);
         _lootMediator.RegisterLoot(loot);
         _poolService.ReleaseObject(loot);
     }
@@ -51,11 +46,6 @@ public class LootFactory : ILootFactory, IDisposable
     
     private void OnLootMissedHandler(Loot loot)
     {
-        if (_activLoots.Contains(loot))
-        {
-            _activLoots.Remove(loot);
-        }
-        
         _poolService.ReleaseObject(loot);
     }
 }
