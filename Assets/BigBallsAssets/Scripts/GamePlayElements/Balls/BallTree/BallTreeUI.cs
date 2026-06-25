@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
-public class BallTreeUI : WindowBase
+public class BallTreeUI : WindowBase, IResetble
 {
     [SerializeField] private RectTransform _treeContainer;
     [SerializeField] private BallTreeNodeUI _nodePrefab;
@@ -18,21 +18,25 @@ public class BallTreeUI : WindowBase
     private List<BallTreeConnectionUI> _connections = new();
 
     [Inject]
-    public void Construct (BallTreeController controller)
+    public void Construct (BallTreeController controller, ISaveService saveService)
     {
         _controller = controller;
+        saveService.RegisterResetable(this);
         BuildTreeUI();
         UpdateUI();
     }
 
     private void BuildTreeUI ()
     {
-        // Очищаем старые элементы
-        foreach (Transform child in _treeContainer)
-            Destroy(child.gameObject);
+        if (_treeContainer.childCount > 0)
+        {
+            foreach (Transform child in _treeContainer)
+                Destroy(child.gameObject);
 
-        _nodeUIs.Clear();
-        _connections.Clear();
+            _nodeUIs.Clear();
+            _connections.Clear();
+        }
+
 
         var model = _controller.GetTreeModel();
         var allTypes = model.GetAllTypes().ToList();
@@ -42,18 +46,21 @@ public class BallTreeUI : WindowBase
         {
             var node = model.GetNode(type);
             var uiElement = Instantiate(_nodePrefab, _treeContainer);
-            uiElement.Initialize(type, node, _controller);
+            uiElement.Init(type, node, _controller);
             uiElement.OnClick += OnNodeClicked;
             _nodeUIs[type] = uiElement;
             uiElement.gameObject.SetActive(true);
             // Устанавливаем позицию
-            uiElement.RectTransform.anchoredPosition = node.Position;
+            uiElement.RectTransform.anchoredPosition = node.BallConfig.Position;
         }
+
+        UpdateContainerSize();
 
         // Создаем соединения между узлами
         foreach (var type in allTypes)
         {
             var children = model.GetChildren(type);
+
             foreach (var childType in children)
             {
                 if (_nodeUIs.ContainsKey(type) && _nodeUIs.ContainsKey(childType))
@@ -63,12 +70,11 @@ public class BallTreeUI : WindowBase
                         _nodeUIs[type].RectTransform,
                         _nodeUIs[childType].RectTransform
                     );
+
                     _connections.Add(connection);
                 }
             }
         }
-
-        UpdateContainerSize();
     }
 
     private void UpdateContainerSize ()
@@ -77,6 +83,8 @@ public class BallTreeUI : WindowBase
 
         var minPos = Vector2.zero;
         var maxPos = Vector2.zero;
+        var size = maxPos - minPos + new Vector2(200f, 200f);
+        var center = (minPos + maxPos) / 2f;
 
         foreach (var ui in _nodeUIs.Values)
         {
@@ -85,33 +93,18 @@ public class BallTreeUI : WindowBase
             maxPos = Vector2.Max(maxPos, pos);
         }
 
-        var size = maxPos - minPos + new Vector2(200f, 200f);
         _treeContainer.sizeDelta = size;
 
-        // Центрируем содержимое
-        var center = (minPos + maxPos) / 2f;
         foreach (var ui in _nodeUIs.Values)
         {
             ui.RectTransform.anchoredPosition -= center;
         }
 
         // Обновляем соединения
-        foreach (var connection in _connections)
-        {
-            connection.UpdatePositions();
-        }
-    }
-
-    private void OnNodeClicked (BallType type)
-    {
-        // Показываем информацию о шаре
-        Debug.Log($"Clicked on ball: {type}");
-
-        if (_controller.CanUnlockBall(type))
-        {
-            // Показываем кнопку "Купить"
-            _controller.TryUnlockBall(type);
-        }
+        //foreach (var connection in _connections)
+        //{
+        //    connection.UpdatePositions();
+        //}
     }
 
     public void UpdateUI ()
@@ -120,12 +113,20 @@ public class BallTreeUI : WindowBase
         {
             if (ui != null && ui.gameObject != null)
             {
-                // Убеждаемся, что нода активна
-                if (ui.gameObject.activeSelf == false)
-                    ui.gameObject.SetActive(true);
-
-                ui.UpdateState();
+                ui.UpdateState(_controller.GetTreeModel().GetNode(ui.BallType));
             }
         }
+
+        foreach (var line in _connections)
+        {
+            line.UpdateLine();
+        }
+    }
+
+    public void Reset () => UpdateUI();
+
+    private void OnNodeClicked (BallType type)
+    {
+        _controller.TryUnlockBall(type);
     }
 }

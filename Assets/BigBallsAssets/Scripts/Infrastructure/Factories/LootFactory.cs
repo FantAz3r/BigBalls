@@ -9,7 +9,6 @@ public class LootFactory : ILootFactory, IDisposable
     private IUpdateService _updateService;
 
     private LootMover _lootMover;
-    
     public LootFactory(IPoolService poolService, ILootMediator lootMediator, IUpdateService updateService)
     {
         _poolService = poolService;
@@ -27,7 +26,7 @@ public class LootFactory : ILootFactory, IDisposable
         _lootMover.Stop();
     }
 
-    public Loot Create(string name)
+    public Loot Create (string name)
     {
         Loot loot = _poolService.GetObject<Loot>(name);
         loot.OnCollected += OnCollectedHandler;
@@ -35,15 +34,14 @@ public class LootFactory : ILootFactory, IDisposable
         return loot;
     }
 
-    private void OnCollectedHandler(Loot loot)
+    private void OnCollectedHandler (Loot loot)
     {
         loot.OnCollected -= OnCollectedHandler;
-        
+
         _lootMediator.RegisterLoot(loot);
         _poolService.ReleaseObject(loot);
     }
-    
-    
+
     private void OnLootMissedHandler(Loot loot)
     {
         _poolService.ReleaseObject(loot);

@@ -33,7 +33,6 @@ namespace BigBalls.Infrastructure.DI
         {
             var factory = Container.Resolve<ILootFactory>() as IDisposable;
             factory?.Dispose();
-            
             base.OnDestroy();
         }
 
@@ -64,7 +63,6 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterProviders(IContainerBuilder builder)
         {
-
             builder.Register<IItemConainerProvider, ItemConainerProvider>(Lifetime.Scoped);
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);

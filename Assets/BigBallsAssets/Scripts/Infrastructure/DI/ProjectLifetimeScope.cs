@@ -10,6 +10,7 @@ namespace BigBalls.Infrastructure.DI
     {
         [SerializeField] private CoroutineRunner _coroutineRunner;
         [SerializeField] private UpdateService _updateService;
+        private IGameStateMachine _gameStateMashine;
 
         protected override void Configure (IContainerBuilder builder)
         {
@@ -25,6 +26,7 @@ namespace BigBalls.Infrastructure.DI
         private void BindStates (IContainerBuilder builder)
         {
             builder.Register<LoadingLevelState>(Lifetime.Singleton);
+            builder.Register<GameExitState>(Lifetime.Singleton);
         }
 
         private void BindServices (IContainerBuilder builder)
@@ -49,6 +51,13 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<GlobalWallet>(Lifetime.Singleton);
             builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
 
+        }
+
+        protected override void OnDestroy ()
+        {
+            _gameStateMashine = Container.Resolve<IGameStateMachine>();
+            _gameStateMashine.EnterIn<GameExitState>();
+            base.OnDestroy();
         }
     }
 }

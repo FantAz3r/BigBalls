@@ -10,7 +10,7 @@ public interface ICardModel
     bool IsOpen { get; }
 
     void AddItemEXP (float value);
-    CardSaveData CraeateSaveData ();
+    CardSaveData CreateSaveData ();
     void InitFromData (CardSaveData data);
     void OpenItem ();
     void Upgrade ();

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Saves;
 using BigBalls.Services;
-using BigBalls.StaticData;
+using UnityEngine;
 
-public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData>
+public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetble
     where TKey : Enum
     where TModel : ICardModel
     where TConfig : ItemConfig
     where TSaveData : CardSaveData
-{ 
+{
     protected readonly ISaveService SaveService;
     protected readonly IResourceLoader ResourceLoader;
-    protected readonly GameProgress GameProgress;
+    protected GameProgress GameProgress;
 
     protected readonly Dictionary<TKey, TModel> Models = new();
 
@@ -24,28 +24,32 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData>
         ResourceLoader = resourceLoader;
         SaveService = saveService;
         GameProgress = saveService.GameProgress;
+
+        saveService.RegisterResetable(this);
     }
 
     public IReadOnlyDictionary<TKey, TModel> AllModels => Models;
 
-    public TModel GetModel (TKey type)
-    {
-        Models.TryGetValue(type, out var model);
-        return model;
-    }
-
-    //public void AddOrUpdateModel (TModel model) => Models[model.Config.Type] = model;
-
     public void Initialize ()
     {
+
+        Models.Clear();
+        _saveDatas.Clear();
+
         var configs = LoadConfigs();
+
         foreach (var config in configs)
         {
-            _saveDatas.Add(config.Key, new CardSaveData((int) (object) config.Key, false, 0));
+            _saveDatas[config.Key] = new CardSaveData((int) (object) config.Key, false, 0);
         }
 
         LoadDataFromSave();
         CreateModels(configs);
+    }
+
+    public void Reset ()
+    {
+        Initialize();
     }
 
     public void Save ()
@@ -54,13 +58,15 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData>
 
         foreach (var model in Models.Values)
         {
-            saves.Add(model.CraeateSaveData() as TSaveData);
+            TSaveData save = (TSaveData) model.CreateSaveData();
+            saves.Add(save);
         }
 
         UpdateGameProgress(saves);
         SaveService.Save(GameProgress);
     }
 
+    //protected abstract void ClearProgressData ();
     protected abstract Dictionary<TKey, TConfig> LoadConfigs ();
 
     protected abstract TModel CreateModel (TKey type, TConfig config, CardSaveData saveData);

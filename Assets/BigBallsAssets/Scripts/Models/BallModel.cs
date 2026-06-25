@@ -9,7 +9,7 @@ public class BallModel : ItemModel
         BallConfig = config;
     }
 
-    public BallSaveData CreateBallSave () => new BallSaveData((int) BallConfig.BallType, ItemEXP, IsOpen, Level);
+    public override CardSaveData CreateSaveData () => new BallSaveData((int) BallConfig.BallType, ItemEXP, IsOpen, Level);
 
     public BallConfig BallConfig { get; private set; }
 }

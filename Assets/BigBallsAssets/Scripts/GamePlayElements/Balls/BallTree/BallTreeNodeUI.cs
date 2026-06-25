@@ -1,5 +1,4 @@
 using System;
-using BigBalls.Configs;
 using BigBalls.StaticData;
 using TMPro;
 using UnityEngine;
@@ -20,38 +19,47 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Color _unlockedColor = Color.white;
     [SerializeField] private Color _availableColor = Color.green;
 
+    public BallType BallType { get; private set; }
+    private BallModel _node;
+    private BallTreeController _controller;
     public RectTransform RectTransform => _rectTransform;
+
     public event Action<BallType> OnClick;
 
-    private BallType _ballType;
-    private BallConfig _node;
-    private BallTreeController _controller;
 
-    public void Initialize (BallType type, BallConfig node, BallTreeController controller)
+    private void OnEnable ()
     {
-        _ballType = type;
+        UpdateState();
+    }
+
+    public void Init (BallType type, BallModel node, BallTreeController controller)
+    {
+        BallType = type;
         _node = node;
         _controller = controller;
 
-        // Настраиваем иконку
         // _icon.sprite = GetSpriteForBallType(type);
 
         if (_unlockButton != null)
-            _unlockButton.onClick.AddListener(OnUnlockClick);
+            _unlockButton.onClick.AddListener(Unlock);
 
         UpdateState();
     }
 
-    public void UpdateState ()
+    public void UpdateState (BallModel node = null)
     {
         if (_controller == null)
             return;
 
-        bool isOpen = _controller.IsBallOpen(_ballType);
-        bool canUnlock = _controller.CanUnlockBall(_ballType);
-        int level = _controller.GetBallLevel(_ballType);
+        if(node != null)
+        {
+            _node = node;
+        }
 
-        // Обновляем состояние
+        bool isOpen = _node.IsOpen;
+        bool canUnlock = _controller.CanUnlockBall(BallType);
+        int level = _node.Level;
+
         _lockIcon.SetActive(isOpen == false);
         _unlockIcon.SetActive(isOpen);
         _levelText.text = isOpen ? $"Lv.{level}" : "Locked";
@@ -59,7 +67,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         if (isOpen == false)
         {
             _background.color = canUnlock ? _availableColor : _lockedColor;
-            _priceText.text = canUnlock ? $"{_node.UnlockPrice} EXP" : "Locked";
+            _priceText.text = canUnlock ? $"{_node.BallConfig.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
 
             //if (_unlockButton != null)
@@ -77,14 +85,11 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick (PointerEventData eventData)
     {
-        OnClick?.Invoke(_ballType);
+        OnClick?.Invoke(BallType);
     }
 
-    private void OnUnlockClick ()
+    private void Unlock()
     {
-        if (_controller.TryUnlockBall(_ballType))
-        {
-            UpdateState();
-        }
+        UpdateState();
     }
 }

@@ -11,10 +11,10 @@ public class BallUnlockService : IBallUnlockService
 
     public bool UnlockBall (BallType type)
     {
-        if (_ballsRepository.AllModels.ContainsKey(type))
+        if (_ballsRepository.AllModels.ContainsKey(type) == false)
             return false;
 
-        var ballModel = _ballsRepository.GetModel(type);
+        var ballModel = _ballsRepository.AllModels[type];
         ballModel.OpenItem();
 
         return true;

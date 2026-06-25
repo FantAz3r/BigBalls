@@ -20,8 +20,6 @@ namespace BigBalls.UI
         {
             base.Open();
             _timeService.StopGame();
-
-            //transform.localScale = Vector3.zero;
         }
 
         public override void Close()

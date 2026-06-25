@@ -1,6 +1,7 @@
 using System;
 using BigBalls.Configs;
 using BigBalls.Saves;
+using UnityEngine;
 
 namespace BigBalls.StaticData
 {
@@ -21,10 +22,10 @@ namespace BigBalls.StaticData
         public event Action<ICardModel> Upgraded;
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
-        public bool IsOpen { get; private set; } = false;
+        public bool IsOpen { get; private set; }
         public int Level { get; private set; }
 
-        public CardSaveData CraeateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
+        public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
         public void Upgrade ()
         {
             if (Level < ItemMaxLevel)

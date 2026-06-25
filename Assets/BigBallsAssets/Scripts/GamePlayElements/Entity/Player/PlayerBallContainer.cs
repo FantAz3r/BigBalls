@@ -16,7 +16,6 @@ namespace BigBalls.GameplayObjects
         private readonly BallConfig _baseBallConfig;
 
         private ItemModel _weapon;
-        private ItemModel _buffer;
 
         private int _currentBallCount = 0;
         private int _createdBallsCount = 0;

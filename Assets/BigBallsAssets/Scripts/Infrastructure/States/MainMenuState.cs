@@ -6,10 +6,14 @@ namespace BigBalls.Infrastructure
     public class MainMenuState : IState
     {
         private readonly IWindowService _windowService;
+        private readonly BallsRepository _ballsRepository;
 
-        public MainMenuState( IWindowService windowService)
+        public MainMenuState(
+            IWindowService windowService,
+            BallsRepository ballsRepository)
         {
             _windowService = windowService;
+            _ballsRepository = ballsRepository;
         }
 
         public void Enter()

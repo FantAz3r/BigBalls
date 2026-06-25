@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Services;
 using BigBalls.StaticData;
@@ -7,6 +6,7 @@ using UnityEngine;
 
 public class BallTreeModel
 {
+    private static readonly Vector2 Spacing = new Vector2(200, 200);
     private readonly BallsRepository _ballsRepository;
 
     private Dictionary<BallType, BallConfig> _nodes;
@@ -16,18 +16,13 @@ public class BallTreeModel
 
     public BallTreeModel (IResourceLoader resourceLoader, BallsRepository ballsRepository)
     {
-        BallTreeData treeData = resourceLoader.Load<BallTreeData>();
+        CardsData treeData = resourceLoader.Load<CardsData>();
         _ballsRepository = ballsRepository;
-        _nodes = treeData.Nodes.ToDictionary(n => n.BallType);
-        _rootType = treeData.RootBallType;
+        _nodes = treeData.Balls;
+        _rootType = BallType.Base;
 
         BuildHierarchy();
-        CalculatePositions(treeData);
-    }
-
-    public void CreateTree()
-    {
-
+        CalculatePositions();
     }
 
     private void BuildHierarchy ()
@@ -54,7 +49,7 @@ public class BallTreeModel
         }
     }
 
-    private void CalculatePositions (BallTreeData treeData)
+    private void CalculatePositions ()
     {
         if (_nodes.ContainsKey(_rootType) == false)
             return;
@@ -86,8 +81,8 @@ public class BallTreeModel
 
                 if (childNode.Position == Vector2.zero)
                 {
-                    var xOffset = (i - (childCount - 1) / 2f) * treeData.Spacing.x;
-                    var yOffset = -treeData.Spacing.y;
+                    var xOffset = (i - (childCount - 1) / 2f) * Spacing.x;
+                    var yOffset = -Spacing.y;
                     childNode.Position = new Vector2(
                         parentPos.x + xOffset,
                         parentPos.y + yOffset
@@ -99,10 +94,9 @@ public class BallTreeModel
         }
     }
 
-    public BallConfig GetNode (BallType type) => _nodes.GetValueOrDefault(type);
+    public BallModel GetNode (BallType type) => _ballsRepository.AllModels[type];
     public List<BallType> GetChildren (BallType type) => _children.GetValueOrDefault(type) ?? new List<BallType>();
     public List<BallType> GetParents (BallType type) => _parents.GetValueOrDefault(type) ?? new List<BallType>();
-    public bool IsRoot (BallType type) => type == _rootType;
     public IEnumerable<BallType> GetAllTypes () => _nodes.Keys;
 
     public bool CanUnlock (BallType type)
@@ -115,7 +109,7 @@ public class BallTreeModel
         if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
             return false;
 
-        foreach (var parentType in node.ParentTypes ?? new List<BallType>())
+        foreach (var parentType in node.BallConfig.ParentTypes ?? new List<BallType>())
         {
             if (_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall) == false)
                 return false;
@@ -123,7 +117,7 @@ public class BallTreeModel
             if (parentBall.IsOpen == false)
                 return false;
 
-            if (parentBall.ItemEXP < node.RequiredEXP)
+            if (parentBall.ItemEXP < node.BallConfig.RequiredEXP)
                 return false;
         }
 

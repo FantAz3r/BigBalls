@@ -1,5 +1,5 @@
-﻿using BigBalls.Services;
-using System.Collections;
+﻿using System.Collections;
+using BigBalls.Services;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -16,7 +16,7 @@ namespace BigBalls.GameplayObjects
         private Stat _damage;
         private bool _canShoot = true;
 
-        public Shooter(Stat damage, Stat attackSpeed, Transform firePoint, IBallContainer ballContainer, ICoroutineRunner coroutineRunner)
+        public Shooter (Stat damage, Stat attackSpeed, Transform firePoint, IBallContainer ballContainer, ICoroutineRunner coroutineRunner)
         {
             _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
             _firePoint = firePoint;
