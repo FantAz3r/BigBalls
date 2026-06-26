@@ -19,45 +19,42 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Color _unlockedColor = Color.white;
     [SerializeField] private Color _availableColor = Color.green;
 
-    public BallType BallType { get; private set; }
     private BallModel _node;
-    private BallTreeController _controller;
-    public RectTransform RectTransform => _rectTransform;
+    private IBallUnlockService _unlockService;
 
     public event Action<BallType> OnClick;
 
+    public BallType BallType { get; private set; }
+    public RectTransform RectTransform => _rectTransform;
 
     private void OnEnable ()
     {
         UpdateState();
+        _unlockButton?.onClick.AddListener(Unlock);
     }
 
-    public void Init (BallType type, BallModel node, BallTreeController controller)
+    private void OnDisable ()
+    {
+        _unlockButton?.onClick.RemoveListener(Unlock);
+    }
+
+    public void Init (BallType type, BallModel node, IBallUnlockService unlockService)
     {
         BallType = type;
         _node = node;
-        _controller = controller;
+        _unlockService = unlockService;
 
         // _icon.sprite = GetSpriteForBallType(type);
-
-        if (_unlockButton != null)
-            _unlockButton.onClick.AddListener(Unlock);
-
         UpdateState();
     }
 
     public void UpdateState (BallModel node = null)
     {
-        if (_controller == null)
-            return;
-
-        if(node != null)
-        {
+        if (node != null)
             _node = node;
-        }
 
         bool isOpen = _node.IsOpen;
-        bool canUnlock = _controller.CanUnlockBall(BallType);
+        bool canUnlock = _unlockService.CanUnlock(BallType);
         int level = _node.Level;
 
         _lockIcon.SetActive(isOpen == false);
@@ -69,17 +66,11 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
             _background.color = canUnlock ? _availableColor : _lockedColor;
             _priceText.text = canUnlock ? $"{_node.BallConfig.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
-
-            //if (_unlockButton != null)
-            //    _unlockButton.gameObject.SetActive(canUnlock);
         }
         else
         {
             _background.color = _unlockedColor;
             _priceText.gameObject.SetActive(false);
-
-            //if (_unlockButton != null)
-            //    _unlockButton.gameObject.SetActive(false);
         }
     }
 
@@ -88,7 +79,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         OnClick?.Invoke(BallType);
     }
 
-    private void Unlock()
+    private void Unlock ()
     {
         UpdateState();
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
+using UnityEngine;
 
 namespace BigBalls.Factories
 {
@@ -40,10 +41,11 @@ namespace BigBalls.Factories
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
+            Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
             ball.EventHandler.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.EntityType, ballModel.BallConfig);
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], ball.transform, _updateService);
+            MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], ball.transform, _updateService, rigidbody);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {

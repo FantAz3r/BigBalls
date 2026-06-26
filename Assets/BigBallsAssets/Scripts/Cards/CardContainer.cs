@@ -1,42 +1,40 @@
-using System;
 using System.Collections.Generic;
-using BigBalls.Services;
+using System.Linq;
 using BigBalls.Saves;
+using BigBalls.Services;
 
 public class CardContainer
 {
     private readonly IResourceLoader _resourceLoader;
+    private readonly BallsRepository _ballsRepository;
+    private readonly ArtefactsRepository _artefactsRepository;
+
     private List<ICardModel> _cards = new List<ICardModel>();
     private GameProgress _gameProgress;
-    public CardContainer (IResourceLoader resourceLoader, GameProgress gameProgress)
+
+    public CardContainer (
+        IResourceLoader resourceLoader,
+        GameProgress gameProgress,
+        BallsRepository ballsRepository,
+        ArtefactsRepository artefactsRepository)
     {
         _resourceLoader = resourceLoader;
         _gameProgress = gameProgress;
+        _ballsRepository = ballsRepository;
+        _artefactsRepository = artefactsRepository;
     }
 
-    public void FillContainer ()
-    {
-        if (_gameProgress.Items == null && _gameProgress.Items.Count == 0)
-        {
-            _cards = LoadStartCards();
-        }
-        else
-        {
-            _cards = LoadCards();
-        }
-    }
-
-    private List<ICardModel> LoadStartCards ()
-    {
-        throw new NotImplementedException();
-    }
+    public List<ICardModel> CardModels => _cards;
 
     public void SaveCards ()
     {
+
     }
 
-    private List<ICardModel> LoadCards ()
+    private void UpdateCards ()
     {
-        return null;
+        _cards.Clear();
+        _cards.AddRange(_ballsRepository.AllModels.Values.Where(ball => ball.IsOpen).ToList());
+        _cards.AddRange(_artefactsRepository.AllModels.Values.Where(artefact => artefact.IsOpen).ToList());
     }
 }

@@ -3,6 +3,7 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -79,28 +80,30 @@ namespace BigBalls.GameplayObjects
 
         public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
 
-        public void AddUniqueBall(ItemModel item)
+        public void AddUniqueBall (ItemModel item)
         {
             if (item is not IWeapon weapon)
                 return;
 
-            foreach(var ball in weapon.UniqueBalls)
+            foreach (var ball in weapon.UniqueBalls)
                 AddUniqueBall(ball);
         }
 
         public bool AddUniqueBall (BallModel uniqueBall)
         {
+            Debug.Log("add unique ball");
             if (uniqueBall?.Config == null)
                 return false;
 
             if (_balls.Count == 0)
             {
                 _balls.Enqueue(uniqueBall);
-                _currentBallCount++;
+                _currentBallCount = _balls.Count;
                 return true;
             }
 
             var tempQueue = new Queue<BallModel>(_balls.Count + 1);
+
             bool replaced = false;
 
             while (_balls.Count > 0)
@@ -120,11 +123,11 @@ namespace BigBalls.GameplayObjects
 
             if (replaced == false)
             {
+                _currentBallCount++;
                 tempQueue.Enqueue(uniqueBall);
             }
 
             _balls = tempQueue;
-            _currentBallCount = _balls.Count;
             return true;
         }
 

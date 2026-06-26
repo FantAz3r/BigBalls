@@ -99,28 +99,5 @@ public class BallTreeModel
     public List<BallType> GetParents (BallType type) => _parents.GetValueOrDefault(type) ?? new List<BallType>();
     public IEnumerable<BallType> GetAllTypes () => _nodes.Keys;
 
-    public bool CanUnlock (BallType type)
-    {
-        var node = GetNode(type);
-
-        if (node == null)
-            return false;
-
-        if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
-            return false;
-
-        foreach (var parentType in node.BallConfig.ParentTypes ?? new List<BallType>())
-        {
-            if (_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall) == false)
-                return false;
-
-            if (parentBall.IsOpen == false)
-                return false;
-
-            if (parentBall.ItemEXP < node.BallConfig.RequiredEXP)
-                return false;
-        }
-
-        return true;
-    }
+   
 }

@@ -23,6 +23,6 @@ public class ArtefactsRepository : ItemRepository<ArtefactType, ArtefactModel, A
     protected override List<ArtefactSaveData> GetSaveDataFromProgress ()
         => GameProgress.Artefacts;
 
-    protected override void UpdateGameProgress (List<ArtefactSaveData> saveData)
+    protected override void SaveGameProgress (List<ArtefactSaveData> saveData)
         => GameProgress.Artefacts = saveData;
 }

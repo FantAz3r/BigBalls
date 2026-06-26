@@ -1,6 +1,7 @@
 using BigBalls.Factories;
 using BigBalls.Services;
 using UnityEngine;
+using UnityEngine.Splines.ExtrusionShapes;
 using VContainer;
 using VContainer.Unity;
 
@@ -31,7 +32,9 @@ namespace BigBalls.Infrastructure.DI
 
         private void BindServices (IContainerBuilder builder)
         {
+            
             builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
+            builder.Register<ITranslateService, YGTranslateService>(Lifetime.Singleton);
             builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
             builder.Register<IResourceLoader, ResourceLoader>(Lifetime.Singleton);
             builder.Register<IUIFactory, UIFactory>(Lifetime.Singleton);
@@ -46,13 +49,12 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<BallsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
             builder.Register<ArtefactsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
 
-            builder.Register<BallTreeController>(Lifetime.Singleton);
             builder.Register<BallTreeModel>(Lifetime.Singleton);
             builder.Register<GlobalWallet>(Lifetime.Singleton);
             builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
 
         }
-
+               
         protected override void OnDestroy ()
         {
             _gameStateMashine = Container.Resolve<IGameStateMachine>();

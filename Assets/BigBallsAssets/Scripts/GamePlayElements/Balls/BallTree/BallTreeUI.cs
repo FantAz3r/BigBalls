@@ -13,18 +13,47 @@ public class BallTreeUI : WindowBase, IResetble
     [SerializeField] private BallTreeConnectionUI _connectionPrefab;
     [SerializeField] private ScrollRect _scrollRect;
 
-    private BallTreeController _controller;
+    private IBallUnlockService _unlockService;
+    private BallTreeModel _treeModel;
     private Dictionary<BallType, BallTreeNodeUI> _nodeUIs = new();
     private List<BallTreeConnectionUI> _connections = new();
 
-    [Inject]
-    public void Construct (BallTreeController controller, ISaveService saveService)
+    private void OnDestroy ()
     {
-        _controller = controller;
+        foreach (var node in _nodeUIs.Values)
+        {
+            node.OnClick -= OnNodeClicked;
+        }
+    }
+
+    [Inject]
+    public void Construct (BallTreeModel treeModel, ISaveService saveService, IBallUnlockService unlockService)
+    {
+        _treeModel = treeModel;
+        _unlockService = unlockService;
+
         saveService.RegisterResetable(this);
         BuildTreeUI();
         UpdateUI();
     }
+
+    public void UpdateUI ()
+    {
+        foreach (var ui in _nodeUIs.Values)
+        {
+            if (ui != null && ui.gameObject != null)
+            {
+                ui.UpdateState(_treeModel.GetNode(ui.BallType));
+            }
+        }
+
+        foreach (var line in _connections)
+        {
+            line.UpdateLine();
+        }
+    }
+
+    public void Reset () => UpdateUI();
 
     private void BuildTreeUI ()
     {
@@ -37,29 +66,25 @@ public class BallTreeUI : WindowBase, IResetble
             _connections.Clear();
         }
 
+        var allTypes = _treeModel.GetAllTypes().ToList();
 
-        var model = _controller.GetTreeModel();
-        var allTypes = model.GetAllTypes().ToList();
-
-        // Создаем UI для каждого узла
         foreach (var type in allTypes)
         {
-            var node = model.GetNode(type);
+            var node = _treeModel.GetNode(type);
             var uiElement = Instantiate(_nodePrefab, _treeContainer);
-            uiElement.Init(type, node, _controller);
+            uiElement.Init(type, node, _unlockService);
             uiElement.OnClick += OnNodeClicked;
+
             _nodeUIs[type] = uiElement;
             uiElement.gameObject.SetActive(true);
-            // Устанавливаем позицию
             uiElement.RectTransform.anchoredPosition = node.BallConfig.Position;
         }
 
         UpdateContainerSize();
 
-        // Создаем соединения между узлами
         foreach (var type in allTypes)
         {
-            var children = model.GetChildren(type);
+            var children = _treeModel.GetChildren(type);
 
             foreach (var childType in children)
             {
@@ -99,34 +124,10 @@ public class BallTreeUI : WindowBase, IResetble
         {
             ui.RectTransform.anchoredPosition -= center;
         }
-
-        // Обновляем соединения
-        //foreach (var connection in _connections)
-        //{
-        //    connection.UpdatePositions();
-        //}
     }
-
-    public void UpdateUI ()
-    {
-        foreach (var ui in _nodeUIs.Values)
-        {
-            if (ui != null && ui.gameObject != null)
-            {
-                ui.UpdateState(_controller.GetTreeModel().GetNode(ui.BallType));
-            }
-        }
-
-        foreach (var line in _connections)
-        {
-            line.UpdateLine();
-        }
-    }
-
-    public void Reset () => UpdateUI();
 
     private void OnNodeClicked (BallType type)
     {
-        _controller.TryUnlockBall(type);
+        _unlockService.TryUnlockBall(type);
     }
 }

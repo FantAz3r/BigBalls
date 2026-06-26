@@ -11,18 +11,18 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
     where TConfig : ItemConfig
     where TSaveData : CardSaveData
 {
-    protected readonly ISaveService SaveService;
     protected readonly IResourceLoader ResourceLoader;
-    protected GameProgress GameProgress;
-
     protected readonly Dictionary<TKey, TModel> Models = new();
 
+    private readonly ISaveService _saveService;
     private readonly Dictionary<TKey, CardSaveData> _saveDatas = new();
+
+    protected GameProgress GameProgress;
 
     protected ItemRepository (IResourceLoader resourceLoader, ISaveService saveService)
     {
         ResourceLoader = resourceLoader;
-        SaveService = saveService;
+        _saveService = saveService;
         GameProgress = saveService.GameProgress;
 
         saveService.RegisterResetable(this);
@@ -32,7 +32,6 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
 
     public void Initialize ()
     {
-
         Models.Clear();
         _saveDatas.Clear();
 
@@ -47,10 +46,7 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
         CreateModels(configs);
     }
 
-    public void Reset ()
-    {
-        Initialize();
-    }
+    public void Reset () => Initialize();
 
     public void Save ()
     {
@@ -62,18 +58,16 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
             saves.Add(save);
         }
 
-        UpdateGameProgress(saves);
-        SaveService.Save(GameProgress);
+        SaveGameProgress(saves);
     }
 
-    //protected abstract void ClearProgressData ();
     protected abstract Dictionary<TKey, TConfig> LoadConfigs ();
 
     protected abstract TModel CreateModel (TKey type, TConfig config, CardSaveData saveData);
 
     protected abstract List<TSaveData> GetSaveDataFromProgress ();
 
-    protected abstract void UpdateGameProgress (List<TSaveData> saveData);
+    protected abstract void SaveGameProgress (List<TSaveData> saveData);
 
     private void LoadDataFromSave ()
     {

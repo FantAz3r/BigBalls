@@ -24,6 +24,6 @@ public class BallsRepository : ItemRepository<BallType, BallModel, BallConfig, B
     protected override List<BallSaveData> GetSaveDataFromProgress ()
         => GameProgress.Balls;
 
-    protected override void UpdateGameProgress (List<BallSaveData> saveData)
+    protected override void SaveGameProgress (List<BallSaveData> saveData)
         => GameProgress.Balls = saveData;
 }

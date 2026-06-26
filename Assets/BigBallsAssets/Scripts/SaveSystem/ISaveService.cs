@@ -5,9 +5,9 @@ public interface ISaveService
 {
     GameProgress GameProgress { get; }
 
-    void Save (GameProgress progress);
+    void Save ();
 
-    GameProgress Load ();
+    void Load ();
     void ResetSave ();
     void RegisterResetable (IResetble resetble);
 }

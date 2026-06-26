@@ -1,11 +1,11 @@
-﻿using BigBalls.Configs;
+﻿using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Services;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class Mover : IUpdateble, ISubscribable
+    public class Mover : IUpdateble, ISubscribable, IMover
     {
         private readonly IUpdateService _updateService;
         private readonly IRaycastService _raycastService;
@@ -20,7 +20,7 @@ namespace BigBalls.GameplayObjects
         public Transform MovableObject { get; private set; }
         public Vector2 Direction { get; private set; }
 
-        public Mover(Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
+        public Mover (Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
             _updateService = updateService;
             _raycastService = raycastService;
@@ -29,28 +29,28 @@ namespace BigBalls.GameplayObjects
             _obstacleLayerMask = playerConfig?.ObstacleLayers ?? 0;
         }
 
-        public void Subscribe() => _updateService.Register(this);
-        public void Unsubscribe() => _updateService.Unregister(this);
-        public void SetDirection(Vector2 direction)
+        public void Subscribe () => _updateService.Register(this);
+        public void Unsubscribe () => _updateService.Unregister(this);
+        public void SetDirection (Vector2 direction)
         {
             _target = null;
             Direction = direction;
         }
 
-        public void SetTarget(Transform target) => _target = target;
+        public void SetTarget (Transform target) => _target = target;
 
-        public void SetReycastInfo(Vector3[] directions, Vector3[] points)
+        public void SetReycastInfo (Vector3[] directions, Vector3[] points)
         {
             _raycastDirections = directions;
             _raycastPoints = points;
         }
 
-        public void Tick()
+        public void Tick ()
         {
             if (_target != null)
             {
                 Vector3 dirToTarget = (_target.position - MovableObject.position);
-                dirToTarget.y = 0; 
+                dirToTarget.y = 0;
 
                 if (dirToTarget.sqrMagnitude > 0.001f)
                 {
@@ -63,7 +63,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void Move(Vector2 direction)
+        public void Move (Vector2 direction)
         {
             if (direction.sqrMagnitude < 0.001f) return;
 

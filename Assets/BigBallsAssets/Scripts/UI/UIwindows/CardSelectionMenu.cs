@@ -10,45 +10,30 @@ using VContainer.Unity;
 
 public class CardSelectionMenu : PauseWindow
 {
-    [SerializeField]
-    private RectTransform _buttonsParent;
-    [SerializeField]
-    private TMP_Text _levelText;
+    [SerializeField] private RectTransform _buttonsParent;
+    [SerializeField] private TMP_Text _levelText;
 
+    private CardView _cardPrefab;
     private List<CardView> _cardsButtons;
     private CardSelector _selector;
     private List<ICardModel> _currentCards;
 
     private IWindowService _windowService;
     private ITimeService _timeService;
-    private IResourceLoader _resourceLoader;
     private IObjectResolverProvider _objectResolverProvider;
 
     private IPlayerExperience _playerExperience;
     private PlayerCardHolder _playerCardHolder;
 
-    [Inject]
-    public void Construct (
-        IWindowService windowService,
-        IResourceLoader resourceLoader,
-        CardSelector cardSelector,
-        IObjectResolverProvider objectResolverProvider,
-        IPlayerExperience playerExperienceModel)
+    private void Awake ()
     {
-        _objectResolverProvider = objectResolverProvider;
-        _windowService = windowService;
-        _resourceLoader = resourceLoader;
-        _selector = cardSelector;
-        _playerExperience = playerExperienceModel;
-    }
-
-    public void Init (PlayerCardHolder playerCardHolder)
-    {
-        _playerCardHolder = playerCardHolder;
+        if (_playerExperience != null)
+            _playerExperience.LevelUpped += Open;
     }
 
     private void OnDisable ()
     {
+
         if (_cardsButtons == null)
             return;
 
@@ -59,6 +44,34 @@ public class CardSelectionMenu : PauseWindow
             button.Selected -= CloseMenu;
             Destroy(button.gameObject);
         }
+    }
+
+    private void OnDestroy ()
+    {
+        if (_playerExperience != null)
+            _playerExperience.LevelUpped -= Open;
+    }
+
+    [Inject]
+    public void Construct (
+        IWindowService windowService,
+        IResourceLoader resourceLoader,
+        CardSelector cardSelector,
+        IObjectResolverProvider objectResolverProvider,
+        IPlayerExperience playerExperienceModel,
+        ITimeService timeService)
+    {
+        _objectResolverProvider = objectResolverProvider;
+        _windowService = windowService;
+        _selector = cardSelector;
+        _playerExperience = playerExperienceModel;
+        _cardPrefab = resourceLoader.Load<CardView>();
+        _timeService = timeService;
+    }
+
+    public void Init (PlayerCardHolder playerCardHolder)
+    {
+        _playerCardHolder = playerCardHolder;
     }
 
     public override void Open ()
@@ -118,13 +131,10 @@ public class CardSelectionMenu : PauseWindow
     {
         int maxCardCount = 3;
         List<CardView> cards = new List<CardView>();
-        CardView prefab = _resourceLoader.Load<CardView>();
 
         for (int i = 0; i < maxCardCount; i++)
         {
-            CardView card = _objectResolverProvider.CurrentResolver.Instantiate(prefab, _buttonsParent);
-            _objectResolverProvider.CurrentResolver.Inject(card);
-
+            CardView card = _objectResolverProvider.CurrentResolver.Instantiate(_cardPrefab, _buttonsParent);
             card.Init(_playerCardHolder);
             cards.Add(card);
             card.Selected += CloseMenu;
@@ -137,6 +147,7 @@ public class CardSelectionMenu : PauseWindow
     {
         foreach (var cardButton in _cardsButtons)
         {
+            cardButton.Selected -= CloseMenu;
             Destroy(cardButton.gameObject);
         }
 

@@ -15,7 +15,7 @@ namespace BigBalls.GameplayObjects
         public DeathHandler<Ball> DeathHandler { get; private set; }
         public bool IsMaterial { get; private set; }
         public bool CanReturnToBag { get; private set; } = false;
-        public Mover Mover { get; private set; }
+        public IMover Mover { get; private set; }
         public int Id { get; private set; }
         public int Level { get; private set; } = 1;
         public Transform Transform => transform;
@@ -45,7 +45,7 @@ namespace BigBalls.GameplayObjects
         public void Construct (
             int id,
             int level,
-            Mover mover,
+            IMover mover,
             List<ICollisionStrategy> collisionStrategies,
             DeathHandler<Ball> deathHandler,
             IEffectFactory ballEffectFactory)

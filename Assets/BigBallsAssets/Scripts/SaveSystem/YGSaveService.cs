@@ -12,19 +12,22 @@ public class YGSaveService : ISaveService
         _resetbles.Add(resetble);
     }
 
-    public void Save (GameProgress progress)
+    public void Save ()
     {
-        GameProgress = progress;
-        YG2.saves.GameProgress = progress;
+        YG2.saves.GameProgress = GameProgress;
         YG2.SaveProgress();
     }
 
-    public GameProgress Load () => YG2.saves.GameProgress;
+    public void Load ()
+    {
+        if (YG2.saves.GameProgress != null)
+            GameProgress = YG2.saves.GameProgress;
+    }
 
     public void ResetSave ()
     {
         GameProgress.Clear();
-        Save(GameProgress);
+        Save();
 
         foreach (var resetble in _resetbles)
         {
