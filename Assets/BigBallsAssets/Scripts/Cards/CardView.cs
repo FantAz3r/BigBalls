@@ -49,13 +49,17 @@ public class CardView : ButtonClickHandler
     {
         if (_card.Level == 1)
         {
+            Debug.Log("add");
             _playerCardHolder.Add(_card);
+            _card.Upgrade();
         }
         else
         {
+            Debug.Log("Upgrade");
             _card.Upgrade();
         }
 
+        Debug.Log(_card.Level);
         Selected?.Invoke();
     }
 }

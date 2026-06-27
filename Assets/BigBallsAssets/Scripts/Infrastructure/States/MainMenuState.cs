@@ -8,15 +8,18 @@ namespace BigBalls.Infrastructure
         private readonly IWindowService _windowService;
         private readonly BallsRepository _ballsRepository;
         private readonly ISaveService _saveService;
+        private readonly ArtefactsRepository _artefactsRepository;
 
         public MainMenuState(
             IWindowService windowService,
             BallsRepository ballsRepository,
-            ISaveService saveService)
+            ISaveService saveService,
+            ArtefactsRepository artefactsRepository)
         {
             _windowService = windowService;
             _ballsRepository = ballsRepository;
             _saveService = saveService;
+            _artefactsRepository = artefactsRepository;
         }
 
         public void Enter()
@@ -27,6 +30,8 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            _artefactsRepository.Save();
+            _ballsRepository.Save();
             _saveService.Save();
         }
     }

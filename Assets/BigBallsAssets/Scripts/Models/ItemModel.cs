@@ -9,11 +9,11 @@ namespace BigBalls.StaticData
         private const int ItemMaxLevel = 10;
         private int _id;
 
-        public ItemModel (int id, ItemConfig config, int level = 1)
+        public ItemModel (int id, ItemConfig config, int level = 0)
         {
             _id = id;
             Config = config;
-            Level = level;
+            NoneGameLevel = level;
 
             IsOpen = config.IsOpen;
         }
@@ -22,16 +22,24 @@ namespace BigBalls.StaticData
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; }
-        public int Level { get; private set; }
+        public int Level => NoneGameLevel + InGameLevel;
+        public int NoneGameLevel { get; private set; } = 0;
+        public int InGameLevel { get; private set; }
+        public bool HasPlayer { get; private set; } = false;
 
-        public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, Level);
+        public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
         public void Upgrade ()
         {
             if (Level < ItemMaxLevel)
             {
-                Level++;
+                InGameLevel++;
                 Upgraded?.Invoke(this);
             }
+        }
+
+        public void ModelAdded()
+        {
+
         }
 
         public void OpenItem () => IsOpen = true;
@@ -39,7 +47,7 @@ namespace BigBalls.StaticData
         public void InitFromData (CardSaveData data)
         {
             _id = data.Id;
-            Level = data.Level;
+            NoneGameLevel = data.NoneGameLevel;
             IsOpen = data.IsOpen;
             ItemEXP = data.ItemExp;
         }

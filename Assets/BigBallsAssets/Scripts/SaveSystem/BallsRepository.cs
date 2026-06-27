@@ -19,7 +19,7 @@ public class BallsRepository : ItemRepository<BallType, BallModel, BallConfig, B
         => _ballsData;
 
     protected override BallModel CreateModel (BallType type, BallConfig config, CardSaveData saveData)
-        => new BallModel((int) type, config, saveData.Level);
+        => new BallModel((int) type, config, saveData.NoneGameLevel);
 
     protected override List<BallSaveData> GetSaveDataFromProgress ()
         => GameProgress.Balls;

@@ -91,8 +91,6 @@ namespace BigBalls.Infrastructure
 
         public void Exit ()
         {
-            _ballsRepository.Save();
-            _artefactsRepository.Save();
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();

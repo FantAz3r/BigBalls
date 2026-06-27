@@ -8,6 +8,7 @@ public interface ICardModel
     int Level { get; }
     float ItemEXP { get; }
     bool IsOpen { get; }
+    bool HasPlayer { get; }
 
     void AddItemEXP (float value);
     CardSaveData CreateSaveData ();

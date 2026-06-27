@@ -91,7 +91,6 @@ namespace BigBalls.GameplayObjects
 
         public bool AddUniqueBall (BallModel uniqueBall)
         {
-            Debug.Log("add unique ball");
             if (uniqueBall?.Config == null)
                 return false;
 

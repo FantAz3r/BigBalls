@@ -6,14 +6,14 @@ namespace BigBalls.Saves
     public class CardSaveData
     {
         public int Id;
-        public int Level;
+        public int NoneGameLevel;
         public bool IsOpen;
         public float ItemExp;
 
         public CardSaveData (int id, bool isOpen, float itemExp, int level = 1)
         {
             Id = id;
-            Level = level;
+            NoneGameLevel = level;
             IsOpen = isOpen;
             ItemExp = itemExp;
         }

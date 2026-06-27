@@ -16,8 +16,6 @@ public class GameExitState : IState
 
     public void Enter ()
     {
-        _ballsRepository.Save();
-        _artefactsRepository.Save();
         _saveService.Save();
     }
 
