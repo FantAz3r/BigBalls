@@ -1,6 +1,6 @@
 ﻿using BigBalls.Configs;
 using BigBalls.Saves;
-using BigBalls.StaticData;
+using System;
 
 public interface ICardModel
 {
@@ -10,7 +10,11 @@ public interface ICardModel
     bool IsOpen { get; }
     bool HasPlayer { get; }
 
+    event Action<ICardModel> Upgraded;
+    event Action<ICardModel> Changed;
+
     void AddItemEXP (float value);
+    void AddToPlayer();
     CardSaveData CreateSaveData ();
     void InitFromData (CardSaveData data);
     void OpenItem ();

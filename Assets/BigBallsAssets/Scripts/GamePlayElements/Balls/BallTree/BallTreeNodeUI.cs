@@ -43,8 +43,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         BallType = type;
         _node = node;
         _unlockService = unlockService;
-
-        // _icon.sprite = GetSpriteForBallType(type);
+        _icon.sprite = node.Config.Icon;
         UpdateState();
     }
 

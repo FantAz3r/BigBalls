@@ -10,6 +10,7 @@ namespace BigBalls.UI
         [field: SerializeField] public PlayerWalletViewer PlayerWalletViewer { get; private set; }
         [field: SerializeField] public PlayerLevelViewer PlayerLevelViewer { get; private set; }
         [field: SerializeField] public WaveViewer WaveViewer { get; private set; }
+        [field: SerializeField] public PlayerSlots PlayerSlots { get; private set; }
 
         public override void Open()
         {

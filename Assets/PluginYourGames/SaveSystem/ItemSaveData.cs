@@ -4,10 +4,10 @@ namespace BigBalls.Saves
 {
     [Serializable]
 
-    public class ItemSaveData
+    public class ItemSaveData : CardSaveData
     {
-        public int ItemType;
-        public int CardCount;
-        public bool HasPlayer;
+        public ItemSaveData(int id, bool isOpen, float itemExp, int level = 1) : base(id, isOpen, itemExp, level)
+        {
+        }
     }
 }

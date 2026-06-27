@@ -1,5 +1,5 @@
-using System;
 using BigBalls.UI;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,17 +20,17 @@ public class CardView : ButtonClickHandler
     public event Action Selected;
 
     [Inject]
-    public void Construct (ITranslateService translateService)
+    public void Construct(ITranslateService translateService)
     {
         _translateService = translateService;
     }
 
-    public void Init (PlayerCardHolder playerCardHolder)
+    public void Init(PlayerCardHolder playerCardHolder)
     {
         _playerCardHolder = playerCardHolder;
     }
 
-    public void Render (ICardModel card)
+    public void Render(ICardModel card)
     {
         _card = card;
         _image.sprite = card.Config.Icon;
@@ -40,26 +40,24 @@ public class CardView : ButtonClickHandler
         _level.text = card.Level.ToString();
     }
 
-    private string RenderStats ()
+    private string RenderStats()
     {
         return string.Empty;
     }
 
-    protected override void OnClick ()
+    protected override void OnClick()
     {
-        if (_card.Level == 1)
+        if (_card.HasPlayer == false)
         {
-            Debug.Log("add");
             _playerCardHolder.Add(_card);
+            _card.AddToPlayer();
             _card.Upgrade();
         }
         else
         {
-            Debug.Log("Upgrade");
             _card.Upgrade();
         }
 
-        Debug.Log(_card.Level);
         Selected?.Invoke();
     }
 }

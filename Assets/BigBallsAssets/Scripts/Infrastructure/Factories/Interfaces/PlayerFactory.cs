@@ -98,12 +98,14 @@ namespace BigBalls.Factories
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerExperienceViewer.Init(_playerExperience);
             _uIFactory.Get<CardSelectionMenu>(WindowType.CardMenu).Init(cardHolder);
+            _uIFactory.Get<HUD>(WindowType.HUD).PlayerSlots.Init(cardHolder);
 
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);
 
             return player;
         }
+
 
         private void OnDied (IEntity entity)
         {

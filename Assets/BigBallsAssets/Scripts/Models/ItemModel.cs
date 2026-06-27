@@ -19,6 +19,7 @@ namespace BigBalls.StaticData
         }
 
         public event Action<ICardModel> Upgraded;
+        public event Action<ICardModel> Changed;
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; }
@@ -37,12 +38,16 @@ namespace BigBalls.StaticData
             }
         }
 
-        public void ModelAdded()
+        public void AddToPlayer()
         {
-
+            HasPlayer = true;
+            Changed?.Invoke(this);
         }
 
-        public void OpenItem () => IsOpen = true;
+        public void OpenItem()
+        {
+            IsOpen = true;
+        }
 
         public void InitFromData (CardSaveData data)
         {

@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using BigBalls.Configs;
-using BigBalls.Factories;
-using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
-using VContainer;
 
 public class HelmetModel : ItemModel, IBuffer
 {
@@ -14,5 +11,4 @@ public class HelmetModel : ItemModel, IBuffer
 
     public HelmetConfig HelmetConfig { get; private set; }
     public List<ArtefactModel> Artefacts => HelmetConfig.Artefacts;
-
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 
 public class PlayerCardHolder
@@ -13,10 +14,14 @@ public class PlayerCardHolder
         _artefactContainer = artefactContainer;
     }
 
+    public event Action<ICardModel> CardChanged;
+
     public void Add (ICardModel card)
     {
+        card.Upgraded += OnCardChanged;
+        card.Changed += OnCardChanged;
         _cards.Add(card);
-
+        
         if (card is BallModel ball)
         {
             _ballContainer.AddUniqueBall(ball);
@@ -27,8 +32,12 @@ public class PlayerCardHolder
         }
     }
 
+    private void OnCardChanged(ICardModel card) => CardChanged?.Invoke(card);
+
     public void Remove (ICardModel card)
     {
+        card.Upgraded -= OnCardChanged;
+        card.Changed -= OnCardChanged;
         _cards.Remove(card);
     }
 }
