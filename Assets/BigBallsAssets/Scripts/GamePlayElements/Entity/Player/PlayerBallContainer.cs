@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -25,7 +24,7 @@ namespace BigBalls.GameplayObjects
         private Queue<BallModel> _balls;
         private List<EffectBehaviour> _effectBehaviours = new();
 
-        public PlayerBallContainer (
+        public PlayerBallContainer(
             Stat ballCount,
             IResourceLoader resourceLoader,
             IBallFactory ballFactory,
@@ -40,15 +39,15 @@ namespace BigBalls.GameplayObjects
             _cardsData = resourceLoader.Load<CardsData>();
             _baseBallConfig = _cardsData.Balls[BallType.Base];
 
-            _balls = new Queue<BallModel>((int) ballCount.MaxValue);
+            _balls = new Queue<BallModel>((int)ballCount.MaxValue);
         }
 
         public IEnumerable<BallModel> Balls => _balls;
 
-        public void Subscribe () => _ballFactory.BallReturned += ReturnBullet;
-        public void Unsubscribe () => _ballFactory.BallReturned -= ReturnBullet;
+        public void Subscribe() => _ballFactory.BallReturned += ReturnBullet;
+        public void Unsubscribe() => _ballFactory.BallReturned -= ReturnBullet;
 
-        public bool TryGetNextBullet (out Ball ball)
+        public bool TryGetNextBullet(out Ball ball)
         {
             ball = null;
 
@@ -76,11 +75,11 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        public void ReturnBullet () => _currentBallCount++;
+        public void ReturnBullet() => _currentBallCount++;
 
-        public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
+        public void AddEffects(List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
 
-        public void AddUniqueBall (ItemModel item)
+        public void AddUniqueBall(ItemModel item)
         {
             if (item is not IWeapon weapon)
                 return;
@@ -89,7 +88,7 @@ namespace BigBalls.GameplayObjects
                 AddUniqueBall(ball);
         }
 
-        public bool AddUniqueBall (BallModel uniqueBall)
+        public bool AddUniqueBall(BallModel uniqueBall)
         {
             if (uniqueBall?.Config == null)
                 return false;
@@ -130,7 +129,7 @@ namespace BigBalls.GameplayObjects
             return true;
         }
 
-        private Ball CreateNewBall ()
+        private Ball CreateNewBall()
         {
             var ballModel = GetNextAvailableConfig();
 
@@ -146,7 +145,7 @@ namespace BigBalls.GameplayObjects
             return ball;
         }
 
-        private BallModel GetNextAvailableConfig ()
+        private BallModel GetNextAvailableConfig()
         {
             if (_weapon?.Config is IWeapon weapon && weapon.UniqueBalls != null && _weaponConfigIndex < weapon.UniqueBalls.Count)
             {

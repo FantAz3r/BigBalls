@@ -12,6 +12,7 @@ namespace BigBalls.Configs
         [SerializeField] private string _descriptionRU;
         [SerializeField] private string _descriptionTR;
 
+        [field: SerializeField] public CardType Type { get; private set; }
         [field: SerializeField] public Rarity Rarity { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public bool IsOpen { get; private set; } = false;

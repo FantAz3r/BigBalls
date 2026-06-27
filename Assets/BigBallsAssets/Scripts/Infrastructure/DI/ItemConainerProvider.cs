@@ -1,29 +1,42 @@
-﻿using BigBalls.Configs;
-using BigBalls.StaticData;
-
-namespace BigBalls.Providers
+﻿namespace BigBalls.Providers
 {
     public class ItemConainerProvider : IItemConainerProvider
     {
-        public ItemModel Gun { get; private set; }
+        public WeaponModel Gun { get; private set; }
 
-        public ItemModel Helmet { get; private set; }
+        public HelmetModel Helmet { get; private set; }
 
-        public ItemModel Armor { get; private set; }
+        public ArmorModel Armor { get; private set; }
 
-        public void Set(ItemModel item)
+        public void Add(ICardModel item)
         {
-            if(item.Config is WeaponConfig)
+            if (item is WeaponModel weapon)
             {
-                Gun = item;
+                Gun = weapon;
             }
-            else if(item.Config is HelmetConfig)
+            else if (item is HelmetModel helmet)
             {
-                Helmet = item;
+                Helmet = helmet;
             }
-            else if(item.Config is ArmorConfig)
+            else if (item is ArmorModel armor)
             {
-                Armor = item;
+                Armor = armor;
+            }
+        }
+
+        public void Remove(ICardModel item)
+        {
+            if (item is WeaponModel)
+            {
+                Gun = null;
+            }
+            else if (item is HelmetModel)
+            {
+                Helmet = null;
+            }
+            else if (item is ArmorModel)
+            {
+                Armor = null;
             }
         }
     }

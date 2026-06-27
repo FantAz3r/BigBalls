@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 1285289007034471460}
   - component: {fileID: 2106096382408846041}
   - component: {fileID: 8349455209960678189}
-  - component: {fileID: 9084895973763929592}
+  - component: {fileID: 2627021797953340014}
   m_Layer: 5
   m_Name: Slot
   m_TagString: Untagged
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9084895973763929592
+--- !u!114 &2627021797953340014
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,11 +221,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 88606198082669469}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551ed355e39f3124ca56bea5704a35ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 19d009c6d0864a54bb59ea58052a91d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _image: {fileID: 8349455209960678189}
   _text: {fileID: 6883493133898206376}
+  _weaponTip: {fileID: 0}
+  _armorTip: {fileID: 0}
+  _helmetTip: {fileID: 0}
+  <IsActiveSlot>k__BackingField: 0
 --- !u!1 &515139984224052008
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,7 +876,7 @@ GameObject:
   - component: {fileID: 7644136381071578023}
   - component: {fileID: 4737213186903607563}
   - component: {fileID: 3429447628321014348}
-  - component: {fileID: 234457750975135911}
+  - component: {fileID: 3456934423533685336}
   m_Layer: 5
   m_Name: Slot (3)
   m_TagString: Untagged
@@ -938,7 +942,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &234457750975135911
+--- !u!114 &3456934423533685336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -947,11 +951,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2762361337822356029}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551ed355e39f3124ca56bea5704a35ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 19d009c6d0864a54bb59ea58052a91d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _image: {fileID: 3429447628321014348}
   _text: {fileID: 4277463557696289194}
+  _weaponTip: {fileID: 0}
+  _armorTip: {fileID: 0}
+  _helmetTip: {fileID: 0}
+  <IsActiveSlot>k__BackingField: 0
 --- !u!1 &2894402181957493504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,10 +1209,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ballSlots:
-  - {fileID: 9084895973763929592}
-  - {fileID: 8626938940405362147}
-  - {fileID: 9215647956358253801}
-  - {fileID: 234457750975135911}
+  - {fileID: 2627021797953340014}
+  - {fileID: 7129604425624349686}
+  - {fileID: 7380888090193884365}
+  - {fileID: 3456934423533685336}
+  _artefactSlots: []
 --- !u!114 &5648229606936542897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1377,7 +1386,7 @@ GameObject:
   - component: {fileID: 2021118132829584247}
   - component: {fileID: 3340394184125846186}
   - component: {fileID: 957029687089720435}
-  - component: {fileID: 9215647956358253801}
+  - component: {fileID: 7380888090193884365}
   m_Layer: 5
   m_Name: Slot (2)
   m_TagString: Untagged
@@ -1443,7 +1452,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9215647956358253801
+--- !u!114 &7380888090193884365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1452,11 +1461,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4502056435479215170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551ed355e39f3124ca56bea5704a35ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 19d009c6d0864a54bb59ea58052a91d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _image: {fileID: 957029687089720435}
   _text: {fileID: 136286315614762257}
+  _weaponTip: {fileID: 0}
+  _armorTip: {fileID: 0}
+  _helmetTip: {fileID: 0}
+  <IsActiveSlot>k__BackingField: 0
 --- !u!1 &5433905026202021961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1709,7 +1722,7 @@ GameObject:
   - component: {fileID: 7635457125581956311}
   - component: {fileID: 6506375376505055033}
   - component: {fileID: 2196358548172912754}
-  - component: {fileID: 8626938940405362147}
+  - component: {fileID: 7129604425624349686}
   m_Layer: 5
   m_Name: Slot (1)
   m_TagString: Untagged
@@ -1775,7 +1788,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8626938940405362147
+--- !u!114 &7129604425624349686
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1784,11 +1797,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7445362699475808727}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551ed355e39f3124ca56bea5704a35ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 19d009c6d0864a54bb59ea58052a91d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _image: {fileID: 2196358548172912754}
   _text: {fileID: 5534466846427666557}
+  _weaponTip: {fileID: 0}
+  _armorTip: {fileID: 0}
+  _helmetTip: {fileID: 0}
+  <IsActiveSlot>k__BackingField: 0
 --- !u!1 &7947626587986958316
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,7 +1817,6 @@ GameObject:
   - component: {fileID: 708704678601881209}
   - component: {fileID: 5323823189975379163}
   - component: {fileID: 2455451020757938868}
-  - component: {fileID: 5060216771821400752}
   m_Layer: 5
   m_Name: Slot (4)
   m_TagString: Untagged
@@ -1866,20 +1882,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5060216771821400752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7947626587986958316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551ed355e39f3124ca56bea5704a35ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _image: {fileID: 2455451020757938868}
-  _text: {fileID: 4262389208232754152}
 --- !u!1 &8882329101090042197
 GameObject:
   m_ObjectHideFlags: 0

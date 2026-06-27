@@ -15,7 +15,8 @@ namespace BigBalls.Services
         T Get<T>(WindowType type) where T : WindowBase;
         LouseLevelMenu CreateLouseMenu();
         WinLevelMenu CreateWinMenu();
-        BallTreeUI CreateBallTree ();
-        CardSelectionMenu CreateCardMenu ();
+        BallTreeUI CreateBallTree();
+        ItemInventory CreateInventoryMenu();
+        CardSelectionMenu CreateCardMenu();
     }
 }

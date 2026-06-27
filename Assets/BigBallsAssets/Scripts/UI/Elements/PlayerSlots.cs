@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlayerSlots : MonoBehaviour
 {
-    [SerializeField] private List<BallSlotView> _ballSlots = new();
-    [SerializeField] private List<ArtefactSlotView> _artefactSlots = new();
+    [SerializeField] private List<Slot> _ballSlots = new();
+    [SerializeField] private List<Slot> _artefactSlots = new();
     private PlayerCardHolder _cardHolder;
 
     public void Init(PlayerCardHolder playerCardHolder)

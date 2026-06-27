@@ -28,6 +28,8 @@ namespace BigBalls.StaticData
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
 
+        public CardType Type => Config.Type;
+
         public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
         public void Upgrade ()
         {

@@ -60,7 +60,9 @@ namespace BigBalls.Factories
 
         public BallTreeUI CreateBallTree () => GetOrCreateWindow(WindowType.BallTree) as BallTreeUI;
 
-        public CardSelectionMenu CreateCardMenu () => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
+        public CardSelectionMenu CreateCardMenu() => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
+
+        public ItemInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as ItemInventory;
 
         public void CreateJoystick ()
         {

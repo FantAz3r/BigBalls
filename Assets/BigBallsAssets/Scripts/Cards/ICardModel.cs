@@ -4,6 +4,7 @@ using System;
 
 public interface ICardModel
 {
+    CardType Type { get; }
     ItemConfig Config { get; }
     int Level { get; }
     float ItemEXP { get; }

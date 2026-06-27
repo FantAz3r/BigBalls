@@ -9,6 +9,7 @@ namespace BigBalls.Infrastructure.DI
         {
             builder.RegisterEntryPoint<MenuEntryPoint>(Lifetime.Scoped);
             builder.Register<MainMenuState>(Lifetime.Scoped);
+            builder.Register<ArmorRepository>(Lifetime.Scoped);
         }
     }
 }
