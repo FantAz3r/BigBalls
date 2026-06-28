@@ -7,14 +7,14 @@ using UnityEngine;
 public class BallTreeModel
 {
     private static readonly Vector2 Spacing = new Vector2(200, 200);
-    private readonly BallsRepository _ballsRepository;
+    private readonly BallRepository _ballsRepository;
 
     private Dictionary<BallType, BallConfig> _nodes;
     private Dictionary<BallType, List<BallType>> _children;
     private Dictionary<BallType, List<BallType>> _parents;
     private BallType _rootType;
 
-    public BallTreeModel (IResourceLoader resourceLoader, BallsRepository ballsRepository)
+    public BallTreeModel (IResourceLoader resourceLoader, BallRepository ballsRepository)
     {
         CardsData treeData = resourceLoader.Load<CardsData>();
         _ballsRepository = ballsRepository;

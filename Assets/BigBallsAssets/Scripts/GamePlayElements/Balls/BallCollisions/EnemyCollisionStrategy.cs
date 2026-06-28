@@ -8,8 +8,10 @@ public class EnemyCollisionStrategy : ICollisionStrategy
         if (collision.gameObject.GetComponentInParent<IEntity>() is IEntity entity)
         {
             ball.SetCanReturnToBag(true);
-            ball.EventHandler.Hit(entity.Id);
+            ball.EventHandler.HitEntity(entity.Id);
         }
+
+        ball.EventHandler.Hit();
 
         return false;
     }

@@ -1,11 +1,11 @@
 public class GameExitState : IState
 {
-    private readonly BallsRepository _ballsRepository;
+    private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly ISaveService _saveService;
 
     public GameExitState (
-        BallsRepository ballsRepository,
+        BallRepository ballsRepository,
         ArtefactsRepository artefactsRepository,
         ISaveService saveService)
     {

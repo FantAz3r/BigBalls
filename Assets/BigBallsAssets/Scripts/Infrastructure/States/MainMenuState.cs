@@ -6,13 +6,13 @@ namespace BigBalls.Infrastructure
     public class MainMenuState : IState
     {
         private readonly IWindowService _windowService;
-        private readonly BallsRepository _ballsRepository;
+        private readonly BallRepository _ballsRepository;
         private readonly ISaveService _saveService;
         private readonly ArtefactsRepository _artefactsRepository;
 
         public MainMenuState(
             IWindowService windowService,
-            BallsRepository ballsRepository,
+            BallRepository ballsRepository,
             ISaveService saveService,
             ArtefactsRepository artefactsRepository)
         {

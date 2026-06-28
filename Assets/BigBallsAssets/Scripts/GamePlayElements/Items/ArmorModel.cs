@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class ArmorModel : ItemModel, IArmor
 {
-    public ArmorModel(int id, ItemConfig config, int level = 0) : base(id, config, level)
+    public ArmorModel(int id, ItemConfig config, int level = 0, float exp = 0) : base(id, config, level, exp)
     {
     }
 

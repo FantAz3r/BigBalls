@@ -4,10 +4,10 @@ using BigBalls.StaticData;
 
 public class BallUnlockService : IBallUnlockService
 {
-    private readonly BallsRepository _ballsRepository;
+    private readonly BallRepository _ballsRepository;
     private readonly GlobalWallet _globalWallet;
 
-    public BallUnlockService (BallsRepository ballsRepository, GlobalWallet globalWallet)
+    public BallUnlockService (BallRepository ballsRepository, GlobalWallet globalWallet)
     {
         _ballsRepository = ballsRepository;
         _globalWallet = globalWallet;

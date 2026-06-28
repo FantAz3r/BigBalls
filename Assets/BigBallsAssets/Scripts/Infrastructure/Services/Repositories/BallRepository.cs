@@ -4,11 +4,11 @@ using BigBalls.Saves;
 using BigBalls.Services;
 using BigBalls.StaticData;
 
-public class BallsRepository : ItemRepository<BallType, BallModel, BallConfig, BallSaveData>
+public class BallRepository : ItemRepository<BallType, BallModel, BallConfig, BallSaveData>
 {
     private readonly Dictionary<BallType, BallConfig> _ballsData;
 
-    public BallsRepository (IResourceLoader resourceLoader, ISaveService saveService)
+    public BallRepository (IResourceLoader resourceLoader, ISaveService saveService)
         : base(resourceLoader, saveService)
     {
         _ballsData = resourceLoader.Load<CardsData>().Balls;
@@ -19,7 +19,7 @@ public class BallsRepository : ItemRepository<BallType, BallModel, BallConfig, B
         => _ballsData;
 
     protected override BallModel CreateModel (BallType type, BallConfig config, CardSaveData saveData)
-        => new BallModel((int) type, config, saveData.NoneGameLevel);
+        => new BallModel((int) type, config, saveData.NoneGameLevel, saveData.ItemExp);
 
     protected override List<BallSaveData> GetSaveDataFromProgress ()
         => GameProgress.Balls;

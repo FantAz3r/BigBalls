@@ -9,7 +9,7 @@ namespace BigBalls.Configs
 
     public class HelmetConfig : ItemConfig, IBuffer
     {
-        [SerializeField] private List<ArtefactModel> _artefacts;
-        public List<ArtefactModel> Artefacts => _artefacts;
+        [SerializeField] private List<ArtefactConfig> _artefacts;
+        public List<ArtefactConfig> Artefacts => _artefacts;
     }
 }

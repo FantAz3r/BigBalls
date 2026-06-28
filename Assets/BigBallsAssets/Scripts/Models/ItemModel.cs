@@ -9,11 +9,12 @@ namespace BigBalls.StaticData
         private const int ItemMaxLevel = 10;
         private int _id;
 
-        public ItemModel (int id, ItemConfig config, int level = 0)
+        public ItemModel (int id, ItemConfig config, int level = 0, float exp = 0)
         {
             _id = id;
             Config = config;
             NoneGameLevel = level;
+            ItemEXP = exp;
 
             IsOpen = config.IsOpen;
         }

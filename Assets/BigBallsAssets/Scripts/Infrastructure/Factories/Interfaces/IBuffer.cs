@@ -4,6 +4,6 @@ namespace BigBalls.Configs
 {
     public interface IBuffer : IItemConfig
     {
-        List<ArtefactModel> Artefacts { get; }
+        List<ArtefactConfig> Artefacts { get; }
     }
 }

@@ -30,8 +30,8 @@ namespace BigBalls.Factories
         private readonly IEffectFactory _effectFactory;
         private readonly IPlayerExperience _playerExperience;
         private readonly EnemySpawner _enemySpawner;
-        private readonly BallsRepository _ballRepository;
-
+        private readonly BallRepository _ballRepository;
+        private readonly ArtefactsRepository _artefactsRepository;
         private PlayerConfig _playerConfig;
 
         public PlayerFactory (
@@ -52,7 +52,8 @@ namespace BigBalls.Factories
             IEffectFactory effectFactory,
             IPlayerExperience playerExperience,
             EnemySpawner enemySpawner,
-            BallsRepository ballRepository)
+            BallRepository ballRepository,
+            ArtefactsRepository artefactsRepository)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -72,6 +73,7 @@ namespace BigBalls.Factories
             _playerExperience = playerExperience;
             _enemySpawner = enemySpawner;
             _ballRepository = ballRepository;
+            _artefactsRepository = artefactsRepository;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -125,7 +127,7 @@ namespace BigBalls.Factories
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
             playerBallContainer.AddUniqueBall(_itemConainerProvider.Gun);
 
-            ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder);
+            ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
             artefactContainer.Set(_itemConainerProvider.Helmet);
 
             cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);

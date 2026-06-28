@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e73c1ee7c03967a4ba2a0d6013dfa068, type: 3}
-  m_Name: ArmorConfig
+  m_Script: {fileID: 11500000, guid: 2536dcfd496d82c469de38b426523729, type: 3}
+  m_Name: ElacticBandConfig
   m_EditorClassIdentifier: 
   _nameEN: 
   _nameRU: 
@@ -18,15 +18,11 @@ MonoBehaviour:
   _descriptionEN: 
   _descriptionRU: 
   _descriptionTR: 
-  <Type>k__BackingField: 2
+  <Type>k__BackingField: 0
   <Rarity>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 0}
-  <IsOpen>k__BackingField: 0
-  _stats:
-    _serializedList:
-    - Key: 0
-      Value:
-        StatType: 1
-        StartMaxValue: 0
-        StartCurrentValue: 50
-        MinValue: 0
+  <IsOpen>k__BackingField: 1
+  <UserType>k__BackingField: 1
+  <ArtefactType>k__BackingField: 1
+  <Effects>k__BackingField:
+  - {fileID: 11400000, guid: 2a43277b9418b9b4481cfb8b477f9060, type: 2}

@@ -46,7 +46,7 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
 
             //................
-            builder.Register<BallsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
+            builder.Register<BallRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
             builder.Register<ArtefactsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
 
             builder.Register<BallTreeModel>(Lifetime.Singleton);

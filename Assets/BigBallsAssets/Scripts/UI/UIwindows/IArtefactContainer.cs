@@ -1,4 +1,6 @@
-﻿public interface IArtefactContainer
+﻿using BigBalls.Configs;
+
+public interface IArtefactContainer
 {
-    void Enable (ArtefactModel artefact);
+    void Enable(ArtefactModel artefact);
 }

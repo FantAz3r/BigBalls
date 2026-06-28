@@ -9,5 +9,6 @@
         Stun,
         Lazer,
         Tunder,
+        ElasticBand,
     }
 }

@@ -6,7 +6,7 @@ using BigBalls.Services;
 public class CardContainer
 {
     private readonly IResourceLoader _resourceLoader;
-    private readonly BallsRepository _ballsRepository;
+    private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
 
     private List<ICardModel> _cards = new List<ICardModel>();
@@ -15,7 +15,7 @@ public class CardContainer
     public CardContainer (
         IResourceLoader resourceLoader,
         GameProgress gameProgress,
-        BallsRepository ballsRepository,
+        BallRepository ballsRepository,
         ArtefactsRepository artefactsRepository)
     {
         _resourceLoader = resourceLoader;

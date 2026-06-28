@@ -7,7 +7,7 @@ public class CardSelector
     private const int MaxLevel = 10;
     private const int CardsPerSelect = 3;
 
-    private readonly BallsRepository _ballsRepository;
+    private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly Dictionary<Rarity, float> _rarityChances = new()
     {
@@ -19,7 +19,7 @@ public class CardSelector
 
     private List<ICardModel> _currentCards = new();
 
-    public CardSelector (BallsRepository ballsRepository, ArtefactsRepository artefactsRepository)
+    public CardSelector (BallRepository ballsRepository, ArtefactsRepository artefactsRepository)
     {
         _ballsRepository = ballsRepository;
         _artefactsRepository = artefactsRepository;

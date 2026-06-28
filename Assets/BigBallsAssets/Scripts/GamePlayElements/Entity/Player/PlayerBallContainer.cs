@@ -30,7 +30,7 @@ namespace BigBalls.GameplayObjects
             IBallFactory ballFactory,
             IEffectFactory effectFactory,
             IIdentifierService identifierService,
-            BallsRepository ballRepository)
+            BallRepository ballRepository)
         {
             _ballCount = ballCount;
             _ballFactory = ballFactory;

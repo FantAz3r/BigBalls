@@ -4,7 +4,7 @@ using BigBalls.StaticData;
 
 public class BallModel : ItemModel
 {
-    public BallModel (int id, BallConfig config, int level = 1) : base(id, config, level)
+    public BallModel (int id, BallConfig config, int level = 1, float exp = 0) : base(id, config, level, exp)
     {
         BallConfig = config;
     }

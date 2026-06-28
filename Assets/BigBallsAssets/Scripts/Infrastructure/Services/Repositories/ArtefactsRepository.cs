@@ -18,7 +18,7 @@ public class ArtefactsRepository : ItemRepository<ArtefactType, ArtefactModel, A
         => _artefactsData;
 
     protected override ArtefactModel CreateModel (ArtefactType type, ArtefactConfig config, CardSaveData saveData)
-        => new ArtefactModel((int) type, config, saveData.NoneGameLevel);
+        => new ArtefactModel((int) type, config, saveData.NoneGameLevel, saveData.ItemExp);
 
     protected override List<ArtefactSaveData> GetSaveDataFromProgress ()
         => GameProgress.Artefacts;

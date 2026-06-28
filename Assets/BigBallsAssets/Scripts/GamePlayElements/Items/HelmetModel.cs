@@ -10,5 +10,5 @@ public class HelmetModel : ItemModel, IBuffer
     }
 
     public HelmetConfig HelmetConfig { get; private set; }
-    public List<ArtefactModel> Artefacts => HelmetConfig.Artefacts;
+    public List<ArtefactConfig> Artefacts => HelmetConfig.Artefacts;
 }

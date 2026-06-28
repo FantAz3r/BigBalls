@@ -6,11 +6,12 @@ using UnityEngine;
 namespace BigBalls.Configs
 {
     [CustomScriptableObjectListEditor]
-    [CreateAssetMenu(fileName = "Artefact", menuName = "Configs/Item/WeaponConfigs")]
+    [CreateAssetMenu(fileName = "Artefact", menuName = "Configs/Item/Artefact")]
 
     public class ArtefactConfig : ItemConfig
     {
         [field: SerializeField] public UserType UserType { get; private set; }
+        [field: SerializeField] public ArtefactType ArtefactType { get; private set; }
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
 
         public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)

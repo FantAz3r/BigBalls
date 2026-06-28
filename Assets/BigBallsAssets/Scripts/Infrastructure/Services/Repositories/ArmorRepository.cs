@@ -13,7 +13,7 @@ public class ArmorRepository : ItemRepository<ItemType, ArmorModel, ArmorConfig,
     }
 
     protected override ArmorModel CreateModel(ItemType type, ArmorConfig config, CardSaveData saveData)
-       => new ArmorModel((int)type, config, saveData.NoneGameLevel);
+       => new ArmorModel((int)type, config, saveData.NoneGameLevel, saveData.ItemExp);
 
     protected override List<ItemSaveData> GetSaveDataFromProgress() => GameProgress.Items;
 

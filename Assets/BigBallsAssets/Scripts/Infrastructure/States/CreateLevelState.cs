@@ -24,7 +24,7 @@ namespace BigBalls.Infrastructure
         private readonly TileMover _tileMover;
         private readonly LevelTimeline _levelTimeline;
         private readonly IDropService _dropService;
-        private readonly BallsRepository _ballsRepository;
+        private readonly BallRepository _ballsRepository;
         private readonly ArtefactsRepository _artefactsRepository;
 
         private LevelConfig _levelConfig;
@@ -44,7 +44,7 @@ namespace BigBalls.Infrastructure
             TileMover tileMover,
             LevelTimeline levelTimeline,
             IDropService dropService,
-            BallsRepository ballsRepository,
+            BallRepository ballsRepository,
             ArtefactsRepository artefactsRepository)
         {
             _objectResolverProvider = objectResolverProvider;
