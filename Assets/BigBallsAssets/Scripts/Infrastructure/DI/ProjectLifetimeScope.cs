@@ -47,8 +47,8 @@ namespace BigBalls.Infrastructure.DI
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
 
             //................
-            builder.Register<BallRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
-            builder.Register<ArtefactsRepository>(Lifetime.Singleton); // не уверен на счёт этого скоупа
+            builder.Register<BallRepository>(Lifetime.Singleton); // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+            builder.Register<ArtefactsRepository>(Lifetime.Singleton); // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
             builder.Register<BallTreeModel>(Lifetime.Singleton);
             builder.Register<GlobalWallet>(Lifetime.Singleton);
@@ -67,6 +67,10 @@ namespace BigBalls.Infrastructure.DI
         {
             _gameStateMashine = Container.Resolve<IGameStateMachine>();
             _gameStateMashine.EnterIn<GameExitState>();
+            
+            var globalWallet = Container.Resolve<GlobalWallet>();
+            globalWallet.Dispose();
+            
             base.OnDestroy();
         }
     }
