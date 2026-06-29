@@ -67,8 +67,9 @@ namespace BigBalls.Factories
             if (entity is not Enemy enemy)
                 return;
 
-            _dropService.DropLoot(enemy.transform.position, enemy);
-
+            if (enemy.DeathHandler.IsBallAttacked)
+                _dropService.DropLoot(enemy.transform.position, enemy);
+            
             enemy.DeathHandler.Unsubscribe();
             enemy.EventHandler.Died -= OnDied;
             enemy.EventHandler.Suisided -= OnDied;

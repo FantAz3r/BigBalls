@@ -7,8 +7,8 @@ public class LootFactory : ILootFactory, IDisposable
     private IPoolService _poolService;
     private ILootMediator _lootMediator;
     private IUpdateService _updateService;
-
     private LootMover _lootMover;
+    
     public LootFactory(IPoolService poolService, ILootMediator lootMediator, IUpdateService updateService)
     {
         _poolService = poolService;
