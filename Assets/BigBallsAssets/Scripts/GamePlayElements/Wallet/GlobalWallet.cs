@@ -12,7 +12,7 @@ public class GlobalWallet : IDisposable
         _walletModel = walletModel;
         _walletModel.OnCoinsCollected += TakeCollectedCoin;
     }
-    
+
     public void Dispose()
     {
         _walletModel.OnCoinsCollected -= TakeCollectedCoin;
@@ -21,7 +21,7 @@ public class GlobalWallet : IDisposable
     private void TakeCollectedCoin(float coin)
     {
         _saveService.GameProgress.Coins += Convert.ToInt32(coin);
-        
+
         Debug.Log("Collected Coin: " + _saveService.GameProgress.Coins);
         _saveService.Save();
     }

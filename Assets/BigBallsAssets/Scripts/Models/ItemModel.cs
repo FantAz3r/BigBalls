@@ -8,7 +8,7 @@ namespace BigBalls.StaticData
     {
         private const int ItemMaxLevel = 10;
         private int _id;
-
+        private int _euqipmentLevel;
         public ItemModel (int id, ItemConfig config, int level = 0, float exp = 0)
         {
             _id = id;
@@ -24,10 +24,10 @@ namespace BigBalls.StaticData
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; }
-        public int Level => NoneGameLevel + InGameLevel;
         public int NoneGameLevel { get; private set; } = 0;
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
+        public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
 
         public CardType Type => Config.Type;
 
@@ -64,5 +64,7 @@ namespace BigBalls.StaticData
         {
             ItemEXP += value;
         }
+
+        public void AddEquipmentLevel(int level) => _euqipmentLevel = level;
     }
 }

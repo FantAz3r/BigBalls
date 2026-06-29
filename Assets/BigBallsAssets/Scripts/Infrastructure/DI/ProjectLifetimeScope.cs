@@ -2,7 +2,6 @@ using BigBalls.Factories;
 using BigBalls.Providers;
 using BigBalls.Services;
 using UnityEngine;
-using UnityEngine.Splines.ExtrusionShapes;
 using VContainer;
 using VContainer.Unity;
 
@@ -14,7 +13,7 @@ namespace BigBalls.Infrastructure.DI
         [SerializeField] private UpdateService _updateService;
         private IGameStateMachine _gameStateMashine;
 
-        protected override void Configure (IContainerBuilder builder)
+        protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<EntryPoint>(Lifetime.Singleton);
             builder.Register<IObjectResolverProvider, ObjectResolverProvider>(Lifetime.Singleton);
@@ -24,15 +23,16 @@ namespace BigBalls.Infrastructure.DI
             BindStates(builder);
             BindServices(builder);
             BindProviders(builder);
+            BindRepositories(builder);
         }
 
-        private void BindStates (IContainerBuilder builder)
+        private void BindStates(IContainerBuilder builder)
         {
             builder.Register<LoadingLevelState>(Lifetime.Singleton);
             builder.Register<GameExitState>(Lifetime.Singleton);
         }
 
-        private void BindServices (IContainerBuilder builder)
+        private void BindServices(IContainerBuilder builder)
         {
             builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
             builder.Register<ITranslateService, YGTranslateService>(Lifetime.Singleton);
@@ -42,35 +42,33 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IWindowService, WindowService>(Lifetime.Singleton);
             builder.Register<IIdentifierService, IdentifierService>(Lifetime.Scoped);
             builder.Register<ISaveService, YGSaveService>(Lifetime.Singleton);
+            builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
 
             //................
-            builder.Register<BallRepository>(Lifetime.Singleton); // �� ������ �� ���� ����� ������
-            builder.Register<ArtefactsRepository>(Lifetime.Singleton); // �� ������ �� ���� ����� ������
-
             builder.Register<BallTreeModel>(Lifetime.Singleton);
             builder.Register<GlobalWallet>(Lifetime.Singleton);
-            builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
-
         }
 
         private void BindProviders(IContainerBuilder builder)
         {
             builder.Register<IItemConainerProvider, ItemConainerProvider>(Lifetime.Singleton);
+        }
+
+        private void BindRepositories(IContainerBuilder builder)
+        {
+            builder.Register<BallRepository>(Lifetime.Singleton);
+            builder.Register<ArtefactsRepository>(Lifetime.Singleton);
+            builder.Register<WeaponRepository>(Lifetime.Singleton);
 
         }
 
-
-        protected override void OnDestroy ()
+        protected override void OnDestroy()
         {
             _gameStateMashine = Container.Resolve<IGameStateMachine>();
             _gameStateMashine.EnterIn<GameExitState>();
-            
-            var globalWallet = Container.Resolve<GlobalWallet>();
-            globalWallet.Dispose();
-            
             base.OnDestroy();
         }
     }

@@ -32,6 +32,7 @@ namespace BigBalls.Factories
         private readonly EnemySpawner _enemySpawner;
         private readonly BallRepository _ballRepository;
         private readonly ArtefactsRepository _artefactsRepository;
+
         private PlayerConfig _playerConfig;
 
         public PlayerFactory (
@@ -93,10 +94,8 @@ namespace BigBalls.Factories
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(out PlayerCardHolder cardHolder, statHolder, player), player);
             deathHandler.Subscribe();
 
-            HealHandler healHandler = new HealHandler(statHolder[StatType.Health]);
-            
             _louseService.SetLouseReason(deathHandler);
-            player.Construct(playerID, deathHandler, healHandler);
+            player.Construct(playerID, deathHandler);
 
             player.EventHandler.Died += OnDied;
 
@@ -128,12 +127,13 @@ namespace BigBalls.Factories
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
-            playerBallContainer.AddUniqueBall(_itemConainerProvider.Gun);
-
             ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
-            artefactContainer.Set(_itemConainerProvider.Helmet);
+            //artefactContainer.Set();
 
             cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);
+            cardHolder.AddItem(_itemConainerProvider.Helmet);
+            cardHolder.AddItem(_itemConainerProvider.Gun);
+
 
             Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer, _coroutineRunner);
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);

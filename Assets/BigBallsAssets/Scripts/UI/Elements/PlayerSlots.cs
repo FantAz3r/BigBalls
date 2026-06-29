@@ -10,6 +10,12 @@ public class PlayerSlots : MonoBehaviour
     public void Init(PlayerCardHolder playerCardHolder)
     {
         _cardHolder = playerCardHolder;
+
+        foreach(var card in _cardHolder.Cards)
+        {
+            ViewSlot(card);
+        }
+
         _cardHolder.CardChanged += ViewSlot;
     }
 

@@ -1,12 +1,9 @@
-using BigBalls.Configs;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -23,6 +20,7 @@ public class CardInventory : WindowBase
     private CardsData _cardData;
     private List<Slot> _slots = new();
     private IResourceLoader _resourceLoader;
+    private WeaponRepository _weaponRepository;
     private ArmorRepository _armorRepository;
     private List<ICardModel> _models = new();
     private IObjectResolverProvider _objectResolverProvider;
@@ -36,19 +34,22 @@ public class CardInventory : WindowBase
     public void Construct(
         IResourceLoader resourceLoader,
         ArmorRepository armorRepository,
-        IObjectResolverProvider objectResolverProvider
-        )
+        WeaponRepository weaponRepository,
+        IObjectResolverProvider objectResolverProvider)
     {
         _resourceLoader = resourceLoader;
+        _weaponRepository = weaponRepository;
         _armorRepository = armorRepository;
         _cardData = _resourceLoader.Load<CardsData>();
         _objectResolverProvider = objectResolverProvider;
-        _models.AddRange(_armorRepository.AllModels.Values);
+
         _canvas = GetComponent<Canvas>();
+        _models.AddRange(_weaponRepository.AllModels.Values);
+        _models.AddRange(_armorRepository.AllModels.Values);
     }
 
-    public void ViewAll() => ViewSlots(card => card is WeaponModel || card is ArmorModel);
-   
+    public void ViewAll() => ViewSlots(card => card is WeaponModel || card is ArmorModel || card is HelmetModel);
+
     private void ViewSlots(Func<ICardModel, bool> filter)
     {
         RemoveAllSlots();

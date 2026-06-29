@@ -12,10 +12,11 @@ namespace BigBalls.GameplayObjects
         private readonly IBallFactory _ballFactory;
         private readonly IEffectFactory _effectFactory;
         private readonly IIdentifierService _identifierService;
+        private readonly BallRepository _ballRepository;
         private readonly CardsData _cardsData;
         private readonly BallConfig _baseBallConfig;
 
-        private ItemModel _weapon;
+        private WeaponModel _weapon;
 
         private int _currentBallCount = 0;
         private int _createdBallsCount = 0;
@@ -36,6 +37,7 @@ namespace BigBalls.GameplayObjects
             _ballFactory = ballFactory;
             _effectFactory = effectFactory;
             _identifierService = identifierService;
+            _ballRepository = ballRepository;
             _cardsData = resourceLoader.Load<CardsData>();
             _baseBallConfig = _cardsData.Balls[BallType.Base];
 
@@ -79,12 +81,11 @@ namespace BigBalls.GameplayObjects
 
         public void AddEffects(List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
 
-        public void AddUniqueBall(ItemModel item)
+        public void AddUniqueBall(WeaponModel weapon)
         {
-            if (item is not IWeapon weapon)
-                return;
+            _weapon = weapon;
 
-            foreach (var ball in weapon.UniqueBalls)
+            foreach (var ball in weapon.UniqueBallModels())
                 AddUniqueBall(ball);
         }
 
@@ -147,9 +148,9 @@ namespace BigBalls.GameplayObjects
 
         private BallModel GetNextAvailableConfig()
         {
-            if (_weapon?.Config is IWeapon weapon && weapon.UniqueBalls != null && _weaponConfigIndex < weapon.UniqueBalls.Count)
+            if (_weapon != null && _weapon.UniqueBallConfigs != null && _weaponConfigIndex < _weapon.UniqueBallConfigs.Count)
             {
-                return weapon.UniqueBalls[_weaponConfigIndex++];
+                return _weapon.UniqueBallModels()[_weaponConfigIndex++];
             }
 
             return new BallModel(_identifierService.ID, _baseBallConfig);

@@ -1,17 +1,19 @@
+using BigBalls.GameplayObjects;
 using BigBalls.Services;
 
 public class LootMediator : ILootMediator
 {
     private IWalletModel _walletModel;
     private IPlayerProvider _playerProvider;
-    private HealHandler _healHandler;
     private readonly IPlayerExperience _playerExperience;
-    
-    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience)
+    private readonly IEntityRepository _entityRepository;
+
+    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience, IEntityRepository entityRepository)
     {
         _walletModel = walletModel;
         _playerProvider = playerProvider;
         _playerExperience = playerExperience;
+        _entityRepository = entityRepository;
     }
 
     public void RegisterLoot(Loot loot)
@@ -23,12 +25,8 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.HealthPotion:
-                
-                if (_healHandler == null)
-                    _healHandler = _playerProvider.Player.HealHandler;
-                
-                _healHandler.Heal(loot.Value);
-                
+                StatHolder statHolder = _entityRepository.Get(_playerProvider.Player.Id);
+                statHolder[StatType.Health].AddCurrentValue(loot.Value);
                 break;
 
             case LootType.Experience:
