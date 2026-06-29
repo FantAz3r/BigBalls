@@ -31,7 +31,7 @@ public class ArtefactContainer : IArtefactContainer
 
     public void Set(ItemModel item)
     {
-        if (item is not IBuffer buffer)
+        if (item is not HelmetModel buffer)
             return;
 
         foreach (var artefact in buffer.Artefacts)

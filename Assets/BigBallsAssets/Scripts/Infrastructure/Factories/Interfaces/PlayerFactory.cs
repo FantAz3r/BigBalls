@@ -86,6 +86,7 @@ namespace BigBalls.Factories
 
             StatHolder statHolder = new StatHolder(playerID, EntityType.Player, _playerConfig, _effectFactory);
             statHolder.Set(_itemConainerProvider.Armor);
+            statHolder.InitStats();
 
             _playerExperience.Init(statHolder[StatType.Experience]);
 

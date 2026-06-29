@@ -62,7 +62,7 @@ namespace BigBalls.Factories
 
         public CardSelectionMenu CreateCardMenu() => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
 
-        public ItemInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as ItemInventory;
+        public CardInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as CardInventory;
 
         public void CreateJoystick ()
         {

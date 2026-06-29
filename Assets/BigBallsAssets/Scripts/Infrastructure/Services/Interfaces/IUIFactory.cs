@@ -16,7 +16,7 @@ namespace BigBalls.Services
         LouseLevelMenu CreateLouseMenu();
         WinLevelMenu CreateWinMenu();
         BallTreeUI CreateBallTree();
-        ItemInventory CreateInventoryMenu();
+        CardInventory CreateInventoryMenu();
         CardSelectionMenu CreateCardMenu();
     }
 }

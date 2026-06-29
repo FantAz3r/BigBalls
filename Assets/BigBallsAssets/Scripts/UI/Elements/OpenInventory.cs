@@ -1,5 +1,5 @@
 using BigBalls.UI;
 
-public class OpenInventory : OpenWindowButton<ItemInventory>
+public class OpenInventory : OpenWindowButton<CardInventory>
 {
 }

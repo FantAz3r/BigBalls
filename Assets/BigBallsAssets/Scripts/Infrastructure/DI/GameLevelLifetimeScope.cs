@@ -63,7 +63,6 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterProviders(IContainerBuilder builder)
         {
-            builder.Register<IItemConainerProvider, ItemConainerProvider>(Lifetime.Scoped);
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);
             builder.RegisterComponent(_sceneContainer)

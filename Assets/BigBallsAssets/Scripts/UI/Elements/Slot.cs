@@ -10,11 +10,11 @@ public class Slot : MonoBehaviour, IDropHandler
     [SerializeField] private Image _image;
     [SerializeField] private TMP_Text _text;
 
-    [SerializeField] private Sprite _weaponTip;
-    [SerializeField] private Sprite _armorTip;
-    [SerializeField] private Sprite _helmetTip;
+    [SerializeField] private Image _weaponTip;
+    [SerializeField] private Image _armorTip;
+    [SerializeField] private Image _helmetTip;
 
-    private CardType _slotType;
+    [SerializeField] private CardType _slotType;
     private IItemConainerProvider _itemContainer;
 
     [field: SerializeField] public bool IsActiveSlot { get; private set; }
@@ -36,15 +36,15 @@ public class Slot : MonoBehaviour, IDropHandler
 
         if (_slotType == CardType.Weapon)
         {
-            CurrentImage.sprite = _weaponTip;
+            _weaponTip.enabled = true;
         }
         else if (_slotType == CardType.Armor)
         {
-            CurrentImage.sprite = _armorTip;
+            _armorTip.enabled = true;
         }
         else if (_slotType == CardType.Helmet)
         {
-            CurrentImage.sprite = _helmetTip;
+            _helmetTip.enabled = true;
         }
     }
 

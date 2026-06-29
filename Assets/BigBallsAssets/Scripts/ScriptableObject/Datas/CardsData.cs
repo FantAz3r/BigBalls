@@ -18,5 +18,4 @@ public class CardsData : ScriptableObject
     public Dictionary<ItemType, ArmorConfig> Armors => _armors;
     public Dictionary<ItemType, WeaponConfig> Weapons => _weapons;
     public Dictionary<ItemType, HelmetConfig> Helmets => _helmets;
-
 }
