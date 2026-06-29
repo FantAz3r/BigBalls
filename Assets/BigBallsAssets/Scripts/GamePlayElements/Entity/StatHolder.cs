@@ -1,9 +1,10 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class StatHolder : IArtefactUser
 {
@@ -15,13 +16,12 @@ public class StatHolder : IArtefactUser
     private IEntityConfig _config;
     private IArmor _armor;
 
-    public StatHolder (int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
+    public StatHolder(int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
         EntityType = entityType;
         OwnerID = ownerID;
         _config = config;
         _effectFactory = effectFactory;
-        InitStats(_config.Stats);
     }
 
     public EntityType EntityType { get; private set; }
@@ -30,17 +30,14 @@ public class StatHolder : IArtefactUser
 
     public Stat this[StatType type] => _stats[type];
 
-    public void Set (ItemModel item)
+    public void Set(ArmorModel item)
     {
-        if (item is not IArmor armor)
-            return;
-
-        _armor = armor;
+        _armor = item;
     }
 
-    private void InitStats (List<StatStruct> stats)
+    public void InitStats()
     {
-        foreach (var stat in stats)
+        foreach (var stat in _config.Stats)
         {
             float maxValue = stat.StartMaxValue;
             float currentValue = stat.StartCurrentValue;
@@ -56,7 +53,7 @@ public class StatHolder : IArtefactUser
         }
     }
 
-    public void AddEffects (List<EffectBehaviour> effects)
+    public void AddEffects(List<EffectBehaviour> effects)
     {
         throw new NotImplementedException();
     }

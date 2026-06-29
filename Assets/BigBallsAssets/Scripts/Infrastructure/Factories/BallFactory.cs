@@ -45,6 +45,7 @@ namespace BigBalls.Factories
             ball.EventHandler.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.EntityType, ballModel.BallConfig);
+            statHolder.InitStats();
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], ball.transform, _updateService, rigidbody);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()

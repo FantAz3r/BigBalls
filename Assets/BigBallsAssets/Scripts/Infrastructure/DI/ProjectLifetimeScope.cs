@@ -1,4 +1,5 @@
 using BigBalls.Factories;
+using BigBalls.Providers;
 using BigBalls.Services;
 using UnityEngine;
 using UnityEngine.Splines.ExtrusionShapes;
@@ -22,6 +23,7 @@ namespace BigBalls.Infrastructure.DI
 
             BindStates(builder);
             BindServices(builder);
+            BindProviders(builder);
         }
 
         private void BindStates (IContainerBuilder builder)
@@ -32,7 +34,6 @@ namespace BigBalls.Infrastructure.DI
 
         private void BindServices (IContainerBuilder builder)
         {
-            
             builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
             builder.Register<ITranslateService, YGTranslateService>(Lifetime.Singleton);
             builder.Register<ILevelLoadingService, LevelLoadingService>(Lifetime.Singleton);
@@ -54,7 +55,14 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
 
         }
-               
+
+        private void BindProviders(IContainerBuilder builder)
+        {
+            builder.Register<IItemConainerProvider, ItemConainerProvider>(Lifetime.Singleton);
+
+        }
+
+
         protected override void OnDestroy ()
         {
             _gameStateMashine = Container.Resolve<IGameStateMachine>();
