@@ -93,8 +93,10 @@ namespace BigBalls.Factories
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], CreateComponents(out PlayerCardHolder cardHolder, statHolder, player), player);
             deathHandler.Subscribe();
 
+            HealHandler healHandler = new HealHandler(statHolder[StatType.Health]);
+            
             _louseService.SetLouseReason(deathHandler);
-            player.Construct(playerID, deathHandler);
+            player.Construct(playerID, deathHandler, healHandler);
 
             player.EventHandler.Died += OnDied;
 

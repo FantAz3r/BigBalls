@@ -3,13 +3,14 @@ using BigBalls.Services;
 public class LootMediator : ILootMediator
 {
     private IWalletModel _walletModel;
-    private IPlayerProvider _iPlayerProvider;
+    private IPlayerProvider _playerProvider;
+    private HealHandler _healHandler;
     private readonly IPlayerExperience _playerExperience;
     
     public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience)
     {
         _walletModel = walletModel;
-        _iPlayerProvider = playerProvider;
+        _playerProvider = playerProvider;
         _playerExperience = playerExperience;
     }
 
@@ -22,7 +23,12 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.HealthPotion:
-                // _healthModel.Heal(loot.Value);
+                
+                if (_healHandler == null)
+                    _healHandler = _playerProvider.Player.HealHandler;
+                
+                _healHandler.Heal(loot.Value);
+                
                 break;
 
             case LootType.Experience:

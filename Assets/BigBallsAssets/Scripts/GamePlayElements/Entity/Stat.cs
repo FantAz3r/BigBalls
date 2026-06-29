@@ -38,11 +38,11 @@ namespace BigBalls.GameplayObjects
             ValueChanged?.Invoke(this);
         }
 
-        public void ReduceCurrentValue(float valueToResuce)
+        public void ReduceCurrentValue(float valueToResource)
         {
-            if (valueToResuce <= 0) return;
+            if (valueToResource <= 0) return;
 
-            CurrentValue = MathF.Max(CurrentValue - valueToResuce, MinValue);
+            CurrentValue = MathF.Max(CurrentValue - valueToResource, MinValue);
             ValueChanged?.Invoke(this);
         }
 

@@ -9,6 +9,7 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }
 
         public DeathHandler<Player> DeathHandler { get; private set; }
+        public HealHandler HealHandler { get; private set; }
         public int Id { get; private set; }
         public PlayerAnimator PlayerAnimator { get; private set; }
         public Transform Transform => transform;
@@ -24,10 +25,11 @@ namespace BigBalls.GameplayObjects
             DeathHandler?.Unsubscribe();
         }
 
-        public void Construct(int id, DeathHandler<Player> playerDeathHandler)
+        public void Construct(int id, DeathHandler<Player> playerDeathHandler, HealHandler healHandler)
         {
             Id = id;
             DeathHandler = playerDeathHandler;
+            HealHandler = healHandler;
         }
     }
 }
