@@ -1,5 +1,5 @@
-using System;
 using BigBalls.Services;
+using UnityEngine;
 
 public class LootFactory : ILootFactory
 {
@@ -19,9 +19,10 @@ public class LootFactory : ILootFactory
         _lootMover.OnLootMissed += OnLootMissedHandler;
     }
 
-    public void Dispose()
+    public void Disable()
     {
         _lootMover.Stop();
+        _lootMover.OnLootMissed -= OnLootMissedHandler;
     }
 
     public Loot Create (string name)

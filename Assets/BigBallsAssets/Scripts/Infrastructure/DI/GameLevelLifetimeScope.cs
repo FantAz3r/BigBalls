@@ -1,3 +1,4 @@
+using System;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
@@ -26,6 +27,12 @@ namespace BigBalls.Infrastructure.DI
             RegisterFactories(builder);
             RegisterProviders(builder);
             RegisterModels(builder);
+        }
+
+        private void OnDisable()
+        {
+            ILootFactory lootFactory = Container.Resolve<ILootFactory>();
+            lootFactory.Disable();
         }
 
         private void RegisterFactories(IContainerBuilder builder)

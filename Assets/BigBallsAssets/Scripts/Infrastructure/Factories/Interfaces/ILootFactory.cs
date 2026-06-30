@@ -1,5 +1,5 @@
 public interface ILootFactory
 {
-    void Dispose();
+    void Disable();
     Loot Create(string name);
 }
