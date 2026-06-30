@@ -19,7 +19,6 @@ public class GameExitState : IState
 
     public void Enter()
     {
-        _globalWallet.Dispose();
         _saveService.Save();
     }
 

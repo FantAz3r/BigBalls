@@ -71,6 +71,7 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterModels(IContainerBuilder builder)
         {
+            builder.Register<IWalletModel, WalletModel > (Lifetime.Scoped);
             builder.Register<ILootMediator, LootMediator>(Lifetime.Scoped);
             builder.Register<IPlayerExperience, PlayerExperienceModel>(Lifetime.Scoped);
         }

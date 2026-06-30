@@ -2,11 +2,17 @@ using System;
 
 public class WalletModel : IWalletModel
 {
-    public float CurrentValue { get; private set; }
+    private GlobalWallet _globalWallet;
+    
+    public WalletModel(GlobalWallet globalWallet)
+    {
+        _globalWallet = globalWallet;
+    }
     
     public event Action<IWalletModel> OnValueChanged;
-    public event Action<float> OnCoinsCollected;
-
+    
+    public float CurrentValue { get; private set; }
+    
     public void AddCoins(int value)
     {
         CurrentValue += value;
@@ -15,6 +21,6 @@ public class WalletModel : IWalletModel
 
     public void PutAccumulatedCoins()
     {
-        OnCoinsCollected?.Invoke(CurrentValue);
+        _globalWallet.TakeCollectedCoin(CurrentValue);
     }
 }

@@ -1,24 +1,16 @@
 ﻿using System;
 using UnityEngine;
 
-public class GlobalWallet : IDisposable
+public class GlobalWallet
 {
     private ISaveService _saveService;
-    private IWalletModel _walletModel;
 
-    public GlobalWallet(ISaveService saveService, IWalletModel walletModel)
+    public GlobalWallet(ISaveService saveService)
     {
         _saveService = saveService;
-        _walletModel = walletModel;
-        _walletModel.OnCoinsCollected += TakeCollectedCoin;
     }
 
-    public void Dispose()
-    {
-        _walletModel.OnCoinsCollected -= TakeCollectedCoin;
-    }
-
-    private void TakeCollectedCoin(float coin)
+    public void TakeCollectedCoin(float coin)
     {
         _saveService.GameProgress.Coins += Convert.ToInt32(coin);
 
