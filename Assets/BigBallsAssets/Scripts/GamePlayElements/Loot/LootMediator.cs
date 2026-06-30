@@ -18,6 +18,8 @@ public class LootMediator : ILootMediator
 
     public void RegisterLoot(Loot loot)
     {
+        StatHolder statHolder = _entityRepository.Get(_playerProvider.Player.Id);
+        
         switch (loot.Type)
         {
             case LootType.Coin:
@@ -25,7 +27,6 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.HealthPotion:
-                StatHolder statHolder = _entityRepository.Get(_playerProvider.Player.Id);
                 statHolder[StatType.Health].AddCurrentValue(loot.Value);
                 break;
 
@@ -34,7 +35,7 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.Ball:
-                // _ballModel.AddBall(loot.BallData);
+                statHolder[StatType.BallBag].AddCurrentValue(loot.Value);
                 break;
         }
     }

@@ -3,22 +3,26 @@ public class GameExitState : IState
     private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly ISaveService _saveService;
-    private readonly GlobalWallet _globalWallet;
+    private readonly ILootFactory _lootFactory;
 
     public GameExitState(
         BallRepository ballsRepository,
         ArtefactsRepository artefactsRepository,
         ISaveService saveService,
-        GlobalWallet globalWallet)
+        ILootFactory lootFactory)
     {
         _ballsRepository = ballsRepository;
         _artefactsRepository = artefactsRepository;
         _saveService = saveService;
-        _globalWallet = globalWallet;
+        _lootFactory = lootFactory;
     }
 
     public void Enter()
     {
+        if (_lootFactory != null)
+        {
+            _lootFactory.Dispose();
+        }
         _saveService.Save();
     }
 

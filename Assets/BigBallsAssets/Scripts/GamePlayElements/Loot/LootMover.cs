@@ -12,12 +12,12 @@ public class LootMover: IUpdateble
 
     private List<Loot> _activeLoots = new List<Loot>();
 
-    public event Action<Loot> OnLootMissed; 
-
     public LootMover(IUpdateService updateService)
     {
         _updateService = updateService;
     }
+    
+    public event Action<Loot> OnLootMissed; 
     
     public void Start() => _updateService.Register(this);
     
@@ -52,5 +52,10 @@ public class LootMover: IUpdateble
     public void AddObject(Loot loot)
     {
         _activeLoots.Add(loot);
+    }
+
+    public void RemoveObject(Loot loot)
+    {
+        _activeLoots.Remove(loot);
     }
 }
