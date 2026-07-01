@@ -18,7 +18,6 @@ public class LootMover : IUpdateble
     }
 
     public event Action<Loot> OnLootMissed;
-
     public void Start() => _updateService.Register(this);
 
     public void Stop()

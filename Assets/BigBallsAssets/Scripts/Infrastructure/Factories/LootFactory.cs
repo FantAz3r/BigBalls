@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.Services;
+using UnityEngine;
 
-public class LootFactory : ILootFactory, IDisposable
+public class LootFactory : ILootFactory
 {
     private IPoolService _poolService;
     private ILootMediator _lootMediator;
@@ -20,10 +19,10 @@ public class LootFactory : ILootFactory, IDisposable
         _lootMover.OnLootMissed += OnLootMissedHandler;
     }
 
-    public void Dispose()
+    public void Disable()
     {
-        _lootMover.OnLootMissed -= OnLootMissedHandler;
         _lootMover.Stop();
+        _lootMover.OnLootMissed -= OnLootMissedHandler;
     }
 
     public Loot Create (string name)
@@ -37,14 +36,16 @@ public class LootFactory : ILootFactory, IDisposable
     private void OnCollectedHandler (Loot loot)
     {
         loot.OnCollected -= OnCollectedHandler;
-
         _lootMover.RemoveObject(loot);
         _lootMediator.RegisterLoot(loot);
-        _poolService.ReleaseObject(loot);
+        OnLootMissedHandler(loot);
     }
 
     private void OnLootMissedHandler(Loot loot)
     {
+        loot.OnCollected -= OnCollectedHandler;
+        _lootMover.OnLootMissed -= OnLootMissedHandler;
+        _lootMover.RemoveObject(loot);
         _poolService.ReleaseObject(loot);
     }
 }

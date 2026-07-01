@@ -111,7 +111,7 @@ namespace BigBalls.Services
             foreach (BallConfig config in _cardsData.Balls.Values)
             {
                 IObjectPool<Ball> pool = new ObjectPool<Ball>(_poolConfig.InitialBallPoolSize, _resolverProvider);
-                string nameParent = config.name;
+                string nameParent = config.Prefab.name;
                 pool.InitializePool(config.Prefab, ballPoolContainer.transform, nameParent);
                 _objectPools[nameParent] = pool;
             }

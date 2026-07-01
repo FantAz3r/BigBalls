@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using BigBalls.Configs;
-using BigBalls.Infrastructure.DI;
-using BigBalls.StaticData;
 using UnityEngine;
 
 namespace BigBalls.Services

@@ -29,11 +29,10 @@ namespace BigBalls.Infrastructure.DI
             RegisterModels(builder);
         }
 
-        protected override void OnDestroy()
+        private void OnDisable()
         {
-            var factory = Container.Resolve<ILootFactory>() as IDisposable;
-            factory?.Dispose();
-            base.OnDestroy();
+            ILootFactory lootFactory = Container.Resolve<ILootFactory>();
+            lootFactory.Disable();
         }
 
         private void RegisterFactories(IContainerBuilder builder)
