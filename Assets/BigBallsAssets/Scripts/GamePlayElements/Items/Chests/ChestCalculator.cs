@@ -28,34 +28,34 @@ public class ChestCalculator
         _cards.AddRange(_armorRepository.AllModels.Values);
     }
 
-    public List<ItemModel> GetCardsFromChest ()
-    {
-        int totalCards = _chestConfig.GetCardCount();
-        var rarityDistribution = GetRarityDistribution(totalCards);
-
-        var allModels = _itemRepository.AllModels.Values;
-        var modelsByRarity = allModels.GroupBy(m => m.Config.Rarity)
-                                     .ToDictionary(g => g.Key, g => g.ToList());
-
-        var result = new List<ItemModel>(totalCards);
-
-        foreach (var kvp in rarityDistribution)
-        {
-            var rarity = kvp.Key; int count = kvp.Value; if (!modelsByRarity.TryGetValue(rarity, out var candidates) || candidates.Count == 0) continue; for (int i = 0; i < count; i++)
-            {
-                int idx = _random.Next(candidates.Count);
-                var chosenModel = candidates[idx];
-
-                if (chosenModel.IsOpened == false)
-                { chosenModel.Open(); } // Добавить количество опыта или очков, равное количеству выпадений 
-                                        // Но тут учитываем, что одна карта может выпадать несколько раз подряд, значит 
-                                        // нужно аккумулировать количество выпадений var itemExpToAdd = 1; 
-                                        // за каждую итерацию добавляем 1 опыта chosenModel.ItemEXP += itemExpToAdd; } }
-
-                return result;
-            }
-        }
-    }
+   // public List<ItemModel> GetCardsFromChest ()
+   // {
+   //     int totalCards = _chestConfig.GetCardCount();
+   //     var rarityDistribution = GetRarityDistribution(totalCards);
+   //
+   //     var allModels = _itemRepository.AllModels.Values;
+   //     var modelsByRarity = allModels.GroupBy(m => m.Config.Rarity)
+   //                                  .ToDictionary(g => g.Key, g => g.ToList());
+   //
+   //     var result = new List<ItemModel>(totalCards);
+   //
+   //     foreach (var kvp in rarityDistribution)
+   //     {
+   //         var rarity = kvp.Key; int count = kvp.Value; if (!modelsByRarity.TryGetValue(rarity, out var candidates) || candidates.Count == 0) continue; for (int i = 0; i < count; i++)
+   //         {
+   //             int idx = _random.Next(candidates.Count);
+   //             var chosenModel = candidates[idx];
+   //
+   //             if (chosenModel.IsOpened == false)
+   //             { chosenModel.Open(); } // Добавить количество опыта или очков, равное количеству выпадений 
+   //                                     // Но тут учитываем, что одна карта может выпадать несколько раз подряд, значит 
+   //                                     // нужно аккумулировать количество выпадений var itemExpToAdd = 1; 
+   //                                     // за каждую итерацию добавляем 1 опыта chosenModel.ItemEXP += itemExpToAdd; } }
+   //
+   //             return result;
+   //         }
+   //     }
+   // }
 
     private Dictionary<Rarity, int> GetRarityDistribution (int totalCards)
     {
