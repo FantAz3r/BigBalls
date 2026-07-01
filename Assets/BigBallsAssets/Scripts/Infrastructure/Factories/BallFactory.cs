@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Factories
@@ -17,7 +17,7 @@ namespace BigBalls.Factories
         private readonly IPlayerProvider _playerProvider;
         private readonly IPoolService _poolService;
 
-        public BallFactory (
+        public BallFactory(
             IObjectResolverProvider objectResolverProvider,
             IEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
@@ -37,14 +37,14 @@ namespace BigBalls.Factories
 
         public event Action BallReturned;
 
-        public Ball Create (BallModel ballModel)
+        public Ball Create(BallModel ballModel)
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
             ball.EventHandler.Returned += OnReturn;
 
-            StatHolder statHolder = new StatHolder(ballId, ballModel.BallConfig.EntityType, ballModel.BallConfig);
+            StatHolder statHolder = new StatHolder(ball, ballModel.BallConfig.EntityType, ballModel.BallConfig);
             statHolder.InitStats();
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], ball.transform, _updateService, rigidbody);
 
@@ -62,7 +62,7 @@ namespace BigBalls.Factories
             return ball;
         }
 
-        private List<ICollisionStrategy> CreateCollisionStrategies ()
+        private List<ICollisionStrategy> CreateCollisionStrategies()
         {
             List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
             {
@@ -75,7 +75,7 @@ namespace BigBalls.Factories
             return collisionStrategies;
         }
 
-        private void OnReturn (IEntity entity)
+        private void OnReturn(IEntity entity)
         {
             if (entity is not Ball ball)
                 return;

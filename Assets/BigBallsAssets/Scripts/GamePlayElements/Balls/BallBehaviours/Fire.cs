@@ -29,19 +29,18 @@ namespace BigBalls.GameplayObjects
             _particleFactory = particleFactory;
         }
 
-        private void OnHit(int id)
+        private void OnHit(IEntity entity)
         {
-            _coroutineRunner.StartCoroutine(Burn(id));
+            _coroutineRunner.StartCoroutine(Burn(entity));
         }
 
-
-        private IEnumerator Burn(int targetId)
+        private IEnumerator Burn(IEntity entity)
         {
             var elapsed = 0f;
 
             while (elapsed < _config.BurnDuration)
             {
-                _damageService.ApplyDamage(targetId, _config.DamagePerSecond);
+                _damageService.ApplyDamage(entity, _config.DamagePerSecond);
                 elapsed += Time.deltaTime;
                 yield return _oneSecond;
             }

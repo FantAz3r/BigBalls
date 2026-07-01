@@ -25,7 +25,7 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.HealthPotion:
-                StatHolder statHolder = _entityRepository.Get(_playerProvider.Player.Id);
+                StatHolder statHolder = _entityRepository.Get(_playerProvider.Player);
                 statHolder[StatType.Health].AddCurrentValue(loot.Value);
                 break;
 

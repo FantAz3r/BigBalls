@@ -1,6 +1,6 @@
-﻿using System;
-using BigBalls.Configs;
+﻿using BigBalls.Configs;
 using BigBalls.Services;
+using System;
 using VContainer;
 
 namespace BigBalls.GameplayObjects
@@ -10,27 +10,27 @@ namespace BigBalls.GameplayObjects
         private readonly DamageConfig _config;
         private IDamageService _damageService;
 
-        public Damage (DamageConfig config, int level) : base(config, level)
+        public Damage(DamageConfig config, int level) : base(config, level)
         {
             _config = config;
         }
 
         [Inject]
-        public void Construct (IDamageService damageService)
+        public void Construct(IDamageService damageService)
         {
             _damageService = damageService;
         }
 
-        private void OnHit (int id)
+        private void OnHit(IEntity entity)
         {
             if (Host is Ball ball)
             {
-                float damage = _damageService.ApplyDamage(id, _config.GetDamage(Level));
+                float damage = _damageService.ApplyDamage(entity, _config.GetDamage(Level));
                 ball.AddDamage(damage);
             }
         }
 
-        protected override IDisposable SubscribeInternal (IEntity host)
+        protected override IDisposable SubscribeInternal(IEntity host)
         {
             host.EventHandler.HitedEntity += OnHit;
 

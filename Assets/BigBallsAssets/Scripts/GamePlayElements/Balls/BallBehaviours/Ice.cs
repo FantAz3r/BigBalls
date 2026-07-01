@@ -22,7 +22,7 @@ public class Ice : EffectBehaviour
         _entityRepository = entityRepository;
     }
 
-    public void OnHit(int id)
+    public void OnHit(IEntity entity)
     {
 
     }

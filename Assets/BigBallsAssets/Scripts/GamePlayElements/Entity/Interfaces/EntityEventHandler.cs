@@ -6,12 +6,12 @@ namespace BigBalls.GameplayObjects
     {
         public event Action Spawned;
         public event Action Hited;
-        public event Action<int> HitedEntity;
+        public event Action<IEntity> HitedEntity;
         public event Action<IEntity> Died;
         public event Action<IEntity> Returned;
         public event Action<IEntity> Suisided;
 
-        public void HitEntity (int id) => HitedEntity?.Invoke(id);
+        public void HitEntity (IEntity entity) => HitedEntity?.Invoke(entity);
         public void Die (IEntity entity) => Died?.Invoke(entity); 
         public void Return (IEntity entity) => Returned?.Invoke(entity);
         public void Spawn () => Spawned?.Invoke();

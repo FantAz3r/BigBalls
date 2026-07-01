@@ -46,6 +46,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<TileFactory>(Lifetime.Scoped);
             builder.Register<EnemySpawner>(Lifetime.Scoped);
             builder.Register<LootSpawner>(Lifetime.Scoped);
+            builder.Register<DamageTextFactory>(Lifetime.Scoped);
         }
 
         private void RegisterServices(IContainerBuilder builder)
@@ -74,6 +75,8 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IWalletModel, WalletModel > (Lifetime.Scoped);
             builder.Register<ILootMediator, LootMediator>(Lifetime.Scoped);
             builder.Register<IPlayerExperience, PlayerExperienceModel>(Lifetime.Scoped);
+            builder.Register<IWalletModel, WalletModel>(Lifetime.Scoped);
+
         }
     }
 }

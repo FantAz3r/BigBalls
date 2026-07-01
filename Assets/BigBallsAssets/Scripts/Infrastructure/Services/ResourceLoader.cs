@@ -27,6 +27,7 @@ namespace BigBalls.Services
             //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
             {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
             {typeof(CardView), "UI/CardView"},
+            {typeof(DamageText), "Prefabs/DamageTextObject"},
         };
 
         public T Load<T>() where T : Object

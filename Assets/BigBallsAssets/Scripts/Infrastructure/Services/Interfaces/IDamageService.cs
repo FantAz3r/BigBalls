@@ -1,7 +1,9 @@
-﻿namespace BigBalls.Services
+﻿using BigBalls.GameplayObjects;
+
+namespace BigBalls.Services
 {
     public interface IDamageService
     {
-        float ApplyDamage(int id, float damage);
+        float ApplyDamage(IEntity entity, float damage);
     }
 }

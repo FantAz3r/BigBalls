@@ -38,6 +38,7 @@ public class LootFactory : ILootFactory, IDisposable
     {
         loot.OnCollected -= OnCollectedHandler;
 
+        _lootMover.RemoveObject(loot);
         _lootMediator.RegisterLoot(loot);
         _poolService.ReleaseObject(loot);
     }

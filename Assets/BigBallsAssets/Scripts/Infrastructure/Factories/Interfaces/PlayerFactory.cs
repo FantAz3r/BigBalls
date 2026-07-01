@@ -85,7 +85,7 @@ namespace BigBalls.Factories
             Player prefab = _resourceLoader.Load<Player>();
             Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
-            StatHolder statHolder = new StatHolder(playerID, EntityType.Player, _playerConfig, _effectFactory);
+            StatHolder statHolder = new StatHolder(player, EntityType.Player, _playerConfig, _effectFactory);
             statHolder.Set(_itemConainerProvider.Armor);
             statHolder.InitStats();
 

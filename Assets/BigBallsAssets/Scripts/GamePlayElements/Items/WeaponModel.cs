@@ -11,7 +11,8 @@ public class WeaponModel : ItemModel
         int id,
         WeaponConfig config,
         int level = 0,
-        float exp = 0) : base(id, config, level, exp)
+        float exp = 0)
+        : base(id, config, level, exp)
     {
         _ballRepository = ballRepository;
         WeaponConfig = config;

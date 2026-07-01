@@ -34,7 +34,7 @@ namespace BigBalls.GameplayObjects
         private void Attack()
         {
             //тут враг убивается об игрока
-            _damageService.ApplyDamage(_playerProvider.Player.Id, _damage.CurrentValue);
+            _damageService.ApplyDamage(_playerProvider.Player, _damage.CurrentValue);
             _owner.EventHandler.Suiside(_owner);
         }
     }

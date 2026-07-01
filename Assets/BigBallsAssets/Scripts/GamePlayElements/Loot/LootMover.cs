@@ -1,31 +1,31 @@
+using BigBalls.Services;
 using System;
 using System.Collections.Generic;
-using BigBalls.Services;
 using UnityEngine;
 
-public class LootMover: IUpdateble
+public class LootMover : IUpdateble
 {
-    private const float _speed = 0.2f;
+    private const float Speed = 0.2f;
     private const int LevelEndZ = -12;
-    
+
     private readonly IUpdateService _updateService;
 
     private List<Loot> _activeLoots = new List<Loot>();
-
-    public event Action<Loot> OnLootMissed; 
 
     public LootMover(IUpdateService updateService)
     {
         _updateService = updateService;
     }
-    
+
+    public event Action<Loot> OnLootMissed;
+
     public void Start() => _updateService.Register(this);
-    
+
     public void Stop()
     {
         _activeLoots.Clear();
         _updateService.Unregister(this);
-    } 
+    }
 
     public void Tick()
     {
@@ -38,8 +38,8 @@ public class LootMover: IUpdateble
                 _activeLoots.Remove(loot);
                 continue;
             }
-            
-            loot.transform.Translate(Vector3.back * _speed * Time.deltaTime);
+
+            loot.transform.Translate(Vector3.back * Speed * Time.deltaTime);
 
             if (loot.transform.position.z <= LevelEndZ)
             {
@@ -48,9 +48,7 @@ public class LootMover: IUpdateble
             }
         }
     }
-    
-    public void AddObject(Loot loot)
-    {
-        _activeLoots.Add(loot);
-    }
+
+    public void AddObject(Loot loot) => _activeLoots.Add(loot);
+    public void RemoveObject(Loot loot) => _activeLoots.Remove(loot);
 }

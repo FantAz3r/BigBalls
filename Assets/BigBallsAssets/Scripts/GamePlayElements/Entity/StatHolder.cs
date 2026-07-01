@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class StatHolder : IArtefactUser
 {
-    public readonly int OwnerID;
+    private readonly IEntity _owner;
     private readonly IEffectFactory _effectFactory;
 
     private List<EffectBehaviour> _effectBehaviours;
@@ -16,10 +16,10 @@ public class StatHolder : IArtefactUser
     private IEntityConfig _config;
     private IArmor _armor;
 
-    public StatHolder(int ownerID, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
+    public StatHolder(IEntity entity, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
         EntityType = entityType;
-        OwnerID = ownerID;
+        _owner = entity;
         _config = config;
         _effectFactory = effectFactory;
     }

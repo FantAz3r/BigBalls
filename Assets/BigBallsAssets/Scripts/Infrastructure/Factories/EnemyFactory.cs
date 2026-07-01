@@ -49,7 +49,7 @@ namespace BigBalls.Factories
             enemy.transform.rotation = Quaternion.identity;
             int enemyID = _identifierService.ID;
 
-            StatHolder statHolder = new StatHolder(enemyID, enemyConfig.Type, enemyConfig);
+            StatHolder statHolder = new StatHolder(enemy, enemyConfig.Type, enemyConfig);
             statHolder.InitStats();
 
             List<ISubscribable> subscribables = CreateComponents(statHolder, enemy, enemyConfig);
@@ -70,7 +70,7 @@ namespace BigBalls.Factories
 
             if (enemy.DeathHandler.IsBallAttacked)
                 _dropService.DropLoot(enemy.transform.position, enemy);
-            
+
             enemy.DeathHandler.Unsubscribe();
             enemy.EventHandler.Died -= OnDied;
             enemy.EventHandler.Suisided -= OnDied;

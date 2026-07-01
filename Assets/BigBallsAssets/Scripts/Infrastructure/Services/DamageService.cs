@@ -8,15 +8,17 @@ namespace BigBalls.Services
     {
         private const float ArmorMultiplyer = 0.06f;
         private readonly IEntityRepository _entityRepository;
+        private readonly DamageTextFactory _damageTextFactory;
 
-        public DamageService (IEntityRepository entityRepository)
+        public DamageService (IEntityRepository entityRepository, DamageTextFactory damageTextFactory)
         {
             _entityRepository = entityRepository;
+            _damageTextFactory = damageTextFactory;
         }
 
-        public float ApplyDamage (int id, float damage)
+        public float ApplyDamage (IEntity entity, float damage)
         {
-            StatHolder statHolder = _entityRepository.Get(id);
+            StatHolder statHolder = _entityRepository.Get(entity);
 
             if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
@@ -34,6 +36,7 @@ namespace BigBalls.Services
                 ApplyHealthDamage(statHolder[StatType.Health], finalDamage);
             }
 
+            _damageTextFactory.Create(entity.Transform.position, finalDamage);
             return finalDamage;
         }
 
