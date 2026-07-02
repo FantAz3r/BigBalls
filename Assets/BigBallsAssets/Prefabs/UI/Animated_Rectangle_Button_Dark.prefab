@@ -457,13 +457,15 @@ MonoBehaviour:
       _useScale: 0
       _targetScale: {x: 0, y: 0, z: 0}
       _usePosition: 0
+      _enabledPositionChange: 1
       _anchoredOffset: {x: 0, y: 0}
       _useRotation: 0
       _targetRotation: {x: 0, y: 0, z: 0}
+      _enableCanvasGroupChange: 1
       _useFade: 0
       _targetAlpha: 1
-      _interactableWhenPlay: 0
-      _blockRaycastWhenPlay: 0
+      _interactableWhenPlay: 1
+      _blockRaycastWhenPlay: 1
       _ignoreParentGroupWhenPlay: 0
       _duration: 0.15
       _ease: 2
@@ -475,9 +477,11 @@ MonoBehaviour:
       _useScale: 1
       _targetScale: {x: 1.25, y: 1.1, z: 1.1}
       _usePosition: 1
+      _enabledPositionChange: 1
       _anchoredOffset: {x: -60, y: 5}
       _useRotation: 0
       _targetRotation: {x: 0, y: 0, z: 0}
+      _enableCanvasGroupChange: 1
       _useFade: 1
       _targetAlpha: 0.95
       _interactableWhenPlay: 1
@@ -493,9 +497,11 @@ MonoBehaviour:
       _useScale: 1
       _targetScale: {x: 0.75, y: 0.5, z: 1}
       _usePosition: 1
+      _enabledPositionChange: 1
       _anchoredOffset: {x: 60, y: -50}
       _useRotation: 1
       _targetRotation: {x: 0, y: 0, z: 2.5}
+      _enableCanvasGroupChange: 1
       _useFade: 0
       _targetAlpha: 0
       _interactableWhenPlay: 0
@@ -504,3 +510,4 @@ MonoBehaviour:
       _duration: 0.1
       _ease: 10
       _delay: 0
+  _targetImage: {fileID: 0}
