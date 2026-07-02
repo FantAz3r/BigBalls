@@ -11,6 +11,7 @@ public struct DotweenAnimationSettings
 
     [Header("Position Offset")]
     [SerializeField] private bool _usePosition;
+    [SerializeField] private bool _enabledPositionChange;
     [SerializeField] private Vector2 _anchoredOffset;
 
     [Header("Rotation")]
@@ -19,6 +20,7 @@ public struct DotweenAnimationSettings
 
     [Header("CanvasGroup properties")]
     [Tooltip("Requires CanvasGroup")]
+    [SerializeField] private bool _enableCanvasGroupChange;
     [SerializeField] private bool _useFade;
 
     [Range(0f, 1f)]
@@ -31,6 +33,9 @@ public struct DotweenAnimationSettings
     [SerializeField] private float _duration;
     [SerializeField] private Ease _ease;
     [SerializeField] private float _delay;
+
+    public bool EnabledPositionChange => _enabledPositionChange;
+    public bool EnabledCanvasGroupChange => _enableCanvasGroupChange;
 
     public bool InteractableWhenPlay => _interactableWhenPlay;
     public bool BlockRaycastWhenPlay => _blockRaycastWhenPlay;
