@@ -25,15 +25,15 @@ namespace BigBalls.GameplayObjects
             _damage = damage;
         }
 
-        public void Subscribe()
+        public void Subscribe ()
         {
             _canShoot = true;
             _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe ()
         {
-            if(_shootRoutine != null && _coroutineRunner != null)
+            if (_shootRoutine != null && _coroutineRunner != null)
             {
                 _coroutineRunner.StopCoroutine(_shootRoutine);
                 _shootRoutine = null;
@@ -41,7 +41,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private IEnumerator ShootRoutine()
+        private IEnumerator ShootRoutine ()
         {
             while (_canShoot)
             {
@@ -50,15 +50,15 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void Shoot()
+        private void Shoot ()
         {
             Vector3 forward = _firePoint.forward;
 
             if (_ballContainer.TryGetNextBullet(out Ball ball))
             {
+                ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
                 ball.transform.position = _firePoint.position + _fireOffset;
                 ball.transform.rotation = _firePoint.rotation;
-                ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
             }
         }
     }

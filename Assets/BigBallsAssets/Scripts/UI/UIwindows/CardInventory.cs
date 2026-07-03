@@ -54,8 +54,6 @@ public class CardInventory : WindowBase
     {
         RemoveAllSlots();
 
-        Debug.Log(_models.Count);
-
         foreach (var card in _models)
         {
             if (filter(card))

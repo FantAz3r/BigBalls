@@ -96,6 +96,7 @@ namespace BigBalls.Infrastructure
             _updateService.Clear();
             _timeService.ResumeGame();
             _poolService.ClearAllPools();
+            _ballsRepository.Save();
         }
     }
 }

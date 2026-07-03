@@ -20,6 +20,9 @@ namespace BigBalls.Services
         {
             StatHolder statHolder = _entityRepository.Get(entity);
 
+            if (statHolder == null)
+                return 0;
+
             if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
                     return 0;

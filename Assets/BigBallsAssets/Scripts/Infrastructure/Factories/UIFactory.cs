@@ -16,7 +16,6 @@ namespace BigBalls.Factories
         private readonly Dictionary<WindowType, WindowBase> _windowCache = new Dictionary<WindowType, WindowBase>();
 
         private WindowData _windowData;
-        private SafeArea _safeAreaUIHolder;
         private UIRoot _uiRoot;
 
         public UIFactory (
@@ -43,7 +42,6 @@ namespace BigBalls.Factories
         public void CreateUIRoot ()
         {
             _uiRoot = Object.Instantiate(_resourceLoader.Load<UIRoot>());
-            _safeAreaUIHolder = _uiRoot.GetComponentInChildren<SafeArea>();
         }
 
         public HUD CreateHUD () => GetOrCreateWindow(WindowType.HUD) as HUD;
@@ -63,6 +61,8 @@ namespace BigBalls.Factories
         public CardSelectionMenu CreateCardMenu() => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
 
         public CardInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as CardInventory;
+
+        public Background CreateBackgroung() => GetOrCreateWindow(WindowType.Background, _uiRoot.BackgroundUIHolder) as Background;
 
         public void CreateJoystick ()
         {
@@ -95,7 +95,7 @@ namespace BigBalls.Factories
             WindowBase prefab = _windowData.Get(windowType);
 
             if (parent == null)
-                window = _resolverProvider.CurrentResolver.Instantiate(prefab, _safeAreaUIHolder.transform);
+                window = _resolverProvider.CurrentResolver.Instantiate(prefab, _uiRoot.SafeAreaUIHolder);
             else
                 window = _resolverProvider.CurrentResolver.Instantiate(prefab, parent);
 

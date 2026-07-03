@@ -18,7 +18,6 @@ public class DamageTextFactory
 
     public DamageText Create(Vector3 position, float damage)
     {
-        Debug.Log("text spawn");
         DamageText damageText = _objectResolverProvider.CurrentResolver.Instantiate(_prefab, position, Quaternion.identity);
         damageText.SetDamageText((int)damage);
         return damageText;

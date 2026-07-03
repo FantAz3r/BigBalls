@@ -18,5 +18,6 @@ namespace BigBalls.Services
         BallTreeUI CreateBallTree();
         CardInventory CreateInventoryMenu();
         CardSelectionMenu CreateCardMenu();
+        Background CreateBackgroung ();
     }
 }

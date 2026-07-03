@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
         private Vector3[] _raycastPoints;
 
         public Transform MovableObject { get; private set; }
-        public Vector2 Direction { get; private set; }
+        [field: SerializeField] public Vector2 Direction { get; private set; }
 
         public MoverPhythics (Stat moveSpeed, Transform movableObject, IUpdateService updateService, Rigidbody rigidbody, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
@@ -91,8 +91,7 @@ namespace BigBalls.GameplayObjects
 
         private void Move (Vector3 moveDirection)
         {
-            float moveSpeed = _moveSpeed.CurrentValue;
-            Vector3 targetVelocity = moveDirection * moveSpeed;
+            Vector3 targetVelocity = moveDirection * _moveSpeed.CurrentValue;
             _rigidbody.velocity = new Vector3(targetVelocity.x, 0f, targetVelocity.z);
         }
     }

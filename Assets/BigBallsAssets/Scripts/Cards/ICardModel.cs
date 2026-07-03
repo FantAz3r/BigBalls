@@ -4,12 +4,14 @@ using System;
 
 public interface ICardModel
 {
+    int MaxLevel { get; }
     CardType Type { get; }
     ItemConfig Config { get; }
     int Level { get; }
     float ItemEXP { get; }
     bool IsOpen { get; }
     bool HasPlayer { get; }
+    float EXPForNextLevel { get; }
 
     event Action<ICardModel> Upgraded;
     event Action<ICardModel> Changed;

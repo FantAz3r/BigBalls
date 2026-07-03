@@ -37,8 +37,6 @@ public class PlayerCardHolder
             //}
             // _artefactContainer.Set(helmet);
         }
-
-        Debug.Log(_cards.Count);
     }
 
     public void Add(ICardModel card)

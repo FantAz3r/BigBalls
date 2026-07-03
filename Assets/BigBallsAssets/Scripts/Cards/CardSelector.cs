@@ -28,25 +28,21 @@ public class CardSelector
     public IEnumerable<ICardModel> GetCardsForSelection ()
     {
         if (_currentCards != null && _currentCards.Count > 0)
-        {
             return _currentCards;
-        }
 
         List<ICardModel> availableCards = GetAvailableModels();
 
         if (availableCards.Count == 0)
-        {
             throw new ArgumentNullException(nameof(availableCards));
-        }
 
+        int countToSelect = Math.Min(CardsPerSelect, availableCards.Count);
         var shuffledModels = availableCards.OrderBy(x => Guid.NewGuid()).ToList();
 
-        _currentCards = SelectCardsByRarityChance(availableCards, CardsPerSelect);
-
+        _currentCards = SelectCardsByRarityChance(shuffledModels, countToSelect);
         return _currentCards;
     }
 
-    public void SaveCurrentCards(List<ICardModel> cardModels)
+    public void SaveCurrentCards (List<ICardModel> cardModels)
     {
         _currentCards = cardModels;
     }
@@ -73,38 +69,40 @@ public class CardSelector
     {
         var selectedCards = new List<ICardModel>();
         var random = new Random();
-
-        var groupedByRarity = cards.GroupBy(c => c.Config.Rarity).ToDictionary(g => g.Key, g => g.ToList());
         var weightedList = new List<(ICardModel card, float weight)>();
 
-        foreach (var rarityGroup in groupedByRarity)
+        foreach (var card in cards)
         {
-            float rarityChance = _rarityChances.ContainsKey(rarityGroup.Key) ? _rarityChances[rarityGroup.Key] : 0f;
-
-            foreach (var card in rarityGroup.Value)
-            {
-                float weight = rarityChance / rarityGroup.Value.Count;
-                weightedList.Add((card, weight));
-            }
+            float rarityChance = _rarityChances.ContainsKey(card.Config.Rarity) ? _rarityChances[card.Config.Rarity] : 0f;
+            int sameRarityCount = cards.Count(c => c.Config.Rarity == card.Config.Rarity);
+            float weight = rarityChance / sameRarityCount;
+            weightedList.Add((card, weight));
         }
 
-        while (selectedCards.Count < count && weightedList.Count > 0)
+        for (int i = 0; i < count && weightedList.Count > 0; i++)
         {
             float totalWeight = weightedList.Sum(x => x.weight);
             float roll = (float) (random.NextDouble() * totalWeight);
             float cumulative = 0f;
+            ICardModel chosen = null;
+            int chosenIndex = -1;
 
-            foreach (var (card, weight) in weightedList)
+            for (int j = 0; j < weightedList.Count; j++)
             {
-                cumulative += weight;
+                cumulative += weightedList[j].weight;
 
                 if (roll <= cumulative)
                 {
-                    selectedCards.Add(card);
+                    chosen = weightedList[j].card;
+                    chosenIndex = j;
+                    break;
                 }
+            }
 
-                weightedList.Remove((card, weight));
-                break;
+            if (chosen != null)
+            {
+                selectedCards.Add(chosen);
+                weightedList.RemoveAt(chosenIndex);
             }
         }
 

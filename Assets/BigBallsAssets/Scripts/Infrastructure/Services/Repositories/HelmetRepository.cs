@@ -15,7 +15,7 @@ public class HelmetRepository : ItemRepository<ItemType, HelmetModel, HelmetConf
     }
 
     protected override HelmetModel CreateModel(ItemType type, HelmetConfig config, CardSaveData saveData)
-        => new HelmetModel(_artefactsRepository, (int)type, config, saveData.NoneGameLevel, saveData.ItemExp);
+        => new HelmetModel(_artefactsRepository, (int) type, config, saveData.NoneGameLevel, saveData.ItemExp);
 
     protected override List<HelmetSaveData> GetSaveDataFromProgress() => GameProgress.Helmets;
 

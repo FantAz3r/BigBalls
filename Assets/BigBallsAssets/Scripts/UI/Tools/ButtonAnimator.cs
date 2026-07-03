@@ -111,31 +111,28 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         Sequence sequence = DOTween.Sequence();
 
-        Sprite sprite = settings.Sprite;
-        Color color = settings.Color;
-        DotweenAnimationSettings dotweenAnimation = settings.AnimationSettings;
-        float duration = dotweenAnimation.Duration;
-        Ease ease = dotweenAnimation.Ease;
-        bool interactable = dotweenAnimation.InteractableWhenPlay;
-        bool blocksRaycast = dotweenAnimation.BlockRaycastWhenPlay;
-        bool ignoreParentGroup = dotweenAnimation.IgnoreParentGroupWhenPlay;
+        float duration = settings.AnimationSettings.Duration;
+        Ease ease = settings.AnimationSettings.Ease;
+        bool interactable = settings.AnimationSettings.InteractableWhenPlay;
+        bool blocksRaycast = settings.AnimationSettings.BlockRaycastWhenPlay;
+        bool ignoreParentGroup = settings.AnimationSettings.IgnoreParentGroupWhenPlay;
 
-        if (dotweenAnimation.TryGetTargetScale(out Vector3 targetScale) == false)
+        if (settings.AnimationSettings.TryGetTargetScale(out Vector3 targetScale) == false)
         {
             targetScale = _originRect.Scale;
         }
 
-        if (dotweenAnimation.TryGetAnchoredOffset(out Vector2 anchoredOffset) == false)
+        if (settings.AnimationSettings.TryGetAnchoredOffset(out Vector2 anchoredOffset) == false)
         {
             anchoredOffset = Vector2.zero;
         }
 
-        if (dotweenAnimation.TryGetTargetRotation(out Vector3 targetRotation) == false)
+        if (settings.AnimationSettings.TryGetTargetRotation(out Vector3 targetRotation) == false)
         {
             targetRotation = _originRect.Rotation;
         }
 
-        if (dotweenAnimation.TryGetTargetAlpha(out float targetAlpha) == false)
+        if (settings.AnimationSettings.TryGetTargetAlpha(out float targetAlpha) == false)
         {
             targetAlpha = _originCanvasGroup.Alpha;
         }
@@ -144,20 +141,18 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             .Join(_rectTransform.DOAnchorPos(_originRect.AnchoredPosition + anchoredOffset, duration).SetEase(ease))
             .Join(_rectTransform.DORotate(targetRotation, duration).SetEase(ease))
             .Join(_canvasGroup.DOFade(targetAlpha, duration).SetEase(ease))
-            .Join(_targetImage.DOColor(color, duration).SetEase(ease))
-            .SetDelay(dotweenAnimation.Delay)
+            .Join(_targetImage.DOColor(settings.Color, duration).SetEase(ease))
+            .SetDelay(settings.AnimationSettings.Delay)
             .SetAutoKill(false)
             .OnPlay(() =>
             {
-                Debug.Log("OnPlay");
                 _canvasGroup.interactable = interactable;
                 _canvasGroup.blocksRaycasts = blocksRaycast;
                 _canvasGroup.ignoreParentGroups = ignoreParentGroup;
             })
             .OnComplete(() =>
             {
-                Debug.Log("OnComplete");
-                _targetImage.sprite = sprite;
+                _targetImage.sprite = settings.Sprite;
                 _canvasGroup.interactable = _originCanvasGroup.Interactable;
                 _canvasGroup.blocksRaycasts = _originCanvasGroup.BlocksRaycasts;
                 _canvasGroup.ignoreParentGroups = _originCanvasGroup.IgnoreParentGroups;

@@ -1,12 +1,12 @@
 using System;
 using BigBalls.Configs;
 using BigBalls.Saves;
+using UnityEngine;
 
 namespace BigBalls.StaticData
 {
     public class ItemModel : ICardModel
     {
-        private const int ItemMaxLevel = 10;
         private int _id;
         private int _euqipmentLevel;
         public ItemModel (int id, ItemConfig config, int level = 0, float exp = 0)
@@ -21,33 +21,51 @@ namespace BigBalls.StaticData
 
         public event Action<ICardModel> Upgraded;
         public event Action<ICardModel> Changed;
+
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; }
+        public int MaxLevel { get; private set; } = 10;
+        public int MaxNoneGameLevel { get; private set; } = 5;
         public int NoneGameLevel { get; private set; } = 0;
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
         public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
+
+        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
 
         public CardType Type => Config.Type;
 
         public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
         public void Upgrade ()
         {
-            if (Level < ItemMaxLevel)
+            if (Level < MaxLevel)
             {
                 InGameLevel++;
                 Upgraded?.Invoke(this);
             }
         }
 
-        public void AddToPlayer()
+        public void UpgradeNoneGameLevel ()
+        {
+            if (NoneGameLevel < MaxNoneGameLevel)
+            {
+                if( ItemEXP >= EXPForNextLevel)
+                {
+                    ItemEXP -= EXPForNextLevel;
+                    NoneGameLevel++;
+                    Upgraded?.Invoke(this);
+                }
+            }
+        }
+
+        public void AddToPlayer ()
         {
             HasPlayer = true;
             Changed?.Invoke(this);
         }
 
-        public void OpenItem()
+        public void OpenItem ()
         {
             IsOpen = true;
         }
@@ -60,11 +78,11 @@ namespace BigBalls.StaticData
             ItemEXP = data.ItemExp;
         }
 
-        public void AddItemEXP(float value)
+        public void AddItemEXP (float value)
         {
             ItemEXP += value;
         }
 
-        public void AddEquipmentLevel(int level) => _euqipmentLevel = level;
+        public void AddEquipmentLevel (int level) => _euqipmentLevel = level;
     }
 }

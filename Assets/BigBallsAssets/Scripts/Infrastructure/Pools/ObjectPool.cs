@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using VContainer.Unity;
 
-public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where  T : MonoBehaviour
+public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehaviour
 {
     private T _prefab;
     private IObjectResolverProvider _resolverProvider;
@@ -13,14 +13,14 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where  T : MonoBehav
     private GameObject _positionInHierarchy;
 
     private Queue<T> _objectPool = new Queue<T>();
-    
-    public ObjectPool(int initializePoolSize, IObjectResolverProvider resolverProvider)
+
+    public ObjectPool (int initializePoolSize, IObjectResolverProvider resolverProvider)
     {
         _poolSize = initializePoolSize;
         _resolverProvider = resolverProvider;
     }
-    
-    public T Get()
+
+    public T Get ()
     {
         if (_objectPool.Count == 0)
             ExpandPool();
@@ -30,38 +30,38 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where  T : MonoBehav
 
         return obj;
     }
-    
-    public void Release(T obj)
+
+    public void Release (T obj)
     {
         obj.gameObject.SetActive(false);
         _objectPool.Enqueue(obj);
     }
-    
-    public override void Clear()
+
+    public override void Clear ()
     {
         foreach (T obj in _objectPool)
         {
-            if(obj != null)
+            if (obj != null)
                 GameObject.Destroy(obj.gameObject);
         }
-        
+
         _objectPool.Clear();
     }
 
-    public void InitializePool(T prefab, Transform transformParent, string nameParent)
+    public void InitializePool (T prefab, Transform transformParent, string nameParent)
     {
         _prefab = prefab;
         _nameParent = nameParent;
         _positionInHierarchy = new GameObject(_nameParent);
         _positionInHierarchy.transform.SetParent(transformParent);
-        
+
         for (int i = 0; i < _poolSize; i++)
         {
             ExpandPool();
         }
     }
 
-    private void ExpandPool()
+    private void ExpandPool ()
     {
         T obj = _resolverProvider.CurrentResolver.Instantiate(_prefab, Vector3.zero, quaternion.identity);
         obj.name = _nameParent;

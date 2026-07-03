@@ -13,6 +13,9 @@ public class ChestConfig :ScriptableObject
     [field: SerializeField] public Sprite OpenIcon { get; private set; }
     [field: SerializeField] public Sprite ShowIcon { get; private set; }
 
+    [field: SerializeField] public int MaxCoin { get; private set; }
+    [field: SerializeField] public int MinCoin { get; private set; }
+
     [field: SerializeField] public int BaseCardCount { get; private set; }
     [field: SerializeField] public int Level { get; private set; }
     [field: SerializeField] public int CardPerLevel { get; private set; }
@@ -21,6 +24,8 @@ public class ChestConfig :ScriptableObject
     {
         return BaseCardCount + CardPerLevel * Level;
     }
+
+    public int GetGold() => Random.Range(MinCoin, MinCoin + 1);
 
     public float GetRarityChance (Rarity candidateRarity)
     {

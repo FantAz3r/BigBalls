@@ -15,6 +15,8 @@ namespace BigBalls.Configs
         [field: SerializeField] public CardType Type { get; private set; }
         [field: SerializeField] public Rarity Rarity { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
+        [field: SerializeField] public int BaseEXPForUpgrade { get; private set; } = 50;
+        [field: SerializeField] public float LevelEXPMultipy { get; private set; } = 1.5f;
         [field: SerializeField] public bool IsOpen { get; private set; } = false;
 
         public string GetName (string lang)

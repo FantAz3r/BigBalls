@@ -10,6 +10,8 @@ namespace BigBalls.GameplayObjects
         private List<ICollisionStrategy> _collisionStrategies;
         private List<EffectBehaviour> _effectBehaviours;
         private IEffectFactory _ballEffectFactory;
+        private float _stackCount;
+        [SerializeField] private Vector3 _velosity;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
@@ -21,19 +23,36 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
-        public float ApplyedDamage { get; private set; }
+        public float AppliedDamage { get; private set; }
 
-        private void Awake ()
-        {
-            EventHandler = new EntityEventHandler();
-        }
+        private void Awake () => EventHandler = new EntityEventHandler();
+
+        private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
 
         private void OnCollisionEnter (Collision collision)
         {
+            _stackCount = 0;
+
             foreach (var strategy in _collisionStrategies)
             {
                 if (strategy.HandleCollision(this, collision))
                     break;
+            }
+        }
+
+        private void OnCollisionStay (Collision collision)
+        {
+            _stackCount += Time.deltaTime;
+
+            if (_stackCount >= 0.1f)
+            {
+                _stackCount = 0;
+
+                foreach (var strategy in _collisionStrategies)
+                {
+                    if (strategy.HandleCollision(this, collision))
+                        break;
+                }
             }
         }
 
@@ -50,7 +69,7 @@ namespace BigBalls.GameplayObjects
             DeathHandler<Ball> deathHandler,
             IEffectFactory ballEffectFactory)
         {
-            ApplyedDamage = 0;
+            AppliedDamage = 0;
             DeathHandler = deathHandler;
             Id = id;
             Level = level;
@@ -60,7 +79,6 @@ namespace BigBalls.GameplayObjects
 
             IsMaterial = Config.IsMaterial;
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
-
             _effectBehaviours = _ballEffectFactory.Create(Config.EffectConfigs, Level);
 
             foreach (var effect in _effectBehaviours)
@@ -94,7 +112,7 @@ namespace BigBalls.GameplayObjects
 
         public void AddDamage (float damage)
         {
-            ApplyedDamage += damage;
+            AppliedDamage += damage;
         }
     }
 }
