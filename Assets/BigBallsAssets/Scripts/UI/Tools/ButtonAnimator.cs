@@ -5,15 +5,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CanvasGroup))]
+[RequireComponent(typeof(Image), typeof(CanvasGroup))]
 public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private ButtonStateSettings _normal;
     [SerializeField] private ButtonStateSettings _highlighted;
     [SerializeField] private ButtonStateSettings _pressed;
 
-    [SerializeField] private Image _targetImage;
-
+    private Image _targetImage;
     private CanvasGroup _canvasGroup;
     private RectTransform _rectTransform;
     private RectTransformSnapshot _originRect;
@@ -26,11 +25,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Awake()
     {
-        if (_targetImage == null)
-        {
-            _targetImage = GetComponent<Image>();
-        }
-
+        _targetImage = GetComponent<Image>();
         _canvasGroup = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
     }
