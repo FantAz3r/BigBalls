@@ -5,14 +5,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Image), typeof(CanvasGroup))]
+[RequireComponent(typeof(CanvasGroup))]
 public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private ButtonStateSettings _normal;
     [SerializeField] private ButtonStateSettings _highlighted;
     [SerializeField] private ButtonStateSettings _pressed;
 
-    private Image _targetImage;
+    [SerializeField] private Image _targetImage;
+
     private CanvasGroup _canvasGroup;
     private RectTransform _rectTransform;
     private RectTransformSnapshot _originRect;
@@ -25,7 +26,11 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Awake()
     {
-        _targetImage = GetComponent<Image>();
+        if (_targetImage == null)
+        {
+            _targetImage = GetComponent<Image>();
+        }
+
         _canvasGroup = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
     }
@@ -137,6 +142,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             targetAlpha = _originCanvasGroup.Alpha;
         }
 
+<<<<<<< HEAD
         sequence.Append(_rectTransform.DOScale(targetScale, duration).SetEase(ease))
             .Join(_rectTransform.DOAnchorPos(_originRect.AnchoredPosition + anchoredOffset, duration).SetEase(ease))
             .Join(_rectTransform.DORotate(targetRotation, duration).SetEase(ease))
@@ -156,6 +162,52 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 _canvasGroup.interactable = _originCanvasGroup.Interactable;
                 _canvasGroup.blocksRaycasts = _originCanvasGroup.BlocksRaycasts;
                 _canvasGroup.ignoreParentGroups = _originCanvasGroup.IgnoreParentGroups;
+=======
+        sequence.Append(_rectTransform.DOScale(targetScale, duration).SetEase(ease));
+
+        if (dotweenAnimation.EnabledPositionChange)
+        {
+            sequence.Join(_rectTransform.DOAnchorPos(_originRect.AnchoredPosition + anchoredOffset, duration).SetEase(ease));
+        }
+
+        sequence.Join(_rectTransform.DORotate(targetRotation, duration).SetEase(ease));
+
+        if (dotweenAnimation.EnabledCanvasGroupChange)
+        {
+            sequence.Join(_canvasGroup.DOFade(targetAlpha, duration).SetEase(ease));
+        }
+
+        if (_targetImage != null)
+        {
+            sequence.Join(_targetImage.DOColor(color, duration).SetEase(ease));
+        }
+
+        sequence.SetDelay(dotweenAnimation.Delay)
+            .SetAutoKill(false)
+            .OnPlay(() =>
+            {
+                if (dotweenAnimation.EnabledCanvasGroupChange)
+                {
+                    _canvasGroup.interactable = interactable;
+                    _canvasGroup.blocksRaycasts = blocksRaycast;
+                    _canvasGroup.ignoreParentGroups = ignoreParentGroup;
+                }
+            })
+            .OnComplete(() =>
+            {
+                if (_targetImage != null)
+                {
+                    _targetImage.sprite = sprite;
+                }
+
+                if (dotweenAnimation.EnabledCanvasGroupChange)
+                {
+                    _canvasGroup.interactable = _originCanvasGroup.Interactable;
+                    _canvasGroup.blocksRaycasts = _originCanvasGroup.BlocksRaycasts;
+                    _canvasGroup.ignoreParentGroups = _originCanvasGroup.IgnoreParentGroups;
+                }
+
+>>>>>>> da9235a194bcc241951f9bc0dae9881ed81421d3
                 onComplete?.Invoke();
             });
 
