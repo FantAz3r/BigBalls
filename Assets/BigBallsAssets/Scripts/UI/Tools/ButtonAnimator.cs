@@ -112,57 +112,39 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         }
     }
 
-    private Tween ConstructTween(ButtonStateSettings settings, Action onComplete = null)
+    private Tween ConstructTween (ButtonStateSettings settings, Action onComplete = null)
     {
         Sequence sequence = DOTween.Sequence();
 
-        float duration = settings.AnimationSettings.Duration;
-        Ease ease = settings.AnimationSettings.Ease;
-        bool interactable = settings.AnimationSettings.InteractableWhenPlay;
-        bool blocksRaycast = settings.AnimationSettings.BlockRaycastWhenPlay;
-        bool ignoreParentGroup = settings.AnimationSettings.IgnoreParentGroupWhenPlay;
+        Sprite sprite = settings.Sprite;
+        Color color = settings.Color;
+        DotweenAnimationSettings dotweenAnimation = settings.AnimationSettings;
+        float duration = dotweenAnimation.Duration;
+        Ease ease = dotweenAnimation.Ease;
+        bool interactable = dotweenAnimation.InteractableWhenPlay;
+        bool blocksRaycast = dotweenAnimation.BlockRaycastWhenPlay;
+        bool ignoreParentGroup = dotweenAnimation.IgnoreParentGroupWhenPlay;
 
-        if (settings.AnimationSettings.TryGetTargetScale(out Vector3 targetScale) == false)
+        if (dotweenAnimation.TryGetTargetScale(out Vector3 targetScale) == false)
         {
             targetScale = _originRect.Scale;
         }
 
-        if (settings.AnimationSettings.TryGetAnchoredOffset(out Vector2 anchoredOffset) == false)
+        if (dotweenAnimation.TryGetAnchoredOffset(out Vector2 anchoredOffset) == false)
         {
             anchoredOffset = Vector2.zero;
         }
 
-        if (settings.AnimationSettings.TryGetTargetRotation(out Vector3 targetRotation) == false)
+        if (dotweenAnimation.TryGetTargetRotation(out Vector3 targetRotation) == false)
         {
             targetRotation = _originRect.Rotation;
         }
 
-        if (settings.AnimationSettings.TryGetTargetAlpha(out float targetAlpha) == false)
+        if (dotweenAnimation.TryGetTargetAlpha(out float targetAlpha) == false)
         {
             targetAlpha = _originCanvasGroup.Alpha;
         }
 
-<<<<<<< HEAD
-        sequence.Append(_rectTransform.DOScale(targetScale, duration).SetEase(ease))
-            .Join(_rectTransform.DOAnchorPos(_originRect.AnchoredPosition + anchoredOffset, duration).SetEase(ease))
-            .Join(_rectTransform.DORotate(targetRotation, duration).SetEase(ease))
-            .Join(_canvasGroup.DOFade(targetAlpha, duration).SetEase(ease))
-            .Join(_targetImage.DOColor(settings.Color, duration).SetEase(ease))
-            .SetDelay(settings.AnimationSettings.Delay)
-            .SetAutoKill(false)
-            .OnPlay(() =>
-            {
-                _canvasGroup.interactable = interactable;
-                _canvasGroup.blocksRaycasts = blocksRaycast;
-                _canvasGroup.ignoreParentGroups = ignoreParentGroup;
-            })
-            .OnComplete(() =>
-            {
-                _targetImage.sprite = settings.Sprite;
-                _canvasGroup.interactable = _originCanvasGroup.Interactable;
-                _canvasGroup.blocksRaycasts = _originCanvasGroup.BlocksRaycasts;
-                _canvasGroup.ignoreParentGroups = _originCanvasGroup.IgnoreParentGroups;
-=======
         sequence.Append(_rectTransform.DOScale(targetScale, duration).SetEase(ease));
 
         if (dotweenAnimation.EnabledPositionChange)
@@ -207,7 +189,6 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     _canvasGroup.ignoreParentGroups = _originCanvasGroup.IgnoreParentGroups;
                 }
 
->>>>>>> da9235a194bcc241951f9bc0dae9881ed81421d3
                 onComplete?.Invoke();
             });
 
@@ -215,6 +196,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         return sequence;
     }
+
 
     private Tween GetStateAnimation(ButtonState state)
     {
