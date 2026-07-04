@@ -1,8 +1,8 @@
-﻿using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
+using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 
 public class PlayerCardHolder
 {
@@ -10,7 +10,7 @@ public class PlayerCardHolder
     private readonly IArtefactContainer _artefactContainer;
     private List<ICardModel> _cards = new();
 
-    public PlayerCardHolder(IBallContainer ballContainer, IArtefactContainer artefactContainer)
+    public PlayerCardHolder (IBallContainer ballContainer, IArtefactContainer artefactContainer)
     {
         _ballContainer = ballContainer;
         _artefactContainer = artefactContainer;
@@ -20,7 +20,7 @@ public class PlayerCardHolder
 
     public List<ICardModel> Cards => _cards;
 
-    public void AddItem(ItemModel item)
+    public void AddItem (ItemModel item)
     {
         if (item is WeaponModel weapon)
         {
@@ -39,14 +39,18 @@ public class PlayerCardHolder
         }
     }
 
-    public void Add(ICardModel card)
+    public void Add (ICardModel card)
     {
         card.Upgraded += OnCardChanged;
         card.Changed += OnCardChanged;
+
         _cards.Add(card);
 
         if (card is BallModel ball)
         {
+            if (_ballContainer.Balls.Contains(card))
+                return;
+
             _ballContainer.AddUniqueBall(ball);
         }
         else if (card is ArtefactModel artefact)
@@ -55,9 +59,9 @@ public class PlayerCardHolder
         }
     }
 
-    private void OnCardChanged(ICardModel card) => CardChanged?.Invoke(card);
+    private void OnCardChanged (ICardModel card) => CardChanged?.Invoke(card);
 
-    public void Remove(ICardModel card)
+    public void Remove (ICardModel card)
     {
         card.Upgraded -= OnCardChanged;
         card.Changed -= OnCardChanged;

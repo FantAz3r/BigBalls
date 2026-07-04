@@ -12,6 +12,8 @@ public interface ICardModel
     bool IsOpen { get; }
     bool HasPlayer { get; }
     float EXPForNextLevel { get; }
+    string Name { get; }
+    string Description { get; }
 
     event Action<ICardModel> Upgraded;
     event Action<ICardModel> Changed;

@@ -44,7 +44,7 @@ namespace BigBalls.Factories
         public Ball Create(BallModel ballModel)
         {
             int ballId = _identifierService.ID;
-            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
+            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name, _playerProvider.Player.transform.position + new Vector3(0, 0.5f, 0));
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
             ball.EventHandler.Returned += OnReturn;
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BigBalls.Configs;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Saves;
 using BigBalls.Services;
 using BigBalls.StaticData;
@@ -8,8 +9,8 @@ public class BallRepository : ItemRepository<BallType, BallModel, BallConfig, Ba
 {
     private readonly Dictionary<BallType, BallConfig> _ballsData;
 
-    public BallRepository (IResourceLoader resourceLoader, ISaveService saveService)
-        : base(resourceLoader, saveService)
+    public BallRepository (IResourceLoader resourceLoader, ISaveService saveService, IObjectResolverProvider objectResolverProvider)
+        : base(resourceLoader, saveService, objectResolverProvider)
     {
         _ballsData = resourceLoader.Load<CardsData>().Balls;
         Initialize();

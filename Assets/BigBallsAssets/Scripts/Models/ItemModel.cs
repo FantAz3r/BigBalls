@@ -2,11 +2,17 @@ using System;
 using BigBalls.Configs;
 using BigBalls.Saves;
 using UnityEngine;
+using VContainer;
+using YG;
 
 namespace BigBalls.StaticData
 {
     public class ItemModel : ICardModel
     {
+        private const string RuLanguage = "ru";
+        private const string EnLanguage = "en";
+        private const string TRLanguage = "tr";
+
         private int _id;
         private int _euqipmentLevel;
         public ItemModel (int id, ItemConfig config, int level = 0, float exp = 0)
@@ -30,13 +36,22 @@ namespace BigBalls.StaticData
         public int NoneGameLevel { get; private set; } = 0;
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
-        public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
-
-        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
 
         public CardType Type => Config.Type;
+        public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
+        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
+
+        public string Name => OnCorrectLanguage(Config.NameRU, Config.NameEN, Config.NameTR);
+        public string Description => OnCorrectLanguage(Config.DescriptionRU, Config.DescriptionEN, Config.DescriptionTR);
+
+        [Inject]
+        public void Construct()
+        {
+
+        }
 
         public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
+
         public void Upgrade ()
         {
             if (Level < MaxLevel)
@@ -50,7 +65,7 @@ namespace BigBalls.StaticData
         {
             if (NoneGameLevel < MaxNoneGameLevel)
             {
-                if( ItemEXP >= EXPForNextLevel)
+                if ( ItemEXP >= EXPForNextLevel)
                 {
                     ItemEXP -= EXPForNextLevel;
                     NoneGameLevel++;
@@ -65,10 +80,7 @@ namespace BigBalls.StaticData
             Changed?.Invoke(this);
         }
 
-        public void OpenItem ()
-        {
-            IsOpen = true;
-        }
+        public void OpenItem () => IsOpen = true;
 
         public void InitFromData (CardSaveData data)
         {
@@ -84,5 +96,22 @@ namespace BigBalls.StaticData
         }
 
         public void AddEquipmentLevel (int level) => _euqipmentLevel = level;
+
+        private string OnCorrectLanguage (string ru, string en, string tr)
+        {
+            string lang = YG2.lang;
+
+            switch (lang)
+            {
+                case RuLanguage:
+                    return ru;
+                case EnLanguage:
+                    return en;
+                case TRLanguage:
+                    return tr;
+                default:
+                    return string.Empty;
+            }
+        }
     }
 }

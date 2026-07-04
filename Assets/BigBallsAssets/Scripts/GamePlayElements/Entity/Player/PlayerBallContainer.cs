@@ -4,7 +4,6 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -49,8 +48,6 @@ namespace BigBalls.GameplayObjects
 
         public bool TryGetNextBullet (out Ball ball)
         {
-            Debug.Log($"{_currentBallCount}  {_balls.Count}  {_createdBallsCount}  {_ballCount.CurrentValue}");
-
             ball = null;
 
             if (_createdBallsCount < _ballCount.CurrentValue)
@@ -84,8 +81,6 @@ namespace BigBalls.GameplayObjects
 
         public void ReturnBullet (BallModel ballModel)
         {
-            Debug.Log($"{_currentBallCount}  {_balls.Count}  {_createdBallsCount}");
-
             _balls.Enqueue(ballModel);
             _currentBallCount++;
         }

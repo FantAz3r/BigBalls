@@ -11,7 +11,6 @@ namespace BigBalls.GameplayObjects
         private List<EffectBehaviour> _effectBehaviours;
         private IEffectFactory _ballEffectFactory;
         private float _stackCount;
-        [SerializeField] private Vector3 _velosity;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
@@ -27,7 +26,7 @@ namespace BigBalls.GameplayObjects
 
         private void Awake () => EventHandler = new EntityEventHandler();
 
-        private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        //private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
 
         private void OnCollisionEnter (Collision collision)
         {

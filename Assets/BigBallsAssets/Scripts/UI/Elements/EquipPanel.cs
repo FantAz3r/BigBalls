@@ -10,6 +10,7 @@ public class EquipPanel : MonoBehaviour
     [SerializeField] private Slot _weaponSlot;
     [SerializeField] private Slot _armorSlot;
     [SerializeField] private Slot _helmetSlot;
+    [SerializeField] private StatsView _statsView;
 
     private Canvas _mainCanvas;
     private CardsData _cardData;
@@ -35,7 +36,7 @@ public class EquipPanel : MonoBehaviour
 
         foreach (var model in _models)
         {
-            if(model.IsOpen && model.HasPlayer)
+            if (model.IsOpen && model.HasPlayer)
             {
                 if(model is ArmorModel)
                 {
@@ -65,6 +66,7 @@ public class EquipPanel : MonoBehaviour
         UIItem item = _objectResolverProvider.CurrentResolver.Instantiate(_itemPrefab, slot.transform);
         item.Init(transform, _mainCanvas);
         item.Render(model);
+        item.StatsButton.Init(_statsView);
         slot.SetItem(item);
     }
 }

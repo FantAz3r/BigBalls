@@ -1,25 +1,28 @@
-using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
-using VContainer.Unity;
 
 public class DamageTextFactory
 {
-    private readonly IResourceLoader _resourceLoader;
-    private readonly IObjectResolverProvider _objectResolverProvider;
-    private DamageText _prefab;
+    private const string DamageTextPool = "DamageTextPool";
 
-    public DamageTextFactory(IResourceLoader resourceLoader, IObjectResolverProvider objectResolverProvider)
+    private readonly IPoolService _poolService;
+
+    public DamageTextFactory (IPoolService poolService)
     {
-        _resourceLoader = resourceLoader;
-        _objectResolverProvider = objectResolverProvider;
-        _prefab = _resourceLoader.Load<DamageText>();
+        _poolService = poolService;
     }
 
-    public DamageText Create(Vector3 position, float damage)
+    public DamageText Create (Vector3 position, float damage)
     {
-        DamageText damageText = _objectResolverProvider.CurrentResolver.Instantiate(_prefab, position, Quaternion.identity);
-        damageText.SetDamageText((int)damage);
+        DamageText damageText = _poolService.GetObject<DamageText>(DamageTextPool, position);
+        damageText.SetDamageText((int) damage);
+        damageText.Removed += OnRemoved;
         return damageText;
+    }
+
+    public void OnRemoved (DamageText damageText)
+    {
+        _poolService.ReleaseObject(damageText);
+        damageText.Removed -= OnRemoved;
     }
 }

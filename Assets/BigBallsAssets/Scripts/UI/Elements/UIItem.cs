@@ -7,6 +7,7 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 {
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private RectTransform _selfRectTransform;
+    [SerializeField] private Slider _slider;
 
     private Transform _inventory;
     private Canvas _mainCanvas;
@@ -15,29 +16,34 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
     [field: SerializeField] public Image SlotImag { get; private set; }
     [field: SerializeField] public TMP_Text ItemLevelText { get; private set; }
+    [field: SerializeField] public StatsButton StatsButton { get; private set; }
 
     public ICardModel Model { get; private set; }
 
-    public void Init(Transform inventory, Canvas mainCanvas)
+    public void Init (Transform inventory, Canvas mainCanvas)
     {
         _inventory = inventory;
         _mainCanvas = mainCanvas;
     }
 
-    public void Render(ICardModel config)
+    public void Render (ICardModel card)
     {
-        Model = config;
+        _slider.maxValue = card.EXPForNextLevel;
+        _slider.value = card.ItemEXP;
+        Model = card;
         SlotImag.sprite = Model.Config.Icon;
         ItemLevelText.text = Model.Level.ToString();
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag (PointerEventData eventData)
     {
         _selfRectTransform.anchoredPosition += eventData.delta / _mainCanvas.scaleFactor;
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public void OnBeginDrag (PointerEventData eventData)
     {
+        StatsButton.View();
+
         _previousParent = transform.parent;
         _previousSlot = _previousParent.GetComponent<Slot>();
 
@@ -46,7 +52,7 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
         _canvasGroup.blocksRaycasts = false;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag (PointerEventData eventData)
     {
         Slot newSlot = null;
 

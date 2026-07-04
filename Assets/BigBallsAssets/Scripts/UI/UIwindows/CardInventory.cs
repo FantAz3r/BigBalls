@@ -25,6 +25,8 @@ public class CardInventory : WindowBase
     private List<ICardModel> _models = new();
     private IObjectResolverProvider _objectResolverProvider;
 
+    [field: SerializeField] public StatsView StatsView { get; private set; }
+
     private void OnEnable()
     {
         ViewAll();
@@ -58,7 +60,7 @@ public class CardInventory : WindowBase
         {
             if (filter(card))
             {
-                if (true) //card.IsOpen && card.Level > 0
+                if (card.IsOpen || card.Level > 0)
                 {
                     Slot slot = Instantiate(_slotPrefab, _parent.transform);
                     _slots.Add(slot);
@@ -68,6 +70,7 @@ public class CardInventory : WindowBase
                     {
                         UIItem item = _objectResolverProvider.CurrentResolver.Instantiate(_itemPrefab, slot.transform);
                         item.Init(transform, _canvas);
+                        item.StatsButton.Init(StatsView);
                         item.Render(card);
                         slot.AddItem(item);
                     }
