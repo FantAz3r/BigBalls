@@ -6,27 +6,28 @@ using UnityEngine;
 
 public class ChestCalculator
 {
-    private readonly ChestConfig _chestConfig;
     private readonly System.Random _random;
 
     private readonly ArmorRepository _armorRepository;
     private readonly WeaponRepository _weaponRepository;
     private readonly List<ICardModel> _cards = new();
 
-    public ChestCalculator (ChestConfig chestConfig, ArmorRepository armorRepository, WeaponRepository weaponRepository, int? seed = null)
+    public ChestCalculator (ArmorRepository armorRepository, WeaponRepository weaponRepository)
     {
         _armorRepository = armorRepository;
         _weaponRepository = weaponRepository;
-        _chestConfig = chestConfig ?? throw new ArgumentNullException(nameof(chestConfig));
-        _random = seed.HasValue ? new System.Random(seed.Value) : new System.Random();
+        _random = new System.Random();
 
         _cards.AddRange(_weaponRepository.AllModels.Values);
         _cards.AddRange(_armorRepository.AllModels.Values);
     }
 
-    public ChestOpenResult OpenChest ()
+    public ChestConfig ChestConfig { get; private set; }
+
+    public ChestOpenResult OpenChest (ChestConfig chestConfig)
     {
-        int totalCards = _chestConfig.GetCardCount();
+        ChestConfig = chestConfig ?? throw new ArgumentNullException(nameof(chestConfig));
+        int totalCards = ChestConfig.GetCardCount();
         var result = new ChestOpenResult();
 
         // ѕровер€ем, есть ли вообще доступные карты
@@ -120,7 +121,7 @@ public class ChestCalculator
     private int CalculateGoldCompensation (int totalCardsCost)
     {
         // Ѕазовое золото за сундук + дополнительное за каждую невыданную карту
-        int baseGold = _chestConfig.GetGold();
+        int baseGold = ChestConfig.GetGold();
         return baseGold + totalCardsCost * 50;
     }
 
@@ -159,7 +160,7 @@ public class ChestCalculator
             .Select(rarity => new
             {
                 Rarity = rarity,
-                Chance = _chestConfig.GetRarityChance(rarity)
+                Chance = ChestConfig.GetRarityChance(rarity)
             })
             .Where(x => x.Chance > 0f)
             .ToList();

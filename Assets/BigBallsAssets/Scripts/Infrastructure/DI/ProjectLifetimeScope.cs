@@ -51,6 +51,8 @@ namespace BigBalls.Infrastructure.DI
             //................
             builder.Register<BallTreeModel>(Lifetime.Singleton);
             builder.Register<GlobalWallet>(Lifetime.Singleton);
+
+            builder.Register<ChestCalculator>(Lifetime.Singleton);
         }
 
         private void BindProviders(IContainerBuilder builder)
@@ -63,7 +65,8 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<BallRepository>(Lifetime.Singleton);
             builder.Register<ArtefactsRepository>(Lifetime.Singleton);
             builder.Register<WeaponRepository>(Lifetime.Singleton);
-
+            builder.Register<ArmorRepository>(Lifetime.Singleton);
+            builder.Register<HelmetRepository>(Lifetime.Singleton);
         }
 
         protected override void OnDestroy()

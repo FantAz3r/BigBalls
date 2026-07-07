@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using BigBalls.StaticData;
-// Новая модель результата открытия сундука
+
 public class ChestOpenResult
 {
-    public List<ItemModel> Cards { get; set; } = new List<ItemModel>();
-    public int GoldAmount { get; set; } = 0;
+    public List<ICardModel> Cards { get; private set; } = new List<ICardModel>();
+    public int GoldAmount { get; set; }
 
     public bool HasCards => Cards.Count > 0;
     public bool HasGold => GoldAmount > 0;
+    public int TotalItems => Cards.Count + (HasGold ? 1 : 0);
 }

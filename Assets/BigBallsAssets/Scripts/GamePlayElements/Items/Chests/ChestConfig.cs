@@ -12,6 +12,8 @@ public class ChestConfig :ScriptableObject
     [field: SerializeField] public Sprite CloseIcon { get; private set; }
     [field: SerializeField] public Sprite OpenIcon { get; private set; }
     [field: SerializeField] public Sprite ShowIcon { get; private set; }
+    [field: SerializeField] public Sprite GoldSprite { get; private set; }
+
 
     [field: SerializeField] public int MaxCoin { get; private set; }
     [field: SerializeField] public int MinCoin { get; private set; }

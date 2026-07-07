@@ -51,7 +51,6 @@ namespace BigBalls.GameplayObjects
 
         protected override IDisposable SubscribeInternal (IEntity host)
         {
-            Debug.Log(Host);
             host.EventHandler.HitedEntity += OnHit;
             return new DisposableObject(() => host.EventHandler.HitedEntity -= OnHit);
         }

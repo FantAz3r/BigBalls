@@ -1,4 +1,3 @@
-using System;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Providers;
@@ -14,7 +13,7 @@ namespace BigBalls.Infrastructure.DI
         [SerializeField] private SceneContainerProvider _sceneContainer;
         [SerializeField] private ObjectContainer _objectContainer;
 
-        protected override void Configure(IContainerBuilder builder)
+        protected override void Configure (IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<LevelEntryPoint>(Lifetime.Scoped);
             builder.Register<CreateLevelState>(Lifetime.Scoped);
@@ -29,13 +28,13 @@ namespace BigBalls.Infrastructure.DI
             RegisterModels(builder);
         }
 
-        private void OnDisable()
+        private void OnDisable ()
         {
             ILootFactory lootFactory = Container.Resolve<ILootFactory>();
             lootFactory.Disable();
         }
 
-        private void RegisterFactories(IContainerBuilder builder)
+        private void RegisterFactories (IContainerBuilder builder)
         {
             builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Scoped);
             builder.Register<IEffectFactory, EffectFactory>(Lifetime.Scoped);
@@ -48,7 +47,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<DamageTextFactory>(Lifetime.Scoped);
         }
 
-        private void RegisterServices(IContainerBuilder builder)
+        private void RegisterServices (IContainerBuilder builder)
         {
             builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
             builder.Register<InputService>(Lifetime.Singleton)
@@ -61,7 +60,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<CardSelector>(Lifetime.Scoped);
         }
 
-        private void RegisterProviders(IContainerBuilder builder)
+        private void RegisterProviders (IContainerBuilder builder)
         {
             builder.Register<IEntityRepository, EntityRepository>(Lifetime.Scoped);
             builder.Register<IPlayerProvider, PlayerProvider>(Lifetime.Scoped);
@@ -69,13 +68,12 @@ namespace BigBalls.Infrastructure.DI
                 .As<ISceneContainerProvider>();
         }
 
-        private void RegisterModels(IContainerBuilder builder)
+        private void RegisterModels (IContainerBuilder builder)
         {
-            builder.Register<IWalletModel, WalletModel > (Lifetime.Scoped);
+            builder.Register<IWalletModel, WalletModel>(Lifetime.Scoped);
             builder.Register<ILootMediator, LootMediator>(Lifetime.Scoped);
             builder.Register<IPlayerExperience, PlayerExperienceModel>(Lifetime.Scoped);
             builder.Register<IWalletModel, WalletModel>(Lifetime.Scoped);
-
         }
     }
 }

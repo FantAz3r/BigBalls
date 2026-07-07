@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private RectTransform _selfRectTransform;
@@ -20,6 +20,9 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
     public ICardModel Model { get; private set; }
 
+
+    private void OnDestroy () => Model.Upgraded -= Render;
+
     public void Init (Transform inventory, Canvas mainCanvas)
     {
         _inventory = inventory;
@@ -28,12 +31,21 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
     public void Render (ICardModel card)
     {
+        if (Model != null)
+        {
+            Model.Upgraded -= Render;
+        }
+
+        Model = card;
+        Model.Upgraded += Render;
+
         _slider.maxValue = card.EXPForNextLevel;
         _slider.value = card.ItemEXP;
-        Model = card;
         SlotImag.sprite = Model.Config.Icon;
         ItemLevelText.text = Model.Level.ToString();
     }
+
+    public void OnPointerClick (PointerEventData eventData) => StatsButton.View();
 
     public void OnDrag (PointerEventData eventData)
     {
@@ -86,4 +98,5 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
         _canvasGroup.blocksRaycasts = true;
     }
+
 }

@@ -24,4 +24,5 @@ public interface ICardModel
     void InitFromData (CardSaveData data);
     void OpenItem ();
     void Upgrade ();
+    void UpgradeNoneGameLevel ();
 }

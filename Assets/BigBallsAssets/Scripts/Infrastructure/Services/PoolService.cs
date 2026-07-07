@@ -15,6 +15,7 @@ namespace BigBalls.Services
         private const string TilePool = "TilePool";
         private const string LootPool = "LootPool";
         private const string DamageTextPool = "DamageTextPool";
+        //private const string CardPool = "CardPool";
 
         private readonly PoolServiceConfig _poolConfig;
         private readonly ObjectContainer _objectContainer;
@@ -101,6 +102,7 @@ namespace BigBalls.Services
             CreatePoolContainer(TilePool, out Transform tilePoolContainer);
             CreatePoolContainer(LootPool, out Transform lootPoolContainer);
             CreatePoolContainer(DamageTextPool, out Transform damageTextContainer);
+            //CreatePoolContainer(CardPool, out Transform cardContainer);
 
             foreach (EnemyConfig config in _enemyConfigs)
                 CreatePool(config.Prefab, enemyPoolContainer, config.name, _poolConfig.InitialEnemyPoolSize);

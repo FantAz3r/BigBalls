@@ -45,9 +45,9 @@ namespace BigBalls.StaticData
         public string Description => OnCorrectLanguage(Config.DescriptionRU, Config.DescriptionEN, Config.DescriptionTR);
 
         [Inject]
-        public void Construct()
+        public void Construct ()
         {
-
+            //TranslateService
         }
 
         public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
@@ -65,7 +65,7 @@ namespace BigBalls.StaticData
         {
             if (NoneGameLevel < MaxNoneGameLevel)
             {
-                if ( ItemEXP >= EXPForNextLevel)
+                if ( true)//ItemEXP >= EXPForNextLevel)
                 {
                     ItemEXP -= EXPForNextLevel;
                     NoneGameLevel++;
