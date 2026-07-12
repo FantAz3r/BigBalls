@@ -20,11 +20,7 @@ namespace BigBalls.Configs
         [field: SerializeField] public bool IsMaterial { get; private set; }
         [field: SerializeField] public bool IsUnique { get; private set; } = true;
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }
-<<<<<<< HEAD
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
-=======
-        [field: SerializeField] public List<EffectConfig> EffectConfigs { get; private set; }
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 
         [field: SerializeField] public List<BallType> ParentTypes { get; private set; }
         [field: SerializeField] public int UnlockPrice { get; private set; }
@@ -32,7 +28,6 @@ namespace BigBalls.Configs
         [field: SerializeField] public Vector2 Position { get; set; }
         public bool IsRoot => ParentTypes == null || ParentTypes.Count == 0;
 
-<<<<<<< HEAD
         public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
 
         public override List<ItemStat> GetStats(int level)
@@ -46,8 +41,5 @@ namespace BigBalls.Configs
 
             return stats;
         }
-=======
-        public StatStruct Get (StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     }
 }

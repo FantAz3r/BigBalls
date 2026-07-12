@@ -43,12 +43,7 @@ public class CardView : ButtonClickHandler
         _card = card;
         _image.sprite = card.Config.Icon;
         _name.text = card.Name;
-<<<<<<< HEAD
         _description.text = card.Description;
-=======
-        //_description.text = card.Description;
-        //_stats.text = RenderStats();
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         _level.text = card.Level.ToString();
         RenderStats(card);
     }

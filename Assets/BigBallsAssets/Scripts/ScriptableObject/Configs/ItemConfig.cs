@@ -20,12 +20,9 @@ namespace BigBalls.Configs
         [field: SerializeField] public int BaseEXPForUpgrade { get; private set; } = 50;
         [field: SerializeField] public float LevelEXPMultipy { get; private set; } = 1.5f;
         [field: SerializeField] public bool IsOpen { get; private set; } = false;
-<<<<<<< HEAD
 
         public virtual List<ItemStat> GetStats(int level) => null;
         public virtual List<BallConfig> GetBalls(int level) => null;
         public virtual List<ArtefactConfig> GetArtefacts(int level) => null;
-=======
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     }
 }

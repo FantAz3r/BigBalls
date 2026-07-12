@@ -88,11 +88,7 @@ public class ChestCardView : MonoBehaviour
 
         sequence.Append(_canvasGroup.DOFade(1f, 0.3f));
         sequence.Join(_rectTransform.DOScale(1f, 0.3f).SetEase(Ease.OutBack));
-<<<<<<< HEAD
         sequence.SetUpdate(true);
-=======
-
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         return sequence;
     }
 
@@ -103,11 +99,7 @@ public class ChestCardView : MonoBehaviour
         sequence.Append(_rectTransform.DOMove(targetTransform.position, duration).SetEase(Ease.InBack));
         sequence.Join(_rectTransform.DOScale(0.5f, duration));
         sequence.Join(_canvasGroup.DOFade(0f, duration * 0.8f));
-<<<<<<< HEAD
         sequence.SetUpdate(true);
-=======
-
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         return sequence;
     }
 
@@ -118,11 +110,7 @@ public class ChestCardView : MonoBehaviour
         // Пульсация при получении карты
         sequence.Append(_rectTransform.DOScale(1.2f, 0.2f).SetEase(Ease.OutQuad));
         sequence.Append(_rectTransform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
-<<<<<<< HEAD
         sequence.SetUpdate(true);
-=======
-
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         // Обновление информации
         sequence.AppendCallback(() => RenderCard(cardModel));
 

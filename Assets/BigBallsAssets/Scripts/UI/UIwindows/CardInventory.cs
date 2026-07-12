@@ -25,11 +25,7 @@ public class CardInventory : WindowBase
     private List<ICardModel> _models = new();
     private IObjectResolverProvider _objectResolverProvider;
 
-<<<<<<< HEAD
     [field: SerializeField] public InventoryStatsView StatsView { get; private set; }
-=======
-    [field: SerializeField] public StatsView StatsView { get; private set; }
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 
     private void OnEnable()
     {

@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 using BigBalls.Infrastructure;
 using BigBalls.Services;
 using System.Collections.Generic;
-=======
-using System.Collections.Generic;
-using BigBalls.Infrastructure;
-using BigBalls.Services;
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +15,6 @@ namespace BigBalls.UI
         [SerializeField] private List<Image> _stars;
         [SerializeField] private TMP_Text _levelStats;
 
-<<<<<<< HEAD
         private IUIFactory _windowService;
         private ChestData _chestData;
 
@@ -39,20 +32,5 @@ namespace BigBalls.UI
             ChestModel chestModel = new ChestModel((int)level, chestConfig);
             _windowService.Get<ChestItemDropView>(WindowType.OpenChest).Init(chestModel);
         }
-=======
-        private ChestData _chestData;
-
-        [Inject]
-        public void Construct(IResourceLoader resourceLoader)
-        {
-            _chestData = resourceLoader.Load<ChestData>();
-        }
-
-        public void LevelComplite (LevelID level, int compliteWaves)
-        {
-            _chestImage.sprite = _chestData.GetChest((Rarity) compliteWaves).CloseIcon;
-        }
-
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     }
 }

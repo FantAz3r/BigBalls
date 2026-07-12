@@ -19,9 +19,6 @@ namespace BigBalls.Services
         CardInventory CreateInventoryMenu();
         CardSelectionMenu CreateCardMenu();
         Background CreateBackgroung ();
-<<<<<<< HEAD
         ChestItemDropView CreateChestWindow();
-=======
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     }
 }

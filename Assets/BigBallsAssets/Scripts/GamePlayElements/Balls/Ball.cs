@@ -24,7 +24,6 @@ namespace BigBalls.GameplayObjects
 
         public float AppliedDamage { get; private set; }
 
-<<<<<<< HEAD
         private void Awake() => EventHandler = new EntityEventHandler();
 
         //private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
@@ -33,37 +32,7 @@ namespace BigBalls.GameplayObjects
         {
             _stackCount = 0;
         }
-=======
-        private void Awake () => EventHandler = new EntityEventHandler();
 
-        //private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
-
-        private void OnCollisionStay(Collision collision)
-        {
-<<<<<<< HEAD
-            _stackCount += Time.deltaTime;
-
-            if (_stackCount >= 0.1f)
-=======
-            _stackCount = 0;
-
-            foreach (var strategy in _collisionStrategies)
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
-            {
-                _stackCount = 0;
-
-                foreach (var strategy in _collisionStrategies)
-                {
-                    if (strategy.HandleCollision(this, collision))
-                        break;
-                }
-            }
-        }
-
-<<<<<<< HEAD
-        private void OnDestroy()
-=======
         private void OnCollisionStay (Collision collision)
         {
             _stackCount += Time.deltaTime;
@@ -81,7 +50,6 @@ namespace BigBalls.GameplayObjects
         }
 
         private void OnDestroy ()
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         {
             UnsubscribeEffects();
         }
@@ -104,12 +72,8 @@ namespace BigBalls.GameplayObjects
 
             IsMaterial = Config.IsMaterial;
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
-<<<<<<< HEAD
 
             _effectBehaviours = _ballEffectFactory.Create(Config.Effects, Level);
-=======
-            _effectBehaviours = _ballEffectFactory.Create(Config.EffectConfigs, Level);
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 
             foreach (var effect in _effectBehaviours)
             {

@@ -1,11 +1,8 @@
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Saves;
-<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
-=======
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 using UnityEngine;
 using VContainer;
 using YG;
@@ -33,10 +30,7 @@ namespace BigBalls.StaticData
         public event Action<ICardModel> Upgraded;
         public event Action<ICardModel> Changed;
 
-<<<<<<< HEAD
         public StatViewService StatViewService { get; set; }
-=======
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         public ItemConfig Config { get; private set; }
         public float ItemEXP { get; private set; }
         public bool IsOpen { get; private set; }
@@ -45,7 +39,6 @@ namespace BigBalls.StaticData
         public int NoneGameLevel { get; private set; } = 0;
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
-<<<<<<< HEAD
         public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
 
         public CardType Type => Config.Type;
@@ -62,26 +55,7 @@ namespace BigBalls.StaticData
 
         public void Upgrade()
         {
-=======
 
-        public CardType Type => Config.Type;
-        public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
-        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
-
-        public string Name => OnCorrectLanguage(Config.NameRU, Config.NameEN, Config.NameTR);
-        public string Description => OnCorrectLanguage(Config.DescriptionRU, Config.DescriptionEN, Config.DescriptionTR);
-
-        [Inject]
-        public void Construct ()
-        {
-            //TranslateService
-        }
-
-        public virtual CardSaveData CreateSaveData () => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
-
-        public void Upgrade ()
-        {
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
             if (Level < MaxLevel)
             {
                 InGameLevel++;
@@ -104,30 +78,13 @@ namespace BigBalls.StaticData
             }
         }
 
-        public void UpgradeNoneGameLevel ()
-        {
-            if (NoneGameLevel < MaxNoneGameLevel)
-            {
-                if ( true)//ItemEXP >= EXPForNextLevel)
-                {
-                    ItemEXP -= EXPForNextLevel;
-                    NoneGameLevel++;
-                    Upgraded?.Invoke(this);
-                }
-            }
-        }
-
-        public void AddToPlayer ()
+        public void AddToPlayer()
         {
             HasPlayer = true;
             Changed?.Invoke(this);
         }
 
-<<<<<<< HEAD
         public void OpenItem() => IsOpen = true;
-=======
-        public void OpenItem () => IsOpen = true;
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 
         public void InitFromData(CardSaveData data)
         {
@@ -137,12 +94,11 @@ namespace BigBalls.StaticData
             ItemEXP = data.ItemExp;
         }
 
-        public void AddItemEXP (float value)
+        public void AddItemEXP(float value)
         {
             ItemEXP += value;
         }
 
-<<<<<<< HEAD
         public void AddEquipmentLevel(int level) => _euqipmentLevel = level;
 
         public virtual CardSaveData CreateSaveData() => new CardSaveData(_id, IsOpen, ItemEXP, NoneGameLevel);
@@ -176,11 +132,7 @@ namespace BigBalls.StaticData
         }
 
         private string OnCorrectLanguage(string ru, string en, string tr)
-=======
-        public void AddEquipmentLevel (int level) => _euqipmentLevel = level;
 
-        private string OnCorrectLanguage (string ru, string en, string tr)
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         {
             string lang = YG2.lang;
 

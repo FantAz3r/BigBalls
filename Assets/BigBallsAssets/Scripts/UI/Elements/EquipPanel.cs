@@ -10,11 +10,7 @@ public class EquipPanel : MonoBehaviour
     [SerializeField] private Slot _weaponSlot;
     [SerializeField] private Slot _armorSlot;
     [SerializeField] private Slot _helmetSlot;
-<<<<<<< HEAD
     [SerializeField] private InventoryStatsView _statsView;
-=======
-    [SerializeField] private StatsView _statsView;
->>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 
     private Canvas _mainCanvas;
     private CardsData _cardData;
