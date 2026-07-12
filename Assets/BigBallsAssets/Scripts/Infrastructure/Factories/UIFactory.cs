@@ -63,9 +63,13 @@ namespace BigBalls.Factories
 
         public Background CreateBackgroung() => GetOrCreateWindow(WindowType.Background, _uiRoot.BackgroundUIHolder) as Background;
 
+<<<<<<< HEAD
         public ChestItemDropView CreateChestWindow() => GetOrCreateWindow(WindowType.OpenChest, _uiRoot.BackgroundUIHolder) as ChestItemDropView;
 
         public void CreateJoystick()
+=======
+        public void CreateJoystick ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         {
         }
 

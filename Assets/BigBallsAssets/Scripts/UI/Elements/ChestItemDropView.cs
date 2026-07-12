@@ -1,11 +1,20 @@
+<<<<<<< HEAD
 using BigBalls.UI;
 using DG.Tweening;
 using System.Collections.Generic;
+=======
+using System.Collections.Generic;
+using DG.Tweening;
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
+<<<<<<< HEAD
 public class ChestItemDropView : WindowBase
+=======
+public class ChestItemDropView : MonoBehaviour
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 {
     [Header("Chest References")]
     [SerializeField] private Image _chestImage;
@@ -36,6 +45,7 @@ public class ChestItemDropView : WindowBase
     private List<ChestCardView> _activeCards = new List<ChestCardView>();
     private ChestCalculator _chestCalculator;
     private Sequence _currentAnimation;
+<<<<<<< HEAD
     private ChestModel _chestModel;
 
     private void Awake()
@@ -44,12 +54,27 @@ public class ChestItemDropView : WindowBase
     }
 
     private void OnDestroy()
+=======
+
+    private void Awake ()
+    {
+        InitializePool();
+
+        if (_openButton != null)
+        {
+            _openButton.onClick.AddListener(OnOpenChestClicked);
+        }
+    }
+
+    private void OnDestroy ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         KillCurrentAnimation();
         DOTween.Kill(transform);
     }
 
     [Inject]
+<<<<<<< HEAD
     public void Construct(ChestCalculator chestCalculator) => _chestCalculator = chestCalculator;
 
     public void Init(ChestModel chestModel)
@@ -66,6 +91,18 @@ public class ChestItemDropView : WindowBase
     }
 
     public void ForceComplete()
+=======
+    public void Initialize (ChestCalculator chestCalculator)
+    {
+        _chestCalculator = chestCalculator;
+
+        _chestImage.sprite = _chestConfig.CloseIcon;
+
+        ResetChest();
+    }
+
+    public void ForceComplete ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         if (_currentAnimation != null)
         {
@@ -73,7 +110,11 @@ public class ChestItemDropView : WindowBase
         }
     }
 
+<<<<<<< HEAD
     private void ResetChest()
+=======
+    private void ResetChest ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         _chestTransform.localScale = Vector3.one;
         _chestCanvasGroup.alpha = 1f;
@@ -87,7 +128,11 @@ public class ChestItemDropView : WindowBase
         _activeCards.Clear();
     }
 
+<<<<<<< HEAD
     private void CreateCards()
+=======
+    private void InitializePool ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         for (int i = 0; i < _poolSize; i++)
         {
@@ -97,28 +142,43 @@ public class ChestItemDropView : WindowBase
         }
     }
 
+<<<<<<< HEAD
     private ChestCardView GetCard()
+=======
+    private ChestCardView GetCard ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         ChestCardView card = Instantiate(_cardPrefab, _cardsContainer);
         _activeCards.Add(card);
         return card;
     }
 
+<<<<<<< HEAD
     private void OnOpenChestClicked()
+=======
+    private void OnOpenChestClicked ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         _openButton.interactable = false;
         AnimateChestOpening();
     }
 
+<<<<<<< HEAD
     private void AnimateChestOpening()
+=======
+    private void AnimateChestOpening ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         KillCurrentAnimation();
 
         _currentAnimation = DOTween.Sequence();
 
+<<<<<<< HEAD
         // Устанавливаем независимость от Time.timeScale для всей последовательности
         _currentAnimation.SetUpdate(true);
 
+=======
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         // Звук открытия
         if (_audioSource != null && _openSound != null)
         {
@@ -126,6 +186,7 @@ public class ChestItemDropView : WindowBase
         }
 
         // Анимация тряски сундука
+<<<<<<< HEAD
         _currentAnimation.Append(
             _chestTransform.DOShakeRotation(_chestShakeDuration, _chestShakeStrength, 10, 90)
                 .SetUpdate(true)  // Тряска не зависит от timeScale
@@ -139,6 +200,14 @@ public class ChestItemDropView : WindowBase
         _currentAnimation.AppendCallback(() =>
         {
             _chestImage.sprite = _chestCalculator.ChestModel.Config.OpenIcon;
+=======
+        _currentAnimation.Append(_chestTransform.DOShakeRotation(_chestShakeDuration, _chestShakeStrength, 10, 90));
+        _currentAnimation.Join(_chestTransform.DOShakeScale(_chestShakeDuration, 0.2f, 10, 90));
+
+        _currentAnimation.AppendCallback(() =>
+        {
+            _chestImage.sprite = _chestCalculator.ChestConfig.OpenIcon;
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         });
 
         // Небольшая пауза перед появлением карт
@@ -154,9 +223,15 @@ public class ChestItemDropView : WindowBase
         _currentAnimation.Play();
     }
 
+<<<<<<< HEAD
     private void DropCards()
     {
         ChestOpenResult result = _chestCalculator.OpenChest(_chestModel);
+=======
+    private void DropCards ()
+    {
+        ChestOpenResult result = _chestCalculator.OpenChest(_chestConfig);
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         List<ICardModel> cards = result.Cards;
         int goldAmount = result.GoldAmount;
 
@@ -185,13 +260,21 @@ public class ChestItemDropView : WindowBase
         }
     }
 
+<<<<<<< HEAD
     private void ShowGoldAnimation(int amount, int cardCount)
+=======
+    private void ShowGoldAnimation (int amount, int cardCount)
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         // Создаем карту для золота
         ChestCardView goldCard = GetCard();
         float delay = cardCount * _cardAppearDelay;
 
+<<<<<<< HEAD
         goldCard.RenderGold(_chestModel.Config.GoldSprite, amount);
+=======
+        goldCard.RenderGold(_chestConfig.GoldSprite, amount);
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         goldCard.CreateAppearAnimation(delay);
 
         // Звук золота
@@ -201,7 +284,11 @@ public class ChestItemDropView : WindowBase
         }
     }
 
+<<<<<<< HEAD
     private void CollectAllCards()
+=======
+    private void CollectAllCards ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         KillCurrentAnimation();
 
@@ -212,7 +299,11 @@ public class ChestItemDropView : WindowBase
         {
             _currentAnimation.AppendCallback(() =>
             {
+<<<<<<< HEAD
                 _chestImage.sprite = _chestCalculator.ChestModel.Config.ShowIcon;
+=======
+                _chestImage.sprite = _chestCalculator.ChestConfig.ShowIcon;
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
             });
         }
 
@@ -226,7 +317,10 @@ public class ChestItemDropView : WindowBase
 
             // Находим целевой трансформ для этой карты (например, слот в инвентаре)
             Transform target = FindTargetForCard(i);
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
             if (target != null)
             {
                 float delay = (_activeCards.Count - 1 - i) * 0.2f;
@@ -240,7 +334,11 @@ public class ChestItemDropView : WindowBase
         _currentAnimation.Play();
     }
 
+<<<<<<< HEAD
     private Transform FindTargetForCard(int index)
+=======
+    private Transform FindTargetForCard (int index)
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         // Здесь нужно реализовать логику поиска целевого слота для карты
         // Например, найти соответствующий слот в UI инвентаря
@@ -255,7 +353,11 @@ public class ChestItemDropView : WindowBase
         return null;
     }
 
+<<<<<<< HEAD
     private void KillCurrentAnimation()
+=======
+    private void KillCurrentAnimation ()
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
     {
         if (_currentAnimation != null && _currentAnimation.IsActive())
         {

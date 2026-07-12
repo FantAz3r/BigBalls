@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+<<<<<<< HEAD
 using System.Collections.Generic;
+=======
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
@@ -31,11 +34,14 @@ namespace BigBalls.GameplayObjects
             //_particleFactory = particleFactory;
         }
 
+<<<<<<< HEAD
         public float GetBurnDuration(int level)
         {
             return _config.BurnDuration * (1 + level);
         }
 
+=======
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
         private void OnHit (IEntity entity)
         {
             _coroutineRunner.StartCoroutine(Burn(entity));
@@ -50,7 +56,11 @@ namespace BigBalls.GameplayObjects
                 if (entity.Transform.gameObject.activeSelf == false)
                     yield break;
 
+<<<<<<< HEAD
                 float damage = _damageService.ApplyDamage(entity, _config.BurnDPS);
+=======
+                float damage = _damageService.ApplyDamage(entity, _config.DamagePerSecond);
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
                 elapsed += Time.deltaTime;
                 yield return _oneSecond;
             }

@@ -22,10 +22,18 @@ public interface ICardModel
 
     void AddItemEXP(float value);
     void AddToPlayer();
+<<<<<<< HEAD
     CardSaveData CreateSaveData();
     List<List<string>> GetStatsText(bool isViewNextLevel);
     void InitFromData(CardSaveData data);
     void OpenItem();
     void Upgrade();
     void UpgradeNoneGameLevel();
+=======
+    CardSaveData CreateSaveData ();
+    void InitFromData (CardSaveData data);
+    void OpenItem ();
+    void Upgrade ();
+    void UpgradeNoneGameLevel ();
+>>>>>>> f0e424ab67e4621452446e379326bfb4b7df25bf
 }
