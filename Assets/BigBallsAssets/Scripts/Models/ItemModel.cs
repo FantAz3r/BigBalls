@@ -23,8 +23,7 @@ namespace BigBalls.StaticData
             Config = config;
             NoneGameLevel = level;
             ItemEXP = exp;
-
-            IsOpen = config.IsOpen;
+            IsOpen = Config.IsOpen;
         }
 
         public event Action<ICardModel> Upgraded;

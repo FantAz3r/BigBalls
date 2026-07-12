@@ -6,13 +6,11 @@ namespace BigBalls.UI
     {
         public virtual void Open()
         {
-            Debug.Log(gameObject.name);
             gameObject.SetActive(true);
         }
 
         public virtual void Close()
         {
-            Debug.Log(gameObject.name);
             gameObject.SetActive(false);
         }
     }

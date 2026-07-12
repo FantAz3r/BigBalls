@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using VContainer;
@@ -25,13 +25,13 @@ public class CardSelectionMenu : PauseWindow
     private IPlayerExperience _playerExperience;
     private PlayerCardHolder _playerCardHolder;
 
-    private void Awake ()
+    private void Awake()
     {
         if (_playerExperience != null)
             _playerExperience.LevelUpped += Open;
     }
 
-    private void OnDisable ()
+    private void OnDisable()
     {
 
         if (_cardsButtons == null)
@@ -46,14 +46,14 @@ public class CardSelectionMenu : PauseWindow
         }
     }
 
-    private void OnDestroy ()
+    private void OnDestroy()
     {
         if (_playerExperience != null)
             _playerExperience.LevelUpped -= Open;
     }
 
     [Inject]
-    public void Construct (
+    public void Construct(
         IWindowService windowService,
         IResourceLoader resourceLoader,
         CardSelector cardSelector,
@@ -69,18 +69,12 @@ public class CardSelectionMenu : PauseWindow
         _timeService = timeService;
     }
 
-    public void Init (PlayerCardHolder playerCardHolder)
+    public void Init(PlayerCardHolder playerCardHolder)
     {
         _playerCardHolder = playerCardHolder;
     }
 
-    public override void Open ()
-    {
-        base.Open();
-        OpenMenu();
-    }
-
-    public void OpenMenu ()
+    public void OpenMenu()
     {
         _levelText.text = (_playerExperience.Stat.CurrentValue + 1).ToString();
 
@@ -98,20 +92,20 @@ public class CardSelectionMenu : PauseWindow
         ShowCards(_currentCards);
     }
 
-    public void CloseMenu ()
+    public void CloseMenu()
     {
         _selector.SaveCurrentCards(null);
         DestroyCards();
         CloseCardMenu();
     }
 
-    public void PostponeChoise ()
+    public void PostponeChoise()
     {
         _selector.SaveCurrentCards(_currentCards);
         CloseCardMenu();
     }
 
-    private void ShowCards (List<ICardModel> cards)
+    private void ShowCards(List<ICardModel> cards)
     {
         for (int i = 0; i < _cardsButtons.Count; i++)
         {
@@ -127,7 +121,7 @@ public class CardSelectionMenu : PauseWindow
         }
     }
 
-    private List<CardView> CreateCards ()
+    private List<CardView> CreateCards()
     {
         int maxCardCount = 3;
         List<CardView> cards = new List<CardView>();
@@ -143,7 +137,7 @@ public class CardSelectionMenu : PauseWindow
         return cards;
     }
 
-    private void DestroyCards ()
+    private void DestroyCards()
     {
         foreach (var cardButton in _cardsButtons)
         {
@@ -154,7 +148,7 @@ public class CardSelectionMenu : PauseWindow
         _currentCards = null;
     }
 
-    private void CloseCardMenu ()
+    private void CloseCardMenu()
     {
         Close();
         _timeService.SmoothEditTimeScalse(0, 0);

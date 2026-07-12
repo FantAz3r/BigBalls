@@ -164,8 +164,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 100 / 100
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
-  m_sharedMaterial: {fileID: 942589445191879500, guid: 02fea1fb776e0ad43a5e684a1ab0ce9e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -424,8 +424,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6863026882795852861}
   - component: {fileID: 1269243335739714013}
-  - component: {fileID: 9019328710301811976}
   - component: {fileID: 717168194011281038}
+  - component: {fileID: 4608971366562388959}
   m_Layer: 5
   m_Name: HealthSlider
   m_TagString: Untagged
@@ -462,21 +462,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3662915276641952017}
   m_CullTransparentMesh: 1
---- !u!114 &9019328710301811976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3662915276641952017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c24f1e8ef40a0954f9f69900117d2336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _healthImage: {fileID: 8070325130710225512}
-  _healthText: {fileID: 100848218748668862}
-  _smoothSpeed: 0.5
 --- !u!114 &717168194011281038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +482,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &4608971366562388959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3662915276641952017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21956ac2c32a54c4cbae2b49bc090263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthImage: {fileID: 8070325130710225512}
+  _healthText: {fileID: 100848218748668862}
+  _smoothSpeed: 10
 --- !u!1 &4180961727823582754
 GameObject:
   m_ObjectHideFlags: 0
