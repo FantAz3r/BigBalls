@@ -39,10 +39,10 @@ namespace BigBalls.StaticData
         public int NoneGameLevel { get; private set; } = 0;
         public int InGameLevel { get; private set; }
         public bool HasPlayer { get; private set; } = false;
+        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
 
         public CardType Type => Config.Type;
         public int Level => NoneGameLevel + InGameLevel + _euqipmentLevel;
-        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
 
         public string Name => OnCorrectLanguage(Config.NameRU, Config.NameEN, Config.NameTR);
         public string Description => OnCorrectLanguage(Config.DescriptionRU, Config.DescriptionEN, Config.DescriptionTR);
@@ -93,7 +93,7 @@ namespace BigBalls.StaticData
             ItemEXP = data.ItemExp;
         }
 
-        public void AddItemEXP(float value)
+        public void AddItemEXP (float value)
         {
             ItemEXP += value;
         }

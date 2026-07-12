@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a4afce934779d438ce0bf985e89ec2, type: 3}
+  m_Name: ChestConfig
+  m_EditorClassIdentifier: 
+  _rarityChance:
+    _serializedList:
+    - Key: 1
+      Value: 90
+    - Key: 2
+      Value: 7
+    - Key: 3
+      Value: 3
+  _rarityChanceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <Rarity>k__BackingField: 1
+  <CloseIcon>k__BackingField: {fileID: 21300000, guid: 150a652d377f7447db261970c983c757,
+    type: 3}
+  <OpenIcon>k__BackingField: {fileID: 21300000, guid: e50903c0d87b64085978f6cec2ae3f87,
+    type: 3}
+  <ShowIcon>k__BackingField: {fileID: 21300000, guid: 72078c04b50a240bb9713d8d719ac21c,
+    type: 3}
+  <GoldSprite>k__BackingField: {fileID: 21300000, guid: b6635a2377bf94adabed6729ee90bdae,
+    type: 3}
+  <MaxCoin>k__BackingField: 10
+  <MinCoin>k__BackingField: 100
+  <BaseCardCount>k__BackingField: 10
+  <Level>k__BackingField: 1
+  <CardPerLevel>k__BackingField: 3

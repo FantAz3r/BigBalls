@@ -12,6 +12,7 @@ public class ChestItemDropView : WindowBase
     [SerializeField] private RectTransform _chestTransform;
     [SerializeField] private Button _openButton;
     [SerializeField] private CanvasGroup _chestCanvasGroup;
+    [SerializeField] private ChestConfig _chestConfig;
 
     [Header("Cards Container")]
     [SerializeField] private Transform _cardsContainer;
@@ -61,7 +62,7 @@ public class ChestItemDropView : WindowBase
         if (_openButton != null)
         {
             _openButton.onClick.AddListener(OnOpenChestClicked);
-        }
+    }
     }
 
     public void ForceComplete()
