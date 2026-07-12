@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using BigBalls.Configs;
+﻿using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -26,11 +26,12 @@ namespace BigBalls.Infrastructure
         private readonly IDropService _dropService;
         private readonly BallRepository _ballsRepository;
         private readonly ArtefactsRepository _artefactsRepository;
-
+        private readonly IWinService _winService;
+        private readonly ILouseService _louseService;
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
 
-        public CreateLevelState (
+        public CreateLevelState(
             IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
             IWindowService windowService,
@@ -45,7 +46,9 @@ namespace BigBalls.Infrastructure
             LevelTimeline levelTimeline,
             IDropService dropService,
             BallRepository ballsRepository,
-            ArtefactsRepository artefactsRepository)
+            ArtefactsRepository artefactsRepository,
+            IWinService winService,
+            ILouseService louseService)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -61,9 +64,11 @@ namespace BigBalls.Infrastructure
             _dropService = dropService;
             _ballsRepository = ballsRepository;
             _artefactsRepository = artefactsRepository;
+            _winService = winService;
+            _louseService = louseService;
         }
 
-        public void Enter (LevelID level)
+        public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
@@ -79,23 +84,27 @@ namespace BigBalls.Infrastructure
             _tileMover.Start();
             _levelTimeline.Start(_levelConfig);
 
+            _winService.SetLevel(level);
+            _louseService.SetLevel(level);
+
             _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
         }
 
-        private void CreateUI ()
+        private void CreateUI()
         {
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
         }
 
-        public void Exit ()
+        public void Exit()
         {
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();
             _poolService.ClearAllPools();
+            _ballsRepository.Save();
         }
     }
 }

@@ -28,6 +28,8 @@ namespace BigBalls.Services
                 [typeof(BallTreeUI)] = uiFactory.CreateBallTree,
                 [typeof(CardSelectionMenu)] = uiFactory.CreateCardMenu,
                 [typeof(CardInventory)] = uiFactory.CreateInventoryMenu,
+                [typeof(Background)] = uiFactory.CreateBackgroung,
+                [typeof(ChestItemDropView)] = uiFactory.CreateChestWindow,
             };
         }
 

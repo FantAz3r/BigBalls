@@ -10,5 +10,6 @@ namespace BigBalls.Configs
         public int InitialEnemyPoolSize = 5;
         public int InitialTilePoolSize = 2;
         public int IinitialLootPoolSize = 3;
+        public int IinitialDamageTextPoolSize = 3;
     }
 }

@@ -20,7 +20,8 @@ namespace BigBalls.UI
         LevelSelect,
         CardMenu,
         PreviousWindow,
-        BallTree
+        BallTree,
+        OpenChest,
     }
 }
 

@@ -10,5 +10,7 @@ namespace BigBalls.Configs
     {
         public List<EntityType> OwnersType;
         public abstract BehaviourType Type { get; }
+
+        public abstract List<ItemStat> GetStats(int level);
     }
 }

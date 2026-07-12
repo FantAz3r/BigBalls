@@ -129,5 +129,6 @@ public class BallTreeUI : WindowBase, IResetble
     private void OnNodeClicked (BallType type)
     {
         _unlockService.TryUnlockBall(type);
+        UpdateUI();
     }
 }

@@ -18,6 +18,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Color _lockedColor = Color.gray;
     [SerializeField] private Color _unlockedColor = Color.white;
     [SerializeField] private Color _availableColor = Color.green;
+    [SerializeField] private Slider _slider;
 
     private BallModel _node;
     private IBallUnlockService _unlockService;
@@ -52,13 +53,17 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         if (node != null)
             _node = node;
 
+        _slider.maxValue = _node.EXPForNextLevel;
+        _slider.minValue = 0;
+        _slider.value = _node.ItemEXP;
+
         bool isOpen = _node.IsOpen;
         bool canUnlock = _unlockService.CanUnlock(BallType);
         int level = _node.Level;
 
         _lockIcon.SetActive(isOpen == false);
         _unlockIcon.SetActive(isOpen);
-        _levelText.text = isOpen ? $"Lv.{level}" : "Locked";
+        _levelText.text = level.ToString();
 
         if (isOpen == false)
         {
@@ -73,6 +78,12 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void Upgrade()
+    {
+        _node.UpgradeNoneGameLevel();
+        UpdateState();
+    }
+
     public void OnPointerClick (PointerEventData eventData)
     {
         OnClick?.Invoke(BallType);
@@ -80,6 +91,13 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
     private void Unlock ()
     {
-        UpdateState();
+        if(_node.Level == 0)
+        {
+            UpdateState();
+        }
+        else
+        {
+            Upgrade();
+        }
     }
 }

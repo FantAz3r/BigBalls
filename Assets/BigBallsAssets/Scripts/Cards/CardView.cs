@@ -1,5 +1,7 @@
+using BigBalls.Services;
 using BigBalls.UI;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,19 +12,24 @@ public class CardView : ButtonClickHandler
     [SerializeField] private Image _image;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _description;
-    [SerializeField] private TMP_Text _stats;
     [SerializeField] private TMP_Text _level;
+    [SerializeField] private RectTransform _statsParent;
+
 
     private ITranslateService _translateService;
     private PlayerCardHolder _playerCardHolder;
     private ICardModel _card;
+    private StatTextHolder _statTextHolder;
+    private List<StatTextHolder> _statTextHolders = new();
+
 
     public event Action Selected;
 
     [Inject]
-    public void Construct(ITranslateService translateService)
+    public void Construct(ITranslateService translateService, IResourceLoader resourceLoader)
     {
         _translateService = translateService;
+        _statTextHolder = resourceLoader.Load<StatTextHolder>();
     }
 
     public void Init(PlayerCardHolder playerCardHolder)
@@ -32,17 +39,35 @@ public class CardView : ButtonClickHandler
 
     public void Render(ICardModel card)
     {
+        ClearStats();
         _card = card;
         _image.sprite = card.Config.Icon;
-        _name.text = card.Config.GetName(_translateService.CurrentLanguage);
-        //_description.text = card.Config.GetDescription(_translateService.CurrentLanguage);
-        //_stats.text = RenderStats();
+        _name.text = card.Name;
+        _description.text = card.Description;
         _level.text = card.Level.ToString();
+        RenderStats(card);
     }
 
-    private string RenderStats()
+    private void RenderStats(ICardModel card)
     {
-        return string.Empty;
+        foreach (var item in card.GetStatsText(true))
+        {
+            StatTextHolder statTextHolder = Instantiate(_statTextHolder, _statsParent);
+            statTextHolder.RenderText(item);
+            _statTextHolders.Add(statTextHolder);
+        }
+    }
+
+    private void ClearStats()
+    {
+        if (_statTextHolders.Count == 0)
+            return;
+
+        foreach (var item in _statTextHolders)
+        {
+            _statTextHolders.Remove(item);
+            Destroy(item.gameObject);
+        }
     }
 
     protected override void OnClick()

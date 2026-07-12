@@ -98,6 +98,4 @@ public class BallTreeModel
     public List<BallType> GetChildren (BallType type) => _children.GetValueOrDefault(type) ?? new List<BallType>();
     public List<BallType> GetParents (BallType type) => _parents.GetValueOrDefault(type) ?? new List<BallType>();
     public IEnumerable<BallType> GetAllTypes () => _nodes.Keys;
-
-   
 }

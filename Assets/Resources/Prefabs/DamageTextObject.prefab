@@ -45,11 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc34a75477c7cf24cbd94a9836632b9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveUpDistance: 1
-  animationDuration: 1
-  fadeDuration: 0.5
+  _moveUpDistance: 1
+  _animationDuration: 1
+  _fadeDuration: 0.5
   _text: {fileID: 7673309619535732501}
   _canvasGroup: {fileID: 6291290210646937064}
+  _offset: {x: 0, y: 0, z: -1}
 --- !u!1 &6515124854727114911
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,14 +76,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6515124854727114911}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 668332950625640531}
   m_Father: {fileID: 3028409872462485849}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}

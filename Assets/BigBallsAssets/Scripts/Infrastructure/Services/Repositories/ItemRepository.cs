@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Saves;
 using BigBalls.Services;
 
@@ -18,16 +19,18 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
 
     protected GameProgress GameProgress;
 
-    protected ItemRepository (IResourceLoader resourceLoader, ISaveService saveService)
+    protected ItemRepository (IResourceLoader resourceLoader, ISaveService saveService, IObjectResolverProvider objectResolverProvider)
     {
         ResourceLoader = resourceLoader;
         _saveService = saveService;
+        ObjectResolverProvider = objectResolverProvider;
         GameProgress = saveService.GameProgress;
 
         saveService.RegisterResetable(this);
     }
 
     public IReadOnlyDictionary<TKey, TModel> AllModels => Models;
+    public IObjectResolverProvider ObjectResolverProvider { get; private set; }
 
     public void Initialize ()
     {
@@ -96,6 +99,7 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
             if (configs.TryGetValue(type, out var config))
             {
                 TModel model = CreateModel(type, config, saveData);
+                ObjectResolverProvider.CurrentResolver.Inject(model);
                 model.InitFromData(saveData);
                 Models[type] = model;
             }

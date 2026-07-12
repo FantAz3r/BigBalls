@@ -10,19 +10,17 @@ namespace BigBalls.UI
     {
         private Button _button;
 
-        private void Awake()
+        private void Awake ()
         {
             _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnClick);
-        }
-        private void OnDestroy()
-        {
-            _button.onClick.RemoveListener(OnClick);
+            _button?.onClick.AddListener(OnClick);
         }
 
-        protected virtual void OnClick()
+        private void OnDestroy ()
         {
-
+            _button?.onClick.RemoveListener(OnClick);
         }
+
+        protected virtual void OnClick () { }
     }
 }

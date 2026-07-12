@@ -1,5 +1,6 @@
-using System;
 using BigBalls.Configs;
+using System;
+using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -10,15 +11,15 @@ namespace BigBalls.GameplayObjects
         private IDisposable _disposable;
         public IEntity Host { get; protected set; }
 
-        protected EffectBehaviour (EffectConfig config, int level)
+        protected EffectBehaviour(EffectConfig config, int level)
         {
             Config = config;
             Level = level;
         }
 
-        protected abstract IDisposable SubscribeInternal (IEntity host);
+        protected abstract IDisposable SubscribeInternal(IEntity host);
 
-        public void Subscribe (IEntity host)
+        public void Subscribe(IEntity host)
         {
             if (_disposable != null)
                 throw new ArgumentNullException(nameof(host));
@@ -27,7 +28,7 @@ namespace BigBalls.GameplayObjects
             _disposable = SubscribeInternal(host);
         }
 
-        public void Unsubscribe (IEntity host)
+        public void Unsubscribe(IEntity host)
         {
             _disposable.Dispose();
             _disposable = null;

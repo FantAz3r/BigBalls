@@ -2,6 +2,7 @@ using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
+using BigBalls.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,8 @@ namespace BigBalls.Services
             {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
             {typeof(CardView), "UI/CardView"},
             {typeof(DamageText), "Prefabs/DamageTextObject"},
+            {typeof(ChestData), "Data/ChestData"},
+            {typeof(StatTextHolder), "UI/StatTextHolder"},
         };
 
         public T Load<T>() where T : Object

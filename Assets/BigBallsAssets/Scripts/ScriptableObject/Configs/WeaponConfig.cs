@@ -10,5 +10,10 @@ namespace BigBalls.Configs
         [SerializeField] private List<BallConfig> _uniqueBalls;
 
         public List<BallConfig> UniqueBallConfigs => _uniqueBalls;
+
+        public override List<BallConfig> GetBalls(int level)
+        {
+            return _uniqueBalls;
+        }
     }
 }

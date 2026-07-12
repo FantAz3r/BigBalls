@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using System;
-using System.Collections.Generic;
+using log4net.Util;
 using UnityEngine;
 
 namespace BigBalls.Factories
@@ -16,6 +17,7 @@ namespace BigBalls.Factories
         private readonly IUpdateService _updateService;
         private readonly IPlayerProvider _playerProvider;
         private readonly IPoolService _poolService;
+        private readonly BallRepository _ballRepository;
 
         public BallFactory(
             IObjectResolverProvider objectResolverProvider,
@@ -24,7 +26,8 @@ namespace BigBalls.Factories
             IIdentifierService identifierService,
             IUpdateService updateService,
             IPlayerProvider playerProvider,
-            IPoolService poolService)
+            IPoolService poolService,
+            BallRepository ballRepository)
         {
             _objectResolverProvider = objectResolverProvider;
             _ballEffectFactory = ballBehaivorFactory;
@@ -33,14 +36,15 @@ namespace BigBalls.Factories
             _updateService = updateService;
             _playerProvider = playerProvider;
             _poolService = poolService;
+            _ballRepository = ballRepository;
         }
 
-        public event Action BallReturned;
+        public event Action<BallModel> BallReturned;
 
         public Ball Create(BallModel ballModel)
         {
             int ballId = _identifierService.ID;
-            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name);
+            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name, _playerProvider.Player.transform.position + new Vector3(0, 0.5f, 0));
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
             ball.EventHandler.Returned += OnReturn;
 
@@ -86,9 +90,11 @@ namespace BigBalls.Factories
             ball.EventHandler.Died -= OnReturn;
             ball.EventHandler.Returned -= OnReturn;
 
+            BallModel model = _ballRepository.AllModels[ball.Config.BallType];
+            model.AddItemEXP(ball.AppliedDamage);
+
             _poolService.ReleaseObject(ball);
-            BallReturned?.Invoke();
-            //BallData.SaveDamage(ball, ball.ApplyedDamage);
+            BallReturned?.Invoke(model);
         }
     }
 }
