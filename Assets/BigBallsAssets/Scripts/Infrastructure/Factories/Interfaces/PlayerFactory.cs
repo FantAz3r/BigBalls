@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Providers;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using BigBalls.UI;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using VContainer;
 using VContainer.Unity;
 
 namespace BigBalls.Factories
@@ -14,7 +14,7 @@ namespace BigBalls.Factories
     public class PlayerFactory : IPlayerFactory
     {
         private readonly IInputService _inputService;
-        private readonly IObjectResolver _objectResolver;
+        private readonly IObjectResolverProvider _objectResolver;
         private readonly ISceneContainerProvider _sceneContainerProvider;
         private readonly IResourceLoader _resourceLoader;
         private readonly IUpdateService _updateService;
@@ -35,9 +35,9 @@ namespace BigBalls.Factories
 
         private PlayerConfig _playerConfig;
 
-        public PlayerFactory (
+        public PlayerFactory(
             IInputService inputService,
-            IObjectResolver objectResolver,
+            IObjectResolverProvider objectResolver,
             ISceneContainerProvider sceneContainerProvider,
             IResourceLoader resourceLoader,
             IUpdateService updateService,
@@ -78,12 +78,12 @@ namespace BigBalls.Factories
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
-        public Player Create ()
+        public Player Create()
         {
             int playerID = _identifierService.ID;
             Vector3 spawnPoint = _sceneContainerProvider.PlayerSpawnPoints.First().transform.position;
             Player prefab = _resourceLoader.Load<Player>();
-            Player player = _objectResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
+            Player player = _objectResolver.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
             StatHolder statHolder = new StatHolder(player, EntityType.Player, _playerConfig, _effectFactory);
             statHolder.Set(_itemConainerProvider.Armor);
@@ -110,8 +110,7 @@ namespace BigBalls.Factories
             return player;
         }
 
-
-        private void OnDied (IEntity entity)
+        private void OnDied(IEntity entity)
         {
             if (entity is not Player player)
                 return;
@@ -121,7 +120,7 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents (out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents(out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
         {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
@@ -134,8 +133,8 @@ namespace BigBalls.Factories
             cardHolder.AddItem(_itemConainerProvider.Helmet);
             cardHolder.AddItem(_itemConainerProvider.Gun);
 
-
-            Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer, _coroutineRunner);
+            Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer);
+            _objectResolver.CurrentResolver.Inject(shooter);
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
 

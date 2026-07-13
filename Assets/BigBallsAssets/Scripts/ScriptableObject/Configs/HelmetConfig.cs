@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using BigBalls.Attributes;
-using BigBalls.GameplayObjects;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -12,10 +11,5 @@ namespace BigBalls.Configs
     {
         [SerializeField] private List<ArtefactConfig> _artefacts;
         public List<ArtefactConfig> Artefacts => _artefacts;
-
-        public override List<ArtefactConfig> GetArtefacts(int level)
-        {
-            return _artefacts;
-        }
     }
 }

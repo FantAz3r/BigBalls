@@ -28,7 +28,6 @@ public class WinService : IWinService
 
     public void SetLevel(LevelID level)
     {
-        Debug.Log(level);
         _level = level;
         _levelConfig = _resourceLoader.Load<LevelData>().Get(_level);
     }

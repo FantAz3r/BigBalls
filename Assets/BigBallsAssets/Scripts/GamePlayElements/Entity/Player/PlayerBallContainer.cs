@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using System;
+using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -25,7 +25,7 @@ namespace BigBalls.GameplayObjects
         private Queue<BallModel> _balls = new();
         private List<EffectBehaviour> _effectBehaviours = new();
 
-        public PlayerBallContainer (
+        public PlayerBallContainer(
             Stat ballCount,
             IResourceLoader resourceLoader,
             IBallFactory ballFactory,
@@ -43,10 +43,10 @@ namespace BigBalls.GameplayObjects
 
         public IEnumerable<BallModel> Balls => _balls;
 
-        public void Subscribe () => _ballFactory.BallReturned += ReturnBullet;
-        public void Unsubscribe () => _ballFactory.BallReturned -= ReturnBullet;
+        public void Subscribe() => _ballFactory.BallReturned += ReturnBullet;
+        public void Unsubscribe() => _ballFactory.BallReturned -= ReturnBullet;
 
-        public bool TryGetNextBullet (out Ball ball)
+        public bool TryGetNextBullet(out Ball ball)
         {
             ball = null;
 
@@ -69,7 +69,7 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        private BallModel GetNextBallModel ()
+        private BallModel GetNextBallModel()
         {
             if (_weapon != null && _weapon.UniqueBallConfigs != null && _weaponConfigIndex < _weapon.UniqueBallConfigs.Count)
             {
@@ -79,15 +79,15 @@ namespace BigBalls.GameplayObjects
             return new BallModel(_identifierService.ID, _baseBallConfig);
         }
 
-        public void ReturnBullet (BallModel ballModel)
+        public void ReturnBullet(BallModel ballModel)
         {
             _balls.Enqueue(ballModel);
             _currentBallCount++;
         }
 
-        public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
+        public void AddEffects(List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
 
-        public void AddUniqueBall (WeaponModel weapon)
+        public void AddUniqueBall(WeaponModel weapon)
         {
             _weapon = weapon;
 
@@ -97,7 +97,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public bool AddUniqueBall (BallModel uniqueBall)
+        public bool AddUniqueBall(BallModel uniqueBall)
         {
             if (uniqueBall?.Config == null)
                 return false;
@@ -108,7 +108,7 @@ namespace BigBalls.GameplayObjects
             return true;
         }
 
-        private Ball CreateNewBall (BallModel ballModel)
+        private Ball CreateNewBall(BallModel ballModel)
         {
             if (ballModel == null)
                 throw new ArgumentNullException(nameof(ballModel));

@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer.Unity;
-using YG;
 
 namespace BigBalls.Services
 {
@@ -14,6 +13,7 @@ namespace BigBalls.Services
 
         public event Action<Vector2> MoveDirectionSeted;
         public event Action<Vector2> RotateDirectionSeted;
+        public event Action Attack;
 
         public InputService(IWindowService windowService)
         {
@@ -34,6 +34,7 @@ namespace BigBalls.Services
 
             _inputActions.Player.Rotate.performed += OnRotatePerformed;
             _inputActions.Player.Rotate.canceled += OnRotateCanceled;
+            _inputActions.Player.Attack.performed += OnAttack;
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context)
@@ -60,6 +61,11 @@ namespace BigBalls.Services
         private void OnRotateCanceled(InputAction.CallbackContext context)
         {
             RotateDirectionSeted?.Invoke(Vector2.zero);
+        }
+
+        private void OnAttack(InputAction.CallbackContext context)
+        {
+            Attack?.Invoke();
         }
 
         public void EnableInput()

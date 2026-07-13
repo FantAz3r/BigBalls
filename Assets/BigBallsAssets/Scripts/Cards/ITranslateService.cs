@@ -2,7 +2,8 @@
 
 public interface ITranslateService
 {
-    string CurrentLanguage { get;}
+    string CurrentLanguage { get; }
+
     event Action<string> LanguageChanged;
     void SwitchLanguage(string language);
 }

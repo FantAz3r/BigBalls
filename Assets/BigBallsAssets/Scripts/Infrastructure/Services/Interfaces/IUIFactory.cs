@@ -4,6 +4,8 @@ namespace BigBalls.Services
 {
     public interface IUIFactory : IService
     {
+        UIRoot UIRoot { get; }
+
         HUD CreateHUD();
         void ClearCache();
         void CreateJoystick();

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using BigBalls.Configs;
+﻿using BigBalls.Configs;
 using BigBalls.Services;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -20,7 +20,7 @@ namespace BigBalls.GameplayObjects
         public Transform MovableObject { get; private set; }
         public Vector2 Direction { get; private set; }
 
-        public Mover (Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
+        public Mover(Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
             _updateService = updateService;
             _raycastService = raycastService;
@@ -29,23 +29,23 @@ namespace BigBalls.GameplayObjects
             _obstacleLayerMask = playerConfig?.ObstacleLayers ?? 0;
         }
 
-        public void Subscribe () => _updateService.Register(this);
-        public void Unsubscribe () => _updateService.Unregister(this);
-        public void SetDirection (Vector2 direction)
+        public void Subscribe() => _updateService.Register(this);
+        public void Unsubscribe() => _updateService.Unregister(this);
+        public void SetDirection(Vector2 direction)
         {
             _target = null;
             Direction = direction;
         }
 
-        public void SetTarget (Transform target) => _target = target;
+        public void SetTarget(Transform target) => _target = target;
 
-        public void SetReycastInfo (Vector3[] directions, Vector3[] points)
+        public void SetReycastInfo(Vector3[] directions, Vector3[] points)
         {
             _raycastDirections = directions;
             _raycastPoints = points;
         }
 
-        public void Tick ()
+        public void Tick()
         {
             if (_target != null)
             {
@@ -63,7 +63,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void Move (Vector2 direction)
+        public void Move(Vector2 direction)
         {
             if (direction.sqrMagnitude < 0.001f) return;
 

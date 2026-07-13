@@ -7,7 +7,7 @@ namespace BigBalls.Services
     {
         event Action<Vector2> MoveDirectionSeted;
         event Action<Vector2> RotateDirectionSeted;
-
+        event Action Attack;
         IInputService GetSelf();
         void EnableInput();
         void DisableInput();

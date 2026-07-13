@@ -1,13 +1,10 @@
-﻿using System;
-using BigBalls.Saves;
+﻿using BigBalls.Saves;
 
 public interface ISaveService
 {
     GameProgress GameProgress { get; }
-
-    void Save ();
-
-    void Load ();
-    void ResetSave ();
-    void RegisterResetable (IResetble resetble);
+    void Save();
+    void Load();
+    void ResetSave();
+    void RegisterResetable(IResetble resetble);
 }

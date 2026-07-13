@@ -22,6 +22,7 @@ namespace BigBalls.UI
         PreviousWindow,
         BallTree,
         OpenChest,
+        Root,
     }
 }
 

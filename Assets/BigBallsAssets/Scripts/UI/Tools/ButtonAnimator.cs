@@ -80,7 +80,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         Tween currentAnimation = GetStateAnimation(_currentState);
 
-        if ((currentAnimation.IsComplete() == false) && (_currentState == ButtonState.Pressed))
+        if (currentAnimation != null && currentAnimation.IsComplete() == false && _currentState == ButtonState.Pressed)
         {
             return;
         }
@@ -92,7 +92,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         Tween currentAnimation = GetStateAnimation(_currentState);
 
-        if (currentAnimation.IsComplete() == false)
+        if (currentAnimation != null && currentAnimation.IsComplete() == false)
         {
             currentAnimation.Complete();
         }

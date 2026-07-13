@@ -31,6 +31,12 @@ namespace BigBalls.GameplayObjects
         private void OnCollisionEnter(Collision collision)
         {
             _stackCount = 0;
+
+            foreach (var strategy in _collisionStrategies)
+            {
+                if (strategy.HandleCollision(this, collision))
+                    break;
+            }
         }
 
         private void OnCollisionStay (Collision collision)

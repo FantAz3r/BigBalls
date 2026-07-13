@@ -15,7 +15,6 @@ namespace BigBalls.Factories
         private readonly Dictionary<WindowType, WindowBase> _windowCache = new Dictionary<WindowType, WindowBase>();
 
         private WindowData _windowData;
-        private UIRoot _uiRoot;
 
         public UIFactory(
             IObjectResolverProvider resolverProvider,
@@ -25,6 +24,8 @@ namespace BigBalls.Factories
             _resourceLoader = resourceLoader;
             _windowData = _resourceLoader.Load<WindowData>();
         }
+
+        public UIRoot UIRoot { get; private set; }
 
         public T Get<T>(WindowType type) where T : WindowBase
         {
@@ -40,7 +41,7 @@ namespace BigBalls.Factories
 
         public void CreateUIRoot()
         {
-            _uiRoot = Object.Instantiate(_resourceLoader.Load<UIRoot>());
+            UIRoot = _resolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<UIRoot>());
         }
 
         public HUD CreateHUD() => GetOrCreateWindow(WindowType.HUD) as HUD;
@@ -61,9 +62,9 @@ namespace BigBalls.Factories
 
         public CardInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as CardInventory;
 
-        public Background CreateBackgroung() => GetOrCreateWindow(WindowType.Background, _uiRoot.BackgroundUIHolder) as Background;
+        public Background CreateBackgroung() => GetOrCreateWindow(WindowType.Background, UIRoot.BackgroundUIHolder) as Background;
 
-        public ChestItemDropView CreateChestWindow() => GetOrCreateWindow(WindowType.OpenChest, _uiRoot.BackgroundUIHolder) as ChestItemDropView;
+        public ChestItemDropView CreateChestWindow() => GetOrCreateWindow(WindowType.OpenChest, UIRoot.BackgroundUIHolder) as ChestItemDropView;
 
         public void CreateJoystick()
 
@@ -97,7 +98,7 @@ namespace BigBalls.Factories
             WindowBase prefab = _windowData.Get(windowType);
 
             if (parent == null)
-                window = _resolverProvider.CurrentResolver.Instantiate(prefab, _uiRoot.SafeAreaUIHolder);
+                window = _resolverProvider.CurrentResolver.Instantiate(prefab, UIRoot.SafeAreaUIHolder);
             else
                 window = _resolverProvider.CurrentResolver.Instantiate(prefab, parent);
 

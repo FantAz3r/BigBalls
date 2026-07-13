@@ -18,7 +18,11 @@ namespace BigBalls.Saves
         public List<ArtefactSaveData> Artefacts = new();
         public List<SoundSaveData> Sounds = new();
 
-        public void Clear()
+        public string Language = "en";
+        public bool ShowDamageNumbers = true;
+        public bool ShowFPS = false;
+        public bool AutoAttack = true;
+        public void ClearProgress()
         {
             Coins = 0;
             Score = 0;
@@ -28,6 +32,14 @@ namespace BigBalls.Saves
             Balls.Clear();
             Artefacts.Clear();
             Sounds.Clear();
+        }
+
+        public void ResetSettings()
+        {
+            Language = "en";
+            ShowDamageNumbers = true;
+            ShowFPS = false;
+            AutoAttack = true;
         }
     }
 }

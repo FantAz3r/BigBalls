@@ -13,10 +13,13 @@ public class InventoryStatsView : MonoBehaviour
     [SerializeField] private TMP_Text _level;
     [SerializeField] private ItemUpgradeButton _upgradeButton;
     [SerializeField] private RectTransform _statsParent;
+    [SerializeField] private RectTransform _slotsParent;
 
     private ICardModel _cardModel;
     private StatTextHolder _statTextHolder;
-    private List<StatTextHolder> _statTextHolders = new ();
+    private StatsSlot _slotPrefab;
+    private List<StatTextHolder> _statTextHolders = new();
+    private List<StatsSlot> _statsSlots = new();
 
     private void Start() => gameObject.SetActive(false);
 
@@ -26,11 +29,13 @@ public class InventoryStatsView : MonoBehaviour
     public void Init(IResourceLoader resourceLoader)
     {
         _statTextHolder = resourceLoader.Load<StatTextHolder>();
+        _slotPrefab = resourceLoader.Load<StatsSlot>();
     }
 
     public void View(ICardModel card)
     {
         ClearStats();
+        ClearSlots();
 
         if (_cardModel != null)
         {
@@ -50,23 +55,58 @@ public class InventoryStatsView : MonoBehaviour
 
     private void RenderStats(ICardModel card)
     {
-        foreach (var item in card.GetStatsText(true))
+        _slotsParent.gameObject.SetActive(false);
+        _statsParent.gameObject.SetActive(false);
+
+        if (card is WeaponModel weaponModel)
         {
-            StatTextHolder statTextHolder = Instantiate(_statTextHolder, _statsParent);
-            statTextHolder.RenderText(item);
-            _statTextHolders.Add(statTextHolder);
+            _slotsParent.gameObject.SetActive(true);
+
+            foreach (var item in weaponModel.UniqueBallModels())
+            {
+                StatsSlot slot = Instantiate(_slotPrefab, _slotsParent);
+                slot.RenderSlots(item, card);
+                _statsSlots.Add(slot);
+            }
+        }
+        else if (card is HelmetModel helmetModel)
+        {
+            _slotsParent.gameObject.SetActive(true);
+
+            foreach (var item in helmetModel.GetArtefacts())
+            {
+                StatsSlot slot = Instantiate(_slotPrefab, _slotsParent);
+                slot.RenderSlots(item, card);
+                _statsSlots.Add(slot);
+            }
+        }
+        else
+        {
+            _statsParent.gameObject.SetActive(true);
+
+            foreach (var item in card.GetStatsText(true))
+            {
+                StatTextHolder statTextHolder = Instantiate(_statTextHolder, _statsParent);
+                statTextHolder.RenderText(item);
+                _statTextHolders.Add(statTextHolder);
+            }
         }
     }
 
-    private void ClearStats()
+    private void ClearStats() => ClearCollection(_statTextHolders);
+
+    private void ClearSlots() => ClearCollection(_statsSlots);
+
+    private void ClearCollection<T>(List<T> collection) where T : MonoBehaviour
     {
-        if (_statTextHolders.Count == 0)
+        if (collection.Count == 0)
             return;
 
-        foreach (var item in _statTextHolders)
+        foreach (var item in collection)
         {
             Destroy(item.gameObject);
-            _statTextHolders.Remove(item);
         }
+
+        collection.Clear();
     }
 }

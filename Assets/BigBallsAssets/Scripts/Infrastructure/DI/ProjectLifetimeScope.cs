@@ -50,7 +50,7 @@ namespace BigBalls.Infrastructure.DI
             //................
             builder.Register<BallTreeModel>(Lifetime.Singleton);
             builder.Register<GlobalWallet>(Lifetime.Singleton);
-
+            builder.Register<PlayerAttackService>(Lifetime.Singleton);
             builder.Register<ChestCalculator>(Lifetime.Singleton);
         }
 

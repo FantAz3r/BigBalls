@@ -11,7 +11,8 @@ namespace BigBalls.Infrastructure.DI
 
         public void SwitchLanguage (string language)
         {
-            LanguageChanged?.Invoke(YG2.lang);
+            YG2.SwitchLanguage(language);
+            LanguageChanged?.Invoke(language);
         }
     }
 }

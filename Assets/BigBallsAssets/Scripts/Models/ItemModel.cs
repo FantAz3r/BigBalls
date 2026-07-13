@@ -54,7 +54,6 @@ namespace BigBalls.StaticData
 
         public void Upgrade()
         {
-
             if (Level < MaxLevel)
             {
                 InGameLevel++;
