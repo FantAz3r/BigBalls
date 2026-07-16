@@ -2,5 +2,5 @@
 
 public interface ILouser
 {
-    event Action Lost;
+    event Action Died;
 }

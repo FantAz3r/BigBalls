@@ -78,6 +78,8 @@ GameObject:
   - component: {fileID: 5098433530387907806}
   - component: {fileID: 3109637433386317176}
   - component: {fileID: 362455203235203668}
+  - component: {fileID: 2961766862341524932}
+  - component: {fileID: 7496240141139238749}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -116,6 +118,8 @@ MonoBehaviour:
   <PlayerConfig>k__BackingField: {fileID: 11400000, guid: 8582dae1f103e854a90b39dc74f3ca9b,
     type: 2}
   <ResourceCollector>k__BackingField: {fileID: 7705727534114590770}
+  <SquashOnShot>k__BackingField: {fileID: 2961766862341524932}
+  <TiltOnShot>k__BackingField: {fileID: 7496240141139238749}
 --- !u!54 &3109637433386317176
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -166,6 +170,38 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2961766862341524932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2580123486827754478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dfd2ede8f284f244a0dd078a2a496f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enabled: 1
+  _squashScale: {x: 1.3, y: 0.7, z: 1.3}
+  returnDuration: 0.12
+  _self: {fileID: 5070131985275992015}
+--- !u!114 &7496240141139238749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2580123486827754478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9faaa3b32b7ea6439045f06e740dd5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enabled: 1
+  _kickAngle: {x: -12, y: 0, z: 0}
+  _returnDuration: 0.15
+  _self: {fileID: 5070131985275992015}
 --- !u!1 &4350208856340714062
 GameObject:
   m_ObjectHideFlags: 0

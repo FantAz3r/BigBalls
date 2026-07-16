@@ -24,9 +24,14 @@ namespace BigBalls.GameplayObjects
 
         public float AppliedDamage { get; private set; }
 
-        private void Awake() => EventHandler = new EntityEventHandler();
+        private void Awake()
+        {
+            EventHandler = new EntityEventHandler();
+            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
+            IsMaterial = Config.IsMaterial;
 
-        //private void Start () => transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        }
+
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -75,9 +80,6 @@ namespace BigBalls.GameplayObjects
             Mover = mover;
             _collisionStrategies = collisionStrategies;
             _ballEffectFactory = ballEffectFactory;
-
-            IsMaterial = Config.IsMaterial;
-            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
 
             _effectBehaviours = _ballEffectFactory.Create(Config.Effects, Level);
 

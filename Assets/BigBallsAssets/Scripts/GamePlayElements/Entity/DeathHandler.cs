@@ -21,7 +21,7 @@ namespace BigBalls.GameplayObjects
             IsBallAttacked = false;
         }
 
-        public event Action Lost;
+        public event Action Died;
 
         public void Subscribe()
         {
@@ -49,7 +49,7 @@ namespace BigBalls.GameplayObjects
             {
                 IsBallAttacked = true;
                 _diebleObject.EventHandler.Die(_diebleObject);
-                Lost?.Invoke();
+                Died?.Invoke();
             }
         }
     }

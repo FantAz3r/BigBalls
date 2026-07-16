@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using VContainer;
 
 public class DamageText : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class DamageText : MonoBehaviour
     [SerializeField] private TMP_Text _text;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Vector3 _offset = new Vector3(0, 0, -1);
+
     public event Action<DamageText> Removed;
+    private Camera _camera;
 
     private void OnEnable ()
     {
@@ -30,14 +33,18 @@ public class DamageText : MonoBehaviour
 
     private void FaceCamera ()
     {
-        Camera mainCamera = Camera.main;
-
-        if (mainCamera != null)
+        if (_camera != null)
         {
-            transform.LookAt(mainCamera.transform);
+            transform.LookAt(_camera.transform);
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, -180, transform.rotation.eulerAngles.z);
             transform.position += _offset;
         }
+    }
+
+    [Inject]
+    public void Init(ICameraProvider cameraProvider)
+    {
+        _camera = cameraProvider.Camera;
     }
 
     public void SetDamageText(int damage)

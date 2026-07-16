@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7466725339337850818}
   - component: {fileID: 6694578084214067232}
   - component: {fileID: 5235839081490269407}
+  - component: {fileID: -2581957506745634593}
   m_Layer: 3
   m_Name: Enemy 2.2
   m_TagString: Untagged
@@ -49,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 0}
+  <HitFlash>k__BackingField: {fileID: 0}
 --- !u!54 &9003017427405841261
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,3 +151,21 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 88a8e9d67ad1c0847a27bc20bdbfa911, type: 2}
+--- !u!114 &-2581957506745634593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385916368145479425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c8d62508d6d8f43906c8106bc68361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
+  - {fileID: 6694578084214067232}
+  _enabled: 1
+  _flashCount: 3
+  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _totalDuration: 0.2

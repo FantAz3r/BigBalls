@@ -1,4 +1,5 @@
 ﻿using BigBalls.Services;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace BigBalls.GameplayObjects
             _ballContainer = ballContainer;
             _damage = damage;
         }
+
+        public event Action Shooted;
 
         [Inject]
         public void Construct(ICoroutineRunner coroutineRunner, PlayerAttackService playerAttackService, IInputService inputService)
@@ -98,6 +101,7 @@ namespace BigBalls.GameplayObjects
                 ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
                 ball.transform.position = _firePoint.position + _fireOffset;
                 ball.transform.rotation = _firePoint.rotation;
+                Shooted?.Invoke();
             }
         }
     }

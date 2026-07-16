@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class CardSelector
 {
@@ -39,6 +40,7 @@ public class CardSelector
         var shuffledModels = availableCards.OrderBy(x => Guid.NewGuid()).ToList();
 
         _currentCards = SelectCardsByRarityChance(shuffledModels, countToSelect);
+        Debug.Log(_currentCards.Count);
         return _currentCards;
     }
 
@@ -68,7 +70,7 @@ public class CardSelector
     private List<ICardModel> SelectCardsByRarityChance (List<ICardModel> cards, int count)
     {
         var selectedCards = new List<ICardModel>();
-        var random = new Random();
+        var random = new System.Random();
         var weightedList = new List<(ICardModel card, float weight)>();
 
         foreach (var card in cards)

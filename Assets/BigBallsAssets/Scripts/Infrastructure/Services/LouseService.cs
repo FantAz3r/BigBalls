@@ -20,12 +20,12 @@ public class LouseService : ILouseService
     public void SetLouseReason(ILouser louser)
     {
         _louser = louser;
-        _louser.Lost += OnLouse;
+        _louser.Died += OnLouse;
     }
 
     private void OnLouse()
     {
-        _louser.Lost -= OnLouse;
+        _louser.Died -= OnLouse;
         _timeService.StopGame();
         _windowService.Open<LouseLevelMenu>();
     }

@@ -245,6 +245,7 @@ GameObject:
   - component: {fileID: 1262936685549616925}
   - component: {fileID: 6003510401459578431}
   - component: {fileID: -5554839284355653895}
+  - component: {fileID: -7712575555397566271}
   m_Layer: 3
   m_Name: Enemy 1.0
   m_TagString: Untagged
@@ -283,6 +284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 9065279687610509858}
+  <HitFlash>k__BackingField: {fileID: -7712575555397566271}
 --- !u!65 &6003510401459578431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -331,3 +333,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &-7712575555397566271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385916368145479425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c8d62508d6d8f43906c8106bc68361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
+  - {fileID: 7792502854173186771}
+  - {fileID: 6177537258823620926}
+  _enabled: 1
+  _flashCount: 3
+  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _totalDuration: 0.2

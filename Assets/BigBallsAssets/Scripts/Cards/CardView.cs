@@ -11,7 +11,6 @@ public class CardView : ButtonClickHandler
 {
     [SerializeField] private Image _image;
     [SerializeField] private TMP_Text _name;
-    [SerializeField] private TMP_Text _description;
     [SerializeField] private TMP_Text _level;
     [SerializeField] private RectTransform _statsParent;
 
@@ -43,7 +42,6 @@ public class CardView : ButtonClickHandler
         _card = card;
         _image.sprite = card.Config.Icon;
         _name.text = card.Name;
-        _description.text = card.Description;
         _level.text = card.Level.ToString();
         RenderStats(card);
     }

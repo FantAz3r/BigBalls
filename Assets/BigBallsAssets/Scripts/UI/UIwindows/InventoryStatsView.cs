@@ -23,7 +23,11 @@ public class InventoryStatsView : MonoBehaviour
 
     private void Start() => gameObject.SetActive(false);
 
-    private void OnDestroy() => _cardModel.Upgraded -= View;
+    private void OnDestroy()
+    {
+        if (_cardModel != null)
+            _cardModel.Upgraded -= View;
+    }
 
     [Inject]
     public void Init(IResourceLoader resourceLoader)

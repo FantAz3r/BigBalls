@@ -7,6 +7,9 @@ namespace BigBalls.GameplayObjects
     {
         [field: SerializeField] public PlayerConfig PlayerConfig { get; private set; }
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }
+        [field: SerializeField] public SquashOnShot SquashOnShot { get; private set; }
+        [field: SerializeField] public TiltOnShot TiltOnShot { get; private set; }
+
 
         public DeathHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }

@@ -31,6 +31,15 @@ namespace BigBalls.UI
             _chestImage.sprite = chestConfig.CloseIcon;
             ChestModel chestModel = new ChestModel((int)level, chestConfig);
             _windowService.Get<ChestItemDropView>(WindowType.OpenChest).Init(chestModel);
+            RenderStars(compliteWaves);
+        }
+
+        private void RenderStars(int compliteWaves)
+        {
+            for (int i = 0; i < compliteWaves; i++)
+            {
+                _stars[i].gameObject.SetActive(true);
+            }
         }
     }
 }

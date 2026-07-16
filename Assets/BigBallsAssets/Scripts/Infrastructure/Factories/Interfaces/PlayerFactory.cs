@@ -32,7 +32,7 @@ namespace BigBalls.Factories
         private readonly EnemySpawner _enemySpawner;
         private readonly BallRepository _ballRepository;
         private readonly ArtefactsRepository _artefactsRepository;
-
+        private readonly ICameraProvider _cameraProvider;
         private PlayerConfig _playerConfig;
 
         public PlayerFactory(
@@ -54,7 +54,8 @@ namespace BigBalls.Factories
             IPlayerExperience playerExperience,
             EnemySpawner enemySpawner,
             BallRepository ballRepository,
-            ArtefactsRepository artefactsRepository)
+            ArtefactsRepository artefactsRepository,
+            ICameraProvider cameraProvider)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -75,6 +76,7 @@ namespace BigBalls.Factories
             _enemySpawner = enemySpawner;
             _ballRepository = ballRepository;
             _artefactsRepository = artefactsRepository;
+            _cameraProvider = cameraProvider;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
@@ -107,6 +109,7 @@ namespace BigBalls.Factories
             _entityRepository.Add(player, statHolder);
             _playerProvider.Set(player);
 
+
             return player;
         }
 
@@ -120,14 +123,13 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents(out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents(out PlayerCardHolder cardHolder, StatHolder statHolder, Player player )
         {
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], player.transform, _updateService, _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
             ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
-            //artefactContainer.Set();
 
             cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);
             cardHolder.AddItem(_itemConainerProvider.Helmet);
@@ -135,6 +137,13 @@ namespace BigBalls.Factories
 
             Shooter shooter = new Shooter(statHolder[StatType.Damage], statHolder[StatType.AttackSpeed], player.transform, playerBallContainer);
             _objectResolver.CurrentResolver.Inject(shooter);
+            player.SquashOnShot.Init(shooter);
+            player.TiltOnShot.Init(shooter);
+
+            ScreenShake screenShake = _cameraProvider.Camera.GetComponent<ScreenShake>();
+            screenShake.Init(shooter, statHolder[StatType.Health]);
+
+
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
 

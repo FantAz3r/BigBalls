@@ -28,7 +28,7 @@ public class CardSelectionMenu : PauseWindow
     private void Awake()
     {
         if (_playerExperience != null)
-            _playerExperience.LevelUpped += Open;
+            _playerExperience.LevelUpped += OpenMenu;
     }
 
     private void OnDisable()
@@ -49,7 +49,7 @@ public class CardSelectionMenu : PauseWindow
     private void OnDestroy()
     {
         if (_playerExperience != null)
-            _playerExperience.LevelUpped -= Open;
+            _playerExperience.LevelUpped -= OpenMenu;
     }
 
     [Inject]
@@ -76,6 +76,7 @@ public class CardSelectionMenu : PauseWindow
 
     public void OpenMenu()
     {
+        Open();
         _levelText.text = (_playerExperience.Stat.CurrentValue + 1).ToString();
 
         if (_currentCards == null)

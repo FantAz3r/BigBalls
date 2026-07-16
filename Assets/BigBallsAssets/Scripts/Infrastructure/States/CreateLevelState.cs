@@ -28,6 +28,7 @@ namespace BigBalls.Infrastructure
         private readonly ArtefactsRepository _artefactsRepository;
         private readonly IWinService _winService;
         private readonly ILouseService _louseService;
+        private readonly ICameraProvider _cameraProvider;
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
 
@@ -48,7 +49,8 @@ namespace BigBalls.Infrastructure
             BallRepository ballsRepository,
             ArtefactsRepository artefactsRepository,
             IWinService winService,
-            ILouseService louseService)
+            ILouseService louseService,
+            ICameraProvider cameraProvider)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -66,6 +68,7 @@ namespace BigBalls.Infrastructure
             _artefactsRepository = artefactsRepository;
             _winService = winService;
             _louseService = louseService;
+            _cameraProvider = cameraProvider;
         }
 
         public void Enter(LevelID level)
@@ -76,6 +79,7 @@ namespace BigBalls.Infrastructure
             _poolService.InitializePools();
 
             CreateUI();
+            CreateCamera();
 
             _playerFactory.Create();
 
@@ -87,7 +91,13 @@ namespace BigBalls.Infrastructure
             _winService.SetLevel(level);
             _louseService.SetLevel(level);
 
-            _objectResolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<Camera>());
+        }
+
+        private void CreateCamera()
+        {
+            Camera prefab = _resourceLoader.Load<Camera>();
+            Camera camera = _objectResolverProvider.CurrentResolver.Instantiate(prefab);
+            _cameraProvider.Camera = camera;
         }
 
         private void CreateUI()

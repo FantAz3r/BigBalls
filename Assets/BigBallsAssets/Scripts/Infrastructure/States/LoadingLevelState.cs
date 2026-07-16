@@ -13,7 +13,6 @@ namespace BigBalls.Infrastructure
 
         public LoadingLevelState(ISceneLoader sceneLoader, IGameStateMachine gameStateMachine)
         {
-            
             _sceneLoader = sceneLoader;
             _gameStateMachine = gameStateMachine;
         }

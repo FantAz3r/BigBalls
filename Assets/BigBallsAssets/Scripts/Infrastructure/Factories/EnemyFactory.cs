@@ -60,6 +60,9 @@ namespace BigBalls.Factories
 
             enemy.Construct(enemyID, deathHandler);
             _entityRepository.Add(enemy, statHolder);
+
+            enemy.HitFlash.Init(statHolder[StatType.Health]);
+
             return enemy;
         }
 
