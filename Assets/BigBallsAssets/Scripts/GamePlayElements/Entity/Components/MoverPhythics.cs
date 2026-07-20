@@ -1,5 +1,6 @@
 ﻿using BigBalls.Configs;
 using BigBalls.Services;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -17,10 +18,12 @@ namespace BigBalls.GameplayObjects
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
 
+        private List<MovementModifier> _movementModifiers = new List<MovementModifier>();
+
         public Transform MovableObject { get; private set; }
         [field: SerializeField] public Vector2 Direction { get; private set; }
 
-        public MoverPhythics (Stat moveSpeed, Transform movableObject, IUpdateService updateService, Rigidbody rigidbody, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
+        public MoverPhythics(Stat moveSpeed, Transform movableObject, IUpdateService updateService, Rigidbody rigidbody, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
             _rigidbody = rigidbody;
             _updateService = updateService;
@@ -38,25 +41,59 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void Subscribe () => _updateService.Register(this);
-        public void Unsubscribe () => _updateService.Unregister(this);
-        public void SetDirection (Vector2 direction)
+        public void Subscribe() => _updateService.Register(this);
+        public void Unsubscribe() => _updateService.Unregister(this);
+
+        public void SetDirection(Vector2 direction)
         {
             _target = null;
             Direction = direction;
         }
 
-        public void SetTarget (Transform target) => _target = target;
+        public void SetTarget(Transform target) => _target = target;
 
-        public void SetReycastInfo (Vector3[] directions, Vector3[] points)
+        public void SetReycastInfo(Vector3[] directions, Vector3[] points)
         {
             _raycastDirections = directions;
             _raycastPoints = points;
         }
-
-        public void Tick ()
+        public void AddModifier(MovementModifier modifier)
         {
-            if (_rigidbody == null) return;
+            _movementModifiers.Add(modifier);
+        }
+
+        public void RemoveModifier(MovementModifier modifier)
+        {
+            _movementModifiers.Remove(modifier);
+        }
+
+        public void ClearModifiers()
+        {
+            _movementModifiers.Clear();
+        }
+
+        public void AddPush(Vector3 pushForce, float duration = 0.5f)
+        {
+            AddModifier(new PushModifier(pushForce, duration));
+        }
+
+        public void AddInstantPush(Vector3 pushForce)
+        {
+            AddModifier(new InstantPushModifier(pushForce));
+        }
+
+        public void AddConstantForce(Vector3 force, float duration)
+        {
+            AddModifier(new ConstantForceModifier(force, duration));
+        }
+
+        public void Tick()
+        {
+            if (_rigidbody == null)
+                return;
+
+            _movementModifiers.RemoveAll(m => m is PushModifier pm && pm.IsActive == false);
+            _movementModifiers.RemoveAll(m => m is ConstantForceModifier cfm && !cfm.IsActive);
 
             Vector3 moveDirection;
 
@@ -89,10 +126,26 @@ namespace BigBalls.GameplayObjects
             Move(moveDirection);
         }
 
-        private void Move (Vector3 moveDirection)
+        public Vector3 GetCurrentVelocity()
         {
-            Vector3 targetVelocity = moveDirection * _moveSpeed.CurrentValue;
-            _rigidbody.velocity = new Vector3(targetVelocity.x, 0f, targetVelocity.z);
+            if (_rigidbody == null)
+                return Vector3.zero;
+
+            return _rigidbody.velocity;
+        }
+
+        public bool HasActiveModifiers() => _movementModifiers.Count > 0;
+
+        private void Move(Vector3 moveDirection)
+        {
+            Vector3 velocity = moveDirection * _moveSpeed.CurrentValue;
+
+            foreach (var modifier in _movementModifiers)
+            {
+                velocity = modifier.Modify(velocity);
+            }
+
+            _rigidbody.velocity = new Vector3(velocity.x, 0f, velocity.z);
         }
     }
 }

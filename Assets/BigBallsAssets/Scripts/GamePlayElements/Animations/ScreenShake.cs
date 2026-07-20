@@ -84,7 +84,6 @@ public class ScreenShake : MonoBehaviour
 
     private void Shake(float intensity, float duration, int frequency)
     {
-        Debug.Log(1234);
         _shakeTween?.Kill();
         _shakeTween = _camera.DOShakePosition(duration, intensity, frequency, _randomnes)
                                       .SetUpdate(true);

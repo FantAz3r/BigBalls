@@ -18,7 +18,7 @@ namespace BigBalls.Services
 
         public float ApplyDamage(IEntity entity, float damage)
         {
-            StatHolder statHolder = _entityRepository.Get(entity);
+            StatHolder statHolder = _entityRepository.GetStatHolder(entity);
 
             if (statHolder == null)
                 return 0;

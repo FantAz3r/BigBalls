@@ -7,7 +7,7 @@ namespace BigBalls.UI
 {
     public class LevelButton : ButtonClickHandler
     {
-        [SerializeField] private LevelID _levelID;
+        [field: SerializeField] public LevelID LevelID { get; private set; }
 
         private ILevelLoadingService _loadingService;
 
@@ -19,7 +19,7 @@ namespace BigBalls.UI
 
         protected override void OnClick()
         {
-             _loadingService.Load(_levelID);
+             _loadingService.Load(LevelID);
         }
     }
 }

@@ -20,7 +20,7 @@ public class ElasticBand : EffectBehaviour
 
     public void OnHit()
     {
-        StatHolder statHolder = _entityRepository.Get(Host);
+        StatHolder statHolder = _entityRepository.GetStatHolder(Host);
         Stat moveStat = statHolder[StatType.MoveSpeed];
         moveStat.AddCurrentValue(moveStat.CurrentValue * _config.AddMoveSpeedPerHit);
     }

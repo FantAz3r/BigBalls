@@ -1,9 +1,10 @@
-using System;
-using System.Collections;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
+using BigBalls.Saves;
 using BigBalls.Services;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class LevelTimeline
@@ -13,6 +14,8 @@ public class LevelTimeline
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly EnemySpawner _enemySpawner;
     private readonly TileFactory _tileFactory;
+    private readonly ISaveService _saveService;
+    private readonly IEnemyFactory _enemyFactory;
 
     private WaitForSeconds _updateInterval = new WaitForSeconds(UpdateIntervalSeconds);
     private WaitForSeconds _lineSpawnDelay;
@@ -20,21 +23,34 @@ public class LevelTimeline
     private Coroutine _timeCoroutine;
     private LevelConfig _levelConfig;
     private bool _isLevelEnded = false;
+    private float _levelTimer = 0f;
 
-    public event Action<int> NewWaveStarted;
-    public event Action<float> TimeElapsed;
-
-    public LevelTimeline (ICoroutineRunner coroutineRunner, EnemySpawner enemySpawner, TileFactory tileFactory)
+    public LevelTimeline(
+        ICoroutineRunner coroutineRunner,
+        EnemySpawner enemySpawner,
+        TileFactory tileFactory,
+        ISaveService saveService,
+        IEnemyFactory enemyFactory)
     {
         _coroutineRunner = coroutineRunner;
         _enemySpawner = enemySpawner;
         _tileFactory = tileFactory;
+        _saveService = saveService;
+        _enemyFactory = enemyFactory;
     }
 
-    public void Start (LevelConfig levelConfig)
+    public event Action<int> NewWaveStarted;
+    public event Action<float> TimeElapsed;
+
+    public int CompliteWaves { get; private set; }
+    public int Kills { get; private set; }
+
+    public void Start(LevelConfig levelConfig)
     {
         _lineSpawnDelay = new WaitForSeconds(levelConfig.LineSpawnDelay);
         _levelConfig = levelConfig;
+        _enemyFactory.Died += CountKills;
+
         _enemySpawner.Init(_levelConfig.Enemies);
 
         if (_mainCoroutine == null)
@@ -44,9 +60,10 @@ public class LevelTimeline
             _timeCoroutine = _coroutineRunner.StartCoroutine(TimeRoutine());
     }
 
-    public void Stop ()
+    public void Stop()
     {
-        _isLevelEnded = false;
+        _isLevelEnded = true;
+        _enemyFactory.Died -= CountKills;
 
         if (_mainCoroutine != null)
         {
@@ -59,9 +76,15 @@ public class LevelTimeline
             _coroutineRunner.StopCoroutine(_timeCoroutine);
             _timeCoroutine = null;
         }
+
+        _saveService.GameProgress.Levels.Add(new LevelSaveData((int)_levelConfig.Level, CompliteWaves, _levelTimer, Kills));
+
+        Kills = 0;
+        _levelTimer = 0;
+        CompliteWaves = 0;
     }
 
-    private IEnumerator WaveRoutine ()
+    private IEnumerator WaveRoutine()
     {
         var waves = _levelConfig.Waves;
 
@@ -84,6 +107,8 @@ public class LevelTimeline
 
             _enemySpawner.Reset();
             ScaleField();
+
+            CompliteWaves++;
         }
 
         yield return new WaitForSeconds(_levelConfig.BossTimeDelay);
@@ -92,21 +117,28 @@ public class LevelTimeline
         _mainCoroutine = null;
     }
 
-    private void ScaleField ()
+   
+
+    private void ScaleField()
     {
         _enemySpawner.ScaleField(_tileFactory.ScaleRoad());
     }
 
-    private IEnumerator TimeRoutine ()
+    private IEnumerator TimeRoutine()
     {
-        float elapsed = 0f;
-        TimeElapsed?.Invoke(elapsed);
+        _levelTimer = 0f;
+        TimeElapsed?.Invoke(_levelTimer);
 
         while (_isLevelEnded == false)
         {
             yield return _updateInterval;
-            elapsed += UpdateIntervalSeconds;
-            TimeElapsed?.Invoke(elapsed);
+            _levelTimer += UpdateIntervalSeconds;
+            TimeElapsed?.Invoke(_levelTimer);
         }
+    }
+
+    private void CountKills(IEntity entity)
+    {
+        Kills++;
     }
 }

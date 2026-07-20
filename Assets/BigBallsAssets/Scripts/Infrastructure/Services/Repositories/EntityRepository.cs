@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class EntityRepository : IEntityRepository
 {
-    private Dictionary<IEntity, StatHolder> _entities = new();
+    private Dictionary<IEntity, (StatHolder StatHolder, ComponentContainer Container)> _entities = new();
 
-    public void Add(IEntity entity, StatHolder statHolder)
+    public void Add(IEntity entity, StatHolder statHolder, ComponentContainer componentContainer)
     {
         if (_entities.ContainsKey(entity))
             return;
 
-        _entities.Add(entity, statHolder);
+        _entities.Add(entity, (statHolder, componentContainer));
     }
 
     public void Remove(IEntity entity)
@@ -21,9 +21,15 @@ public class EntityRepository : IEntityRepository
         }
     }
 
-    public StatHolder Get(IEntity entity)
+    public StatHolder GetStatHolder(IEntity entity)
     {
-        _entities.TryGetValue(entity, out StatHolder statHolder);
-        return statHolder;
+        _entities.TryGetValue(entity, out (StatHolder StatHolder, ComponentContainer Container) statHolder);
+        return statHolder.StatHolder;
+    }
+
+    public ComponentContainer GetContainer(IEntity entity)
+    {
+        _entities.TryGetValue(entity, out (StatHolder StatHolder, ComponentContainer Container) statHolder);
+        return statHolder.Container;
     }
 }

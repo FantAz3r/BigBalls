@@ -8,14 +8,14 @@ namespace BigBalls.GameplayObjects
     {
         private readonly Vector3 _offset = new Vector3(0, 0.25f, 0);
         private readonly Rotator _rotator;
-        private readonly Mover _mover;
+        private readonly IMover _mover;
         private readonly IInputService _inputService;
         private readonly int _reycastAngle = 30;
 
         private Vector3[] _raycastPoints = new Vector3[3];
         private Vector3[] _raycastDirections = new Vector3[3];
 
-        public PlayerMover(IInputService inputService, Rotator rotator, Mover mover)
+        public PlayerMover(IInputService inputService, Rotator rotator, IMover mover)
         {
             _inputService = inputService;
             _rotator = rotator;

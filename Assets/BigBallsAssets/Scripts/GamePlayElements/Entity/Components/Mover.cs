@@ -99,5 +99,22 @@ namespace BigBalls.GameplayObjects
                 MovableObject.Translate(moveDirection * moveStep, Space.World);
             }
         }
+
+        public void AddConstantForce(Vector3 force, float duration)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AddInstantPush(Vector3 pushForce)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AddPush(Vector3 pushForce, float duration = 0.5f)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Vector3 GetCurrentVelocity() => _moveSpeed.CurrentValue * Direction;
     }
 }

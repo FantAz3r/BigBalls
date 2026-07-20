@@ -1,26 +1,90 @@
+using BigBalls.Services;
 using System;
+using System.Collections;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.GameplayObjects
 {
     public class EntityTrigger : MonoBehaviour
     {
         [SerializeField] private SphereCollider _sphereCollider;
+        [SerializeField] private float _playerDetectionDelay = 2.0f;
+
+        private Coroutine _detectionCoroutine;
+        private bool _isPlayerInZone = false;
+        private bool _canDetectWall;
+        private WaitForSeconds _waitDelay;
+        private ICoroutineRunner _coroutineRunner;
 
         public event Action WallDetected;
         public event Action PlayerDetected;
+        public event Action PlayerCollision;
+        public event Action PlayerStayedLongEnough;
+
+
+        private void Awake()
+        {
+            _waitDelay = new WaitForSeconds(_playerDetectionDelay);
+        }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent<BackWall>(out _))
             {
-                WallDetected?.Invoke();
-
+                if (_canDetectWall)
+                    _coroutineRunner.StartCoroutine(WallDetectionDelay());
             }
 
             if (other.TryGetComponent<Player>(out _))
             {
+                _isPlayerInZone = true;
                 PlayerDetected?.Invoke();
+
+                _detectionCoroutine = _coroutineRunner.StartCoroutine(PlayerDetectionTimer());
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent<Player>(out _))
+            {
+                _isPlayerInZone = false;
+
+                if (_detectionCoroutine != null)
+                {
+                    _coroutineRunner.StopCoroutine(_detectionCoroutine);
+                    _detectionCoroutine = null;
+                }
+            }
+        }
+
+        [Inject]
+        public void Construct(ICoroutineRunner coroutineRunner) => _coroutineRunner = coroutineRunner;
+
+        private IEnumerator PlayerDetectionTimer()
+        {
+            yield return _waitDelay;
+
+            if (_isPlayerInZone)
+            {
+                PlayerStayedLongEnough?.Invoke();
+            }
+        }
+
+        private IEnumerator WallDetectionDelay()
+        {
+            _canDetectWall = false;
+            yield return _waitDelay;
+            WallDetected?.Invoke();
+            _canDetectWall = true;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.collider.TryGetComponent<Player>(out _))
+            {
+                PlayerCollision?.Invoke();
             }
         }
     }

@@ -2,6 +2,7 @@ using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,6 +43,8 @@ namespace BigBalls.Factories
             _dropService = dropService;
         }
 
+        public event Action<IEntity> Died;
+
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
             Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name);
@@ -59,7 +62,7 @@ namespace BigBalls.Factories
             enemy.EventHandler.Died += OnDied;
 
             enemy.Construct(enemyID, deathHandler);
-            _entityRepository.Add(enemy, statHolder);
+            _entityRepository.Add(enemy, statHolder, null);
 
             enemy.HitFlash.Init(statHolder[StatType.Health]);
 
@@ -80,6 +83,7 @@ namespace BigBalls.Factories
 
             _poolService.ReleaseObject(enemy);
             _entityRepository.Remove(enemy);
+            Died?.Invoke(enemy);
         }
 
         private List<ISubscribable> CreateComponents(StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
@@ -87,13 +91,23 @@ namespace BigBalls.Factories
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, _raycastService, enemyConfig);
             Init(mover, enemyConfig);
 
-            EnemyAttacker enemyAttacker = new EnemyAttacker(_playerProvider, statHolder[StatType.Damage], enemy, enemy.EntityTrigger, _damageService);
+            Shooter shooter = null;
+
+            if (enemyConfig.HasRangeAttack)
+            {
+                shooter = new Shooter(statHolder[StatType.AttackSpeed], enemy.transform, null, _playerProvider.Player.Transform);
+                _resolverProvider.CurrentResolver.Inject(shooter);
+            }
+
+            EnemyAttacker enemyAttacker = new EnemyAttacker(statHolder[StatType.Damage], enemy, enemyConfig, shooter);
+            _resolverProvider.CurrentResolver.Inject(enemyAttacker);
             enemy.EventHandler.Suisided += OnDied;
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {
                 mover,
-                enemyAttacker
+                enemyAttacker,
+                shooter
             };
 
             return subscribables;

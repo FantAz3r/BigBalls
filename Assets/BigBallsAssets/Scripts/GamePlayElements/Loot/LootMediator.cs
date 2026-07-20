@@ -18,7 +18,7 @@ public class LootMediator : ILootMediator
 
     public void RegisterLoot(Loot loot)
     {
-        StatHolder statHolder = _entityRepository.Get(_playerProvider.Player);
+        StatHolder statHolder = _entityRepository.GetStatHolder(_playerProvider.Player);
         switch (loot.Type)
         {
             case LootType.Coin:

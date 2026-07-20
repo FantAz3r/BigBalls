@@ -10,10 +10,10 @@ namespace BigBalls.GameplayObjects
         private readonly Stat _health;
         private readonly List<ISubscribable> _subscribables;
         private readonly T _diebleObject;
-        
+
         public bool IsBallAttacked { get; private set; }
 
-        public DeathHandler (Stat health, List<ISubscribable> subscribables, T diebleObject)
+        public DeathHandler(Stat health, List<ISubscribable> subscribables, T diebleObject)
         {
             _health = health;
             _subscribables = subscribables;
@@ -27,7 +27,7 @@ namespace BigBalls.GameplayObjects
         {
             foreach (var item in _subscribables)
             {
-                item.Subscribe();
+                item?.Subscribe();
             }
 
             _health.ValueChanged += HandleDeath;
@@ -37,7 +37,7 @@ namespace BigBalls.GameplayObjects
         {
             foreach (var item in _subscribables)
             {
-                item.Unsubscribe();
+                item?.Unsubscribe();
             }
 
             _health.ValueChanged -= HandleDeath;

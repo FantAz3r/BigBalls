@@ -21,7 +21,6 @@ namespace BigBalls.GameplayObjects
         public int Level { get; private set; } = 1;
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
-
         public float AppliedDamage { get; private set; }
 
         private void Awake()
@@ -29,9 +28,7 @@ namespace BigBalls.GameplayObjects
             EventHandler = new EntityEventHandler();
             transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
             IsMaterial = Config.IsMaterial;
-
         }
-
 
         private void OnCollisionEnter(Collision collision)
         {

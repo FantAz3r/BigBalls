@@ -29,6 +29,7 @@ namespace BigBalls.Infrastructure
         private readonly IWinService _winService;
         private readonly ILouseService _louseService;
         private readonly ICameraProvider _cameraProvider;
+        private readonly ISaveService _saveService;
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
 
@@ -50,7 +51,8 @@ namespace BigBalls.Infrastructure
             ArtefactsRepository artefactsRepository,
             IWinService winService,
             ILouseService louseService,
-            ICameraProvider cameraProvider)
+            ICameraProvider cameraProvider,
+            ISaveService saveService)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -69,6 +71,7 @@ namespace BigBalls.Infrastructure
             _winService = winService;
             _louseService = louseService;
             _cameraProvider = cameraProvider;
+            _saveService = saveService;
         }
 
         public void Enter(LevelID level)
@@ -90,7 +93,6 @@ namespace BigBalls.Infrastructure
 
             _winService.SetLevel(level);
             _louseService.SetLevel(level);
-
         }
 
         private void CreateCamera()
@@ -109,6 +111,7 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            _saveService.Save();
             _levelTimeline.Stop();
             _uIFactory.ClearCache();
             _updateService.Clear();

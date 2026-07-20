@@ -9,6 +9,7 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public ResourceCollector ResourceCollector { get; private set; }
         [field: SerializeField] public SquashOnShot SquashOnShot { get; private set; }
         [field: SerializeField] public TiltOnShot TiltOnShot { get; private set; }
+        [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
 
 
         public DeathHandler<Player> DeathHandler { get; private set; }
@@ -17,7 +18,7 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
-        private void Awake ()
+        private void Awake()
         {
             EventHandler = new EntityEventHandler();
         }

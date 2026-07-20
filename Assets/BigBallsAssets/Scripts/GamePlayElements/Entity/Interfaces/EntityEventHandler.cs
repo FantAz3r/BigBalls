@@ -11,11 +11,11 @@ namespace BigBalls.GameplayObjects
         public event Action<IEntity> Returned;
         public event Action<IEntity> Suisided;
 
-        public void HitEntity (IEntity entity) => HitedEntity?.Invoke(entity);
-        public void Die (IEntity entity) => Died?.Invoke(entity); 
-        public void Return (IEntity entity) => Returned?.Invoke(entity);
-        public void Spawn () => Spawned?.Invoke();
-        public void Suiside (IEntity entity) => Suisided?.Invoke(entity);
+        public void HitEntity(IEntity entity) => HitedEntity?.Invoke(entity);
+        public void Die(IEntity entity) => Died?.Invoke(entity);
+        public void Return(IEntity entity) => Returned?.Invoke(entity);
+        public void Spawn() => Spawned?.Invoke();
+        public void Suiside(IEntity entity) => Suisided?.Invoke(entity);
         public void Hit() => Hited?.Invoke();
     }
 }

@@ -113,7 +113,7 @@ namespace BigBalls.GameplayObjects
             if (ballModel == null)
                 throw new ArgumentNullException(nameof(ballModel));
 
-            var ball = _ballFactory.Create(ballModel);
+            var ball = _ballFactory.Create(ballModel, EntityType.Player);
 
             if (_effectBehaviours.Count > 0)
                 ball.AddEffects(_effectBehaviours);

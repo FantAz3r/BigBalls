@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using log4net.Util;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Factories
@@ -41,7 +40,7 @@ namespace BigBalls.Factories
 
         public event Action<BallModel> BallReturned;
 
-        public Ball Create(BallModel ballModel)
+        public Ball Create(BallModel ballModel, EntityType type)
         {
             int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name, _playerProvider.Player.transform.position + new Vector3(0, 0.5f, 0));
@@ -61,8 +60,17 @@ namespace BigBalls.Factories
             ball.EventHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
-            ball.Construct(ballId, ballModel.Level, mover, CreateCollisionStrategies(), ballDeathHandler, _ballEffectFactory);
-            _entityRepository.Add(ball, statHolder);
+
+            var collisions = new List<ICollisionStrategy>();
+
+            if (type == EntityType.Player)
+                collisions = CreateCollisionStrategies();
+            else if (type == EntityType.Enemy)
+                collisions = CreateCollisionStrategiesToEnemy();
+
+
+            ball.Construct(ballId, ballModel.Level, mover, collisions, ballDeathHandler, _ballEffectFactory);
+            _entityRepository.Add(ball, statHolder, null);
             return ball;
         }
 
@@ -78,6 +86,18 @@ namespace BigBalls.Factories
 
             return collisionStrategies;
         }
+
+        private List<ICollisionStrategy> CreateCollisionStrategiesToEnemy()
+        {
+            List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
+            {
+                new HitPlayerStrategy(),
+                new WallColllisionStrategy()
+            };
+
+            return collisionStrategies;
+        }
+
 
         private void OnReturn(IEntity entity)
         {

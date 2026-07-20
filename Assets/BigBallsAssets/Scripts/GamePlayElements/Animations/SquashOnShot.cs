@@ -34,7 +34,7 @@ public class SquashOnShot : MonoBehaviour
 
     private void OnShooted()
     {
-        if (enabled == false)
+        if (_enabled == false)
             return;
 
         if (_currentTween != null)

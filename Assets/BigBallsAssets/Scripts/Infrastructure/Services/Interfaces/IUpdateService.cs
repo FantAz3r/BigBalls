@@ -6,5 +6,7 @@
         void Unregister(IUpdateble tickable);
         void SetPaused(bool isPaused);
         void Clear();
+        void RegisterFixed(IUpdateble tickable);
+        void UnregisterFixed(IUpdateble tickable);
     }
 }

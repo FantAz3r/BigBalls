@@ -18,21 +18,20 @@ namespace BigBalls.GameplayObjects
         private ICoroutineRunner _coroutineRunner;
         private IInputService _inputService;
 
-        private Stat _damage;
         private PlayerAttackService _playerAttackService;
         private bool _canShoot = true;
+        private Transform _target;
 
         public Shooter(
-            Stat damage,
             Stat attackSpeed,
             Transform firePoint,
-            IBallContainer ballContainer
-           )
+            IBallContainer ballContainer,
+            Transform target = null)
         {
             _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
             _firePoint = firePoint;
             _ballContainer = ballContainer;
-            _damage = damage;
+            _target = target;
         }
 
         public event Action Shooted;
@@ -48,8 +47,12 @@ namespace BigBalls.GameplayObjects
         public void Subscribe()
         {
             _canShoot = true;
-            _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
             _inputService.Attack += HandleShoot;
+        }
+
+        public void StartShoot(Ball ball = null)
+        {
+            _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine(ball));
         }
 
         public void Unsubscribe()
@@ -64,14 +67,44 @@ namespace BigBalls.GameplayObjects
             _inputService.Attack -= HandleShoot;
         }
 
-        private IEnumerator ShootRoutine()
+        public void Shoot(Ball ball)
+        {
+            Vector3 forward = _firePoint.forward;
+
+            if (_target == null)
+            {
+                ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
+            }
+            else
+            {
+                ball.Mover.SetDirection(new Vector2(_target.position.x, _target.position.z));
+            }
+
+            ball.transform.position = _firePoint.position + _fireOffset;
+            ball.transform.rotation = _firePoint.rotation;
+
+            Shooted?.Invoke();
+        }
+
+        private IEnumerator ShootRoutine(Ball @ball = null)
         {
             while (_canShoot)
             {
-                if (_playerAttackService.IsAutoAttack)
+                if (@ball == null)
                 {
-                    yield return _attackDelay;
-                    Shoot();
+                    if (_playerAttackService.IsAutoAttack)
+                    {
+                        yield return _attackDelay;
+
+                        if (_ballContainer.TryGetNextBullet(out Ball ballForShoot))
+                        {
+                            Shoot(ballForShoot);
+                        }
+                    }
+                }
+                else
+                {
+                    Shoot(ball);
                 }
             }
         }
@@ -85,23 +118,13 @@ namespace BigBalls.GameplayObjects
 
                 for (int i = 0; i < ballCount; i++)
                 {
-                    Shoot();
+                    if (_ballContainer.TryGetNextBullet(out Ball ball))
+                    {
+                        Shoot(ball);
+                    }
                 }
 
                 _canShoot = true;
-            }
-        }
-
-        private void Shoot()
-        {
-            Vector3 forward = _firePoint.forward;
-
-            if (_ballContainer.TryGetNextBullet(out Ball ball))
-            {
-                ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
-                ball.transform.position = _firePoint.position + _fireOffset;
-                ball.transform.rotation = _firePoint.rotation;
-                Shooted?.Invoke();
             }
         }
     }

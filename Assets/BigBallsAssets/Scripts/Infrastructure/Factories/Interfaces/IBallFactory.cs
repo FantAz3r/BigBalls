@@ -6,6 +6,6 @@ namespace BigBalls.Factories
     public interface IBallFactory
     {
         event Action<BallModel> BallReturned;
-        Ball Create (BallModel ballModel);
+        Ball Create(BallModel ballModel, EntityType type);
     }
 }

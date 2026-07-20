@@ -6,7 +6,7 @@ namespace BigBalls.GameplayObjects
     {
         IEnumerable<BallModel> Balls { get; }
 
-        bool AddUniqueBall (BallModel uniqueBall);
+        bool AddUniqueBall(BallModel uniqueBall);
         void AddUniqueBall(WeaponModel weapon);
         void Subscribe();
         bool TryGetNextBullet(out Ball ball);

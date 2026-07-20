@@ -120,6 +120,7 @@ MonoBehaviour:
   <ResourceCollector>k__BackingField: {fileID: 7705727534114590770}
   <SquashOnShot>k__BackingField: {fileID: 2961766862341524932}
   <TiltOnShot>k__BackingField: {fileID: 7496240141139238749}
+  <Rigidbody>k__BackingField: {fileID: 3109637433386317176}
 --- !u!54 &3109637433386317176
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,8 +129,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2580123486827754478}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 100
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -199,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enabled: 1
-  _kickAngle: {x: -12, y: 0, z: 0}
+  _kickAngleX: -12
   _returnDuration: 0.15
   _self: {fileID: 5070131985275992015}
 --- !u!1 &4350208856340714062

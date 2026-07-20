@@ -55,13 +55,13 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehavi
         return obj;
     }
 
-    public void Release (T obj)
+    public override void Release (T obj)
     {
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(_positionInHierarchy.transform);
         _objectPool.Enqueue(obj);
     }
-
+   
     public override void Clear ()
     {
         foreach (T obj in _objectPool)
@@ -105,4 +105,6 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehavi
         T obj = CreateObject(position, rotation, parent);
         _objectPool.Enqueue(obj);
     }
+
+   
 }
