@@ -21,14 +21,14 @@ namespace BigBalls.Factories
         private List<Tile> _tilePrefabs;
         private List<Tile> _activeTiles = new List<Tile>();
 
-        public TileFactory(IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner, IPoolService poolService)
+        public TileFactory (IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner, IPoolService poolService)
         {
             _resolverProvider = resolverProvider;
             _coroutineRunner = coroutineRunner;
             _poolService = poolService;
         }
 
-        public float TileLength => _tilePrefabs.First().transform.localScale.z;
+        public float TileLength => 15;
         public IReadOnlyList<Tile> ActiveTiles => _activeTiles;
         public int RoadWidth { get; private set; }
 
@@ -36,20 +36,20 @@ namespace BigBalls.Factories
         {
             RoadWidth = StartWidth;
             _tilePrefabs = levelConfig.TilePrefabs;
+            SpawnNextTile(9);
             SpawnNextTile();
             SpawnNextTile();
         }
 
-        public void SpawnNextTile()
+        public void SpawnNextTile(float offsetZ = 0)
         {
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
-            Vector3 spawnPoint = new Vector3(0, 0, GetLNextSpawnPointZ());
+            Vector3 spawnPoint = new Vector3(-7, -0.5f, GetLNextSpawnPointZ() - offsetZ);
 
             Tile newTile = _poolService.GetObject<Tile>(prefab.name);
             newTile.transform.position = spawnPoint;
             newTile.transform.rotation = Quaternion.identity;
-            
-            newTile.Construct(_coroutineRunner, RoadWidth);
+            newTile.Construct(RoadWidth);
             newTile.Finished += () => SpawnNextTile();
 
             _activeTiles.Add(newTile);
@@ -73,7 +73,7 @@ namespace BigBalls.Factories
                 return 0;
 
             Tile lastTile = _activeTiles[_activeTiles.Count - 1];
-            return lastTile.transform.position.z + lastTile.transform.localScale.z;
+            return lastTile.transform.position.z + 15;
         }
 
         public void RemoveTile(int index)

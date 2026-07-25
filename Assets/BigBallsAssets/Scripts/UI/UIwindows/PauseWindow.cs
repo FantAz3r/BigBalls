@@ -3,11 +3,8 @@ using VContainer;
 
 namespace BigBalls.UI
 {
-    public class PauseWindow : WindowBase
+    public class PauseWindow : PopupWindow
     {
-        private const float ViewDuration = 0.5f;
-        private const float TargetScale = 1f;
-
         private ITimeService _timeService;
 
         [Inject]

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 
-public class CardInventory : WindowBase
+public class CardInventory : PopupWindow
 {
     [SerializeField] private Slot _slotPrefab;
     [SerializeField] private UIItem _itemPrefab;

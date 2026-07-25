@@ -26,30 +26,44 @@ namespace BigBalls.GameplayObjects
 
         public event Action<IReadonlyStat> ValueChanged;
         public event Action<IReadonlyStat> ResetedToMiValue;
+        public event Action ValueRedused;
+        public event Action ValueIncreased;
 
         public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float CurrentValue { get; private set; }
 
-        public void AddCurrentValue(float valueToAdd)
+        public float AddCurrentValue (float valueToAdd)
         {
             if (valueToAdd <= 0)
-                return;
+                return 0;
 
+            float before = CurrentValue;
             CurrentValue = MathF.Min(CurrentValue + valueToAdd, MaxValue);
+            float actualAdd = CurrentValue - before;
+
             ValueChanged?.Invoke(this);
+            ValueIncreased?.Invoke();
+
+            return actualAdd;
         }
 
-        public void ReduceCurrentValue(float valueToResource)
+        public float ReduceCurrentValue(float valueToResource)
         {
             if (valueToResource <= 0)
-                return;
+                return 0;
 
+            float before = CurrentValue;
             CurrentValue = MathF.Max(CurrentValue - valueToResource, MinValue);
+            float actualReduced = before - CurrentValue;
+
+            ValueRedused?.Invoke();
             ValueChanged?.Invoke(this);
 
             if (CurrentValue == MinValue)
                 ResetedToMiValue?.Invoke(this);
+
+            return actualReduced;
         }
 
         public void AddMaxValue(float valueToAdd)

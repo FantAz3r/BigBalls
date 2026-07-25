@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc34a75477c7cf24cbd94a9836632b9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveUpDistance: 1
   _animationDuration: 1
-  _fadeDuration: 0.5
+  _maxHorizontalSpread: 1.5
+  _maxVerticalHeight: 1.5
+  _startScale: 0.3
+  _endScale: 0.8
   _text: {fileID: 7673309619535732501}
   _canvasGroup: {fileID: 6291290210646937064}
   _offset: {x: 0, y: 0, z: -1}

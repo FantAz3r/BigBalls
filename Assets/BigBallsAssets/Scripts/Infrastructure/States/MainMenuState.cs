@@ -9,17 +9,20 @@ namespace BigBalls.Infrastructure
         private readonly BallRepository _ballsRepository;
         private readonly ISaveService _saveService;
         private readonly ArtefactsRepository _artefactsRepository;
+        private readonly IUIFactory _uIFactory;
 
         public MainMenuState(
             IWindowService windowService,
             BallRepository ballsRepository,
             ISaveService saveService,
-            ArtefactsRepository artefactsRepository)
+            ArtefactsRepository artefactsRepository,
+            IUIFactory uIFactory)
         {
             _windowService = windowService;
             _ballsRepository = ballsRepository;
             _saveService = saveService;
             _artefactsRepository = artefactsRepository;
+            _uIFactory = uIFactory;
         }
 
         public void Enter()
@@ -34,6 +37,7 @@ namespace BigBalls.Infrastructure
             _artefactsRepository.Save();
             _ballsRepository.Save();
             _saveService.Save();
+            _uIFactory.ClearCache();
         }
     }
 }

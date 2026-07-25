@@ -1,5 +1,6 @@
-using BigBalls.GameplayObjects;
 using System;
+using System.Drawing;
+using BigBalls.GameplayObjects;
 using Random = UnityEngine.Random;
 
 namespace BigBalls.Services
@@ -10,13 +11,13 @@ namespace BigBalls.Services
         private readonly IEntityRepository _entityRepository;
         private readonly DamageTextFactory _damageTextFactory;
 
-        public DamageService(IEntityRepository entityRepository, DamageTextFactory damageTextFactory)
+        public DamageService (IEntityRepository entityRepository, DamageTextFactory damageTextFactory)
         {
             _entityRepository = entityRepository;
             _damageTextFactory = damageTextFactory;
         }
 
-        public float ApplyDamage(IEntity entity, float damage)
+        public float ApplyDamage (IEntity entity, float damage)
         {
             StatHolder statHolder = _entityRepository.GetStatHolder(entity);
 
@@ -28,6 +29,7 @@ namespace BigBalls.Services
                     return 0;
 
             float finalDamage = damage;
+            float actualDamage = 0;
 
             if (statHolder.Stats.ContainsKey(StatType.Armor))
             {
@@ -36,14 +38,16 @@ namespace BigBalls.Services
 
             if (statHolder.Stats.ContainsKey(StatType.Health))
             {
-                ApplyHealthDamage(statHolder[StatType.Health], finalDamage);
+                actualDamage = ApplyHealthDamage(statHolder[StatType.Health], finalDamage);
             }
 
-            _damageTextFactory.Create(entity.Transform.position, finalDamage);
+            if (actualDamage > 0)
+                _damageTextFactory.Create(entity.Transform.position, actualDamage);
+
             return finalDamage;
         }
 
-        private bool ApplyEvasion(Stat evasion)
+        private bool ApplyEvasion (Stat evasion)
         {
             if (evasion.CurrentValue <= evasion.MinValue)
                 return false;
@@ -54,7 +58,7 @@ namespace BigBalls.Services
             return roll <= evasionChance;
         }
 
-        private float ApplyArmor(Stat armor, float damage)
+        private float ApplyArmor (Stat armor, float damage)
         {
             if (armor.CurrentValue <= 0) return damage;
 
@@ -65,12 +69,12 @@ namespace BigBalls.Services
             return MathF.Max(0f, finalDamage);
         }
 
-        private void ApplyHealthDamage(Stat health, float damage)
+        private float ApplyHealthDamage (Stat health, float damage)
         {
             if (damage <= 0)
-                return;
+                return 0;
 
-            health.ReduceCurrentValue(damage);
+            return health.ReduceCurrentValue(damage);
         }
     }
 }

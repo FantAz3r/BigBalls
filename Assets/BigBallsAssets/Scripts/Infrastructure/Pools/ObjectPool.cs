@@ -55,7 +55,7 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehavi
         return obj;
     }
 
-    public override void Release (T obj)
+    public void Release (T obj)
     {
         obj.gameObject.SetActive(false);
         obj.transform.SetParent(_positionInHierarchy.transform);
@@ -89,6 +89,7 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehavi
     private T CreateObject (Vector3 position, Quaternion rotation, Transform parent)
     {
         T obj = _resolverProvider.CurrentResolver.Instantiate(_prefab, position, rotation);
+        _resolverProvider.CurrentResolver.Inject(obj);
         obj.name = _nameParent;
 
         if (parent != null)
@@ -105,6 +106,4 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehavi
         T obj = CreateObject(position, rotation, parent);
         _objectPool.Enqueue(obj);
     }
-
-   
 }

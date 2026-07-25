@@ -16,7 +16,6 @@ namespace BigBalls.Configs
         [field: SerializeField] public Ball Prefab { get; private set; }
         [field: SerializeField] public EntityType EntityType { get; private set; }
         [field: SerializeField] public BallType BallType { get; private set; }
-        [field: SerializeField] public float Radius { get; private set; } = 0.2f;
         [field: SerializeField] public bool IsMaterial { get; private set; }
         [field: SerializeField] public bool IsUnique { get; private set; } = true;
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }

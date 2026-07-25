@@ -8,9 +8,7 @@ namespace BigBalls.Services
         WindowBase Open<T>(GameObject payload = null)
             where T : WindowBase;
 
-        WindowBase OpenPreviousWindow<T>()
-           where T : WindowBase;
-
+        WindowBase OpenPreviousWindow ();
         void CreateUIRoot();
         void CreateJoystick();
     }

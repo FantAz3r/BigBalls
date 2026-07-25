@@ -32,7 +32,7 @@ namespace BigBalls.GameplayObjects
                 Tile tile = activeTiles[i];
                 tile.transform.Translate(Vector3.back * TileMoveSpeed * Time.deltaTime);
 
-                if (tile.transform.position.z <= -_factory.TileLength)
+                if (tile.transform.position.z <= -_factory.TileLength * 2)
                 {
                     _factory.RemoveTile(i);
                 }

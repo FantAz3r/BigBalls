@@ -12,7 +12,6 @@ public class ChestCalculator
     private readonly List<ICardModel> _cards = new();
 
     public ChestModel ChestModel { get; private set; }
-    // Добавлены недостающие поля
     private const int BaseGold = 100;
     private const int TotalCardsCost = 10;
 

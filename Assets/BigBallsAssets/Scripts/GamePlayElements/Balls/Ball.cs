@@ -14,11 +14,11 @@ namespace BigBalls.GameplayObjects
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
+        public BallModel Model { get; private set; }
         public bool IsMaterial { get; private set; }
         public bool CanReturnToBag { get; private set; } = false;
         public IMover Mover { get; private set; }
         public int Id { get; private set; }
-        public int Level { get; private set; } = 1;
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
         public float AppliedDamage { get; private set; }
@@ -26,7 +26,6 @@ namespace BigBalls.GameplayObjects
         private void Awake()
         {
             EventHandler = new EntityEventHandler();
-            transform.localScale = new Vector3(Config.Radius, Config.Radius, Config.Radius);
             IsMaterial = Config.IsMaterial;
         }
 
@@ -64,7 +63,7 @@ namespace BigBalls.GameplayObjects
 
         public void Construct(
             int id,
-            int level,
+            BallModel model,
             IMover mover,
             List<ICollisionStrategy> collisionStrategies,
             DeathHandler<Ball> deathHandler,
@@ -73,12 +72,12 @@ namespace BigBalls.GameplayObjects
             AppliedDamage = 0;
             DeathHandler = deathHandler;
             Id = id;
-            Level = level;
+            Model = model;
             Mover = mover;
             _collisionStrategies = collisionStrategies;
             _ballEffectFactory = ballEffectFactory;
 
-            _effectBehaviours = _ballEffectFactory.Create(Config.Effects, Level);
+            _effectBehaviours = _ballEffectFactory.Create(Config.Effects, Model.Level);
 
             foreach (var effect in _effectBehaviours)
             {

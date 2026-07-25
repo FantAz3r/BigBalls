@@ -1,3 +1,4 @@
+using BigBalls.Configs;
 using BigBalls.StaticData;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public SquashOnShot SquashOnShot { get; private set; }
         [field: SerializeField] public TiltOnShot TiltOnShot { get; private set; }
         [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
-
+        [field: SerializeField] public Transform WeaponSpawnPoint { get; private set; }
+        [field: SerializeField] public Transform FirePoint { get; private set; }
 
         public DeathHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }
@@ -32,6 +34,11 @@ namespace BigBalls.GameplayObjects
         {
             Id = id;
             DeathHandler = playerDeathHandler;
+        }
+
+        public void SetFirePoint (Cannon cannon)
+        {
+            FirePoint = cannon.FirePoint;
         }
     }
 }

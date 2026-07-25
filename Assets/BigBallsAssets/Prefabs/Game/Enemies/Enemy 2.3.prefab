@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6929812920440443843}
   - component: {fileID: 2000002871604403432}
   - component: {fileID: -6981145196445419042}
+  - component: {fileID: 6418732694476606713}
   m_Layer: 3
   m_Name: Enemy 2.3
   m_TagString: Untagged
@@ -51,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 0}
   <HitFlash>k__BackingField: {fileID: -6981145196445419042}
+  <EnemyFallAnimator>k__BackingField: {fileID: 6418732694476606713}
 --- !u!54 &4351653627525780640
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -169,3 +171,21 @@ MonoBehaviour:
   _flashCount: 3
   _flashColor: {r: 1, g: 1, b: 1, a: 1}
   _totalDuration: 0.2
+--- !u!114 &6418732694476606713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385916368145479425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ac4c6507f5e34caa0dcd4d08f901c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startOffsetY: 10
+  _fallDuration: 0.8
+  _delay: 0
+  _fallEase: 30
+  _landingBounce: 0.15
+  _landingBounceDuration: 0.2

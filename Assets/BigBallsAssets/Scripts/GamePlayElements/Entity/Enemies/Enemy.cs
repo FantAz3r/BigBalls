@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -7,6 +6,9 @@ namespace BigBalls.GameplayObjects
     {
         [field: SerializeField] public EntityTrigger EntityTrigger { get; private set; }
         [field: SerializeField] public HitFlash HitFlash { get; private set; }
+        [field: SerializeField] public EnemyFallAnimator EnemyFallAnimator { get; private set; }
+        [field: SerializeField] public EnemyHitedAnimation EnemyHitedAnimation { get; private set; }
+
         public int Id { get; private set; }
         public DeathHandler<Enemy> DeathHandler { get; private set; }
         public Transform Transform => transform;
@@ -18,7 +20,7 @@ namespace BigBalls.GameplayObjects
             EventHandler = new EntityEventHandler();
         }
 
-        public void Construct(int id, DeathHandler<Enemy> deathHandler)
+        public void Construct (int id, DeathHandler<Enemy> deathHandler)
         {
             DeathHandler = deathHandler;
             Id = id;

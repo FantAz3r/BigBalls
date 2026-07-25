@@ -1,9 +1,9 @@
-using BigBalls.Configs;
-using BigBalls.GameplayObjects;
-using BigBalls.Infrastructure.DI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BigBalls.Configs;
+using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using UnityEngine;
 
 namespace BigBalls.Services
@@ -15,6 +15,7 @@ namespace BigBalls.Services
         private const string TilePool = "TilePool";
         private const string LootPool = "LootPool";
         private const string DamageTextPool = "DamageTextPool";
+        private const string EnemyBullets = "EnemyBulletsPool";
         //private const string CardPool = "CardPool";
 
         private readonly PoolServiceConfig _poolConfig;
@@ -29,7 +30,7 @@ namespace BigBalls.Services
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
 
-        public PoolService(ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
+        public PoolService (ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
         {
             _objectContainer = objectContainer;
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
@@ -38,7 +39,7 @@ namespace BigBalls.Services
             _resolverProvider = resolverProvider;
         }
 
-        public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
+        public void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
         {
             _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
@@ -59,33 +60,33 @@ namespace BigBalls.Services
             _lootInfos = lootInfos.Values.ToList();
         }
 
-        public T GetObject<T>(string nameObject)
+        public T GetObject<T> (string nameObject)
             where T : MonoBehaviour
             => GetPool<T>(nameObject)?.Get();
 
-        public T GetObject<T>(string nameObject, Vector3 position)
+        public T GetObject<T> (string nameObject, Vector3 position)
             where T : MonoBehaviour
             => GetPool<T>(nameObject)?.Get(position);
 
-        public T GetObject<T>(string nameObject, Vector3 position, Quaternion rotation)
+        public T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation)
             where T : MonoBehaviour
             => GetPool<T>(nameObject)?.Get(position, rotation);
 
-        public T GetObject<T>(string nameObject, Transform parent)
+        public T GetObject<T> (string nameObject, Transform parent)
             where T : MonoBehaviour
             => GetPool<T>(nameObject)?.Get(parent);
 
-        public T GetObject<T>(string nameObject, Vector3 position, Quaternion rotation, Transform parent)
+        public T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation, Transform parent)
             where T : MonoBehaviour
             => GetPool<T>(nameObject)?.Get(position, rotation, parent);
 
-        public void ReleaseObject<T>(T obj)
+        public void ReleaseObject<T> (T obj)
             where T : MonoBehaviour
         {
             GetPool<T>(obj.name)?.Release(obj);
         }
 
-        public void ClearAllPools()
+        public void ClearAllPools ()
         {
             foreach (ObjectPoolBase obj in _objectPools.Values)
             {
@@ -95,13 +96,14 @@ namespace BigBalls.Services
             _objectPools.Clear();
         }
 
-        public void InitializePools()
+        public void InitializePools ()
         {
             CreatePoolContainer(EnemyPool, out Transform enemyPoolContainer);
             CreatePoolContainer(BallPool, out Transform ballPoolContainer);
             CreatePoolContainer(TilePool, out Transform tilePoolContainer);
             CreatePoolContainer(LootPool, out Transform lootPoolContainer);
             CreatePoolContainer(DamageTextPool, out Transform damageTextContainer);
+            CreatePoolContainer(EnemyBullets, out Transform enemyBulletsContainer);
             //CreatePoolContainer(CardPool, out Transform cardContainer);
 
             foreach (EnemyConfig config in _enemyConfigs)
@@ -109,6 +111,9 @@ namespace BigBalls.Services
 
             foreach (BallConfig config in _cardsData.Balls.Values)
                 CreatePool(config.Prefab, ballPoolContainer, config.Prefab.name, _poolConfig.InitialBallPoolSize);
+
+            foreach (BallConfig config in _cardsData.EnmyProjectiles.Values)
+                CreatePool(config.Prefab, enemyBulletsContainer, config.Prefab.name, _poolConfig.InitialBallPoolSize);
 
             foreach (Tile tile in _levelConfig.TilePrefabs)
                 CreatePool(tile, tilePoolContainer, tile.name, _poolConfig.InitialTilePoolSize);
@@ -119,14 +124,14 @@ namespace BigBalls.Services
             CreatePool(_damageText, damageTextContainer, DamageTextPool, _poolConfig.IinitialDamageTextPoolSize);
         }
 
-        private void CreatePoolContainer(string name, out Transform container)
+        private void CreatePoolContainer (string name, out Transform container)
         {
             GameObject go = new GameObject(name);
             go.transform.SetParent(_objectContainer.transform);
             container = go.transform;
         }
 
-        private void CreatePool<T>(T prefab, Transform parent, string name, int initialSize)
+        private void CreatePool<T> (T prefab, Transform parent, string name, int initialSize)
             where T : MonoBehaviour
         {
             IObjectPool<T> pool = new ObjectPool<T>(initialSize, _resolverProvider);
@@ -134,20 +139,13 @@ namespace BigBalls.Services
             _objectPools[name] = pool;
         }
 
-        private ObjectPool<T> GetPool<T>(string name)
+        private ObjectPool<T> GetPool<T> (string name)
             where T : MonoBehaviour
         {
             if (_objectPools.TryGetValue(name, out object poolObj) && poolObj is ObjectPool<T> pool)
                 return pool;
 
-            T prefabComponent = prefab.GetComponent<T>();
-            if (prefabComponent == null)
-            {
-                Debug.LogError($"Prefab '{name}' does not have component of type {typeof(T).Name}!");
-                return null;
-            }
-
-            return CreatePool<T>(prefabComponent, name, _poolConfig.DefaultPoolSize);
+            throw new ArgumentNullException(name);
         }
     }
 }

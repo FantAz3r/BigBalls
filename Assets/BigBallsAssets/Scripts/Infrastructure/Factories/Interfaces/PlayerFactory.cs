@@ -1,3 +1,4 @@
+using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Providers;
@@ -143,7 +144,13 @@ namespace BigBalls.Factories
             cardHolder.AddItem(_itemConainerProvider.Helmet);
             cardHolder.AddItem(_itemConainerProvider.Gun);
 
-            Shooter shooter = new Shooter(statHolder[StatType.AttackSpeed], player.transform, playerBallContainer);
+            if (_itemConainerProvider.Gun != null)
+            {
+                Cannon cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
+                player.SetFirePoint(cannon);
+            }
+
+            Shooter shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponSpawnPoint, playerBallContainer);
             _objectResolver.CurrentResolver.Inject(shooter);
             shooter.StartShoot();
 

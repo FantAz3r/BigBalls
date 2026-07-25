@@ -1,40 +1,53 @@
+using System.Collections;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
     public class RoadColliderPlacer : MonoBehaviour
     {
-        private readonly Vector3 _topScreenPoint = new Vector3(Screen.width / 2f, Screen.height, 0f);
-        private readonly Vector3 _bottomScreenPoint = new Vector3(Screen.width / 2f, 0f, 0f);
-
         [Header("Настройки")]
+        [SerializeField] private Vector3 _topOffset;
+        [SerializeField] private Vector3 _bottomOffset;
         [SerializeField] private Camera _camera;
         [SerializeField] private FrontWall _frontWallPrefab;
         [SerializeField] private BackWall _backWallPrefab;
         [SerializeField] private LayerMask _roadLayerMask;
         [SerializeField] private float _raycastDistance = 50f;
+        [SerializeField] private float _debugRayDuration = 2f;
 
         private FrontWall _topWallInstance;
         private BackWall _bottomWallInstance;
 
-        void Start()
+        void Start ()
         {
+            StartCoroutine(WaitRoutine());
+        }
+
+        private IEnumerator WaitRoutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+
             PlaceFrontWall();
             PlaceBackWall();
         }
 
-        private void PlaceFrontWall()
+        private void PlaceFrontWall ()
         {
-            _topWallInstance = PlaceWall(_topScreenPoint, _frontWallPrefab, _topWallInstance);
+            var topScreenPoint = new Vector3(Screen.width / 2f, Screen.height, 0f);
+            _topWallInstance = PlaceWall(topScreenPoint, _frontWallPrefab, _topWallInstance, _topOffset);
         }
 
-        private void PlaceBackWall()
+        private void PlaceBackWall ()
         {
-            _bottomWallInstance = PlaceWall(_bottomScreenPoint, _backWallPrefab, _bottomWallInstance);
+            var bottomScreenPoint = new Vector3(Screen.width / 2f, 0f, 0f);
+            _bottomWallInstance = PlaceWall(bottomScreenPoint, _backWallPrefab, _bottomWallInstance, _bottomOffset);
         }
 
-        private T PlaceWall<T>(Vector3 screenPoint, T prefab, T instance) where T : MonoBehaviour
+        private T PlaceWall<T> (Vector3 screenPoint, T prefab, T instance, Vector3 offset) where T : MonoBehaviour
         {
+            if (_camera == null || prefab == null)
+                return instance;
+
             Ray ray = _camera.ScreenPointToRay(screenPoint);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _raycastDistance, _roadLayerMask))
@@ -44,7 +57,7 @@ namespace BigBalls.GameplayObjects
                 else
                     instance.gameObject.SetActive(true);
 
-                instance.transform.position = hit.point;
+                instance.transform.position = hit.point + offset;
                 instance.transform.rotation = Quaternion.identity;
             }
             else

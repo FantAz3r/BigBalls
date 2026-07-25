@@ -14,38 +14,30 @@ namespace BigBalls.GameplayObjects
         private readonly Stat _damage;
         private readonly Enemy _owner;
         private readonly EntityTrigger _entityTrigger;
-        private readonly Shooter _shooter;
 
         private IEntityRepository _entityRepository;
         private IPlayerProvider _playerProvider;
         private IDamageService _damageService;
         private ICoroutineRunner _coroutineRunner;
-        private IBallFactory _ballFactory;
-        private IIdentifierService _identifierService;
         private bool _canAttack;
 
-        public EnemyAttacker(Stat damage, Enemy owner, EnemyConfig config, Shooter shooter)
+        public EnemyAttacker(Stat damage, Enemy owner, EnemyConfig config)
         {
             _damage = damage;
             _owner = owner;
             _entityTrigger = owner.EntityTrigger;
             _config = config;
-            _shooter = shooter;
         }
 
         [Inject]
         public void Construst(
             IPlayerProvider playerProvider,
             IDamageService damageService,
-            ICoroutineRunner coroutineRunner,
-            IBallFactory ballFactory,
-            IIdentifierService identifierService)
+            ICoroutineRunner coroutineRunner)
         {
             _coroutineRunner = coroutineRunner;
             _playerProvider = playerProvider;
             _damageService = damageService;
-            _identifierService = identifierService;
-            _ballFactory = ballFactory;
         }
 
         public void Subscribe()
@@ -54,7 +46,6 @@ namespace BigBalls.GameplayObjects
             _entityTrigger.WallDetected += MeeleAttack;
             _entityTrigger.PlayerStayedLongEnough += MeeleAttack;
             _entityTrigger.PlayerCollision += CollisionAttack;
-            RangeAttack();
         }
 
         public void Unsubscribe()
@@ -75,16 +66,6 @@ namespace BigBalls.GameplayObjects
                 return;
 
             _coroutineRunner.StartCoroutine(MeeleAttackRoutine(_config.Type == EntityType.Enemy));
-        }
-
-        private void RangeAttack()
-        {
-            if (_config.HasRangeAttack == false)
-                return;
-
-            BallModel ballModel = new BallModel(_identifierService.ID, _config.BallConfig);
-            Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy);
-            _shooter.StartShoot(ball);
         }
 
         private IEnumerator MeeleAttackRoutine(bool needSuiside)

@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4198694581542161090}
   - component: {fileID: 5593218187109602567}
+  - component: {fileID: 1602703489326348102}
+  - component: {fileID: 2539614718007247908}
   m_Layer: 3
   m_Name: Boss
   m_TagString: Untagged
@@ -46,6 +48,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 6317752248337351765}
+  <HitFlash>k__BackingField: {fileID: 1602703489326348102}
+  <EnemyFallAnimator>k__BackingField: {fileID: 2539614718007247908}
+--- !u!114 &1602703489326348102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433841478738700639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c8d62508d6d8f43906c8106bc68361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
+  - {fileID: 7395932934726797433}
+  _enabled: 1
+  _flashCount: 3
+  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _totalDuration: 0.2
+--- !u!114 &2539614718007247908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433841478738700639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ac4c6507f5e34caa0dcd4d08f901c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _startOffsetY: 10
+  _fallDuration: 0.8
+  _delay: 0
+  _fallEase: 30
+  _landingBounce: 0.15
+  _landingBounceDuration: 0.2
 --- !u!1 &8963592587052070549
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sphereCollider: {fileID: 1864667913063696545}
+  _playerDetectionDelay: 2
 --- !u!1001 &8170150330980521213
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -223,6 +264,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1498948324190777287}
   m_SourcePrefab: {fileID: 100100000, guid: fd1e8dd8e6819654eb37433305068e40, type: 3}
+--- !u!23 &7395932934726797433 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: fd1e8dd8e6819654eb37433305068e40,
+    type: 3}
+  m_PrefabInstance: {fileID: 8170150330980521213}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8568253378870588182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fd1e8dd8e6819654eb37433305068e40,

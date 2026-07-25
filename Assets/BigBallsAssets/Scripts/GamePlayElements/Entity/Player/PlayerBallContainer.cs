@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using System;
-using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -25,7 +25,7 @@ namespace BigBalls.GameplayObjects
         private Queue<BallModel> _balls = new();
         private List<EffectBehaviour> _effectBehaviours = new();
 
-        public PlayerBallContainer(
+        public PlayerBallContainer (
             Stat ballCount,
             IResourceLoader resourceLoader,
             IBallFactory ballFactory,
@@ -43,25 +43,29 @@ namespace BigBalls.GameplayObjects
 
         public IEnumerable<BallModel> Balls => _balls;
 
-        public void Subscribe() => _ballFactory.BallReturned += ReturnBullet;
-        public void Unsubscribe() => _ballFactory.BallReturned -= ReturnBullet;
+        public void Subscribe () => _ballFactory.BallReturned += OnReturnBullet;
 
-        public bool TryGetNextBullet(out Ball ball)
+        public void Unsubscribe () => _ballFactory.BallReturned += OnReturnBullet;
+
+        public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
+
+        public bool TryGetNextBullet (out Ball ball)
         {
             ball = null;
+            BallModel model = null;
 
             if (_createdBallsCount < _ballCount.CurrentValue)
             {
-                var ballModel = GetNextBallModel();
-                ball = CreateNewBall(ballModel);
+                model = GetNextBallModel();
+                ball = CreateNewBall(model);
                 _createdBallsCount++;
                 return true;
             }
 
             if (_currentBallCount > 0 && _balls.Count > 0)
             {
-                var ballModel = _balls.Dequeue();
-                ball = CreateNewBall(ballModel);
+                model = _balls.Dequeue();
+                ball = CreateNewBall(model);
                 _currentBallCount--;
                 return true;
             }
@@ -69,7 +73,7 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        private BallModel GetNextBallModel()
+        private BallModel GetNextBallModel ()
         {
             if (_weapon != null && _weapon.UniqueBallConfigs != null && _weaponConfigIndex < _weapon.UniqueBallConfigs.Count)
             {
@@ -79,15 +83,7 @@ namespace BigBalls.GameplayObjects
             return new BallModel(_identifierService.ID, _baseBallConfig);
         }
 
-        public void ReturnBullet(BallModel ballModel)
-        {
-            _balls.Enqueue(ballModel);
-            _currentBallCount++;
-        }
-
-        public void AddEffects(List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
-
-        public void AddUniqueBall(WeaponModel weapon)
+        public void AddUniqueBall (WeaponModel weapon)
         {
             _weapon = weapon;
 
@@ -97,7 +93,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public bool AddUniqueBall(BallModel uniqueBall)
+        public bool AddUniqueBall (BallModel uniqueBall)
         {
             if (uniqueBall?.Config == null)
                 return false;
@@ -108,7 +104,13 @@ namespace BigBalls.GameplayObjects
             return true;
         }
 
-        private Ball CreateNewBall(BallModel ballModel)
+        private void OnReturnBullet (BallModel ballModel)
+        {
+            _balls.Enqueue(ballModel);
+            _currentBallCount++;
+        }
+
+        private Ball CreateNewBall (BallModel ballModel)
         {
             if (ballModel == null)
                 throw new ArgumentNullException(nameof(ballModel));

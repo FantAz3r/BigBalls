@@ -28,7 +28,6 @@ public class ScreenShake : MonoBehaviour
     private Shooter _shooter;
     private Stat _health;
     private Tween _shakeTween;
-    private ICameraProvider _cameraProvider;
 
     public void Init(Shooter shooter, Stat health)
     {
@@ -36,7 +35,7 @@ public class ScreenShake : MonoBehaviour
         _health = health;
 
         _shooter.Shooted += OnShot;
-        _health.ValueChanged += OnDamaged;
+        _health.ValueRedused += OnDamaged;
         _health.ResetedToMiValue += OnDied;
     }
 
@@ -47,7 +46,7 @@ public class ScreenShake : MonoBehaviour
 
         if (_health != null)
         {
-            _health.ValueChanged += OnDamaged;
+            _health.ValueRedused += OnDamaged;
             _health.ResetedToMiValue += OnDied;
         }
     }
@@ -59,7 +58,7 @@ public class ScreenShake : MonoBehaviour
 
         if (_health != null)
         {
-            _health.ValueChanged -= OnDamaged;
+            _health.ValueRedused -= OnDamaged;
             _health.ResetedToMiValue -= OnDied;
         }
     }
@@ -70,7 +69,7 @@ public class ScreenShake : MonoBehaviour
             Shake(_shotIntensity, _shotDuration, _shotFrequency);
     }
 
-    private void OnDamaged(IReadonlyStat useles)
+    private void OnDamaged()
     {
         if (_onHit)
             Shake(_hitIntensity, _hitDuration, _hitFrequency);

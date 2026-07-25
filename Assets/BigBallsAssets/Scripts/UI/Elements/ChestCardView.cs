@@ -22,7 +22,8 @@ public class ChestCardView : MonoBehaviour
     public RectTransform RectTransform => _rectTransform;
     public CanvasGroup CanvasGroup => _canvasGroup;
 
-    public void RenderCard (ICardModel cardModel)
+    public void RenderCard (ICardModel cardModel) => RenderCard(cardModel, 1);
+    public void RenderCard (ICardModel cardModel, int count)
     {
         gameObject.SetActive(true);
 
@@ -33,7 +34,7 @@ public class ChestCardView : MonoBehaviour
         }
 
         _iconImage.sprite = cardModel.Config.Icon;
-        _amountText.text = "x1";
+        _amountText.text = $"x{count}";
         _rarityText.text = cardModel.Config.Rarity.ToString();
 
         SetRarityColor(cardModel.Config.Rarity);

@@ -1,6 +1,6 @@
-using BigBalls.UI;
 using System;
 using System.Collections.Generic;
+using BigBalls.UI;
 using UnityEngine;
 
 namespace BigBalls.Services
@@ -12,7 +12,7 @@ namespace BigBalls.Services
         private WindowBase _currentWindow = null;
         private WindowBase _previousWindow = null;
 
-        public WindowService(IUIFactory uiFactory)
+        public WindowService (IUIFactory uiFactory)
         {
             _uiFactory = uiFactory;
 
@@ -33,25 +33,20 @@ namespace BigBalls.Services
             };
         }
 
-        public WindowBase Open<T>(GameObject payload = null)
+        public WindowBase Open<T> (GameObject payload = null)
             where T : WindowBase
         {
             return Get(typeof(T));
         }
 
-        public WindowBase OpenPreviousWindow<T>()
-            where T : WindowBase
+        public WindowBase OpenPreviousWindow ()
         {
-            var temp = _currentWindow;
-            _currentWindow = _previousWindow;
-            _previousWindow = temp;
-
-            return Get(_currentWindow.GetType());
+            return Get(_previousWindow.GetType());
         }
 
-        private WindowBase Get(Type type)
+        private WindowBase Get (Type type)
         {
-            if(_currentWindow != null && type == _currentWindow.GetType())
+            if (_currentWindow != null && type == _currentWindow.GetType())
                 return null;
 
             _previousWindow = _currentWindow;
@@ -65,12 +60,12 @@ namespace BigBalls.Services
             return _currentWindow;
         }
 
-        public void CreateUIRoot()
+        public void CreateUIRoot ()
         {
             _uiFactory.CreateUIRoot();
         }
 
-        public void CreateJoystick()
+        public void CreateJoystick ()
         {
             _uiFactory.CreateJoystick();
         }

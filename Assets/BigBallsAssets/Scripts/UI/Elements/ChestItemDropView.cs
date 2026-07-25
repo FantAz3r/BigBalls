@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using BigBalls.UI;
 using DG.Tweening;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -38,21 +38,21 @@ public class ChestItemDropView : WindowBase
     private Sequence _currentAnimation;
     private ChestModel _chestModel;
 
-    private void Awake()
+    private void Awake ()
     {
         CreateCards();
     }
 
-    private void OnDestroy()
+    private void OnDestroy ()
     {
         KillCurrentAnimation();
         DOTween.Kill(transform);
     }
 
     [Inject]
-    public void Construct(ChestCalculator chestCalculator) => _chestCalculator = chestCalculator;
+    public void Construct (ChestCalculator chestCalculator) => _chestCalculator = chestCalculator;
 
-    public void Init(ChestModel chestModel)
+    public void Init (ChestModel chestModel)
     {
         Debug.Log("inited");
         _chestModel = chestModel;
@@ -62,10 +62,10 @@ public class ChestItemDropView : WindowBase
         if (_openButton != null)
         {
             _openButton.onClick.AddListener(OnOpenChestClicked);
-    }
+        }
     }
 
-    public void ForceComplete()
+    public void ForceComplete ()
     {
         if (_currentAnimation != null)
         {
@@ -73,7 +73,7 @@ public class ChestItemDropView : WindowBase
         }
     }
 
-    private void ResetChest()
+    private void ResetChest ()
     {
         _chestTransform.localScale = Vector3.one;
         _chestCanvasGroup.alpha = 1f;
@@ -87,7 +87,7 @@ public class ChestItemDropView : WindowBase
         _activeCards.Clear();
     }
 
-    private void CreateCards()
+    private void CreateCards ()
 
     {
         for (int i = 0; i < _poolSize; i++)
@@ -98,21 +98,21 @@ public class ChestItemDropView : WindowBase
         }
     }
 
-    private ChestCardView GetCard()
+    private ChestCardView GetCard ()
     {
         ChestCardView card = Instantiate(_cardPrefab, _cardsContainer);
         _activeCards.Add(card);
         return card;
     }
 
-    private void OnOpenChestClicked()
+    private void OnOpenChestClicked ()
 
     {
         _openButton.interactable = false;
         AnimateChestOpening();
     }
 
-    private void AnimateChestOpening()
+    private void AnimateChestOpening ()
 
     {
         KillCurrentAnimation();
@@ -159,39 +159,52 @@ public class ChestItemDropView : WindowBase
         _currentAnimation.Play();
     }
 
-    private void DropCards()
+    private void DropCards ()
     {
         ChestOpenResult result = _chestCalculator.OpenChest(_chestModel);
 
         List<ICardModel> cards = result.Cards;
+
+        Dictionary<ICardModel, int> cardDrop = new Dictionary<ICardModel, int>();
+
+        foreach (var card in cards)
+        {
+            if (cardDrop.ContainsKey(card))
+            {
+                cardDrop[card]++;
+            }
+            else
+            {
+                cardDrop.Add(card, 1);
+            }
+        }
+
         int goldAmount = result.GoldAmount;
 
-        // Создаем карты для выпавших предметов
-        for (int i = 0; i < cards.Count; i++)
+        int i = 0;
+
+        foreach (var card in cardDrop)
         {
             ChestCardView cardView = GetCard();
-            cardView.RenderCard(cards[i]);
+            cardView.RenderCard(card.Key, card.Value);
 
-
-            // Анимация появления
+            i++;
             float delay = i * _cardAppearDelay;
             cardView.CreateAppearAnimation(delay);
 
-            // Звук появления карты
             if (_audioSource != null && _cardAppearSound != null && i == 0)
             {
                 DOVirtual.DelayedCall(delay, () => _audioSource.PlayOneShot(_cardAppearSound));
             }
         }
 
-        // Показываем золото, если есть
         if (goldAmount > 0)
         {
             ShowGoldAnimation(goldAmount, cards.Count);
         }
     }
 
-    private void ShowGoldAnimation(int amount, int cardCount)
+    private void ShowGoldAnimation (int amount, int cardCount)
 
     {
         // Создаем карту для золота
@@ -209,7 +222,7 @@ public class ChestItemDropView : WindowBase
         }
     }
 
-    private void CollectAllCards()
+    private void CollectAllCards ()
 
     {
         KillCurrentAnimation();
@@ -250,7 +263,7 @@ public class ChestItemDropView : WindowBase
         _currentAnimation.Play();
     }
 
-    private Transform FindTargetForCard(int index)
+    private Transform FindTargetForCard (int index)
 
     {
         // Здесь нужно реализовать логику поиска целевого слота для карты
@@ -266,7 +279,7 @@ public class ChestItemDropView : WindowBase
         return null;
     }
 
-    private void KillCurrentAnimation()
+    private void KillCurrentAnimation ()
 
     {
         if (_currentAnimation != null && _currentAnimation.IsActive())

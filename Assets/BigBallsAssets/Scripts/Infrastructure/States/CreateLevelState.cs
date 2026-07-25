@@ -78,8 +78,10 @@ namespace BigBalls.Infrastructure
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
+
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();
+            _tileGenerator.StartSpawn(_levelConfig);
 
             CreateUI();
             CreateCamera();
@@ -87,7 +89,6 @@ namespace BigBalls.Infrastructure
             _playerFactory.Create();
 
             _dropService.SetCurrentLevelConfig(_currentEnemyConfig);
-            _tileGenerator.StartSpawn(_levelConfig);
             _tileMover.Start();
             _levelTimeline.Start(_levelConfig);
 

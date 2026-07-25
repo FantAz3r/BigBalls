@@ -91,15 +91,15 @@ namespace BigBalls.Factories
             Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, _raycastService, enemyConfig);
             Init(mover, enemyConfig);
 
-            Shooter shooter = null;
+            EnemyShooter shooter = null;
 
             if (enemyConfig.HasRangeAttack)
             {
-                shooter = new Shooter(statHolder[StatType.AttackSpeed], enemy.transform, null, _playerProvider.Player.Transform);
+                shooter = new EnemyShooter(statHolder[StatType.AttackSpeed], enemy.transform, enemyConfig, _playerProvider.Player.Transform);
                 _resolverProvider.CurrentResolver.Inject(shooter);
             }
 
-            EnemyAttacker enemyAttacker = new EnemyAttacker(statHolder[StatType.Damage], enemy, enemyConfig, shooter);
+            EnemyAttacker enemyAttacker = new EnemyAttacker(statHolder[StatType.Damage], enemy, enemyConfig);
             _resolverProvider.CurrentResolver.Inject(enemyAttacker);
             enemy.EventHandler.Suisided += OnDied;
 

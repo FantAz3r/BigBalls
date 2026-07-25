@@ -2,4 +2,6 @@
 {
     None = 0,
     Base,
+    Fire,
+    Ice,
 }

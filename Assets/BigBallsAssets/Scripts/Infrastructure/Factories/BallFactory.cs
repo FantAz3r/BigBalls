@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Factories
@@ -18,7 +18,7 @@ namespace BigBalls.Factories
         private readonly IPoolService _poolService;
         private readonly BallRepository _ballRepository;
 
-        public BallFactory(
+        public BallFactory (
             IObjectResolverProvider objectResolverProvider,
             IEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
@@ -40,12 +40,10 @@ namespace BigBalls.Factories
 
         public event Action<BallModel> BallReturned;
 
-        public Ball Create(BallModel ballModel, EntityType type)
+        public Ball Create (BallModel ballModel, EntityType type)
         {
-            int ballId = _identifierService.ID;
             Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name, _playerProvider.Player.transform.position + new Vector3(0, 0.5f, 0));
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
-            ball.EventHandler.Returned += OnReturn;
 
             StatHolder statHolder = new StatHolder(ball, ballModel.BallConfig.EntityType, ballModel.BallConfig);
             statHolder.InitStats();
@@ -57,27 +55,34 @@ namespace BigBalls.Factories
             };
 
             DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
-            ball.EventHandler.Died += OnReturn;
             ballDeathHandler.Subscribe();
 
 
             var collisions = new List<ICollisionStrategy>();
 
             if (type == EntityType.Player)
+            {
+                ball.EventHandler.Died += OnReturnToPlayer;
+                ball.EventHandler.Returned += OnReturnToPlayer;
                 collisions = CreateCollisionStrategies();
-            else if (type == EntityType.Enemy)
+            }
+            else
+            {
+                ball.EventHandler.Died += OnReturn;
+                ball.EventHandler.Returned += OnReturn;
                 collisions = CreateCollisionStrategiesToEnemy();
+            }
 
-
-            ball.Construct(ballId, ballModel.Level, mover, collisions, ballDeathHandler, _ballEffectFactory);
+            ball.Construct(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler, _ballEffectFactory);
             _entityRepository.Add(ball, statHolder, null);
             return ball;
         }
 
-        private List<ICollisionStrategy> CreateCollisionStrategies()
+        private List<ICollisionStrategy> CreateCollisionStrategies ()
         {
             List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
             {
+                new BallCollisionStrategy(),
                 new PlayerCollisionStrategy(),
                 new BackWallCollisionStrategy(_playerProvider.Player),
                 new EnemyCollisionStrategy(),
@@ -87,10 +92,11 @@ namespace BigBalls.Factories
             return collisionStrategies;
         }
 
-        private List<ICollisionStrategy> CreateCollisionStrategiesToEnemy()
+        private List<ICollisionStrategy> CreateCollisionStrategiesToEnemy ()
         {
             List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
             {
+                new BallCollisionStrategy(),
                 new HitPlayerStrategy(),
                 new WallColllisionStrategy()
             };
@@ -98,8 +104,21 @@ namespace BigBalls.Factories
             return collisionStrategies;
         }
 
+        private void OnReturnToPlayer (IEntity entity)
+        {
+            if (entity is not Ball ball)
+                return;
 
-        private void OnReturn(IEntity entity)
+            OnReturn(ball);
+
+            ball.EventHandler.Died -= OnReturnToPlayer;
+            ball.EventHandler.Returned -= OnReturnToPlayer;
+            BallModel model = _ballRepository.AllModels[ball.Config.BallType];
+            model.AddItemEXP(ball.AppliedDamage);
+            BallReturned?.Invoke(model);
+        }
+
+        private void OnReturn (IEntity entity)
         {
             if (entity is not Ball ball)
                 return;
@@ -109,12 +128,7 @@ namespace BigBalls.Factories
             ball.DeathHandler.Unsubscribe();
             ball.EventHandler.Died -= OnReturn;
             ball.EventHandler.Returned -= OnReturn;
-
-            BallModel model = _ballRepository.AllModels[ball.Config.BallType];
-            model.AddItemEXP(ball.AppliedDamage);
-
             _poolService.ReleaseObject(ball);
-            BallReturned?.Invoke(model);
         }
     }
 }

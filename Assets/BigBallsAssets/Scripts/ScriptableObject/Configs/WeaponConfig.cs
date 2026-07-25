@@ -9,9 +9,11 @@ namespace BigBalls.Configs
     {
         [SerializeField] private List<BallConfig> _uniqueBalls;
 
+        [field: SerializeField] public Cannon Cannon { get; set; }
+
         public List<BallConfig> UniqueBallConfigs => _uniqueBalls;
 
-        public override List<BallConfig> GetBalls(int level)
+        public override List<BallConfig> GetBalls (int level)
         {
             return _uniqueBalls;
         }

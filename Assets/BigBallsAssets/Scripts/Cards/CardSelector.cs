@@ -40,7 +40,6 @@ public class CardSelector
         var shuffledModels = availableCards.OrderBy(x => Guid.NewGuid()).ToList();
 
         _currentCards = SelectCardsByRarityChance(shuffledModels, countToSelect);
-        Debug.Log(_currentCards.Count);
         return _currentCards;
     }
 

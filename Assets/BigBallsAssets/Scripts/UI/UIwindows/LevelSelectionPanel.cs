@@ -1,7 +1,6 @@
 namespace BigBalls.UI
 {
-    public class LevelSelectionPanel : WindowBase
+    public class LevelSelectionPanel : PopupWindow
     {
-        
     }
 }

@@ -202,14 +202,16 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private Enemy SpawnEnemyAt(EnemyConfig enemy, Vector2Int position)
+        private Enemy SpawnEnemyAt(EnemyConfig prefab, Vector2Int position)
         {
             float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
             float spawnOffsetY = 0.5f;
-            float spawnOffsetZ = 8;
+            float spawnOffsetZ = 6;
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
-            return _enemyFactory.Create(enemy, spawnPosition);
+            Enemy enemy = _enemyFactory.Create(prefab, spawnPosition);
+            enemy.EnemyFallAnimator.PlayFall(spawnPosition);
+            return enemy;
         }
 
         public void AddEffects (List<EffectBehaviour> effects)

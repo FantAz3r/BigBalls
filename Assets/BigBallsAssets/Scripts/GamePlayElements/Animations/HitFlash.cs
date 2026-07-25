@@ -4,68 +4,70 @@ using UnityEngine;
 
 public class HitFlash : MonoBehaviour
 {
-    private static readonly int _baseColorID = Shader.PropertyToID("_BaseColor");
+    private static readonly int _emissionColorID = Shader.PropertyToID("_EmissionColor");
 
     [SerializeField] private Renderer[] _renderers;
-    [SerializeField] private bool _enabled;
-    [SerializeField] private int _flashCount;
+    [SerializeField] private bool _enabled = true;
+    [SerializeField] private int _flashCount = 1;
     [SerializeField] private Color _flashColor = Color.white;
-    [SerializeField] private float _totalDuration;
+    [SerializeField] private float _totalDuration = 0.2f;
 
     private Stat _health;
     private Material[] _materials;
-    private Color[] _baseColors;
+    private Color[] _baseEmissionColors;
 
-    private void Awake()
+    private void Awake ()
     {
         _materials = new Material[_renderers.Length];
-        _baseColors = new Color[_renderers.Length];
+        _baseEmissionColors = new Color[_renderers.Length];
 
         for (int i = 0; i < _renderers.Length; i++)
         {
             _materials[i] = _renderers[i].material;
-            _baseColors[i] = _materials[i].GetColor(_baseColorID);
+            _materials[i].EnableKeyword("_EMISSION");
+            _baseEmissionColors[i] = _materials[i].GetColor(_emissionColorID);
         }
     }
 
-    private void OnEnable()
+    private void OnEnable ()
     {
         if (_health != null)
             _health.ValueChanged += OnHit;
     }
 
-    private void OnDisable()
+    private void OnDisable ()
     {
-        if(_health != null)
+        if (_health != null)
             _health.ValueChanged -= OnHit;
     }
 
-    public void Init(Stat stat)
+    public void Init (Stat stat)
     {
         _health = stat;
-        _health.ValueChanged += OnHit;
+
+        if (_health != null)
+            _health.ValueChanged += OnHit;
     }
 
-    private void OnHit(IReadonlyStat stat)
+    private void OnHit (IReadonlyStat stat)
     {
         if (_enabled == false)
             return;
 
-        float cycles = _flashCount * 2;
-        float halfDuration = _totalDuration / cycles;
-
         for (int i = 0; i < _materials.Length; i++)
         {
             Material material = _materials[i];
-            Color color = _baseColors[i];
+            Color targetColor = _baseEmissionColors[i];
 
-            transform.DOKill(material);
-
-            material.DOColor(color, _totalDuration)
-                 .From(_flashColor)
-                 .SetEase(Ease.Linear)
-                 .SetLoops(_flashCount, LoopType.Yoyo)
-                 .SetUpdate(true);
+            material.DOKill();
+            material.DOColor(_flashColor, _emissionColorID, _totalDuration / (_flashCount * 2))
+                 .From(targetColor)
+                 .SetEase(Ease.InOutSine)
+                 .SetLoops(_flashCount * 2, LoopType.Yoyo)
+                 .OnComplete(() =>
+                 {
+                     material.SetColor(_emissionColorID, targetColor);
+                 });
         }
     }
 }
