@@ -6,7 +6,7 @@ public class PushModifier : MovementModifier
     private float _duration;
     private float _elapsedTime;
 
-    public PushModifier(Vector3 pushForce, float duration)
+    public PushModifier (Vector3 pushForce, float duration)
     {
         _pushForce = pushForce;
         _duration = duration;
@@ -14,7 +14,7 @@ public class PushModifier : MovementModifier
         IsActive = true;
     }
 
-    public override Vector3 Modify(Vector3 velocity)
+    public override Vector3 Modify (Vector3 velocity)
     {
         if (IsActive == false)
             return velocity;
@@ -28,6 +28,8 @@ public class PushModifier : MovementModifier
         }
 
         float time = 1f - (_elapsedTime / _duration);
-        return velocity + _pushForce * time;
+        velocity = velocity + _pushForce * time;
+        velocity.y = 0;
+        return velocity;
     }
 }

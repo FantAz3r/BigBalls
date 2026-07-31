@@ -14,6 +14,7 @@ namespace BigBalls.GameplayObjects
         private readonly Stat _damage;
         private readonly Enemy _owner;
         private readonly EntityTrigger _entityTrigger;
+        private readonly EntityCollision _entityCollision;
 
         private IEntityRepository _entityRepository;
         private IPlayerProvider _playerProvider;
@@ -26,6 +27,7 @@ namespace BigBalls.GameplayObjects
             _damage = damage;
             _owner = owner;
             _entityTrigger = owner.EntityTrigger;
+            _entityCollision = owner.EntityCollision;
             _config = config;
         }
 
@@ -33,42 +35,49 @@ namespace BigBalls.GameplayObjects
         public void Construst(
             IPlayerProvider playerProvider,
             IDamageService damageService,
-            ICoroutineRunner coroutineRunner)
+            ICoroutineRunner coroutineRunner,
+            IEntityRepository entityRepository)
         {
             _coroutineRunner = coroutineRunner;
             _playerProvider = playerProvider;
             _damageService = damageService;
+            _entityRepository = entityRepository;
         }
 
         public void Subscribe()
         {
             _canAttack = true;
-            _entityTrigger.WallDetected += MeeleAttack;
-            _entityTrigger.PlayerStayedLongEnough += MeeleAttack;
-            _entityTrigger.PlayerCollision += CollisionAttack;
+            _entityTrigger.WallDetected += JumpAttack;
+            _entityTrigger.PlayerStayedLongEnough += JumpAttack;
+
+            if(_entityCollision != null)
+                _entityCollision.PlayerCollision += CollisionAttack;
         }
 
         public void Unsubscribe()
         {
-            _entityTrigger.PlayerStayedLongEnough -= MeeleAttack;
-            _entityTrigger.WallDetected -= MeeleAttack;
-            _entityTrigger.PlayerCollision -= CollisionAttack;
+            _entityTrigger.PlayerStayedLongEnough -= JumpAttack;
+            _entityTrigger.WallDetected -= JumpAttack;
+
+            if (_entityCollision != null)
+                _entityCollision.PlayerCollision -= CollisionAttack;
         }
 
         private void CollisionAttack()
         {
             _damageService.ApplyDamage(_playerProvider.Player, _damage.CurrentValue);
+            PlayerKnockBack();
         }
 
-        private void MeeleAttack()
+        private void JumpAttack()
         {
             if (_config.HasMeeleAttack == false)
                 return;
 
-            _coroutineRunner.StartCoroutine(MeeleAttackRoutine(_config.Type == EntityType.Enemy));
+            _coroutineRunner.StartCoroutine(JumpAttackRoutine(_config.CanSuiside));
         }
 
-        private IEnumerator MeeleAttackRoutine(bool needSuiside)
+        private IEnumerator JumpAttackRoutine(bool needSuiside)
         {
             _canAttack = false;
             Vector3 startPosition = _owner.transform.position;
@@ -112,8 +121,13 @@ namespace BigBalls.GameplayObjects
         private void PlayerKnockBack()
         {
             MoverPhythics mover = _entityRepository.GetContainer(_playerProvider.Player).Get<MoverPhythics>();
-            Vector3 pushDirection = (_playerProvider.Player.transform.position - _owner.transform.position).normalized;
-            mover.AddInstantPush(pushDirection);
+
+            Vector3 rawDir = (_playerProvider.Player.transform.position - _owner.transform.position).normalized;
+            Vector3 pushDirection = Mathf.Abs(rawDir.x) > Mathf.Abs(rawDir.z)
+                ? new Vector3(Mathf.Sign(rawDir.x), 0, 0)
+                : new Vector3(0, 0, Mathf.Sign(rawDir.z));
+
+            mover.AddPush(pushDirection, 50);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace BigBalls.GameplayObjects
 {
     public class TileMover : IUpdateble
     {
-        private const float TileMoveSpeed = 0.2f;
+        private const float TileMoveSpeed = 0.4f;
 
         private readonly TileFactory _factory;
         private readonly IUpdateService _updateService;

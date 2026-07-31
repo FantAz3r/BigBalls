@@ -219,6 +219,7 @@ MonoBehaviour:
   <EntityTrigger>k__BackingField: {fileID: 0}
   <HitFlash>k__BackingField: {fileID: 7521705279176443960}
   <EnemyFallAnimator>k__BackingField: {fileID: -6628027722666029776}
+  <EnemyHitedAnimation>k__BackingField: {fileID: 0}
 --- !u!65 &6003510401459578431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -283,9 +284,9 @@ MonoBehaviour:
   - {fileID: 7792502854173186771}
   - {fileID: 6177537258823620926}
   _enabled: 1
-  _flashCount: 3
+  _flashCount: 1
   _flashColor: {r: 1, g: 1, b: 1, a: 1}
-  _totalDuration: 0.2
+  _totalDuration: 0.1
 --- !u!114 &-6628027722666029776
 MonoBehaviour:
   m_ObjectHideFlags: 0

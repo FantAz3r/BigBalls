@@ -57,7 +57,6 @@ namespace BigBalls.Factories
             DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
             ballDeathHandler.Subscribe();
 
-
             var collisions = new List<ICollisionStrategy>();
 
             if (type == EntityType.Player)
@@ -124,6 +123,7 @@ namespace BigBalls.Factories
                 return;
 
             _entityRepository.Remove(ball);
+            ball.ClearCollisionStrategies();
             ball.UnsubscribeEffects();
             ball.DeathHandler.Unsubscribe();
             ball.EventHandler.Died -= OnReturn;

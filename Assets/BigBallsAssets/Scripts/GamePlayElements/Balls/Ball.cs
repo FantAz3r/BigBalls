@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -23,13 +23,13 @@ namespace BigBalls.GameplayObjects
         public EntityEventHandler EventHandler { get; private set; }
         public float AppliedDamage { get; private set; }
 
-        private void Awake()
+        private void Awake ()
         {
             EventHandler = new EntityEventHandler();
             IsMaterial = Config.IsMaterial;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter (Collision collision)
         {
             _stackCount = 0;
 
@@ -61,7 +61,7 @@ namespace BigBalls.GameplayObjects
             UnsubscribeEffects();
         }
 
-        public void Construct(
+        public void Construct (
             int id,
             BallModel model,
             IMover mover,
@@ -85,7 +85,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void AddEffects(List<EffectBehaviour> effects)
+        public void AddEffects (List<EffectBehaviour> effects)
         {
             foreach (var effect in effects)
                 effect.Subscribe(this);
@@ -93,7 +93,7 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.AddRange(effects);
         }
 
-        public void UnsubscribeEffects()
+        public void UnsubscribeEffects ()
         {
             CanReturnToBag = false;
 
@@ -105,10 +105,15 @@ namespace BigBalls.GameplayObjects
             _effectBehaviours.Clear();
         }
 
-        public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
-        public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
+        public void SetCanReturnToBag (bool canReturnToBag) => CanReturnToBag = canReturnToBag;
+        public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
 
-        public void AddDamage(float damage)
+        public void ClearCollisionStrategies ()
+        {
+            _collisionStrategies.Clear();
+        }
+
+        public void AddDamage (float damage)
         {
             AppliedDamage += damage;
         }

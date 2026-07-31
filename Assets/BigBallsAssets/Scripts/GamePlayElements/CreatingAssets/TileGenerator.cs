@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using BigBalls.GameplayObjects;
 
 public class TileGenerator : MonoBehaviour
 {
@@ -10,6 +11,11 @@ public class TileGenerator : MonoBehaviour
         [Range(0, 1)] public float spawnChance; // Вероятность появления этого типа (от 0 до 1)
         public Color debugColor; // Для визуализации в редакторе
     }
+
+    [SerializeField] private Tile _tile;
+    [SerializeField] private List<Wall> _walls;
+    [SerializeField] private GameObject _wallPlefab;
+    [SerializeField] private GameObject _columnPlefab;
 
     [Header("Settings")]
     [SerializeField] private int _gridSize = 13;
@@ -28,6 +34,11 @@ public class TileGenerator : MonoBehaviour
     {
         InitializeLinesArray();
         GenerateTile();
+
+        foreach (Wall wall in _walls)
+        {
+            wall.BuildWall(_wallPlefab, _columnPlefab);
+        }
     }
 
     private void InitializeLinesArray ()
@@ -53,6 +64,7 @@ public class TileGenerator : MonoBehaviour
         }
 
         float seed = Random.value * 100f;
+        List<TileLine> lines = new List<TileLine>();
 
         for (int x = 0; x < _gridSize; x++)
         {
@@ -62,6 +74,8 @@ public class TileGenerator : MonoBehaviour
             // Создаем контейнер для линии (даже если отключена - для структуры, но без блоков)
             GameObject lineContainer = new GameObject($"Line {x}");
             lineContainer.transform.parent = transform;
+            TileLine tileLine = lineContainer.AddComponent<TileLine>();
+            lines.Add(tileLine);
 
             // Если линия отключена - просто создаем пустой контейнер и идем дальше
             if (!isLineActive)
@@ -79,6 +93,8 @@ public class TileGenerator : MonoBehaviour
                 }
             }
         }
+
+        _tile.SetLines(lines);
     }
 
     private GameObject DeterminePrefab (int x, int z, float seed)

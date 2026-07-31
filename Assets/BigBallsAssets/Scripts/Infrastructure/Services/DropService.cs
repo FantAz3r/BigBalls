@@ -23,7 +23,12 @@ public class DropService : IDropService
             if (Random.value > lootInfo.DropChance)
                 continue;
 
-            _lootSpawner.SpawnLootItem(position, lootInfo);
+            int count = Random.Range(lootInfo.MinAmount, lootInfo.MaxAmount);
+
+            for (int i = 0; i < count; i++)
+            {
+                _lootSpawner.SpawnLootItem(position, lootInfo);
+            }
         }
     }
 

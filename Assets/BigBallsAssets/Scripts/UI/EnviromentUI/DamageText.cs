@@ -2,7 +2,6 @@ using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using VContainer;
 
 public class DamageText : MonoBehaviour
 {
@@ -78,6 +77,7 @@ public class DamageText : MonoBehaviour
     private void FaceCamera ()
     {
         transform.LookAt(_camera.transform);
+        transform.localRotation = Quaternion.Euler(-transform.localRotation.eulerAngles.x, 0, 0);
     }
 }
 

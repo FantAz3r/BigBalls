@@ -133,5 +133,10 @@ namespace BigBalls.GameplayObjects
             if (_scaleTweener != null && _scaleTweener.IsActive())
                 _scaleTweener.Kill();
         }
+
+        public void SetLines(List<TileLine> tileLines)
+        {
+            _tileLines = tileLines;
+        }
     }
 }

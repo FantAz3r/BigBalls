@@ -5,6 +5,7 @@ namespace BigBalls.GameplayObjects
     public class Enemy : MonoBehaviour, IEntity, IHitble
     {
         [field: SerializeField] public EntityTrigger EntityTrigger { get; private set; }
+        [field: SerializeField] public EntityCollision EntityCollision { get; private set; }
         [field: SerializeField] public HitFlash HitFlash { get; private set; }
         [field: SerializeField] public EnemyFallAnimator EnemyFallAnimator { get; private set; }
         [field: SerializeField] public EnemyHitedAnimation EnemyHitedAnimation { get; private set; }

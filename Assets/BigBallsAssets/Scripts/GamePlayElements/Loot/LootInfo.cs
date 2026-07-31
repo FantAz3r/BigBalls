@@ -16,7 +16,4 @@ public class LootInfo
     
     [Tooltip("Максимальное количество")]
     public int MaxAmount = 3;
-    
-    [Tooltip("Тип лута")]
-    public LootType LootType;
 }

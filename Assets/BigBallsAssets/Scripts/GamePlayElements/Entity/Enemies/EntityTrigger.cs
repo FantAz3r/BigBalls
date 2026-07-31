@@ -11,15 +11,15 @@ namespace BigBalls.GameplayObjects
         [SerializeField] private SphereCollider _sphereCollider;
         [SerializeField] private float _playerDetectionDelay = 2.0f;
 
+        private Coroutine _wallDetectionRoutine;
         private Coroutine _detectionCoroutine;
         private bool _isPlayerInZone = false;
-        private bool _canDetectWall;
+        private bool _canDetectWall = true;
         private WaitForSeconds _waitDelay;
         private ICoroutineRunner _coroutineRunner;
 
         public event Action WallDetected;
         public event Action PlayerDetected;
-        public event Action PlayerCollision;
         public event Action PlayerStayedLongEnough;
 
 
@@ -33,7 +33,7 @@ namespace BigBalls.GameplayObjects
             if (other.TryGetComponent<BackWall>(out _))
             {
                 if (_canDetectWall)
-                    _coroutineRunner.StartCoroutine(WallDetectionDelay());
+                    _wallDetectionRoutine = _coroutineRunner.StartCoroutine(WallDetectionDelay());
             }
 
             if (other.TryGetComponent<Player>(out _))
@@ -57,6 +57,12 @@ namespace BigBalls.GameplayObjects
                     _detectionCoroutine = null;
                 }
             }
+
+            if (other.TryGetComponent<BackWall>(out _))
+            {
+                if (_wallDetectionRoutine != null)
+                    _coroutineRunner.StopCoroutine(_wallDetectionRoutine);
+            }
         }
 
         [Inject]
@@ -78,14 +84,6 @@ namespace BigBalls.GameplayObjects
             yield return _waitDelay;
             WallDetected?.Invoke();
             _canDetectWall = true;
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.collider.TryGetComponent<Player>(out _))
-            {
-                PlayerCollision?.Invoke();
-            }
         }
     }
 }

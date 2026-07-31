@@ -100,21 +100,21 @@ namespace BigBalls.GameplayObjects
             }
         }
 
+        public Vector3 GetCurrentVelocity() => _moveSpeed.CurrentValue * Direction;
+
         public void AddConstantForce(Vector3 force, float duration)
         {
             throw new System.NotImplementedException();
         }
 
-        public void AddInstantPush(Vector3 pushForce)
+        public void AddInstantPush (Vector3 pushDirection, float force)
         {
             throw new System.NotImplementedException();
         }
 
-        public void AddPush(Vector3 pushForce, float duration = 0.5f)
+        public void AddPush (Vector3 pushDirection, float force, float duration = 0.5F)
         {
             throw new System.NotImplementedException();
         }
-
-        public Vector3 GetCurrentVelocity() => _moveSpeed.CurrentValue * Direction;
     }
 }

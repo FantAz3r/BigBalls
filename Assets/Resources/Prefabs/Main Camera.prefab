@@ -68,7 +68,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 25
   field of view: 75
   orthographic: 0
   orthographic size: 5
@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37fe8db4894a8b8469fb87e91f0cc921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _topOffset: {x: 0, y: 0, z: -2}
-  _bottomOffset: {x: 0, y: 0, z: 1}
+  _topOffset: {x: 0, y: 0, z: -1}
+  _bottomOffset: {x: 0, y: 0, z: 0.5}
   _camera: {fileID: 165992718321331761}
   _frontWallPrefab: {fileID: 6752271607411679644, guid: 89bb4c1da27696e448faf5c3d7b7664d,
     type: 3}
