@@ -2266,7 +2266,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: ResetProgressButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:
@@ -2432,7 +2433,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:
@@ -2599,7 +2601,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: LeaderboardButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:
@@ -2743,7 +2746,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: BallTreeButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:
@@ -2915,7 +2919,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:
@@ -2963,6 +2968,31 @@ PrefabInstance:
         type: 3}
       propertyPath: _highlighted._animationSettings._anchoredOffset.x
       value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: en
+      value: New Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: ru
+      value: "\u041D\u043E\u0432\u0430\u044F \u0438\u0433\u0440\u0430"
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: tr
+      value: Yeni Oyun
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: countLang
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: processTranslateLabel
+      value: 0/3 completed
       objectReference: {fileID: 0}
     - target: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -3066,6 +3096,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
+      propertyPath: m_text
+      value: New Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
       propertyPath: m_fontSize
       value: 50
       objectReference: {fileID: 0}
@@ -3099,12 +3134,18 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4293000960
       objectReference: {fileID: 0}
+    - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9188509256693790805, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: m_Name
       value: NewGameButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -3266,7 +3307,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: BestiaryButton
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2396778483716166435, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_AddedGameObjects:

@@ -206,7 +206,7 @@ namespace BigBalls.GameplayObjects
         {
             float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
             float spawnOffsetY = 0.5f;
-            float spawnOffsetZ = 6;
+            float spawnOffsetZ = 5;
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             Enemy enemy = _enemyFactory.Create(prefab, spawnPosition);

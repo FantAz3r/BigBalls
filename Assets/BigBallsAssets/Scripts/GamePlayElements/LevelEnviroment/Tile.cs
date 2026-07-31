@@ -16,15 +16,13 @@ namespace BigBalls.GameplayObjects
         [SerializeField] private Ground _ground;
         [SerializeField] private BoxCollider _boxCollider;
         [SerializeField] private float _scaleDuration = 1.0f;
-        [SerializeField] private GameObject _water;
         [SerializeField] private List<TileLine> _tileLines = new();
 
+        private int _halfWidth;
         private int _currentWidth;
         private bool _isActionComplete = false;
         private bool _isScaling = false;
         private Tweener _scaleTweener;
-        private int _halfWidth;
-
 
         public event Action Finished;
 
@@ -83,11 +81,9 @@ namespace BigBalls.GameplayObjects
             _isScaling = true;
             Vector3 leftStart = _leftWall.transform.localPosition;
             Vector3 rightStart = _rightWall.transform.localPosition;
-            Vector3 waterScale = _water.transform.localScale;
 
             Vector3 leftTarget = new Vector3(leftStart.x + 1, leftStart.y, leftStart.z);
             Vector3 rightTarget = new Vector3(rightStart.x - 1, rightStart.y, rightStart.z);
-            Vector3 waterTargetScale = new Vector3(newWidth, _water.transform.localScale.y, _water.transform.localScale.z);
 
             _scaleTweener = DOTween.To(
                 () => 0f,
@@ -96,7 +92,6 @@ namespace BigBalls.GameplayObjects
                     float progress = Mathf.SmoothStep(0, 1, t);
                     _leftWall.transform.localPosition = Vector3.Lerp(leftStart, leftTarget, progress);
                     _rightWall.transform.localPosition = Vector3.Lerp(rightStart, rightTarget, progress);
-                    _water.transform.localScale = Vector3.Lerp(waterScale, waterTargetScale, progress);
                 },
                 1f,
                 _scaleDuration

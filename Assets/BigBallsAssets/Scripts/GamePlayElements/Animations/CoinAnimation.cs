@@ -5,6 +5,7 @@ public class CoinAnimation : MonoBehaviour
 {
     [Header("Rotation Settings")]
     [SerializeField] private float _rotationSpeed = 360f;
+    [SerializeField] private float _rotateDuration = 1;
     [SerializeField] private RotateMode _rotateMode = RotateMode.LocalAxisAdd;
 
     [Header("Float Settings")]
@@ -30,8 +31,8 @@ public class CoinAnimation : MonoBehaviour
         StopAnimation();
 
         _rotationTweener = transform
-            .DORotate(new Vector3(0, _rotationSpeed, 0), 1f, _rotateMode)
-            .SetLoops(-1, LoopType.Incremental)
+            .DORotate(new Vector3(0, _rotationSpeed, 0), _rotateDuration, _rotateMode)
+            .SetLoops(-1, LoopType.Restart)
             .SetEase(Ease.Linear)
             .SetDelay(_startDelay);
 
