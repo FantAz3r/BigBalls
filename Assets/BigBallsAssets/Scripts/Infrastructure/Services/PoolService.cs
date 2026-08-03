@@ -14,9 +14,10 @@ namespace BigBalls.Services
         private const string BallPool = "BallPool";
         private const string TilePool = "TilePool";
         private const string LootPool = "LootPool";
+        private const string ParticlePool = "ParticlePool";
         private const string DamageTextPool = "DamageTextPool";
         private const string EnemyBullets = "EnemyBulletsPool";
-        //private const string CardPool = "CardPool";
+        private const string LigtningBolt = "LigtningBoltPool";
 
         private readonly PoolServiceConfig _poolConfig;
         private readonly ObjectContainer _objectContainer;
@@ -26,7 +27,9 @@ namespace BigBalls.Services
         private List<LootInfo> _lootInfos = new List<LootInfo>();
         private CardsData _cardsData;
         private LevelConfig _levelConfig;
+        private LightningBolt _ligtningBolt;
         private DamageText _damageText;
+        private ParticleData _particleInfos;
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
 
@@ -36,6 +39,8 @@ namespace BigBalls.Services
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
             _cardsData = resourceLoader.Load<CardsData>();
             _damageText = resourceLoader.Load<DamageText>();
+            _ligtningBolt = resourceLoader.Load<LightningBolt>();
+            _particleInfos = resourceLoader.Load<ParticleData>();
             _resolverProvider = resolverProvider;
         }
 
@@ -61,27 +66,27 @@ namespace BigBalls.Services
         }
 
         public T GetObject<T> (string nameObject)
-            where T : MonoBehaviour
+            where T : Component
             => GetPool<T>(nameObject)?.Get();
 
         public T GetObject<T> (string nameObject, Vector3 position)
-            where T : MonoBehaviour
+            where T : Component
             => GetPool<T>(nameObject)?.Get(position);
 
         public T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation)
-            where T : MonoBehaviour
+            where T : Component
             => GetPool<T>(nameObject)?.Get(position, rotation);
 
         public T GetObject<T> (string nameObject, Transform parent)
-            where T : MonoBehaviour
+            where T : Component
             => GetPool<T>(nameObject)?.Get(parent);
 
         public T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation, Transform parent)
-            where T : MonoBehaviour
+            where T : Component
             => GetPool<T>(nameObject)?.Get(position, rotation, parent);
 
         public void ReleaseObject<T> (T obj)
-            where T : MonoBehaviour
+            where T : Component
         {
             GetPool<T>(obj.name)?.Release(obj);
         }
@@ -102,7 +107,9 @@ namespace BigBalls.Services
             CreatePoolContainer(BallPool, out Transform ballPoolContainer);
             CreatePoolContainer(TilePool, out Transform tilePoolContainer);
             CreatePoolContainer(LootPool, out Transform lootPoolContainer);
+            CreatePoolContainer(ParticlePool, out Transform particlePoolContainer);
             CreatePoolContainer(DamageTextPool, out Transform damageTextContainer);
+            CreatePoolContainer(LigtningBolt, out Transform ligtningBoltContainer);
             CreatePoolContainer(EnemyBullets, out Transform enemyBulletsContainer);
             //CreatePoolContainer(CardPool, out Transform cardContainer);
 
@@ -121,6 +128,10 @@ namespace BigBalls.Services
             foreach (LootInfo lootInfo in _lootInfos)
                 CreatePool(lootInfo.LootPrefab, lootPoolContainer, lootInfo.LootPrefab.name, _poolConfig.IinitialLootPoolSize);
 
+            foreach (ParticleObject particle in _particleInfos.Particles)
+                CreatePool(particle, particlePoolContainer, ParticlePool, _poolConfig.DefaultPoolSize);
+
+            CreatePool(_ligtningBolt, ligtningBoltContainer, LigtningBolt, _poolConfig.DefaultPoolSize);
             CreatePool(_damageText, damageTextContainer, DamageTextPool, _poolConfig.IinitialDamageTextPoolSize);
         }
 
@@ -132,7 +143,7 @@ namespace BigBalls.Services
         }
 
         private void CreatePool<T> (T prefab, Transform parent, string name, int initialSize)
-            where T : MonoBehaviour
+            where T : Component
         {
             IObjectPool<T> pool = new ObjectPool<T>(initialSize, _resolverProvider);
             pool.InitializePool(prefab, parent, name);
@@ -140,7 +151,7 @@ namespace BigBalls.Services
         }
 
         private ObjectPool<T> GetPool<T> (string name)
-            where T : MonoBehaviour
+            where T : Component
         {
             if (_objectPools.TryGetValue(name, out object poolObj) && poolObj is ObjectPool<T> pool)
                 return pool;

@@ -33,6 +33,7 @@ namespace BigBalls.Factories
         private readonly EnemySpawner _enemySpawner;
         private readonly BallRepository _ballRepository;
         private readonly ArtefactsRepository _artefactsRepository;
+        private readonly WeaponRepository _weaponRepository;
         private readonly ICameraProvider _cameraProvider;
         private PlayerConfig _playerConfig;
 
@@ -56,6 +57,7 @@ namespace BigBalls.Factories
             EnemySpawner enemySpawner,
             BallRepository ballRepository,
             ArtefactsRepository artefactsRepository,
+            WeaponRepository weaponRepository,
             ICameraProvider cameraProvider)
         {
             _inputService = inputService;
@@ -77,6 +79,7 @@ namespace BigBalls.Factories
             _enemySpawner = enemySpawner;
             _ballRepository = ballRepository;
             _artefactsRepository = artefactsRepository;
+            _weaponRepository = weaponRepository;
             _cameraProvider = cameraProvider;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
@@ -147,6 +150,11 @@ namespace BigBalls.Factories
             if (_itemConainerProvider.Gun != null)
             {
                 Cannon cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
+                player.SetFirePoint(cannon);
+            }
+            else
+            {
+                Cannon cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
                 player.SetFirePoint(cannon);
             }
 

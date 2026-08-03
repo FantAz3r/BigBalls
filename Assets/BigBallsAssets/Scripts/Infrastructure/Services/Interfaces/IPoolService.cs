@@ -8,18 +8,18 @@ namespace BigBalls.Services
     {
         void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig);
         void InitializePools ();
-        void ReleaseObject<T> (T obj) where T : MonoBehaviour;
+        void ReleaseObject<T> (T obj) where T : Component;
         void ClearAllPools ();
 
         T GetObject<T> (string name)
-            where T : MonoBehaviour;
+            where T : Component;
         T GetObject<T> (string nameObject, Vector3 position)
-            where T : MonoBehaviour;
+            where T : Component;
         T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation)
-            where T : MonoBehaviour;
+            where T : Component;
         T GetObject<T> (string nameObject, Transform parent)
-            where T : MonoBehaviour;
+            where T : Component;
         T GetObject<T> (string nameObject, Vector3 position, Quaternion rotation, Transform parent)
-            where T : MonoBehaviour;
+            where T : Component;
     }
 }

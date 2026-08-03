@@ -297,6 +297,13 @@ namespace BigBalls.Localization
             { Turkish, "hasar" },
         };
 
+        private static readonly Dictionary<string, string> DamageMultiplyDict = new Dictionary<string, string>
+        {
+            { Russian, "множитель урона" },
+            { English, "damage multiply" },
+            { Turkish, "hasar" },
+        };
+
         private static readonly Dictionary<string, string> AttackDelayDict = new Dictionary<string, string>
         {
             { Russian, "задержка атаки" },
@@ -461,6 +468,7 @@ namespace BigBalls.Localization
         public static string NoBestScore => GetText(NoBestScoreDict);
 
         public static string Damage => GetText(DamageDict);
+        public static string DamageMultiply => GetText(DamageMultiplyDict);
 
         public static string AttackDelay => GetText(AttackDelayDict);
 

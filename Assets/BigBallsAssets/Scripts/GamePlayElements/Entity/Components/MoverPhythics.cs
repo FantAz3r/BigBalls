@@ -143,7 +143,6 @@ namespace BigBalls.GameplayObjects
             foreach (var modifier in _movementModifiers)
             {
                 velocity = modifier.Modify(velocity);
-                Debug.Log(velocity);
             }
 
             _rigidbody.velocity = new Vector3(velocity.x, 0f, velocity.z);

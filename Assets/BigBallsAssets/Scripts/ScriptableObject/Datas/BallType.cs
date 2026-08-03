@@ -8,5 +8,7 @@
         Ice,
         Lava,
         Thunder,
+        Steel,
+        Bomb,
     }
 }

@@ -5,6 +5,7 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
+using log4net.Core;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -24,6 +25,8 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.Damage] = CreateDamageEffect,
                 [BehaviourType.Burn] = CreateFireEffect,
                 [BehaviourType.Freeze] = CreateIceEffect,
+                [BehaviourType.Explosion] = CreateBomb,
+                [BehaviourType.Tunder] = CreateTunder,
                 //[BehaviourType.Tunder] = CreateTunderEffect,
             };
         }
@@ -55,6 +58,7 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateDamageEffect(EffectConfig config, int level) => new Damage(config as DamageConfig, level);
         private EffectBehaviour CreateFireEffect(EffectConfig config, int level) => new Fire(config as FireConfig, level);
         private EffectBehaviour CreateIceEffect(EffectConfig config, int level) => new Ice(config as IceConfig, level);
-        //private EffectBehaviour CreateTunderEffect(EffectConfig config) => new Tunder(config as TunderConfig);
+        private EffectBehaviour CreateBomb(EffectConfig config, int level) => new Bomb (config as BombConfig, level);
+        private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Tunder(config as TunderConfig, level);
     }
 }

@@ -8,19 +8,17 @@ public class BounceTraectory : MonoBehaviour
 {
     [Header("Настройки линии")]
     [SerializeField] private LineRenderer _lineRenderer;
-    [SerializeField] private float _maxTotalLength = 20f; // Максимальная суммарная длина линии
-    [SerializeField] private int _maxSegments = 3; // Максимальное количество сегментов (отскоков)
-    [SerializeField] private LayerMask _collisionMask; // Маска для столкновений со стенами и врагами
+    [SerializeField] private float _maxTotalLength = 20f;
+    [SerializeField] private int _maxSegments = 3;
+    [SerializeField] private LayerMask _collisionMask;
     [SerializeField] private Vector3 _offset = new Vector3(0.5f, 0.5f, 0.5f);
-
-    [Header("Настройки снаряда")]
-    [SerializeField] private float _projectileSpeed = 10f; // Скорость снаряда
 
     private IInputService _inputService;
     private Vector3 _startPosition;
     private List<Vector3> _trajectoryPoints = new List<Vector3>();
     private Vector3 _rotateDirection;
     private Transform _firePoint;
+
     [Inject]
     public void Construct (IInputService inputService)
     {

@@ -354,18 +354,16 @@ MonoBehaviour:
   _noiseScale: 0.2
   _activeLines: 010101010101010101010101010101
   _floorLight:
-    prefab: {fileID: 207692699304745134, guid: 854a56e28ccd2ba4bbdd523ab2c9a658, type: 3}
+    prefab: {fileID: 6701168702914768212, guid: 542cfbf92b02f7045819e990ff277fcf,
+      type: 3}
     spawnChance: 0.5
     debugColor: {r: 1, g: 1, b: 1, a: 1}
   _floorDark:
-    prefab: {fileID: 6306701632997747446, guid: e3da0341d5cece84499b996e0ea551d5,
+    prefab: {fileID: 6701168702914768212, guid: 7754dc7f9b9246c44a07986b897f2d97,
       type: 3}
     spawnChance: 0.5
     debugColor: {r: 0, g: 0, b: 0, a: 1}
-  _specialGroups:
-  - prefab: {fileID: 58269800313385693, guid: 472228365cc59cd4eb5dd3e6f845e504, type: 3}
-    spawnChance: 0
-    debugColor: {r: 0, g: 0, b: 0, a: 0}
+  _specialGroups: []
 --- !u!65 &2762834723403185087
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -473,7 +471,6 @@ MonoBehaviour:
   _ground: {fileID: 7273358387059726809}
   _boxCollider: {fileID: 4098065659655877398}
   _scaleDuration: 1
-  _water: {fileID: 0}
   _tileLines: []
 --- !u!1 &5035128733759056569
 GameObject:

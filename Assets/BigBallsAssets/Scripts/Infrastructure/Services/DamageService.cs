@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using BigBalls.GameplayObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -18,7 +17,7 @@ namespace BigBalls.Services
             _damageTextFactory = damageTextFactory;
         }
 
-        public float ApplyDamage (IEntity entity, float damage)
+        public float ApplyDamage (IEntity entity, float damage, Color color = default)
         {
             StatHolder statHolder = _entityRepository.GetStatHolder(entity);
 
@@ -43,7 +42,7 @@ namespace BigBalls.Services
             }
 
             if (actualDamage > 0)
-                _damageTextFactory.Create(entity.Transform.position, actualDamage);
+                _damageTextFactory.Create(entity.Transform.position, actualDamage, color);
 
             return finalDamage;
         }

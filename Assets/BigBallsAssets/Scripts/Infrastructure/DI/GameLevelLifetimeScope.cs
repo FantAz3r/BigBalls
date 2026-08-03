@@ -36,6 +36,7 @@ namespace BigBalls.Infrastructure.DI
 
         private void RegisterFactories (IContainerBuilder builder)
         {
+            builder.Register<IParticleFactory, ParticleFactory>(Lifetime.Scoped);
             builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Scoped);
             builder.Register<IEffectFactory, EffectFactory>(Lifetime.Scoped);
             builder.Register<IEnemyFactory, EnemyFactory>(Lifetime.Scoped);

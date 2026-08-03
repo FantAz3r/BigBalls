@@ -10,5 +10,7 @@
         Lazer,
         Tunder,
         ElasticBand,
+        Explosion,
+        Steel,
     }
 }

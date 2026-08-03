@@ -4,6 +4,7 @@ using UnityEngine;
 public class DamageTextFactory
 {
     private const string DamageTextPool = "DamageTextPool";
+    private Color _color = Color.white;
 
     private readonly IPoolService _poolService;
     private readonly ISaveService _saveService;
@@ -17,13 +18,22 @@ public class DamageTextFactory
         _cameraProvider = cameraProvider;
     }
 
-    public DamageText Create (Vector3 position, float damage)
+    public DamageText Create (Vector3 position, float damage, Color color = default)
     {
         if (_saveService.GameProgress.ShowDamageNumbers)
         {
             DamageText damageText = _poolService.GetObject<DamageText>(DamageTextPool, position + _offset);
             damageText.Init(_cameraProvider);
-            damageText.SetDamageText((int) damage);
+
+            if (color == default)
+            {
+                damageText.SetDamageText((int) damage, _color);
+            }
+            else
+            {
+                damageText.SetDamageText((int) damage, color);
+            }
+
             damageText.Removed += OnRemoved;
             return damageText;
         }

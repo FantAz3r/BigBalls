@@ -3,7 +3,7 @@ using BigBalls.Infrastructure.DI;
 using UnityEngine;
 using VContainer.Unity;
 
-public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : MonoBehaviour
+public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : Component
 {
     private T _prefab;
     private IObjectResolverProvider _resolverProvider;

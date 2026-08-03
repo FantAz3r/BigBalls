@@ -8,11 +8,11 @@ namespace BigBalls.GameplayObjects
     public class Ball : MonoBehaviour, IEntity
     {
         private List<ICollisionStrategy> _collisionStrategies;
-        private List<EffectBehaviour> _effectBehaviours;
         private IEffectFactory _ballEffectFactory;
         private float _stackCount;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
+        public List<EffectBehaviour> EffectBehaviours { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
         public BallModel Model { get; private set; }
         public bool IsMaterial { get; private set; }
@@ -77,9 +77,9 @@ namespace BigBalls.GameplayObjects
             _collisionStrategies = collisionStrategies;
             _ballEffectFactory = ballEffectFactory;
 
-            _effectBehaviours = _ballEffectFactory.Create(Config.Effects, Model.Level);
+            EffectBehaviours = _ballEffectFactory.Create(Config.Effects, Model.Level);
 
-            foreach (var effect in _effectBehaviours)
+            foreach (var effect in EffectBehaviours)
             {
                 effect.Subscribe(this);
             }
@@ -90,19 +90,19 @@ namespace BigBalls.GameplayObjects
             foreach (var effect in effects)
                 effect.Subscribe(this);
 
-            _effectBehaviours.AddRange(effects);
+            EffectBehaviours.AddRange(effects);
         }
 
         public void UnsubscribeEffects ()
         {
             CanReturnToBag = false;
 
-            foreach (var effect in _effectBehaviours)
+            foreach (var effect in EffectBehaviours)
             {
                 effect?.Unsubscribe(this);
             }
 
-            _effectBehaviours.Clear();
+            EffectBehaviours.Clear();
         }
 
         public void SetCanReturnToBag (bool canReturnToBag) => CanReturnToBag = canReturnToBag;

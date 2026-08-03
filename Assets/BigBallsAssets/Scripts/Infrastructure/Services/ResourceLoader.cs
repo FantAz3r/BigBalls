@@ -32,6 +32,8 @@ namespace BigBalls.Services
             {typeof(ChestData), "Data/ChestData"},
             {typeof(StatTextHolder), "UI/StatTextHolder"},
             {typeof(StatsSlot), "UI/StatSlot"},
+            {typeof(LightningBolt), "LightningBolt"},
+            {typeof(ParticleData), "Prefabs/ParticleObject"},
         };
 
         public T Load<T>() where T : Object

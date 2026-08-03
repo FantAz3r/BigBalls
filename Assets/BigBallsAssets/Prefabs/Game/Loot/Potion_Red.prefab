@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3054397110175018375}
   - component: {fileID: 4420562445287949408}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 3854941434979277618}
   - component: {fileID: 5939719556743729931}
   - component: {fileID: 5482572451439400547}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Potion_Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,6 +193,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Potion_Bottle
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ce5c2205b0adfe46b83094d7816d301,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -271,6 +276,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Potion_Liquid
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0e4c575e53e1abb4684ad155b68b862c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0e4c575e53e1abb4684ad155b68b862c,
         type: 3}
@@ -355,6 +365,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Potion_Lid
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eddbbc9d8e90e294cb33743ce84586a1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eddbbc9d8e90e294cb33743ce84586a1,
         type: 3}

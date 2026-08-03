@@ -5,6 +5,6 @@ namespace BigBalls.Services
 {
     public interface IDamageService
     {
-        float ApplyDamage (IEntity entity, float damage);
+        float ApplyDamage (IEntity entity, float damage, UnityEngine.Color color = default);
     }
 }

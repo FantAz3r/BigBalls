@@ -32,10 +32,10 @@ public class DamageText : MonoBehaviour
         _camera = cameraProvider.Camera;
     }
 
-    public void SetDamageText (int damage)
+    public void SetDamageText (int damage, Color color)
     {
         _text.text = damage.ToString();
-
+        _text.color = color;
         float randomXDir = UnityEngine.Random.Range(-1f, 1f);
         float targetX = randomXDir * _maxHorizontalSpread;
         float peakY = UnityEngine.Random.Range(_maxVerticalHeight * 0.5f, _maxVerticalHeight);
