@@ -61,7 +61,7 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : Component
         obj.transform.SetParent(_positionInHierarchy.transform);
         _objectPool.Enqueue(obj);
     }
-   
+
     public override void Clear ()
     {
         foreach (T obj in _objectPool)

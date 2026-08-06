@@ -5,5 +5,6 @@ namespace BigBalls.Factories
     public interface IPlayerFactory
     {
         Player Create();
+        void OnPlayerSpawned ();
     }
 }

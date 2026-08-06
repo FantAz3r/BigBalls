@@ -1,6 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
 using BigBalls.GameplayObjects;
+using UnityEngine;
 
 public class TileGenerator : MonoBehaviour
 {
@@ -74,6 +74,7 @@ public class TileGenerator : MonoBehaviour
             // Создаем контейнер для линии (даже если отключена - для структуры, но без блоков)
             GameObject lineContainer = new GameObject($"Line {x}");
             lineContainer.transform.parent = transform;
+            lineContainer.transform.position += new Vector3(0, 0.5f, 0);
             TileLine tileLine = lineContainer.AddComponent<TileLine>();
             lines.Add(tileLine);
 

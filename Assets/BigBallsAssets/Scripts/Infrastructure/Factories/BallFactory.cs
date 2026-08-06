@@ -129,6 +129,8 @@ namespace BigBalls.Factories
             ball.EventHandler.Died -= OnReturn;
             ball.EventHandler.Returned -= OnReturn;
             _poolService.ReleaseObject(ball);
+
+            ball.transform.position = new Vector3(1000, 1000, 1000);
         }
     }
 }

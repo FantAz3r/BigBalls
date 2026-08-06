@@ -13,6 +13,7 @@ namespace BigBalls.StaticData
 
     public class IceConfig : EffectConfig
     {
+        public Color FreezeColor;
         public float FreezeDuration = 3;
         public float SlowPercent = 0.2f;
 
@@ -22,7 +23,7 @@ namespace BigBalls.StaticData
         public override BehaviourType Type => BehaviourType.Freeze;
 
         public float GetFreezeDuration(int level) => Math.Additive(FreezeDuration, FreezeDurationPerLevel, level);
-        public float GetSlowPercent(int level) => Math.Additive(FreezeDuration, FreezeDurationPerLevel, level);
+        public float GetSlowPercent(int level) => Math.Additive(SlowPercent, SlowPercentPerLevel, level);
 
         public override List<ItemStat> GetStats(int level)
         {

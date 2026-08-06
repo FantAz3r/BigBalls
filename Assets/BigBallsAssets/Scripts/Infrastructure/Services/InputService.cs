@@ -68,12 +68,12 @@ namespace BigBalls.Services
             Attack?.Invoke();
         }
 
-        public void EnableInput()
+        public void Enable()
         {
             _inputActions.Player.Enable();
         }
 
-        public void DisableInput()
+        public void Disable()
         {
             _inputActions.Player.Disable();
         }

@@ -5,7 +5,12 @@ Shader "Unlit/LightningLine"
         _MainTex ("Sprite Sheet", 2D) = "white" {}
         _Columns ("Columns", Float) = 2
         _Rows ("Rows", Float) = 2
-        _Speed ("Speed", Float) = 12.0
+
+        [Header(Animation Settings)]
+        _AnimSpeed ("Animation Speed", Float) = 12.0
+
+        [Header(Movement Settings)]
+        _ScrollSpeed ("Scroll Speed (X/Y)", Vector) = (1, 0, 0, 0)
     }
 
     SubShader
@@ -40,7 +45,8 @@ Shader "Unlit/LightningLine"
             float4 _MainTex_ST;
             float _Columns;
             float _Rows;
-            float _Speed;
+            float _AnimSpeed;
+            float4 _ScrollSpeed; // x - скорость по горизонтали, y - по вертикали
 
             v2f vert (appdata v)
             {
@@ -53,21 +59,24 @@ Shader "Unlit/LightningLine"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // Номер кадра (от 0 до _Columns*_Rows-1)
+                // --- 1. РАСЧЕТ СМЕЩЕНИЯ (SCROLLING) ---
+                // Смещаем UV координаты во времени, чтобы текстура "ехала"
+                float2 scrolledUV = i.uv + _Time.y * _ScrollSpeed.xy;
+
+                // --- 2. РАСЧЕТ АНИМАЦИИ КАДРОВ ---
                 float totalFrames = _Columns * _Rows;
-                float frame = fmod(floor(_Time.y * _Speed), totalFrames);
+                float cycleDuration = totalFrames / _AnimSpeed;
+                float timeInCycle = fmod(_Time.y, cycleDuration);
+                float frame = floor(timeInCycle * _AnimSpeed);
 
-                // Координаты кадра в сетке: столбец и строка
                 float col = fmod(frame, _Columns);
-                float row = floor(frame / _Columns);   // снизу вверх
+                float row = floor(frame / _Columns);
 
-                // Можно инвертировать строку, если текстура упакована сверху вниз
-                // row = _Rows - 1 - row;
-
-                // Пересчитываем UV в границы ячейки
+                // --- 3. СБОРКА ИТОГОВЫХ UV ---
+                // Мы берем "едущие" UV и накладываем на них сетку спрайтшита
                 float2 spriteUV = float2(
-                    (i.uv.x + col) / _Columns,
-                    (i.uv.y + row) / _Rows
+                    (scrolledUV.x + col) / _Columns,
+                    (scrolledUV.y + row) / _Rows
                 );
 
                 fixed4 tex = tex2D(_MainTex, spriteUV);

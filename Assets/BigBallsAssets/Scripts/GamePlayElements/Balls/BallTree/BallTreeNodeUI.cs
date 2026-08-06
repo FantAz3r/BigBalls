@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BigBalls.StaticData;
 using TMPro;
 using UnityEngine;
@@ -20,10 +21,14 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Color _availableColor = Color.green;
     [SerializeField] private Slider _slider;
 
+
+    private List<BallTreeConnectionUI> _childConnections = new List<BallTreeConnectionUI>();
+    private List<BallTreeConnectionUI> _parentConnections = new List<BallTreeConnectionUI>();
+    private bool _isOpen;
     private BallModel _node;
     private IBallUnlockService _unlockService;
 
-    public event Action<BallType> OnClick;
+    public event Action<BallTreeNodeUI> OnClick;
 
     public BallType BallType { get; private set; }
     public RectTransform RectTransform => _rectTransform;
@@ -57,47 +62,99 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         _slider.minValue = 0;
         _slider.value = _node.ItemEXP;
 
-        bool isOpen = _node.IsOpen;
+        _isOpen = _node.IsOpen;
         bool canUnlock = _unlockService.CanUnlock(BallType);
         int level = _node.Level;
 
-        _lockIcon.SetActive(isOpen == false);
-        _unlockIcon.SetActive(isOpen);
+        _lockIcon.SetActive(_isOpen == false);
+        _unlockIcon.SetActive(_isOpen);
         _levelText.text = level.ToString();
 
-        if (isOpen == false)
+        if (_isOpen == false)
         {
             _background.color = canUnlock ? _availableColor : _lockedColor;
             _priceText.text = canUnlock ? $"{_node.BallConfig.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
+            DisableConnections();
+            TryUpgradeConnaction();
         }
         else
         {
             _background.color = _unlockedColor;
             _priceText.gameObject.SetActive(false);
+
+            foreach (var connection in _parentConnections)
+            {
+                connection.UpgradeConnaction();
+            }
+
+            UpdateConnections();
         }
     }
 
-    public void Upgrade()
+    public void OnPointerClick (PointerEventData eventData)
+    {
+        OnClick?.Invoke(this);
+    }
+
+    public void Upgrade ()
     {
         _node.UpgradeNoneGameLevel();
         UpdateState();
     }
 
-    public void OnPointerClick (PointerEventData eventData)
+    public void AddChildConnection (BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
+    public void AddParentConnection (BallTreeConnectionUI connectionUI) => _parentConnections.Add(connectionUI);
+
+    public void ClearConnections ()
     {
-        OnClick?.Invoke(BallType);
+        _parentConnections.Clear();
+        _childConnections.Clear();
+    }
+
+    public void UpdateConnections ()
+    {
+        foreach (var connection in _childConnections)
+        {
+            connection.UpdateLine();
+        }
+    }
+
+    private void DisableConnections ()
+    {
+        foreach (var connection in _childConnections)
+        {
+            connection.DisableLine();
+        }
+    }
+
+    private void TryUpgradeConnaction ()
+    {
+        int count = 0;
+
+        foreach (var connection in _parentConnections)
+        {
+            if (connection.IsConnected)
+            {
+                count++;
+            }
+        }
+
+        if (count >= _parentConnections.Count)
+        {
+            
+        }
     }
 
     private void Unlock ()
     {
-        if(_node.Level == 0)
+        if (_isOpen)
         {
-            UpdateState();
+            Upgrade();
         }
         else
         {
-            Upgrade();
+            UpdateState();
         }
     }
 }

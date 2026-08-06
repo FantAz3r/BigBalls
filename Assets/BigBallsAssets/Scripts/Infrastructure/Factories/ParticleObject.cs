@@ -1,81 +1,70 @@
 ﻿using System;
 using System.Collections;
+using BigBalls.Services;
 using UnityEngine;
+using VContainer;
 
 public class ParticleObject : MonoBehaviour
 {
-    [field: SerializeField] public ParticleSystem ParticleSystem { get; private set; }
+    [SerializeField] private ParticleSystem _particleSystem;
 
-    public event Action<ParticleObject> Returned;
-
-    private bool _isReturning;
+    private ICoroutineRunner _coroutineRunner;
     private Coroutine _watcherCoroutine;
 
-    private void Awake ()
+    [Inject]
+    public void Construct (ICoroutineRunner coroutineRunner)
     {
-        if (ParticleSystem == null)
-            ParticleSystem = GetComponentInChildren<ParticleSystem>(true);
+        _coroutineRunner = coroutineRunner;
     }
 
-    public void Init (ParticleSystem particleSystem)
+    public void Play (float duration = 0)
     {
-        ParticleSystem = Instantiate(particleSystem, transform);
+        if (_particleSystem == null)
+            return;
+
+        Stop();
+        _particleSystem.Clear();
+
+        gameObject.SetActive(true);
+        _particleSystem.Play();
+        _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
     }
 
-    public void Play ()
+    public void Stop ()
     {
-        _isReturning = false;
+        if (_particleSystem == null)
+            return;
 
         if (_watcherCoroutine != null)
         {
-            StopCoroutine(_watcherCoroutine);
+            _coroutineRunner.StopCoroutine(_watcherCoroutine);
             _watcherCoroutine = null;
         }
 
-        ParticleSystem.Clear();
-        ParticleSystem.Play();
-        _watcherCoroutine = StartCoroutine(WatchForEnd());
+        _particleSystem.Stop();
+        gameObject.SetActive(false);
     }
 
-    public void Stop()
+    private IEnumerator WatchForEnd (float duration = 0)
     {
-        ParticleSystem.Stop();
-        OnParticleEndedInternal();
-    }
-
-    private void OnParticleEndedInternal ()
-    {
-        if (_isReturning)
-            return;
-
-        _isReturning = true;
-        Destroy(ParticleSystem.gameObject);
-        Returned?.Invoke(this);
-    }
-
-    private IEnumerator WatchForEnd ()
-    {
-        while (ParticleSystem != null && ParticleSystem.IsAlive(true))
+        if (duration == 0)
         {
-            yield return null;
+            while (_particleSystem != null && _particleSystem.IsAlive(true))
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(duration);
         }
 
         _watcherCoroutine = null;
-
-        if (_isReturning)
-            yield break;
-
-        OnParticleEndedInternal();
+        Stop();
     }
 
-    private void OnDestroy ()
+    private void OnDisable ()
     {
-        Returned = null;
-
-        if (_watcherCoroutine != null)
-        {
-            StopCoroutine(_watcherCoroutine);
-            _watcherCoroutine = null;
-        }
+        Stop();
     }
 }

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0d60a40d719aee47941f9ba2367e3f9, type: 3}
   m_Name: IceConfig
   m_EditorClassIdentifier: 
-  OwnersType: 0500000006000000
+  OwnersType: 06000000
+  FreezeColor: {r: 0.28875935, g: 0.6547284, b: 0.9716981, a: 1}
   FreezeDuration: 3
-  SlowPercent: 0.1
+  SlowPercent: 0.5
+  FreezeDurationPerLevel: 1
+  SlowPercentPerLevel: 0.05

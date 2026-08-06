@@ -13,6 +13,7 @@ public class BallTreeUI : WindowBase, IResetble
     [SerializeField] private BallTreeConnectionUI _connectionPrefab;
     [SerializeField] private ScrollRect _scrollRect;
 
+    private ISaveService _saveService;
     private IBallUnlockService _unlockService;
     private BallTreeModel _treeModel;
     private Dictionary<BallType, BallTreeNodeUI> _nodeUIs = new();
@@ -29,6 +30,7 @@ public class BallTreeUI : WindowBase, IResetble
     [Inject]
     public void Construct (BallTreeModel treeModel, ISaveService saveService, IBallUnlockService unlockService)
     {
+        _saveService = saveService;
         _treeModel = treeModel;
         _unlockService = unlockService;
 
@@ -37,7 +39,7 @@ public class BallTreeUI : WindowBase, IResetble
         UpdateUI();
     }
 
-    public void UpdateUI ()
+    public void UpdateUI (BallTreeNodeUI ballTreeNodeUI = null)
     {
         foreach (var ui in _nodeUIs.Values)
         {
@@ -46,14 +48,13 @@ public class BallTreeUI : WindowBase, IResetble
                 ui.UpdateState(_treeModel.GetNode(ui.BallType));
             }
         }
-
-        foreach (var line in _connections)
-        {
-            line.UpdateLine();
-        }
     }
 
-    public void Reset () => UpdateUI();
+    public void Reset ()
+    {
+        BuildTreeUI();
+        UpdateUI();
+    }
 
     private void BuildTreeUI ()
     {
@@ -72,6 +73,7 @@ public class BallTreeUI : WindowBase, IResetble
         {
             var node = _treeModel.GetNode(type);
             var uiElement = Instantiate(_nodePrefab, _treeContainer);
+
             uiElement.Init(type, node, _unlockService);
             uiElement.OnClick += OnNodeClicked;
 
@@ -88,15 +90,18 @@ public class BallTreeUI : WindowBase, IResetble
 
             foreach (var childType in children)
             {
-                if (_nodeUIs.ContainsKey(type) && _nodeUIs.ContainsKey(childType))
+                if (_nodeUIs.TryGetValue(type, out BallTreeNodeUI parentUI) &&
+                    _nodeUIs.TryGetValue(childType, out var childUI))
                 {
-                    var connection = Instantiate(_connectionPrefab, _treeContainer);
+                    BallTreeConnectionUI connection = Instantiate(_connectionPrefab, _treeContainer);
                     connection.SetConnection(
-                        _nodeUIs[type].RectTransform,
-                        _nodeUIs[childType].RectTransform
+                        parentUI.RectTransform,
+                        childUI.RectTransform
                     );
 
                     _connections.Add(connection);
+                    parentUI.AddChildConnection(connection);
+                    childUI.AddParentConnection(connection);
                 }
             }
         }
@@ -104,7 +109,8 @@ public class BallTreeUI : WindowBase, IResetble
 
     private void UpdateContainerSize ()
     {
-        if (_nodeUIs.Count == 0) return;
+        if (_nodeUIs.Count == 0)
+            return;
 
         var minPos = Vector2.zero;
         var maxPos = Vector2.zero;
@@ -126,9 +132,12 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    private void OnNodeClicked (BallType type)
+    private void OnNodeClicked (BallTreeNodeUI node)
     {
-        _unlockService.TryUnlockBall(type);
-        UpdateUI();
+        if (_unlockService.TryUnlockBall(node.BallType))
+        {
+            node.UpdateState();
+            UpdateUI();
+        }
     }
 }

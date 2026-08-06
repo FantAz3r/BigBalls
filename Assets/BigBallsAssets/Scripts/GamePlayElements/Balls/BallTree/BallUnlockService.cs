@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using BigBalls.StaticData;
 
 public class BallUnlockService : IBallUnlockService
@@ -42,7 +41,7 @@ public class BallUnlockService : IBallUnlockService
         if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
             return false;
 
-        foreach (var parentType in node.BallConfig.ParentTypes ?? new List<BallType>())
+        foreach (var parentType in node.BallConfig.ParentTypes)
         {
             if (_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall) == false)
                 return false;

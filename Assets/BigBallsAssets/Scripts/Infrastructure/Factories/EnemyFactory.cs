@@ -64,7 +64,7 @@ namespace BigBalls.Factories
             enemy.Construct(enemyID, deathHandler);
             _entityRepository.Add(enemy, statHolder, null);
 
-            enemy.HitFlash.Init(statHolder[StatType.Health]);
+            enemy.ColorChanger.Init(statHolder[StatType.Health]);
 
             return enemy;
         }

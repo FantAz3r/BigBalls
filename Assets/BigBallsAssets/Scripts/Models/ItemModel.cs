@@ -68,7 +68,7 @@ namespace BigBalls.StaticData
             {
                 if (true)//ItemEXP >= EXPForNextLevel)
                 {
-                    ItemEXP -= EXPForNextLevel;
+                    //ItemEXP -= EXPForNextLevel;
                     NoneGameLevel++;
                     Upgraded?.Invoke(this);
                     BindStats();

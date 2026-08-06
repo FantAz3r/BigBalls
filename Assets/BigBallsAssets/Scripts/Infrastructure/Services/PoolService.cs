@@ -129,7 +129,7 @@ namespace BigBalls.Services
                 CreatePool(lootInfo.LootPrefab, lootPoolContainer, lootInfo.LootPrefab.name, _poolConfig.IinitialLootPoolSize);
 
             foreach (ParticleObject particle in _particleInfos.Particles)
-                CreatePool(particle, particlePoolContainer, ParticlePool, _poolConfig.DefaultPoolSize);
+                CreatePool(particle, particlePoolContainer, particle.gameObject.name, _poolConfig.DefaultPoolSize);
 
             CreatePool(_ligtningBolt, ligtningBoltContainer, LigtningBolt, _poolConfig.DefaultPoolSize);
             CreatePool(_damageText, damageTextContainer, DamageTextPool, _poolConfig.IinitialDamageTextPoolSize);

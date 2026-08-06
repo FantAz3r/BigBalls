@@ -25,7 +25,7 @@ namespace BigBalls.GameplayObjects
         {
             if (Host is Ball ball)
             {
-                float damage = _damageService.ApplyDamage(entity, _config.GetDamage(Level));
+                float damage = _damageService.ApplyDamage(entity, _config.GetDamage(Level), ball.Config.DamageColor);
                 ball.AddDamage(damage);
             }
         }

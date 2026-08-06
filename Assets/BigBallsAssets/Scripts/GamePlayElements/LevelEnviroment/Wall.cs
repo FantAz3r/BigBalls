@@ -15,6 +15,9 @@ namespace BigBalls.GameplayObjects
                 Instantiate(wall, t);
             }
 
+            if (column == null)
+                return;
+
             foreach (Transform t in _column)
             {
                 Instantiate(column, t);

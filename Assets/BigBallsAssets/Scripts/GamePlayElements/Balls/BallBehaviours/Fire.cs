@@ -13,7 +13,6 @@ namespace BigBalls.GameplayObjects
         private readonly FireConfig _config;
         private IDamageService _damageService;
         private ICoroutineRunner _coroutineRunner;
-        private IParticleFactory _particleFactory;
         private WaitForSeconds _oneSecond = new WaitForSeconds(1);
 
         public Fire(FireConfig config, int level) : base(config, level)
@@ -22,11 +21,10 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        public void Construct(IDamageService damageService, ICoroutineRunner coroutineRunner, IParticleFactory particleFactory)
+        public void Construct (IDamageService damageService, ICoroutineRunner coroutineRunner)
         {
             _damageService = damageService;
             _coroutineRunner = coroutineRunner;
-            _particleFactory = particleFactory;
         }
 
         private void OnHit(IEntity entity)
@@ -38,13 +36,17 @@ namespace BigBalls.GameplayObjects
         {
             var elapsed = 0f;
 
+            if (entity is Enemy enemy)
+            {
+                enemy.EffectViewer.EnableEffect(EffectType.Burn, _config.GetBurnDuration(Level));
+            }
+
             while (elapsed <= _config.BurnDuration)
             {
                 if (entity.Transform.gameObject.activeSelf == false)
                     yield break;
 
                 float damage = _damageService.ApplyDamage(entity, _config.BurnDPS, _config.Color);
-                _particleFactory.Create(_config.Particle, entity.Transform);
                 elapsed += Time.deltaTime;
                 yield return _oneSecond;
             }

@@ -13,7 +13,6 @@ namespace BigBalls.Configs
     public class FireConfig : EffectConfig
     {
         public Color Color;
-        public ParticleSystem Particle;
 
         public float BurnDuration = 3f;
         public float BurnDPS = 0.05f;

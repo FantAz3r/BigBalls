@@ -35,8 +35,9 @@ namespace BigBalls.Factories
         private readonly ArtefactsRepository _artefactsRepository;
         private readonly WeaponRepository _weaponRepository;
         private readonly ICameraProvider _cameraProvider;
-        private PlayerConfig _playerConfig;
 
+        private PlayerConfig _playerConfig;
+        private Shooter _shooter;
         public PlayerFactory(
             IInputService inputService,
             IObjectResolverProvider objectResolver,
@@ -158,15 +159,14 @@ namespace BigBalls.Factories
                 player.SetFirePoint(cannon);
             }
 
-            Shooter shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponSpawnPoint, playerBallContainer);
-            _objectResolver.CurrentResolver.Inject(shooter);
-            shooter.StartShoot();
+            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponSpawnPoint, playerBallContainer);
+            _objectResolver.CurrentResolver.Inject(_shooter);
 
-            player.SquashOnShot.Init(shooter);
-            player.TiltOnShot.Init(shooter);
+            player.SquashOnShot.Init(_shooter);
+            player.TiltOnShot.Init(_shooter);
 
             ScreenShake screenShake = _cameraProvider.Camera.GetComponent<ScreenShake>();
-            screenShake.Init(shooter, statHolder[StatType.Health]);
+            screenShake.Init(_shooter, statHolder[StatType.Health]);
 
             PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
@@ -174,7 +174,7 @@ namespace BigBalls.Factories
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {
                 mover,
-                shooter,
+                _shooter,
                 rotator,
                 playerMover,
                 healthRegenerator,
@@ -182,6 +182,12 @@ namespace BigBalls.Factories
             };
 
             return subscribables;
+        }
+
+        public void OnPlayerSpawned()
+        {
+            _shooter.StartShoot();
+            _inputService.Enable();
         }
     }
 }

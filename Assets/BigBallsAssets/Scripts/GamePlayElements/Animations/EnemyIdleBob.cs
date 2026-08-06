@@ -17,16 +17,26 @@ public class EnemyIdleBob : MonoBehaviour
 
     private void OnEnable ()
     {
-        _tween = transform.DOScaleY(_initialScale.y * _scaleMultiplier, _duration)
-            .SetEase(_ease)
-            .SetLoops(-1, LoopType.Yoyo)
-            .SetUpdate(true)
-            .Play();
+        Play();
     }
 
     private void OnDisable ()
     {
         _tween?.Kill();
         transform.localScale = _initialScale;
+    }
+
+    public void Stop()
+    {
+        _tween?.Kill();
+    }
+
+    public void Play ()
+    {
+        _tween = transform.DOScaleY(_initialScale.y * _scaleMultiplier, _duration)
+             .SetEase(_ease)
+             .SetLoops(-1, LoopType.Yoyo)
+             .SetUpdate(true)
+             .Play();
     }
 }
