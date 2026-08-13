@@ -43,6 +43,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IIdentifierService, IdentifierService>(Lifetime.Scoped);
             builder.Register<ISaveService, YGSaveService>(Lifetime.Singleton);
             builder.Register<IBallUnlockService, BallUnlockService>(Lifetime.Singleton);
+            builder.Register<IDeviceService, YGDeviceService>(Lifetime.Singleton);
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
