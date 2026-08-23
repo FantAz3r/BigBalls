@@ -3,6 +3,7 @@ using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ArtefactContainer : IArtefactContainer
 {
@@ -34,6 +35,8 @@ public class ArtefactContainer : IArtefactContainer
         if (item is not HelmetModel buffer)
             return;
 
+        Debug.Log("helmetSeted");
+
         foreach (var artefact in buffer.Artefacts)
         {
             ArtefactModel model = _artefactsRepository.AllModels[artefact.ArtefactType];
@@ -48,16 +51,11 @@ public class ArtefactContainer : IArtefactContainer
 
         _artefacts.Add(artefact);
 
-        var effects = _effectFactory.Create(artefact);
-
-        if (effects == null || effects.Count == 0)
-            return;
-
         foreach (var user in _users)
         {
             if (user.Value == artefact.ArtefactConfig.UserType)
             {
-                user.Key.AddEffects(effects);
+                user.Key.AddEffects(artefact);
             }
         }
     }

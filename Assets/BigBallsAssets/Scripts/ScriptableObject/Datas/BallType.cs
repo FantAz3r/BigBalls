@@ -10,5 +10,6 @@
         Thunder,
         Steel,
         Bomb,
+        Ground,
     }
 }

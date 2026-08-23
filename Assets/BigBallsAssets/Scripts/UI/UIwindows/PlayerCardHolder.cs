@@ -31,11 +31,12 @@ public class PlayerCardHolder
         }
         else if (item is HelmetModel helmet)
         {
-            //foreach (var artefact in helmet.)
-            //{
-            //    Add(artefact);
-            //}
-            // _artefactContainer.Set(helmet);
+            foreach (var artefact in helmet.GetArtefacts())
+            {
+                Add(artefact);
+            }
+
+            //_artefactContainer.Set(helmet);
         }
     }
 

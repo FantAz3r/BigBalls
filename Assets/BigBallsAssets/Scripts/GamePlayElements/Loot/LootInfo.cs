@@ -5,7 +5,7 @@ using UnityEngine;
 public class LootInfo
 {
     [Tooltip("Префаб лута")] 
-    public Loot LootPrefab;
+    public LootType LootType;
     
     [Tooltip("Шанс выпадения (0-1). Например 0.3 = 30%")]
     [Range(0f, 1f)]

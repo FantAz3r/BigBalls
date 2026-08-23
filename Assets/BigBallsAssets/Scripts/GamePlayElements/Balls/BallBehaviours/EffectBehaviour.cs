@@ -1,6 +1,5 @@
 using BigBalls.Configs;
 using System;
-using System.Collections.Generic;
 
 namespace BigBalls.GameplayObjects
 {
@@ -19,19 +18,23 @@ namespace BigBalls.GameplayObjects
 
         protected abstract IDisposable SubscribeInternal(IEntity host);
 
+        protected virtual void OnUnsubscribe() { }
+
         public void Subscribe(IEntity host)
         {
-            if (_disposable != null)
-                throw new ArgumentNullException(nameof(host));
-
             Host = host;
             _disposable = SubscribeInternal(host);
         }
 
         public void Unsubscribe(IEntity host)
         {
-            _disposable.Dispose();
-            _disposable = null;
+            if (_disposable != null)
+            {
+                _disposable.Dispose();
+                _disposable = null;
+            }
+
+            OnUnsubscribe();
             Host = null;
         }
     }

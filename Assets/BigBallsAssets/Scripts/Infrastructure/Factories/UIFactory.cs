@@ -102,6 +102,7 @@ namespace BigBalls.Factories
             else
                 window = _resolverProvider.CurrentResolver.Instantiate(prefab, parent);
 
+            _resolverProvider.CurrentResolver.Inject(window);
             return window;
         }
     }

@@ -1,8 +1,8 @@
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using BigBalls.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,11 +17,10 @@ public class CardInventory : PopupWindow
     [SerializeField] private TMP_Text _tipText;
 
     private Canvas _canvas;
-    private CardsData _cardData;
     private List<Slot> _slots = new();
-    private IResourceLoader _resourceLoader;
     private WeaponRepository _weaponRepository;
     private ArmorRepository _armorRepository;
+    private HelmetRepository _helmetRepository;
     private List<ICardModel> _models = new();
     private IObjectResolverProvider _objectResolverProvider;
 
@@ -34,23 +33,26 @@ public class CardInventory : PopupWindow
 
     [Inject]
     public void Construct(
-        IResourceLoader resourceLoader,
         ArmorRepository armorRepository,
         WeaponRepository weaponRepository,
+        HelmetRepository helmetRepository,
         IObjectResolverProvider objectResolverProvider)
     {
-        _resourceLoader = resourceLoader;
+        _helmetRepository = helmetRepository;
         _weaponRepository = weaponRepository;
         _armorRepository = armorRepository;
-        _cardData = _resourceLoader.Load<CardsData>();
         _objectResolverProvider = objectResolverProvider;
 
         _canvas = GetComponent<Canvas>();
         _models.AddRange(_weaponRepository.AllModels.Values);
         _models.AddRange(_armorRepository.AllModels.Values);
+        _models.AddRange(_helmetRepository.AllModels.Values);
     }
 
     public void ViewAll() => ViewSlots(card => card is WeaponModel || card is ArmorModel || card is HelmetModel);
+    public void ViewWeapons() => ViewSlots(card => card is WeaponModel);
+    public void ViewHelmets() => ViewSlots(card => card is HelmetModel);
+    public void ViewArmors() => ViewSlots(card => card is ArmorModel);
 
     private void ViewSlots(Func<ICardModel, bool> filter)
     {
@@ -60,7 +62,7 @@ public class CardInventory : PopupWindow
         {
             if (filter(card))
             {
-                if (card.IsOpen || card.Level > 0)
+                if (card.IsOpen || card.Level > 1 || true)
                 {
                     Slot slot = Instantiate(_slotPrefab, _parent.transform);
                     _slots.Add(slot);

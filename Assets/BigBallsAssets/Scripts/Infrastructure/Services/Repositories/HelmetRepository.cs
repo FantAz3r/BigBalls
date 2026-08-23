@@ -3,6 +3,7 @@ using BigBalls.Configs;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Saves;
 using BigBalls.Services;
+using UnityEngine;
 
 public class HelmetRepository : ItemRepository<ItemType, HelmetModel, HelmetConfig, HelmetSaveData>
 {
@@ -18,6 +19,7 @@ public class HelmetRepository : ItemRepository<ItemType, HelmetModel, HelmetConf
     {
         _helmetData = resourceLoader.Load<CardsData>().Helmets;
         _artefactsRepository = artefactsRepository;
+        Initialize();
     }
 
     protected override HelmetModel CreateModel (ItemType type, HelmetConfig config, CardSaveData saveData)

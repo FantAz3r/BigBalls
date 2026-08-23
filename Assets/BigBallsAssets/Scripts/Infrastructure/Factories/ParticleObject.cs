@@ -6,10 +6,11 @@ using VContainer;
 
 public class ParticleObject : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem _particleSystem;
-
     private ICoroutineRunner _coroutineRunner;
     private Coroutine _watcherCoroutine;
+    [field: SerializeField] public ParticleSystem ParticleSystem { get; private set; }
+
+    public event Action<ParticleObject> Returned;
 
     [Inject]
     public void Construct (ICoroutineRunner coroutineRunner)
@@ -19,20 +20,19 @@ public class ParticleObject : MonoBehaviour
 
     public void Play (float duration = 0)
     {
-        if (_particleSystem == null)
+        if (ParticleSystem == null)
             return;
 
-        Stop();
-        _particleSystem.Clear();
+        ParticleSystem.Clear();
 
         gameObject.SetActive(true);
-        _particleSystem.Play();
+        ParticleSystem.Play();
         _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
     }
 
     public void Stop ()
     {
-        if (_particleSystem == null)
+        if (ParticleSystem == null)
             return;
 
         if (_watcherCoroutine != null)
@@ -41,7 +41,8 @@ public class ParticleObject : MonoBehaviour
             _watcherCoroutine = null;
         }
 
-        _particleSystem.Stop();
+        Returned?.Invoke(this);
+        ParticleSystem.Stop();
         gameObject.SetActive(false);
     }
 
@@ -49,7 +50,7 @@ public class ParticleObject : MonoBehaviour
     {
         if (duration == 0)
         {
-            while (_particleSystem != null && _particleSystem.IsAlive(true))
+            while (ParticleSystem != null && ParticleSystem.IsAlive(true))
             {
                 yield return null;
             }

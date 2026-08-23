@@ -1,8 +1,10 @@
+using BigBalls.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UI_Spline_Renderer;
 using UnityEngine;
+using VContainer;
 
 public class BallTreeConnectionUI : MonoBehaviour
 {
@@ -19,6 +21,7 @@ public class BallTreeConnectionUI : MonoBehaviour
     [Header("Animation Settings")]
     [SerializeField] private float _animationDuration = 0.5f;
 
+    private ICoroutineRunner _coroutineRunner;
     private Coroutine _fillCoroutine;
 
     public bool IsConnected { get; private set; }
@@ -26,6 +29,18 @@ public class BallTreeConnectionUI : MonoBehaviour
     private void Awake ()
     {
         transform.SetAsFirstSibling();
+    }
+
+    public void OnDisable()
+    {
+        if (_fillCoroutine != null)
+            _coroutineRunner.StopCoroutine(_fillCoroutine);
+    }
+
+    [Inject]
+    public void Construct(ICoroutineRunner coroutineRunner)
+    { 
+        _coroutineRunner = coroutineRunner;
     }
 
     public void SetConnection (RectTransform from, RectTransform to)
@@ -63,7 +78,7 @@ public class BallTreeConnectionUI : MonoBehaviour
 
         if (IsConnected)
             return;
-        _fillCoroutine = StartCoroutine(FillRoutine());
+        _fillCoroutine = _coroutineRunner.StartCoroutine(FillRoutine());
     }
 
     public void UpgradeConnaction()
@@ -77,7 +92,7 @@ public class BallTreeConnectionUI : MonoBehaviour
         IsConnected = false;
 
         if (_fillCoroutine != null)
-            StopCoroutine(_fillCoroutine);
+            _coroutineRunner.StopCoroutine(_fillCoroutine);
     }
 
     private IEnumerator FillRoutine ()
@@ -87,6 +102,9 @@ public class BallTreeConnectionUI : MonoBehaviour
 
         while (elapsed < _animationDuration)
         {
+            if (_splineRenderer == null)
+                yield break;
+
             elapsed += Time.deltaTime;
             float t = elapsed / _animationDuration;
             float smoothT = Mathf.SmoothStep(0, 1, t);

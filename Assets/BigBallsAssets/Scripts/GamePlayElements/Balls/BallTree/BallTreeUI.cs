@@ -1,10 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
+using BigBalls.Infrastructure.DI;
+using BigBalls.Services;
 using BigBalls.StaticData;
 using BigBalls.UI;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
+using VContainer.Unity;
 
 public class BallTreeUI : WindowBase, IResetble
 {
@@ -12,14 +15,16 @@ public class BallTreeUI : WindowBase, IResetble
     [SerializeField] private BallTreeNodeUI _nodePrefab;
     [SerializeField] private BallTreeConnectionUI _connectionPrefab;
     [SerializeField] private ScrollRect _scrollRect;
+    [SerializeField] private UpgradePanel _upgradePanel;
 
+    private IObjectResolverProvider _objectResolverProvider;
     private ISaveService _saveService;
     private IBallUnlockService _unlockService;
     private BallTreeModel _treeModel;
     private Dictionary<BallType, BallTreeNodeUI> _nodeUIs = new();
     private List<BallTreeConnectionUI> _connections = new();
 
-    private void OnDestroy ()
+    private void OnDestroy()
     {
         foreach (var node in _nodeUIs.Values)
         {
@@ -28,18 +33,24 @@ public class BallTreeUI : WindowBase, IResetble
     }
 
     [Inject]
-    public void Construct (BallTreeModel treeModel, ISaveService saveService, IBallUnlockService unlockService)
+    public void Construct(
+        BallTreeModel treeModel,
+        ISaveService saveService,
+        IBallUnlockService unlockService,
+        IResourceLoader resourceLoader,
+        IObjectResolverProvider objectResolverProvider)
     {
+        _objectResolverProvider = objectResolverProvider;
         _saveService = saveService;
         _treeModel = treeModel;
         _unlockService = unlockService;
-
+        _upgradePanel.Init(resourceLoader.Load<StatTextHolder>());
         saveService.RegisterResetable(this);
         BuildTreeUI();
         UpdateUI();
     }
 
-    public void UpdateUI (BallTreeNodeUI ballTreeNodeUI = null)
+    public void UpdateUI(BallTreeNodeUI ballTreeNodeUI = null)
     {
         foreach (var ui in _nodeUIs.Values)
         {
@@ -50,13 +61,13 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    public void Reset ()
+    public void Reset()
     {
         BuildTreeUI();
         UpdateUI();
     }
 
-    private void BuildTreeUI ()
+    private void BuildTreeUI()
     {
         if (_treeContainer.childCount > 0)
         {
@@ -72,7 +83,7 @@ public class BallTreeUI : WindowBase, IResetble
         foreach (var type in allTypes)
         {
             var node = _treeModel.GetNode(type);
-            var uiElement = Instantiate(_nodePrefab, _treeContainer);
+            var uiElement = _objectResolverProvider.CurrentResolver.Instantiate(_nodePrefab, _treeContainer);
 
             uiElement.Init(type, node, _unlockService);
             uiElement.OnClick += OnNodeClicked;
@@ -93,7 +104,7 @@ public class BallTreeUI : WindowBase, IResetble
                 if (_nodeUIs.TryGetValue(type, out BallTreeNodeUI parentUI) &&
                     _nodeUIs.TryGetValue(childType, out var childUI))
                 {
-                    BallTreeConnectionUI connection = Instantiate(_connectionPrefab, _treeContainer);
+                    BallTreeConnectionUI connection = _objectResolverProvider.CurrentResolver.Instantiate(_connectionPrefab, _treeContainer);
                     connection.SetConnection(
                         parentUI.RectTransform,
                         childUI.RectTransform
@@ -107,7 +118,7 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    private void UpdateContainerSize ()
+    private void UpdateContainerSize()
     {
         if (_nodeUIs.Count == 0)
             return;
@@ -132,12 +143,9 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    private void OnNodeClicked (BallTreeNodeUI node)
+    private void OnNodeClicked(BallTreeNodeUI node)
     {
-        if (_unlockService.TryUnlockBall(node.BallType))
-        {
-            node.UpdateState();
-            UpdateUI();
-        }
+        _upgradePanel.SetNode(node);
+        UpdateUI();
     }
 }

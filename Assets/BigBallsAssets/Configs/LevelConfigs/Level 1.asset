@@ -16,18 +16,32 @@ MonoBehaviour:
   <TilePrefabs>k__BackingField:
   - {fileID: 652544688650284373, guid: 5e0ace0bd649f1d4a9d5d25d71947fe9, type: 3}
   <Waves>k__BackingField:
-  - WaveCooldown: 2
+  - WaveCooldown: 1
     BossConfig: {fileID: 0}
-    LineCount: 24
-  - WaveCooldown: 20
+    LineCount: 10
+    Enemies:
+    - {fileID: 11400000, guid: e88d60ffcf141b946b76c92fb20a356e, type: 2}
+    - {fileID: 11400000, guid: d5819e5a2e9647e408061159388ffe6a, type: 2}
+    - {fileID: 11400000, guid: 90594bef1b09ba94884751da8be1088b, type: 2}
+  - WaveCooldown: 15
     BossConfig: {fileID: 11400000, guid: 670f42e2581aff64ba4ac958b82494c7, type: 2}
-    LineCount: 24
-  <Enemies>k__BackingField:
-  - {fileID: 11400000, guid: e88d60ffcf141b946b76c92fb20a356e, type: 2}
-  - {fileID: 11400000, guid: d5819e5a2e9647e408061159388ffe6a, type: 2}
-  - {fileID: 11400000, guid: 90594bef1b09ba94884751da8be1088b, type: 2}
-  - {fileID: 11400000, guid: f30dd239e5305b54ab0dfcce51c5011c, type: 2}
-  - {fileID: 11400000, guid: 8c408227fe5c7384d9d42c64eec2c991, type: 2}
-  <BossTimeDelay>k__BackingField: 30
+    LineCount: 15
+    Enemies:
+    - {fileID: 11400000, guid: e88d60ffcf141b946b76c92fb20a356e, type: 2}
+    - {fileID: 11400000, guid: d5819e5a2e9647e408061159388ffe6a, type: 2}
+    - {fileID: 11400000, guid: f30dd239e5305b54ab0dfcce51c5011c, type: 2}
+    - {fileID: 11400000, guid: 8c408227fe5c7384d9d42c64eec2c991, type: 2}
+    - {fileID: 11400000, guid: 8c408227fe5c7384d9d42c64eec2c991, type: 2}
+  - WaveCooldown: 15
+    BossConfig: {fileID: 11400000, guid: 670f42e2581aff64ba4ac958b82494c7, type: 2}
+    LineCount: 20
+    Enemies:
+    - {fileID: 11400000, guid: f30dd239e5305b54ab0dfcce51c5011c, type: 2}
+    - {fileID: 11400000, guid: 8c408227fe5c7384d9d42c64eec2c991, type: 2}
+    - {fileID: 11400000, guid: 90594bef1b09ba94884751da8be1088b, type: 2}
+    - {fileID: 11400000, guid: d5819e5a2e9647e408061159388ffe6a, type: 2}
+    - {fileID: 11400000, guid: fc26812d70d516541ab772a76368e1cd, type: 2}
+    - {fileID: 11400000, guid: 2edcd551fe7e1af4fa6f2316281451b0, type: 2}
+  <BossTimeDelay>k__BackingField: 20
   <LevelBoss>k__BackingField: {fileID: 11400000, guid: b2b389587aef4534baaf5abe8dee70eb,
     type: 2}

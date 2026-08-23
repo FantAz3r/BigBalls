@@ -2,9 +2,7 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class StatHolder : IArtefactUser
 {
@@ -53,8 +51,8 @@ public class StatHolder : IArtefactUser
         }
     }
 
-    public void AddEffects(List<EffectBehaviour> effects)
+    public void AddEffects(ArtefactModel artefactModel)
     {
-        throw new NotImplementedException();
+        _effectBehaviours.AddRange(_effectFactory.Create(artefactModel.ArtefactConfig.Effects, artefactModel.Level));
     }
 }

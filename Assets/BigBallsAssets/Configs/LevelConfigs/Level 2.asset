@@ -14,8 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Level>k__BackingField: 5
   <TilePrefabs>k__BackingField:
-  - {fileID: 0}
-  <Waves>k__BackingField: []
-  <Enemies>k__BackingField: []
+  - {fileID: 4389509605278658530, guid: 4a241374b62348d4a8b3d3fe7ace3d17, type: 3}
+  <Waves>k__BackingField:
+  - WaveCooldown: 1
+    BossConfig: {fileID: 0}
+    LineCount: 20
+    Enemies:
+    - {fileID: 11400000, guid: a7a53898969b55c4dbf0b7c384990e40, type: 2}
+    - {fileID: 11400000, guid: 041bdb8d26c1701469262ffeb24ad155, type: 2}
+  - WaveCooldown: 15
+    BossConfig: {fileID: 0}
+    LineCount: 25
+    Enemies:
+    - {fileID: 11400000, guid: a7a53898969b55c4dbf0b7c384990e40, type: 2}
+    - {fileID: 11400000, guid: 041bdb8d26c1701469262ffeb24ad155, type: 2}
+  - WaveCooldown: 15
+    BossConfig: {fileID: 0}
+    LineCount: 30
+    Enemies:
+    - {fileID: 11400000, guid: a7a53898969b55c4dbf0b7c384990e40, type: 2}
+    - {fileID: 11400000, guid: 041bdb8d26c1701469262ffeb24ad155, type: 2}
   <BossTimeDelay>k__BackingField: 0
   <LevelBoss>k__BackingField: {fileID: 0}

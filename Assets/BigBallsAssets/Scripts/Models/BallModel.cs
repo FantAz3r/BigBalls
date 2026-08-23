@@ -14,6 +14,8 @@ public class BallModel : ItemModel
 
     public BallConfig BallConfig { get; private set; }
 
+    
+
     public override CardSaveData CreateSaveData() => new BallSaveData((int)BallConfig.BallType, ItemEXP, IsOpen, NoneGameLevel);
     protected override List<ItemStat> GetStats() => BallConfig.GetStats(Level);
 }

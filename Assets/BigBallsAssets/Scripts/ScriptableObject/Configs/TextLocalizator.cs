@@ -297,6 +297,26 @@ namespace BigBalls.Localization
             { Turkish, "hasar" },
         };
 
+        private static readonly Dictionary<string, string> UnlockDict = new Dictionary<string, string>
+        {
+            { Russian, "разблокировать" },
+            { English, "unlock" },
+            { Turkish, "kilidi aç" },
+        };
+        private static readonly Dictionary<string, string> UpgradeDict = new Dictionary<string, string>
+        {
+            { Russian, "улучшить" },
+            { English, "upgrade" },
+            { Turkish, "güncelleme" },
+        };
+
+        private static readonly Dictionary<string, string> DurationDict = new Dictionary<string, string>
+        {
+            { Russian, "длительность" },
+            { English, "duration" },
+            { Turkish, "süre" },
+        };
+
         private static readonly Dictionary<string, string> DamageMultiplyDict = new Dictionary<string, string>
         {
             { Russian, "множитель урона" },
@@ -460,7 +480,10 @@ namespace BigBalls.Localization
 
 
         public static string YourBestScore => GetText(YourBestScoreDict);
+        public static string Unlock => GetText(UnlockDict);
+        public static string Upgrade => GetText(UpgradeDict);
         public static string BurnDuration => GetText(BurnDurationDict);
+        public static string Duration => GetText(DurationDict);
         public static string FreezeDuration => GetText(FreezeDurationDict);
         public static string BurnDPS => GetText(BurnDPSDict);
         public static string SlowPercent => GetText(SlowPercentDict);

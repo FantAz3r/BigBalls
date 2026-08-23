@@ -18,22 +18,25 @@ namespace BigBalls.Services
         {
             { typeof(WindowData), "Data/WindowData"},
             { typeof(LevelData), "Data/LevelData"},
+            { typeof(ChestData), "Data/ChestData"},
+            { typeof(EnemyData), "Data/EnemyData"},
+            { typeof(CardsData), "Data/CardsData"},
+            { typeof(ParticleData), "Data/Particle Data"},
+            { typeof(LootData), "Data/LootData"},
+
             { typeof(Player), "Player/Player"},
             { typeof(UIRoot), "UI/UIRoot"},
             { typeof(PlayerConfig), "Configs/PlayerConfig"},
             { typeof(Camera), "Prefabs/Main Camera"},
             { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
-            { typeof(EnemyData), "Data/EnemyData"},
-            { typeof(CardsData), "Data/CardsData"},
             //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
             {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
             {typeof(CardView), "UI/CardView"},
             {typeof(DamageText), "Prefabs/DamageTextObject"},
-            {typeof(ChestData), "Data/ChestData"},
             {typeof(StatTextHolder), "UI/StatTextHolder"},
             {typeof(StatsSlot), "UI/StatSlot"},
             {typeof(LightningBolt), "LightningBolt"},
-            {typeof(ParticleData), "Data/Particle Data"},
+
         };
 
         public T Load<T>() where T : Object

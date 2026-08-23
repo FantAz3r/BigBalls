@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using BigBalls.Infrastructure;
 using BigBalls.Saves;
 using BigBalls.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -34,14 +34,17 @@ public class LevelButtonView : MonoBehaviour
                 if (i > 0)
                 {
                     LevelSaveData previousLevel = levels[i - 1];
-
+                    Button button = _levelButton.GetComponent<Button>();
+                    Debug.Log(1234);
                     if (previousLevel != null && previousLevel.IsComplite)
                     {
                         _lockImage.gameObject.SetActive(true);
+                        button.interactable = false;
                     }
                     else
                     {
                         _lockImage.gameObject.SetActive(false);
+                        button.interactable = true;
                     }
                 }
                 else

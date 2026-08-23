@@ -4,6 +4,7 @@ using BigBalls.Configs;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Saves;
 using BigBalls.Services;
+using UnityEngine;
 
 public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetble
     where TKey : Enum

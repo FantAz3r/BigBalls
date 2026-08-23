@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af39815683a76e94a9ca217baf3b0748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _axis: 1
   _scaleMultiplier: 1.1
   _duration: 0.4
   _ease: 4
@@ -195,6 +196,7 @@ MonoBehaviour:
   <EnemyHitedAnimation>k__BackingField: {fileID: 954770692113148135}
   <EffectViewer>k__BackingField: {fileID: 2715446913355483138}
   <EnemyIdleBob>k__BackingField: {fileID: 6679321886095457674}
+  <EnemyAnimator>k__BackingField: {fileID: 0}
 --- !u!65 &6003510401459578431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1086,7 +1088,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 0d0dc2c13ed2098429e153d10a374462, type: 2}
+      objectReference: {fileID: 2100000, guid: 8653122c65e53744bb456078c940805b, type: 2}
     - target: {fileID: 8892783186768470342, guid: 20818fda9cf85f94ca4d9803d50fb8d8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1604,7 +1606,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 0d0dc2c13ed2098429e153d10a374462, type: 2}
+      objectReference: {fileID: 2100000, guid: 8653122c65e53744bb456078c940805b, type: 2}
     - target: {fileID: 5122863035917360194, guid: 62dcba975a0bdfe47bef48ea43049412,
         type: 3}
       propertyPath: m_LocalPosition.x

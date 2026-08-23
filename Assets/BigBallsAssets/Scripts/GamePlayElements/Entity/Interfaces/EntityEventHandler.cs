@@ -10,6 +10,7 @@ namespace BigBalls.GameplayObjects
         public event Action<IEntity> Died;
         public event Action<IEntity> Returned;
         public event Action<IEntity> Suisided;
+        public event Action<IEntity> Reflected;
 
         public void HitEntity(IEntity entity) => HitedEntity?.Invoke(entity);
         public void Die(IEntity entity) => Died?.Invoke(entity);
@@ -17,5 +18,6 @@ namespace BigBalls.GameplayObjects
         public void Spawn() => Spawned?.Invoke();
         public void Suiside(IEntity entity) => Suisided?.Invoke(entity);
         public void Hit() => Hited?.Invoke();
+        public void Reflect(IEntity entity) => Reflected?.Invoke(entity);
     }
 }

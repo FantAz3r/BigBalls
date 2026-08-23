@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
-using log4net.Core;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -27,6 +25,8 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.Freeze] = CreateIceEffect,
                 [BehaviourType.Explosion] = CreateBomb,
                 [BehaviourType.Tunder] = CreateTunder,
+                [BehaviourType.ElasticBand] = CreateElasticBand,
+                [BehaviourType.EarthShake] = CreateEarthShake,
                 //[BehaviourType.Tunder] = CreateTunderEffect,
             };
         }
@@ -60,5 +60,7 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateIceEffect(EffectConfig config, int level) => new Ice(config as IceConfig, level);
         private EffectBehaviour CreateBomb(EffectConfig config, int level) => new Bomb (config as BombConfig, level);
         private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Tunder(config as TunderConfig, level);
+        private EffectBehaviour CreateElasticBand(EffectConfig config, int level) => new ElasticBand(config as ElasticBandConfig, level);
+        private EffectBehaviour CreateEarthShake(EffectConfig config, int level) => new EarthShake(config as GroundBallConfig, level);
     }
 }

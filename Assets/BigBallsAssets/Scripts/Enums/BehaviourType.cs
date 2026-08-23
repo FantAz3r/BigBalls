@@ -12,5 +12,6 @@
         ElasticBand,
         Explosion,
         Steel,
+        EarthShake,
     }
 }

@@ -1,20 +1,21 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using System;
+using System.Collections.Generic;
+using VContainer;
 
 namespace BigBalls.GameplayObjects
 {
     public class PlayerBallContainer : IBallContainer, ISubscribable, IArtefactUser
     {
         private readonly Stat _ballCount;
-        private readonly IBallFactory _ballFactory;
-        private readonly IEffectFactory _effectFactory;
-        private readonly IIdentifierService _identifierService;
-        private readonly CardsData _cardsData;
-        private readonly BallConfig _baseBallConfig;
+        private IBallFactory _ballFactory;
+        private IIdentifierService _identifierService;
+        private IPlayerProvider _playerProvider;
+        private CardsData _cardsData;
+        private BallConfig _baseBallConfig;
 
         private WeaponModel _weapon;
 
@@ -23,33 +24,36 @@ namespace BigBalls.GameplayObjects
         private int _weaponConfigIndex = 0;
 
         private Queue<BallModel> _balls = new();
-        private List<EffectBehaviour> _effectBehaviours = new();
+        private List<ArtefactModel> _artefacts = new();
 
-        public PlayerBallContainer (
-            Stat ballCount,
-            IResourceLoader resourceLoader,
-            IBallFactory ballFactory,
-            IEffectFactory effectFactory,
-            IIdentifierService identifierService,
-            BallRepository ballRepository)
+        public PlayerBallContainer(Stat ballCount)
         {
             _ballCount = ballCount;
+        }
+
+        [Inject]
+        public void Construct(
+            IResourceLoader resourceLoader,
+            IBallFactory ballFactory,
+            IIdentifierService identifierService,
+            IPlayerProvider playerProvider)
+        {
             _ballFactory = ballFactory;
-            _effectFactory = effectFactory;
             _identifierService = identifierService;
+            _playerProvider = playerProvider;
             _cardsData = resourceLoader.Load<CardsData>();
             _baseBallConfig = _cardsData.Balls[BallType.Base];
         }
 
         public IEnumerable<BallModel> Balls => _balls;
 
-        public void Subscribe () => _ballFactory.BallReturned += OnReturnBullet;
+        public void Subscribe() => _ballFactory.BallReturned += OnReturnBullet;
 
-        public void Unsubscribe () => _ballFactory.BallReturned += OnReturnBullet;
+        public void Unsubscribe() => _ballFactory.BallReturned += OnReturnBullet;
 
-        public void AddEffects (List<EffectBehaviour> effects) => _effectBehaviours.AddRange(effects);
+        public void AddEffects(ArtefactModel artefactModel) => _artefacts.Add(artefactModel);
 
-        public bool TryGetNextBullet (out Ball ball)
+        public bool TryGetNextBullet(out Ball ball)
         {
             ball = null;
             BallModel model = null;
@@ -73,7 +77,7 @@ namespace BigBalls.GameplayObjects
             return false;
         }
 
-        private BallModel GetNextBallModel ()
+        private BallModel GetNextBallModel()
         {
             if (_weapon != null && _weapon.UniqueBallConfigs != null && _weaponConfigIndex < _weapon.UniqueBallConfigs.Count)
             {
@@ -83,7 +87,7 @@ namespace BigBalls.GameplayObjects
             return new BallModel(_identifierService.ID, _baseBallConfig);
         }
 
-        public void AddUniqueBall (WeaponModel weapon)
+        public void AddUniqueBall(WeaponModel weapon)
         {
             _weapon = weapon;
 
@@ -93,7 +97,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public bool AddUniqueBall (BallModel uniqueBall)
+        public bool AddUniqueBall(BallModel uniqueBall)
         {
             if (uniqueBall?.Config == null)
                 return false;
@@ -104,22 +108,24 @@ namespace BigBalls.GameplayObjects
             return true;
         }
 
-        private void OnReturnBullet (BallModel ballModel)
+        private void OnReturnBullet(BallModel ballModel)
         {
             _balls.Enqueue(ballModel);
             _currentBallCount++;
         }
 
-        private Ball CreateNewBall (BallModel ballModel)
+        private Ball CreateNewBall(BallModel ballModel)
         {
             if (ballModel == null)
                 throw new ArgumentNullException(nameof(ballModel));
 
-            var ball = _ballFactory.Create(ballModel, EntityType.Player);
+            var ball = _ballFactory.Create(ballModel, EntityType.Player, _playerProvider.Player.Transform);
 
-            if (_effectBehaviours.Count > 0)
-                ball.AddEffects(_effectBehaviours);
+            if (_artefacts.Count > 0)
+                ball.AddEffects(_artefacts);
 
+            ball.Subscribe();
+            ball.EventHandler.Spawn();
             return ball;
         }
     }

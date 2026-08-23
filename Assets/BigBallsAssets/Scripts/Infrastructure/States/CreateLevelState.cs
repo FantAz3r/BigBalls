@@ -77,7 +77,7 @@ namespace BigBalls.Infrastructure
         public void Enter(LevelID level)
         {
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
-            _currentEnemyConfig = _levelConfig.GetCurrentEnemyConfigToLevel();
+            _currentEnemyConfig = _levelConfig.GetAllLevelEnemies();
 
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();

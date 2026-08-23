@@ -47,9 +47,7 @@ namespace BigBalls.Factories
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
-            Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name);
-            enemy.transform.position = spawnPosition;
-            enemy.transform.rotation = Quaternion.identity;
+            Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name, spawnPosition, enemyConfig.Prefab.transform.rotation);
             int enemyID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(enemy, enemyConfig.Type, enemyConfig);
@@ -95,7 +93,7 @@ namespace BigBalls.Factories
 
             if (enemyConfig.HasRangeAttack)
             {
-                shooter = new EnemyShooter(statHolder[StatType.AttackSpeed], enemy.transform, enemyConfig, _playerProvider.Player.Transform);
+                shooter = new EnemyShooter(statHolder[StatType.AttackSpeed], enemy, enemyConfig, _playerProvider.Player.Transform);
                 _resolverProvider.CurrentResolver.Inject(shooter);
             }
 

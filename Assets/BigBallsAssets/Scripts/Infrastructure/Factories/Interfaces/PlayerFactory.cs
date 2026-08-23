@@ -141,7 +141,8 @@ namespace BigBalls.Factories
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, _updateService, player.Rigidbody , _raycastService, _playerConfig);
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
-            PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag], _resourceLoader, _ballFactory, _effectFactory, _identifierService, _ballRepository);
+            PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);
+            _objectResolver.CurrentResolver.Inject(playerBallContainer);
             ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
 
             cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);

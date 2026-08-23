@@ -1,15 +1,15 @@
-using System;
-using System.Collections;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
+using System;
+using System.Collections;
 using UnityEngine;
 using VContainer;
 
 public class EnemyShooter : ISubscribable
 {
-    private readonly Transform _firePoint;
+    private readonly Enemy _enemy;
     private readonly EnemyConfig _config;
     private readonly WaitForSeconds _attackDelay;
 
@@ -20,13 +20,13 @@ public class EnemyShooter : ISubscribable
     private IIdentifierService _identifierService;
     private IBallFactory _ballFactory;
 
-    public EnemyShooter (Stat attackSpeed,
-            Transform firePoint,
+    public EnemyShooter(Stat attackSpeed,
+            Enemy firePoint,
             EnemyConfig config,
             Transform target)
     {
-        _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
-        _firePoint = firePoint;
+        _attackDelay = new WaitForSeconds((1 / attackSpeed.CurrentValue) * UnityEngine.Random.Range(0.6f, 1.4f));
+        _enemy = firePoint;
         _config = config;
         _target = target;
     }
@@ -34,20 +34,20 @@ public class EnemyShooter : ISubscribable
     public event Action Shooted;
 
     [Inject]
-    public void Construct (ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory)
+    public void Construct(ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory)
     {
         _coroutineRunner = coroutineRunner;
         _identifierService = identifierService;
         _ballFactory = ballFactory;
     }
 
-    public void Subscribe ()
+    public void Subscribe()
     {
         _canShoot = true;
         _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
     }
 
-    public void Unsubscribe ()
+    public void Unsubscribe()
     {
         _canShoot = false;
 
@@ -58,26 +58,37 @@ public class EnemyShooter : ISubscribable
         }
     }
 
-    public void Shoot (Ball ball)
+    public void Shoot()
     {
-        ball.transform.position = _firePoint.position;
-        Vector3 toTarget = _target.position - ball.transform.position;
-        toTarget.y = 0f;
-        ball.transform.rotation = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
-        Vector2 dir2D = new Vector2(toTarget.x, toTarget.z).normalized;
-        ball.Mover.SetDirection(dir2D);
+        BallModel ballModel = new BallModel(_identifierService.ID, _config.BallConfig);
+        Vector3 direction = _target.position - _enemy.transform.position;
+        direction.y = 0;
+        direction.Normalize();
+        Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
 
+        Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy, _enemy.Transform, rotation);
+        ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
+        ball.transform.position = _enemy.transform.position;
         Shooted?.Invoke();
     }
 
-    private IEnumerator ShootRoutine ()
+    private IEnumerator ShootRoutine()
     {
         while (_canShoot)
         {
-            BallModel ballModel = new BallModel(_identifierService.ID, _config.BallConfig);
-            Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy);
-            Shoot(ball);
             yield return _attackDelay;
+
+            if (_target == null)
+                yield break;
+
+            if (_enemy.EnemyAnimator == null)
+            {
+                Shoot();
+            }
+            else
+            {
+                _enemy.EnemyAnimator.Shoot(Shoot);
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 0
-  <Value>k__BackingField: 5
+  <Value>k__BackingField: 1
 --- !u!135 &9017627496987517002
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 12ba2eadb226fa44eadae781b55514d5, type: 2}
+  - {fileID: 2100000, guid: b7f70d23ebeb07948a56eb18dfd48cfb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rotationSpeed: 360
+  _rotateDuration: 1
   _rotateMode: 1
   _floatHeight: 0.5
   _floatDuration: 0.75

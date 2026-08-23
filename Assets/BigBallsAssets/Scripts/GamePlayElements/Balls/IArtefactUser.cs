@@ -4,6 +4,6 @@ namespace BigBalls.GameplayObjects
 {
     public interface IArtefactUser
     {
-        void AddEffects (List<EffectBehaviour> effects);
+        void AddEffects (ArtefactModel artefactModel);
     }
 }

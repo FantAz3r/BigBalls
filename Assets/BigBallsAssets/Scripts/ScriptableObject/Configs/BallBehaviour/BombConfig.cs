@@ -6,13 +6,15 @@ using BigBalls.Localization;
 using UnityEngine;
 using Math = Utils.Math;
 
-[CreateAssetMenu(fileName = "IceConfig", menuName = "Configs/BahaviourConfig/BombConfig")]
+[CreateAssetMenu(fileName = "BombConfig", menuName = "Configs/BahaviourConfig/BombConfig")]
 [Serializable]
 
 public class BombConfig : EffectConfig
 {
+    public ParticleObject ParticleObject;
     public float Radius = 1f;
     public float Damage = 10f;
+    public float RespawnDelay = 3f;
 
     public float RadiusPerLevel = 1f;
     public float DamagePerLevel = 10f;

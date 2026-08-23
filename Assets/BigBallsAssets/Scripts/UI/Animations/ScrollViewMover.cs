@@ -22,7 +22,7 @@ public class ScrollViewMover : MonoBehaviour
     private Vector2 _lastMousePosition;
     private IDeviceService _deviceService;
 
-    private void Reset ()
+    private void Reset()
     {
         _scrollRect = GetComponent<ScrollRect>();
     }
@@ -33,7 +33,7 @@ public class ScrollViewMover : MonoBehaviour
         _deviceService = deviceService;
     }
 
-    private void Update ()
+    private void Update()
     {
         if (_scrollRect == null)
             return;
@@ -109,7 +109,7 @@ public class ScrollViewMover : MonoBehaviour
         if (direction == Vector2.zero)
             return;
 
-        MoveScroll(direction * _edgeScrollSpeed * Time.unscaledDeltaTime);
+        MoveScroll(direction * _edgeScrollSpeed * Time.deltaTime);
     }
 
     private void HandleTouch ()
@@ -129,6 +129,7 @@ public class ScrollViewMover : MonoBehaviour
 
     private void MoveScroll (Vector2 delta)
     {
+
         Vector2 normalizedDelta = new Vector2(
             _scrollRect.content.rect.width > _scrollRect.viewport.rect.width
                 ? delta.x / _scrollRect.content.rect.width

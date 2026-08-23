@@ -51,8 +51,6 @@ public class LevelTimeline
         _levelConfig = levelConfig;
         _enemyFactory.Died += CountKills;
 
-        _enemySpawner.Init(_levelConfig.Enemies);
-
         if (_mainCoroutine == null)
             _mainCoroutine = _coroutineRunner.StartCoroutine(WaveRoutine());
 
@@ -77,7 +75,25 @@ public class LevelTimeline
             _timeCoroutine = null;
         }
 
-        _saveService.GameProgress.Levels.Add(new LevelSaveData((int)_levelConfig.Level, CompliteWaves, _levelTimer, Kills));
+        var currentLevelId = (int)_levelConfig.Level;
+        var newStars = CompliteWaves;
+        var newData = new LevelSaveData(currentLevelId, CompliteWaves, _levelTimer, Kills);
+
+        var existingLevelSave = _saveService.GameProgress.Levels
+            .Find(l => l.LevelID == currentLevelId); 
+
+        if (existingLevelSave != null)
+        {
+            if (newStars > existingLevelSave.CompliteWaves)
+            {
+                int index = _saveService.GameProgress.Levels.IndexOf(existingLevelSave);
+                _saveService.GameProgress.Levels[index] = newData;
+            }
+        }
+        else
+        {
+            _saveService.GameProgress.Levels.Add(newData);
+        }
 
         Kills = 0;
         _levelTimer = 0;
@@ -91,6 +107,7 @@ public class LevelTimeline
         for (int i = 0; i < waves.Count; i++)
         {
             Wave wave = waves[i];
+            _enemySpawner.SetEnemies(wave.Enemies);
 
             yield return new WaitForSeconds(wave.WaveCooldown);
 

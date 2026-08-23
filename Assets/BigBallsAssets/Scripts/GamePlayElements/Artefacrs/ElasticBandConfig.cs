@@ -11,9 +11,15 @@ public class ElasticBandConfig : EffectConfig
 {
     public float StartBallMoveSpeed;
     public float AddMoveSpeedPerHit;
-    public float MaxMoveSpeed;
+    public float MaxMoveSpeedMultiplyer;
 
+    public float AddMoveSpeedPerHitPerLevel;
+    public float MaxMoveSpeedMultiplyerPerLevel;
     public override BehaviourType Type => BehaviourType.ElasticBand;
+
+
+    public float GetMoveSpeed(int level) => AddMoveSpeedPerHit + AddMoveSpeedPerHitPerLevel * level;
+    public float GetMaxSpeedMyltiplyer(int level) => MaxMoveSpeedMultiplyer + MaxMoveSpeedMultiplyerPerLevel * level;
 
     public override List<ItemStat> GetStats(int level)
     {

@@ -26,10 +26,11 @@ namespace BigBalls.Services
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private List<LootInfo> _lootInfos = new List<LootInfo>();
         private CardsData _cardsData;
+        private ParticleData _particleInfos;
+        private LootData _lootData;
         private LevelConfig _levelConfig;
         private LightningBolt _ligtningBolt;
         private DamageText _damageText;
-        private ParticleData _particleInfos;
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
 
@@ -41,6 +42,7 @@ namespace BigBalls.Services
             _damageText = resourceLoader.Load<DamageText>();
             _ligtningBolt = resourceLoader.Load<LightningBolt>();
             _particleInfos = resourceLoader.Load<ParticleData>();
+            _lootData = resourceLoader.Load<LootData>();
             _resolverProvider = resolverProvider;
         }
 
@@ -49,20 +51,20 @@ namespace BigBalls.Services
             _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
 
-            Dictionary<string, LootInfo> lootInfos = new Dictionary<string, LootInfo>();
-
-            foreach (EnemyConfig config in _enemyConfigs)
-            {
-                foreach (LootInfo lootInfo in config.PossibleLoot)
-                {
-                    if (lootInfo?.LootPrefab != null)
-                    {
-                        lootInfos.TryAdd(lootInfo.LootPrefab.name, lootInfo);
-                    }
-                }
-            }
-
-            _lootInfos = lootInfos.Values.ToList();
+           // Dictionary<string, LootInfo> lootInfos = new Dictionary<string, LootInfo>();
+           //
+           // foreach (EnemyConfig config in _enemyConfigs)
+           // {
+           //     foreach (LootInfo lootInfo in config.PossibleLoot)
+           //     {
+           //         if (lootInfo?.LootPrefab != null)
+           //         {
+           //             lootInfos.TryAdd(lootInfo.LootPrefab.name, lootInfo);
+           //         }
+           //     }
+           // }
+           //
+           // _lootInfos = lootInfos.Values.ToList();
         }
 
         public T GetObject<T> (string nameObject)
@@ -125,8 +127,8 @@ namespace BigBalls.Services
             foreach (Tile tile in _levelConfig.TilePrefabs)
                 CreatePool(tile, tilePoolContainer, tile.name, _poolConfig.InitialTilePoolSize);
 
-            foreach (LootInfo lootInfo in _lootInfos)
-                CreatePool(lootInfo.LootPrefab, lootPoolContainer, lootInfo.LootPrefab.name, _poolConfig.IinitialLootPoolSize);
+            foreach (Loot loot in _lootData.GetAllLoot())
+                CreatePool(loot, lootPoolContainer, loot.name, _poolConfig.IinitialLootPoolSize);
 
             foreach (ParticleObject particle in _particleInfos.Particles)
                 CreatePool(particle, particlePoolContainer, particle.gameObject.name, _poolConfig.DefaultPoolSize);

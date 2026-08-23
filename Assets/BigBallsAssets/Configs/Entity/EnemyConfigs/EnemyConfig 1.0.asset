@@ -43,20 +43,13 @@ MonoBehaviour:
     m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 0}
   PossibleLoot:
-  - LootPrefab: {fileID: -7175670180899759876, guid: 82b395a1eaf410e469c360a614cd2cc5,
-      type: 3}
+  - LootType: 0
     DropChance: 0.4
     MinAmount: 2
-    MaxAmount: 6
-  - LootPrefab: {fileID: 5482572451439400547, guid: d74df00e31f496846a775572af229b2f,
-      type: 3}
-    DropChance: 0.075
-    MinAmount: 1
-    MaxAmount: 1
-  - LootPrefab: {fileID: 7755661948603910049, guid: a1c71bd3d62ccde4691eef79ca692bb0,
-      type: 3}
+    MaxAmount: 7
+  - LootType: 1
     DropChance: 0.3
-    MinAmount: 2
-    MaxAmount: 5
+    MinAmount: 5
+    MaxAmount: 20
   BaseExperience: 10
   BaseCoins: 5

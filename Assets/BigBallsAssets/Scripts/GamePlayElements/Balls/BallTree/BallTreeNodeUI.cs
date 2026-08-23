@@ -25,29 +25,32 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     private List<BallTreeConnectionUI> _childConnections = new List<BallTreeConnectionUI>();
     private List<BallTreeConnectionUI> _parentConnections = new List<BallTreeConnectionUI>();
     private bool _isOpen;
-    private BallModel _node;
     private IBallUnlockService _unlockService;
 
     public event Action<BallTreeNodeUI> OnClick;
 
     public BallType BallType { get; private set; }
+    public BallModel BallModel { get; private set; }
     public RectTransform RectTransform => _rectTransform;
 
     private void OnEnable ()
     {
-        UpdateState();
-        _unlockButton?.onClick.AddListener(Unlock);
+        if(BallModel != null)
+        {
+            UpdateState();
+        }
+        //_unlockButton?.onClick.AddListener(Unlock);
     }
 
     private void OnDisable ()
     {
-        _unlockButton?.onClick.RemoveListener(Unlock);
+        //_unlockButton?.onClick.RemoveListener(Unlock);
     }
 
     public void Init (BallType type, BallModel node, IBallUnlockService unlockService)
     {
         BallType = type;
-        _node = node;
+        BallModel = node;
         _unlockService = unlockService;
         _icon.sprite = node.Config.Icon;
         UpdateState();
@@ -56,15 +59,15 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     public void UpdateState (BallModel node = null)
     {
         if (node != null)
-            _node = node;
+            BallModel = node;
 
-        _slider.maxValue = _node.EXPForNextLevel;
+        _slider.maxValue = BallModel.EXPForNextLevel;
         _slider.minValue = 0;
-        _slider.value = _node.ItemEXP;
+        _slider.value = BallModel.ItemEXP;
 
-        _isOpen = _node.IsOpen;
+        _isOpen = BallModel.IsOpen;
         bool canUnlock = _unlockService.CanUnlock(BallType);
-        int level = _node.Level;
+        int level = BallModel.Level;
 
         _lockIcon.SetActive(_isOpen == false);
         _unlockIcon.SetActive(_isOpen);
@@ -73,7 +76,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         if (_isOpen == false)
         {
             _background.color = canUnlock ? _availableColor : _lockedColor;
-            _priceText.text = canUnlock ? $"{_node.BallConfig.UnlockPrice} EXP" : "Locked";
+            _priceText.text = canUnlock ? $"{BallModel.BallConfig.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
             DisableConnections();
             TryUpgradeConnaction();
@@ -99,8 +102,13 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
     public void Upgrade ()
     {
-        _node.UpgradeNoneGameLevel();
+        BallModel.UpgradeNoneGameLevel();
         UpdateState();
+    }
+
+    public void Unlock()
+    {
+        _unlockService.TryUnlockBall(BallModel.BallConfig.BallType);
     }
 
     public void AddChildConnection (BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
@@ -142,19 +150,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
         if (count >= _parentConnections.Count)
         {
-            
-        }
-    }
-
-    private void Unlock ()
-    {
-        if (_isOpen)
-        {
-            Upgrade();
-        }
-        else
-        {
-            UpdateState();
         }
     }
 }

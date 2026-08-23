@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using UnityEngine;
@@ -13,7 +12,10 @@ public class SpatialService : ISpatialService
         {
             if (collider.TryGetComponent<IEntity>(out var entity))
             {
-                yield return entity;
+                if (entity is not Ball)
+                {
+                    yield return entity;
+                }
             }
         }
     }

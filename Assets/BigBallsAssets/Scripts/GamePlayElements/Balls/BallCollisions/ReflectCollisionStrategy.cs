@@ -33,5 +33,6 @@ public class ReflectCollisionStrategy : ICollisionStrategy
         reflectedDirection.y = 0;
         reflectedDirection.Normalize();
         ball.Mover.SetDirection(new Vector2(reflectedDirection.x, reflectedDirection.z));
+        ball.EventHandler.Reflect(ball);
     }
 }

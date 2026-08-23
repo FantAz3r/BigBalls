@@ -1,3 +1,5 @@
+using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,5 +23,12 @@ public class StatTextHolder : MonoBehaviour
         {
             _nextLevelValue.gameObject.SetActive(false);
         }
+    }
+
+    public void RenderText(ItemStat itemStat)
+    {
+        _name.text = itemStat.Name;
+        _currentValue.text = itemStat.Value.ToString();
+        _nextLevelValue.text = itemStat.NextValue.ToString();
     }
 }

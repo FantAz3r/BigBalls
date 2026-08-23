@@ -19,7 +19,7 @@ namespace BigBalls.GameplayObjects
         private int _rowIndex = 0;
 
         private HashSet<Vector2Int> _occupiedPositions = new HashSet<Vector2Int>();
-        private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
+        private List<EnemyConfig> _enemies = new List<EnemyConfig>();
 
         public EnemySpawner(IEnemyFactory enemyFactory, IWinService winService)
         {
@@ -27,9 +27,9 @@ namespace BigBalls.GameplayObjects
             _winService = winService;
         }
 
-        public void Init(List<EnemyConfig> enemies)
+        public void SetEnemies(List<EnemyConfig> enemies)
         {
-            _enemyConfigs = enemies;
+            _enemies = enemies;
         }
 
         public void Reset()
@@ -191,7 +191,7 @@ namespace BigBalls.GameplayObjects
                 return;
             }
 
-            foreach (var enemy in _enemyConfigs)
+            foreach (var enemy in _enemies)
             {
                 if (enemy.Weight > targetWeight) continue;
                 if (lastEnemy != null && enemy.Weight > lastEnemy.Weight) continue;
@@ -214,7 +214,7 @@ namespace BigBalls.GameplayObjects
             return enemy;
         }
 
-        public void AddEffects (List<EffectBehaviour> effects)
+        public void AddEffects(ArtefactModel artefactModel)
         {
             throw new NotImplementedException();
         }

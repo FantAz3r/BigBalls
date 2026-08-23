@@ -21,6 +21,6 @@ public class WalletModel : IWalletModel
 
     public void PutAccumulatedCoins()
     {
-        _globalWallet.TakeCollectedCoin(CurrentValue);
+        _globalWallet.AddCoins(CurrentValue);
     }
 }

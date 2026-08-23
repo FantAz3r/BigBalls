@@ -15,9 +15,9 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 1262936685549616925, guid: cbf0e8c95b2dc7144a0c5712a6c48a09,
     type: 3}
   <Type>k__BackingField: 2
-  <CanSuiside>k__BackingField: 0
+  <CanSuiside>k__BackingField: 1
   <HasRangeAttack>k__BackingField: 1
-  <HasMeeleAttack>k__BackingField: 0
+  <HasMeeleAttack>k__BackingField: 1
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
@@ -44,20 +44,17 @@ MonoBehaviour:
   <BallConfig>k__BackingField: {fileID: 11400000, guid: a2d31e70cfb6a534fb40d7fb10bb5ab7,
     type: 2}
   PossibleLoot:
-  - LootPrefab: {fileID: -7175670180899759876, guid: 82b395a1eaf410e469c360a614cd2cc5,
-      type: 3}
+  - LootType: 0
     DropChance: 0.4
     MinAmount: 2
     MaxAmount: 6
-  - LootPrefab: {fileID: 5482572451439400547, guid: d74df00e31f496846a775572af229b2f,
-      type: 3}
+  - LootType: 2
     DropChance: 0.075
     MinAmount: 1
     MaxAmount: 1
-  - LootPrefab: {fileID: 7755661948603910049, guid: a1c71bd3d62ccde4691eef79ca692bb0,
-      type: 3}
+  - LootType: 1
     DropChance: 0.3
-    MinAmount: 2
-    MaxAmount: 5
+    MinAmount: 5
+    MaxAmount: 20
   BaseExperience: 10
   BaseCoins: 5
