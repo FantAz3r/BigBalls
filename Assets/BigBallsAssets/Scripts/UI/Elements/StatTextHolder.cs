@@ -1,5 +1,4 @@
 using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,13 +9,14 @@ public class StatTextHolder : MonoBehaviour
     [SerializeField] private TMP_Text _currentValue;
     [SerializeField] private TMP_Text _nextLevelValue;
 
-    public void RenderText(List<string> texts)
+    public void RenderText(List<string> texts, bool showNextLevel = true)
     {
         _name.text = texts[0];
         _currentValue.text = texts[1];
 
-        if (texts.Count >= 2)
+        if (texts.Count >= 2 && showNextLevel)
         {
+            _nextLevelValue.gameObject.SetActive(true);
             _nextLevelValue.text = texts[2];
         }
         else
@@ -25,10 +25,19 @@ public class StatTextHolder : MonoBehaviour
         }
     }
 
-    public void RenderText(ItemStat itemStat)
+    public void RenderText(ItemStat itemStat, bool showNextLevel = true)
     {
         _name.text = itemStat.Name;
         _currentValue.text = itemStat.Value.ToString();
-        _nextLevelValue.text = itemStat.NextValue.ToString();
+
+        if (showNextLevel)
+        {
+            _nextLevelValue.gameObject.SetActive(true);
+            _nextLevelValue.text = itemStat.NextValue.ToString();
+        }
+        else
+        {
+            _nextLevelValue.gameObject.SetActive(false);
+        }
     }
 }

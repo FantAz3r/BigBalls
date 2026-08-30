@@ -13,6 +13,7 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public Transform WeaponSpawnPoint { get; private set; }
         [field: SerializeField] public Transform FirePoint { get; private set; }
+        [field: SerializeField] public Cannon Cannon { get; private set; }
 
         public DeathHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }
@@ -38,6 +39,7 @@ namespace BigBalls.GameplayObjects
 
         public void SetFirePoint (Cannon cannon)
         {
+            Cannon = cannon;
             FirePoint = cannon.FirePoint;
         }
     }

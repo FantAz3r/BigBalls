@@ -46,9 +46,24 @@ public class Ice : EffectBehaviour
         enemy.EnemyIdleBob.Stop();
 
         StatHolder statHolder = _entityRepository.GetStatHolder(enemy);
-        Stat stat = statHolder[StatType.MoveSpeed];
-        float slowValue = stat.CurrentValue * _config.GetSlowPercent(Level);
-        stat.ReduceCurrentValue(slowValue);
+        Stat movespeed = statHolder[StatType.MoveSpeed];
+        float slowAttackSpeedValue = 0;
+        float slowAttsckSpeedValue = 0;
+
+        float slowValue = movespeed.CurrentValue * _config.GetSlowPercent(Level);
+        movespeed.ReduceCurrentValue(slowValue);
+
+        if (statHolder.TryGetStat(out Stat attsckSpeed, StatType.AttackSpeed))
+        {
+            slowAttackSpeedValue = attsckSpeed.CurrentValue * _config.GetSlowPercent(Level);
+            attsckSpeed.ReduceCurrentValue(slowValue);
+        }
+
+        if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed))
+        {
+            slowAttsckSpeedValue = movespeed.CurrentValue * _config.GetSlowPercent(Level);
+            rotationSpeed.ReduceCurrentValue(slowValue);
+        }
 
         while (elapsed <= time)
         {
@@ -60,7 +75,9 @@ public class Ice : EffectBehaviour
         }
 
         enemy.EnemyIdleBob.Play();
-        stat.AddCurrentValue(slowValue);
+        movespeed.AddCurrentValue(slowValue);
+        rotationSpeed.AddCurrentValue(slowAttsckSpeedValue);
+        attsckSpeed.AddCurrentValue(slowAttackSpeedValue);
     }
 
 

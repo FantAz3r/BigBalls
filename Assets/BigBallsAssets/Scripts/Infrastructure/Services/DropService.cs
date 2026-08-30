@@ -41,7 +41,7 @@ public class DropService : IDropService
     {
         foreach (EnemyConfig config in currentEnemyConfigs)
         {
-            _enemyConfigs.TryAdd(config.name, config);
+            _enemyConfigs.TryAdd(config.Prefab.name, config);
         }
     }
 }

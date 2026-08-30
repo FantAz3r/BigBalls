@@ -42,7 +42,7 @@ namespace BigBalls.Factories
 
         public Ball Create (BallModel ballModel, EntityType type, Transform shooter, Quaternion rotation)
         {
-            Ball ball = _poolService.GetObject<Ball>(ballModel.BallConfig.Prefab.name, shooter.position + new Vector3(0, 0.5f, 0), rotation);
+            Ball ball = _poolService.GetObject(ballModel.BallConfig.Prefab, shooter.position + new Vector3(0, 0.5f, 0), rotation);
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
             StatHolder statHolder = new StatHolder(ball, ballModel.BallConfig.EntityType, ballModel.BallConfig);

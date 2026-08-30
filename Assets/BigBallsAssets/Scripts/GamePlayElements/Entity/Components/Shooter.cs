@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using BigBalls.Configs;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
@@ -10,7 +11,7 @@ namespace BigBalls.GameplayObjects
     public class Shooter : ISubscribable
     {
         private readonly Vector3 _fireOffset = new Vector3(0.5f, 0.5f, 0.5f);
-        private readonly Transform _firePoint;
+        private readonly Cannon _cannon;
         private readonly IBallContainer _ballContainer;
         private readonly WaitForSeconds _attackDelay;
 
@@ -23,12 +24,12 @@ namespace BigBalls.GameplayObjects
 
         public Shooter (
             Stat attackSpeed,
-            Transform firePoint,
+            Cannon cannon,
             IBallContainer ballContainer
             )
         {
             _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
-            _firePoint = firePoint;
+            _cannon = cannon;
             _ballContainer = ballContainer;
         }
 
@@ -67,13 +68,16 @@ namespace BigBalls.GameplayObjects
 
         public void Shoot (Ball ball)
         {
-            Vector3 forward = _firePoint.forward;
+            Vector3 forward = _cannon.FirePoint.forward;
 
             ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
-            ball.transform.position = _firePoint.position;
-            ball.transform.rotation = _firePoint.rotation;
+            ball.transform.position = _cannon.FirePoint.position;
+            ball.transform.rotation = _cannon.FirePoint.rotation;
 
             Shooted?.Invoke();
+
+            if(_cannon.Particle != null)
+                _cannon.Particle.Play();
         }
 
         private IEnumerator ShootRoutine (Ball @ball = null)

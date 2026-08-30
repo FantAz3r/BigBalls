@@ -11,7 +11,7 @@ public class LootSpawner
 
     public void SpawnLootItem (Vector3 position, Loot prefab)
     {
-        Loot loot = _lootFactory.Create(prefab.name);
+        Loot loot = _lootFactory.Create(prefab);
         Vector3 randomOffset = Random.insideUnitCircle * 0.5f;
         loot.transform.position = position + new Vector3(randomOffset.x, 0, randomOffset.y);
     }

@@ -7,11 +7,12 @@
         Burn,
         Freeze,
         Stun,
-        Lazer,
+        Laser,
         Tunder,
         ElasticBand,
         Explosion,
         Steel,
         EarthShake,
+        LineLaser,
     }
 }

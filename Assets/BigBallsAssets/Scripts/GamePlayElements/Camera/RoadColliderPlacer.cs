@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
         private FrontWall _topWallInstance;
         private BackWall _bottomWallInstance;
 
-        void Start ()
+        public void PlaceWalls()
         {
             StartCoroutine(WaitRoutine());
         }

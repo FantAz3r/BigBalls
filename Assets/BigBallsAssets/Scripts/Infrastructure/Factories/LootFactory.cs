@@ -1,5 +1,4 @@
 using BigBalls.Services;
-using UnityEngine;
 
 public class LootFactory : ILootFactory
 {
@@ -25,9 +24,9 @@ public class LootFactory : ILootFactory
         _lootMover.OnLootMissed -= OnLootMissedHandler;
     }
 
-    public Loot Create (string name)
+    public Loot Create (Loot prefab)
     {
-        Loot loot = _poolService.GetObject<Loot>(name);
+        Loot loot = _poolService.GetObject(prefab);
         loot.OnCollected += OnCollectedHandler;
         _lootMover.AddObject(loot);
         return loot;

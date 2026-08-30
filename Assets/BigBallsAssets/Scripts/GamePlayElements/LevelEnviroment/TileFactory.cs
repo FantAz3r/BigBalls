@@ -46,7 +46,7 @@ namespace BigBalls.Factories
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
             Vector3 spawnPoint = new Vector3(-7, -0.5f, GetLNextSpawnPointZ() - offsetZ);
 
-            Tile newTile = _poolService.GetObject<Tile>(prefab.name);
+            Tile newTile = _poolService.GetObject(prefab);
             newTile.transform.position = spawnPoint;
             newTile.transform.rotation = Quaternion.identity;
             newTile.Construct(RoadWidth);

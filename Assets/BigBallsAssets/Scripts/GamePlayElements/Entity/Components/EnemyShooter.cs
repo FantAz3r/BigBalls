@@ -11,8 +11,9 @@ public class EnemyShooter : ISubscribable
 {
     private readonly Enemy _enemy;
     private readonly EnemyConfig _config;
-    private readonly WaitForSeconds _attackDelay;
+    private readonly Stat _attackSpeed;
 
+    private WaitForSeconds _attackDelay;
     private Coroutine _shootRoutine;
     private ICoroutineRunner _coroutineRunner;
     private bool _canShoot = true;
@@ -25,7 +26,7 @@ public class EnemyShooter : ISubscribable
             EnemyConfig config,
             Transform target)
     {
-        _attackDelay = new WaitForSeconds((1 / attackSpeed.CurrentValue) * UnityEngine.Random.Range(0.6f, 1.4f));
+        _attackSpeed = attackSpeed;
         _enemy = firePoint;
         _config = config;
         _target = target;
@@ -43,6 +44,7 @@ public class EnemyShooter : ISubscribable
 
     public void Subscribe()
     {
+        _attackSpeed.ValueChanged += OnStatChanged;
         _canShoot = true;
         _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
     }
@@ -50,6 +52,7 @@ public class EnemyShooter : ISubscribable
     public void Unsubscribe()
     {
         _canShoot = false;
+        _attackSpeed.ValueChanged -= OnStatChanged;
 
         if (_shootRoutine != null)
         {
@@ -69,7 +72,13 @@ public class EnemyShooter : ISubscribable
         Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy, _enemy.Transform, rotation);
         ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
         ball.transform.position = _enemy.transform.position;
+        ball.Subscribe();
         Shooted?.Invoke();
+    }
+
+    private void OnStatChanged(IReadonlyStat stat)
+    {
+        _attackDelay = new WaitForSeconds((1 / stat.CurrentValue) * UnityEngine.Random.Range(0.6f, 1.4f));
     }
 
     private IEnumerator ShootRoutine()

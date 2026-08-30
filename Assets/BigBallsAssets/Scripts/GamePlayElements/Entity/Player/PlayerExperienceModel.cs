@@ -6,7 +6,7 @@ namespace BigBalls.GameplayObjects
     public class PlayerExperienceModel : IPlayerExperience
     {
         private const float UpgradeMultiplier = 1.2f;
-        
+
         public Stat Stat { get; private set; }
         public float CurrentEXP { get; private set; } = 0;
         public float EXPForNextLevel { get; private set; }

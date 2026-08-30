@@ -14,22 +14,20 @@ public class PushModifier : MovementModifier
         IsActive = true;
     }
 
-    public override Vector3 Modify (Vector3 velocity)
+    public override Vector3 Modify(Vector3 inputVelocity)
     {
-        if (IsActive == false)
-            return velocity;
+        if (!IsActive)
+            return inputVelocity;
 
         _elapsedTime += Time.fixedDeltaTime;
 
         if (_elapsedTime >= _duration)
         {
             IsActive = false;
-            return velocity;
+            return inputVelocity;
         }
 
-        float time = 1f - (_elapsedTime / _duration);
-        velocity = velocity + _pushForce * time;
-        velocity.y = 0;
-        return velocity;
+        float t = 1f - (_elapsedTime / _duration);
+        return inputVelocity + (_pushForce * t);
     }
 }

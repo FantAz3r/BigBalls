@@ -20,7 +20,7 @@ namespace BigBalls.Infrastructure
         public void Start()
         {
             _saveService.Load();
-            _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.MainMenu);
+            _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.Level1);
         }
     }
 }

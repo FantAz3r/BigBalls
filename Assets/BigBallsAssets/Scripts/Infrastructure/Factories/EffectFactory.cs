@@ -27,7 +27,7 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.Tunder] = CreateTunder,
                 [BehaviourType.ElasticBand] = CreateElasticBand,
                 [BehaviourType.EarthShake] = CreateEarthShake,
-                //[BehaviourType.Tunder] = CreateTunderEffect,
+                [BehaviourType.Laser] = CreateLaser,
             };
         }
 
@@ -62,5 +62,6 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Tunder(config as TunderConfig, level);
         private EffectBehaviour CreateElasticBand(EffectConfig config, int level) => new ElasticBand(config as ElasticBandConfig, level);
         private EffectBehaviour CreateEarthShake(EffectConfig config, int level) => new EarthShake(config as GroundBallConfig, level);
+        private EffectBehaviour CreateLaser(EffectConfig config, int level) => new LineLaser(config as LaserConfig, level);
     }
 }

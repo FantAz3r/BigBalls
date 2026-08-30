@@ -25,8 +25,6 @@ namespace BigBalls.Services
 
         public void Start()
         {
-            _inputActions.Enable();
-
             _inputActions.Player.Move.performed += OnMovePerformed;
             _inputActions.Player.Move.canceled += OnMoveCanceled;
 

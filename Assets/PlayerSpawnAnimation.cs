@@ -15,12 +15,10 @@ public class PlayerSpawnAnimation : MonoBehaviour
     private Action _action;
     private IPlayerFactory _playerFactory;
 
-
     [Inject]
     public void Construct(IPlayerFactory playerFactory)
     {
         _playerFactory = playerFactory;
-        _action = () => _playerFactory.OnPlayerSpawned();
         StartSpawnAnimation(_action);
     }
 
@@ -33,7 +31,6 @@ public class PlayerSpawnAnimation : MonoBehaviour
             .SetEase(_spawnEase)
             .OnComplete(() =>
             {
-                action?.Invoke();
             });
     }
 }

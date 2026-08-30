@@ -55,4 +55,17 @@ public class StatHolder : IArtefactUser
     {
         _effectBehaviours.AddRange(_effectFactory.Create(artefactModel.ArtefactConfig.Effects, artefactModel.Level));
     }
+
+    public bool TryGetStat(out Stat stat, StatType type)
+    {
+        stat = null;
+
+        if (_stats.ContainsKey(type))
+        {
+            stat = _stats[type];
+            return true;
+        }
+
+        return false;
+    }
 }

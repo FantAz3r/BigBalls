@@ -19,7 +19,14 @@ namespace BigBalls.UI
 
         protected override void OnClick()
         {
-             _loadingService.Load(LevelID);
+            if(LevelID == LevelID.None)
+            {
+                _loadingService.Reload();
+            }
+            else
+            {
+                _loadingService.Load(LevelID);
+            }
         }
     }
 }

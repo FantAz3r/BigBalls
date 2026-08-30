@@ -31,23 +31,12 @@ namespace BigBalls.Infrastructure
             _previousLevel = _currentLevel;
             _currentLevel = level;
 
-            if(level == LevelID.MainMenu)
-            {
-                _sceneLoader.LoadSceneImmediately(level.ToString(), InitMainMenu);
-                return;
-            }
-
             _sceneLoader.LoadSceneWithLoadingScreen(level.ToString(), InitGameLevel);
         }
 
         private void InitGameLevel()
         {
-            _gameStateMachine.EnterIn<CreateLevelState,LevelID>(_currentLevel);
-        }
-
-        private void InitMainMenu()
-        {
-            _gameStateMachine.EnterIn<MainMenuState>();
+            _gameStateMachine.EnterIn<CreateLevelState, LevelID>(_currentLevel);
         }
     }
 }

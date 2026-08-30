@@ -1,36 +1,36 @@
-using System;
-using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
 public class Tunder : EffectBehaviour
 {
     private readonly TunderConfig _config;
-
+    private LightningBolt _lightningBoltPrefab;
     private IPoolService _poolService;
     private IDamageService _damageService;
 
-    public Tunder (TunderConfig config, int level) : base(config, level)
+    public Tunder(TunderConfig config, int level) : base(config, level)
     {
         _config = config;
     }
 
-
     [Inject]
-    public void Construct (IDamageService damageService, IPoolService poolService)
+    public void Construct(IDamageService damageService, IPoolService poolService, IResourceLoader resourceLoader)
     {
         _poolService = poolService;
         _damageService = damageService;
+        _lightningBoltPrefab = resourceLoader.Load<LightningBolt>();
     }
 
-    public void ExecuteChain (IEntity startTarget)
+    public void ExecuteChain(IEntity startTarget)
     {
         if (Host is not Ball ball)
             return;
 
-        int maxJumps = (int) _config.GetHitCount(Level);
+        int maxJumps = (int)_config.GetHitCount(Level);
         float searchRadius = _config.SearchRange;
 
         HashSet<IEntity> hitEntities = new HashSet<IEntity>();
@@ -50,18 +50,19 @@ public class Tunder : EffectBehaviour
             currentTarget = FindNextTarget(currentTarget.Transform.position, searchRadius, hitEntities);
         }
 
-        LightningBolt lightningBolt = _poolService.GetObject<LightningBolt>("LigtningBoltPool");
+        LightningBolt lightningBolt = _poolService.GetObject(_lightningBoltPrefab);
         List<Transform> enemies = new();
 
         foreach (var entity in hitEntities)
         {
             enemies.Add(entity.Transform);
         }
+
         lightningBolt.LightFinished += OnRelease;
         lightningBolt.StartLightning(enemies, maxJumps);
     }
 
-    private IEntity FindNextTarget (Vector3 position, float radius, HashSet<IEntity> excluded)
+    private IEntity FindNextTarget(Vector3 position, float radius, HashSet<IEntity> excluded)
     {
         Collider[] colliders = Physics.OverlapSphere(position, radius);
 
@@ -91,13 +92,13 @@ public class Tunder : EffectBehaviour
         _poolService.ReleaseObject(lightningBolt);
     }
 
-    protected override IDisposable SubscribeInternal (IEntity host)
+    protected override IDisposable SubscribeInternal(IEntity host)
     {
         host.EventHandler.HitedEntity += OnHit;
         return new DisposableObject(() => host.EventHandler.HitedEntity -= OnHit);
     }
 
-    private void OnHit (IEntity entity)
+    private void OnHit(IEntity entity)
     {
         ExecuteChain(entity);
     }

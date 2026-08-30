@@ -26,6 +26,7 @@ public class BallTreeUI : WindowBase, IResetble
 
     private void OnDestroy()
     {
+        _upgradePanel.Upgraded += UpdateUI;
         foreach (var node in _nodeUIs.Values)
         {
             node.OnClick -= OnNodeClicked;
@@ -47,10 +48,10 @@ public class BallTreeUI : WindowBase, IResetble
         _upgradePanel.Init(resourceLoader.Load<StatTextHolder>());
         saveService.RegisterResetable(this);
         BuildTreeUI();
-        UpdateUI();
+        ViewNodes();
     }
 
-    public void UpdateUI(BallTreeNodeUI ballTreeNodeUI = null)
+    public void ViewNodes(BallTreeNodeUI ballTreeNodeUI = null)
     {
         foreach (var ui in _nodeUIs.Values)
         {
@@ -146,6 +147,11 @@ public class BallTreeUI : WindowBase, IResetble
     private void OnNodeClicked(BallTreeNodeUI node)
     {
         _upgradePanel.SetNode(node);
-        UpdateUI();
+        ViewNodes();
+    }
+
+    private void UpdateUI()
+    {
+        ViewNodes();
     }
 }

@@ -160,7 +160,7 @@ namespace BigBalls.Factories
                 player.SetFirePoint(cannon);
             }
 
-            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponSpawnPoint, playerBallContainer);
+            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.Cannon, playerBallContainer);
             _objectResolver.CurrentResolver.Inject(_shooter);
 
             player.SquashOnShot.Init(_shooter);

@@ -24,7 +24,7 @@ public class UpgradePanel : MonoBehaviour
     private StatTextHolder _statTextHolder;
     private List<StatTextHolder> _statTextHolders = new();
 
-    public event Action<BallTreeNodeUI> Upgraded;
+    public event Action Upgraded;
 
     private void Start() => gameObject.SetActive(false);
 
@@ -72,22 +72,27 @@ public class UpgradePanel : MonoBehaviour
         _expSlider.value = _cardModel.ItemEXP;
         _expProgresText.text = $"{_cardModel.ItemEXP} / {_cardModel.EXPForNextLevel}";
 
-        RenderStats(_cardModel);
 
         if (_cardModel.IsOpen)
         {
             _updateText.text = TextLocalizator.Upgrade;
             _expSlider.gameObject.SetActive(true);
+            RenderStats(_cardModel, true);
+
         }
         else
         {
             _updateText.text = TextLocalizator.Unlock;
             _expSlider.gameObject.SetActive(false);
             _costText.text = _cardModel.BallConfig.UnlockPrice.ToString();
+            RenderStats(_cardModel, false);
+
         }
+
+        Upgraded?.Invoke();
     }
 
-    private void RenderStats(ICardModel card)
+    private void RenderStats(ICardModel card, bool showNextLevel)
     {
         if (card is not BallModel ball)
             return;
@@ -97,7 +102,7 @@ public class UpgradePanel : MonoBehaviour
         foreach (var item in ball.BallConfig.GetStats(ball.Level))
         {
             StatTextHolder statTextHolder = Instantiate(_statTextHolder, _statsParent);
-            statTextHolder.RenderText(item);
+            statTextHolder.RenderText(item, showNextLevel);
             _statTextHolders.Add(statTextHolder);
         }
     }

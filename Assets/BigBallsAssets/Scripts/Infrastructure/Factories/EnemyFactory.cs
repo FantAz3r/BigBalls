@@ -47,7 +47,7 @@ namespace BigBalls.Factories
 
         public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
-            Enemy enemy = _poolService.GetObject<Enemy>(enemyConfig.name, spawnPosition, enemyConfig.Prefab.transform.rotation);
+            Enemy enemy = _poolService.GetObject(enemyConfig.Prefab, spawnPosition, enemyConfig.Prefab.transform.rotation);
             int enemyID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(enemy, enemyConfig.Type, enemyConfig);
@@ -59,7 +59,7 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             enemy.EventHandler.Died += OnDied;
 
-            enemy.Construct(enemyID, deathHandler);
+            enemy.Init(enemyID, deathHandler, enemyConfig, statHolder);
             _entityRepository.Add(enemy, statHolder, null);
 
             enemy.ColorChanger.Init(statHolder[StatType.Health]);
@@ -90,11 +90,18 @@ namespace BigBalls.Factories
             Init(mover, enemyConfig);
 
             EnemyShooter shooter = null;
+            Rotator rotator = null;
 
             if (enemyConfig.HasRangeAttack)
             {
                 shooter = new EnemyShooter(statHolder[StatType.AttackSpeed], enemy, enemyConfig, _playerProvider.Player.Transform);
                 _resolverProvider.CurrentResolver.Inject(shooter);
+            }
+
+            if (statHolder.TryGetStat(out Stat stat, StatType.RotationSpeed) && enemy.RotationPart != null)
+            {
+                rotator = new Rotator(statHolder[StatType.RotationSpeed], enemy.RotationPart, _updateService);
+                rotator.SetTarget(_playerProvider.Player.transform);
             }
 
             EnemyAttacker enemyAttacker = new EnemyAttacker(statHolder[StatType.Damage], enemy, enemyConfig);
@@ -105,7 +112,8 @@ namespace BigBalls.Factories
             {
                 mover,
                 enemyAttacker,
-                shooter
+                shooter,
+                rotator
             };
 
             return subscribables;

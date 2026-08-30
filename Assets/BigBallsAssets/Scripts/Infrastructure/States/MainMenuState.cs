@@ -27,17 +27,11 @@ namespace BigBalls.Infrastructure
 
         public void Enter()
         {
-            _windowService.CreateUIRoot();
-            _windowService.Open<Background>();
-            _windowService.Open<MainMenu>();
         }
 
         public void Exit()
         {
-            _artefactsRepository.Save();
-            _ballsRepository.Save();
-            _saveService.Save();
-            _uIFactory.ClearCache();
+            
         }
     }
 }

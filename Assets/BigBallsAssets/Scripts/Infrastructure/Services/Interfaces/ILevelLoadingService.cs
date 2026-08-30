@@ -5,5 +5,6 @@ namespace BigBalls.Services
     public interface ILevelLoadingService : IService
     {
         void Load(LevelID level);
+        void Reload();
     }
 }

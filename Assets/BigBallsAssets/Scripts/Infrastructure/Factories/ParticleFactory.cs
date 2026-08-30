@@ -13,14 +13,21 @@ public class ParticleFactory : IParticleFactory
 
     public ParticleObject Create(ParticleObject prefab, Vector3 position)
     {
-        var particle = _poolService.GetObject<ParticleObject>(prefab.name, position);
+        var particle = _poolService.GetObject(prefab, position);
+        SetupParticle(particle);
+        return particle;
+    }
+
+    public ParticleObject Create(ParticleObject prefab, Vector3 position, Quaternion rotation)
+    {
+        var particle = _poolService.GetObject(prefab, position, rotation);
         SetupParticle(particle);
         return particle;
     }
 
     public ParticleObject Create(ParticleObject prefab, Transform parent)
     {
-        var particle = _poolService.GetObject<ParticleObject>(prefab.name, parent);
+        var particle = _poolService.GetObject(prefab, parent);
         particle.transform.position = Vector3.zero;
         SetupParticle(particle);
         return particle;

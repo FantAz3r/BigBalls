@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using BigBalls.Configs;
+﻿using BigBalls.Configs;
 using BigBalls.Services;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
@@ -23,7 +23,7 @@ namespace BigBalls.GameplayObjects
         public Transform MovableObject { get; private set; }
         [field: SerializeField] public Vector2 Direction { get; private set; }
 
-        public MoverPhythics (Stat moveSpeed, Transform movableObject, IUpdateService updateService, Rigidbody rigidbody, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
+        public MoverPhythics(Stat moveSpeed, Transform movableObject, IUpdateService updateService, Rigidbody rigidbody, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
         {
             _rigidbody = rigidbody;
             _updateService = updateService;
@@ -41,53 +41,53 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void Subscribe () => _updateService.Register(this);
-        public void Unsubscribe () => _updateService.Unregister(this);
+        public void Subscribe() => _updateService.Register(this);
+        public void Unsubscribe() => _updateService.Unregister(this);
 
-        public void SetDirection (Vector2 direction)
+        public void SetDirection(Vector2 direction)
         {
             _target = null;
             Direction = direction;
         }
 
-        public void SetTarget (Transform target) => _target = target;
+        public void SetTarget(Transform target) => _target = target;
 
-        public void SetReycastInfo (Vector3[] directions, Vector3[] points)
+        public void SetReycastInfo(Vector3[] directions, Vector3[] points)
         {
             _raycastDirections = directions;
             _raycastPoints = points;
         }
-        public void AddModifier (MovementModifier modifier)
+        public void AddModifier(MovementModifier modifier)
         {
             _movementModifiers.Add(modifier);
         }
 
-        public void RemoveModifier (MovementModifier modifier)
+        public void RemoveModifier(MovementModifier modifier)
         {
             _movementModifiers.Remove(modifier);
         }
 
-        public void ClearModifiers ()
+        public void ClearModifiers()
         {
             _movementModifiers.Clear();
         }
 
-        public void AddPush (Vector3 pushDirection, float force, float duration = 0.5f)
+        public void AddPush(Vector3 pushDirection, float force, float duration = 0.5f)
         {
             AddModifier(new PushModifier(pushDirection * force, duration));
         }
 
-        public void AddInstantPush (Vector3 pushDirection, float force)
+        public void AddInstantPush(Vector3 pushDirection, float force)
         {
             AddModifier(new InstantPushModifier(pushDirection * force));
         }
 
-        public void AddConstantForce (Vector3 direction, float duration)
+        public void AddConstantForce(Vector3 direction, float duration)
         {
             AddModifier(new ConstantForceModifier(direction, duration));
         }
 
-        public void Tick ()
+        public void Tick()
         {
             if (_rigidbody == null)
                 return;
@@ -114,19 +114,13 @@ namespace BigBalls.GameplayObjects
             }
             else
             {
-                if (Direction.sqrMagnitude < 0.001f)
-                {
-                    _rigidbody.velocity = Vector3.zero;
-                    return;
-                }
-
                 moveDirection = new Vector3(Direction.x, 0f, Direction.y).normalized;
             }
 
             Move(moveDirection);
         }
 
-        public Vector3 GetCurrentVelocity ()
+        public Vector3 GetCurrentVelocity()
         {
             if (_rigidbody == null)
                 return Vector3.zero;
@@ -134,9 +128,9 @@ namespace BigBalls.GameplayObjects
             return _rigidbody.velocity;
         }
 
-        public bool HasActiveModifiers () => _movementModifiers.Count > 0;
+        public bool HasActiveModifiers() => _movementModifiers.Count > 0;
 
-        private void Move (Vector3 moveDirection)
+        private void Move(Vector3 moveDirection)
         {
             Vector3 velocity = moveDirection * _moveSpeed.CurrentValue;
 

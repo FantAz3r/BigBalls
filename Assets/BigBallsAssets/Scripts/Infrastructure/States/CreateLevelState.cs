@@ -4,6 +4,7 @@ using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
+using log4net.Core;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer.Unity;
@@ -30,9 +31,10 @@ namespace BigBalls.Infrastructure
         private readonly ILouseService _louseService;
         private readonly ICameraProvider _cameraProvider;
         private readonly ISaveService _saveService;
+        private readonly IInputService _inputService;
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfig;
-
+        private LevelID _currentLevel;
         public CreateLevelState(
             IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
@@ -52,7 +54,8 @@ namespace BigBalls.Infrastructure
             IWinService winService,
             ILouseService louseService,
             ICameraProvider cameraProvider,
-            ISaveService saveService)
+            ISaveService saveService,
+            IInputService inputService)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -72,35 +75,56 @@ namespace BigBalls.Infrastructure
             _louseService = louseService;
             _cameraProvider = cameraProvider;
             _saveService = saveService;
+            _inputService = inputService;
         }
 
         public void Enter(LevelID level)
         {
+            Debug.Log(level);
+            _currentLevel = level;
+            _windowService.CreateUIRoot();
+            _windowService.Open<MainMenu>();
+            _uIFactory.UIRoot.GlobalWalletView.Enable();
+
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfig = _levelConfig.GetAllLevelEnemies();
 
             _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
             _poolService.InitializePools();
-            _tileGenerator.StartSpawn(_levelConfig);
 
-            CreateUI();
-            CreateCamera();
-
-            _playerFactory.Create();
-
+            Camera camera = CreateCamera();
+            CameraOrbit cameraOrbit = camera.GetComponent<CameraOrbit>();
+            cameraOrbit = camera.GetComponent<CameraOrbit>();
+            Player player = _playerFactory.Create();
+            cameraOrbit.StartOrbit(player.transform);
             _dropService.SetCurrentLevelConfig(_currentEnemyConfig);
-            _tileMover.Start();
-            _levelTimeline.Start(_levelConfig);
-
-            _winService.SetLevel(level);
-            _louseService.SetLevel(level);
         }
 
-        private void CreateCamera()
+        public void StartLevel()
+        {
+            CameraOrbit cameraOrbit = _cameraProvider.Camera.GetComponent<CameraOrbit>();
+            cameraOrbit.StopOrbit();
+            RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
+            CameraSmoothTransition cameraTransition = _cameraProvider.Camera.GetComponent<CameraSmoothTransition>();
+            cameraTransition.MoveCamera(colliderPlacer.PlaceWalls);
+
+            _uIFactory.Get<MainMenu>(WindowType.MainMenu).Close();
+            _playerFactory.OnPlayerSpawned();
+            _inputService.Start();
+            _levelTimeline.Start(_levelConfig);
+            _tileGenerator.StartSpawn(_levelConfig);
+            _tileMover.Start();
+            _winService.SetLevel(_currentLevel);
+            _louseService.SetLevel(_currentLevel);
+            CreateUI();
+        }
+
+        private Camera CreateCamera()
         {
             Camera prefab = _resourceLoader.Load<Camera>();
             Camera camera = _objectResolverProvider.CurrentResolver.Instantiate(prefab);
             _cameraProvider.Camera = camera;
+            return camera;
         }
 
         private void CreateUI()
@@ -108,6 +132,7 @@ namespace BigBalls.Infrastructure
             _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
+            _uIFactory.UIRoot.GlobalWalletView.Disable();
         }
 
         public void Exit()
@@ -119,6 +144,12 @@ namespace BigBalls.Infrastructure
             _timeService.ResumeGame();
             _poolService.ClearAllPools();
             _ballsRepository.Save();
+
+
+            _artefactsRepository.Save();
+            _ballsRepository.Save();
+            _saveService.Save();
+            _uIFactory.ClearCache();
         }
     }
 }

@@ -112,7 +112,6 @@ namespace BigBalls.GameplayObjects
         {
             var player = _playerProvider.Player;
             _damageService.ApplyDamage(player, _damage.CurrentValue);
-            PlayerKnockBack();
 
             if (needSuiside)
                 _owner.EventHandler.Suiside(_owner);
@@ -127,7 +126,7 @@ namespace BigBalls.GameplayObjects
                 ? new Vector3(Mathf.Sign(rawDir.x), 0, 0)
                 : new Vector3(0, 0, Mathf.Sign(rawDir.z));
 
-            mover.AddPush(pushDirection, 50);
+            mover.AddPush(pushDirection, 25);
         }
     }
 }

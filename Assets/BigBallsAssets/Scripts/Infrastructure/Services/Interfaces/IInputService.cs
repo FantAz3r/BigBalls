@@ -11,5 +11,6 @@ namespace BigBalls.Services
         IInputService GetSelf();
         void Enable();
         void Disable();
+        void Start();
     }
 }

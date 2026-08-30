@@ -11,5 +11,7 @@
         Steel,
         Bomb,
         Ground,
+        HorizontalLaser,
+        VerticalLaser,
     }
 }

@@ -15,9 +15,20 @@ public class GlobalWalletView : MonoBehaviour
         View();
     }
 
+    public void Enable()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Disable()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void OnDestroy()
     {
-        _globalWallet.OnValueChange -= View;
+        if(_globalWallet != null)
+            _globalWallet.OnValueChange -= View;
     }
 
     private void View()
