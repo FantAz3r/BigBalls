@@ -15,7 +15,19 @@ MonoBehaviour:
   <Level>k__BackingField: 6
   <TilePrefabs>k__BackingField:
   - {fileID: 7788360856318601049, guid: f9ff3cb822c989a48afcd0d80c716b31, type: 3}
-  <Waves>k__BackingField: []
-  <Enemies>k__BackingField: []
+  <Waves>k__BackingField:
+  - WaveCooldown: 0
+    BossConfig: {fileID: 0}
+    LineCount: 0
+    Enemies: []
+  - WaveCooldown: 0
+    BossConfig: {fileID: 11400000, guid: 03e058979ae893f45abae47f5858e065, type: 2}
+    LineCount: 0
+    Enemies: []
+  - WaveCooldown: 0
+    BossConfig: {fileID: 11400000, guid: d656fe8fe1d4bf848997e2e92863ae7f, type: 2}
+    LineCount: 0
+    Enemies: []
   <BossTimeDelay>k__BackingField: 0
   <LevelBoss>k__BackingField: {fileID: 0}
+  ConfigsForPool: []

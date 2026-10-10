@@ -36,7 +36,9 @@ namespace BigBalls.Factories
         {
             RoadWidth = StartWidth;
             _tilePrefabs = levelConfig.TilePrefabs;
-            SpawnNextTile(9);
+            SpawnNextTile(39);
+            SpawnNextTile();
+            SpawnNextTile();
             SpawnNextTile();
             SpawnNextTile();
         }
@@ -46,7 +48,7 @@ namespace BigBalls.Factories
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
             Vector3 spawnPoint = new Vector3(-7, -0.5f, GetLNextSpawnPointZ() - offsetZ);
 
-            Tile newTile = _poolService.GetObject(prefab);
+            Tile newTile = _poolService.Get(prefab);
             newTile.transform.position = spawnPoint;
             newTile.transform.rotation = Quaternion.identity;
             newTile.Construct(RoadWidth);
@@ -79,7 +81,7 @@ namespace BigBalls.Factories
         public void RemoveTile(int index)
         {
             Tile tile = _activeTiles[index];
-            _poolService.ReleaseObject(tile);
+            _poolService.Release(tile);
             tile.Finished -= () => SpawnNextTile();
 
             _activeTiles.RemoveAt(index);

@@ -13,5 +13,6 @@
         AttackSpeed,
         BallBag,
         Experience,
+        Shield,
     }
-} 
+}

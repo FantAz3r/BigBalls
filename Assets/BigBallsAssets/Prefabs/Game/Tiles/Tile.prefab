@@ -1486,6 +1486,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a516463947c15c14290ba4073fe25cb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tile: {fileID: 0}
+  _walls: []
+  _wallPlefab: {fileID: 0}
+  _columnPlefab: {fileID: 0}
   _gridSize: 13
   _tileSize: 1
   _noiseScale: 0.5
@@ -5599,7 +5603,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &726412595987806766
 Transform:
   m_ObjectHideFlags: 0
@@ -5676,7 +5680,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2678247389231728921
 Transform:
   m_ObjectHideFlags: 0
@@ -10948,7 +10952,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7557678590596423442
 Transform:
   m_ObjectHideFlags: 0
@@ -12725,7 +12729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7442902074140329231
 Transform:
   m_ObjectHideFlags: 0

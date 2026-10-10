@@ -12,6 +12,7 @@ namespace BigBalls.Factories
                 ball.EventHandler.Return(ball);
                 return true;
             }
+
             return true;
         }
     }

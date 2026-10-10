@@ -4,16 +4,16 @@ using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.Factories
 {
     public class BallFactory : IBallFactory
     {
-        private readonly IObjectResolverProvider _objectResolverProvider;
-        private readonly IEffectFactory _ballEffectFactory;
+        private readonly IObjectResolver _objectResolver;
+        private readonly IEffectFactory _effectFactory;
         private readonly IEntityRepository _entityRepository;
         private readonly IIdentifierService _identifierService;
-        private readonly IUpdateService _updateService;
         private readonly IPlayerProvider _playerProvider;
         private readonly IPoolService _poolService;
         private readonly BallRepository _ballRepository;
@@ -23,16 +23,14 @@ namespace BigBalls.Factories
             IEffectFactory ballBehaivorFactory,
             IEntityRepository entityRepository,
             IIdentifierService identifierService,
-            IUpdateService updateService,
             IPlayerProvider playerProvider,
             IPoolService poolService,
             BallRepository ballRepository)
         {
-            _objectResolverProvider = objectResolverProvider;
-            _ballEffectFactory = ballBehaivorFactory;
+            _objectResolver = objectResolverProvider.CurrentResolver;
+            _effectFactory = ballBehaivorFactory;
             _entityRepository = entityRepository;
             _identifierService = identifierService;
-            _updateService = updateService;
             _playerProvider = playerProvider;
             _poolService = poolService;
             _ballRepository = ballRepository;
@@ -40,14 +38,15 @@ namespace BigBalls.Factories
 
         public event Action<BallModel> BallReturned;
 
-        public Ball Create (BallModel ballModel, EntityType type, Transform shooter, Quaternion rotation)
+        public Ball Create (BallModel ballModel, EntityType type, Transform shooter, List<ICollisionStrategy> strategies, Quaternion rotation)
         {
-            Ball ball = _poolService.GetObject(ballModel.BallConfig.Prefab, shooter.position + new Vector3(0, 0.5f, 0), rotation);
+            Ball ball = _poolService.Get(ballModel.BallConfig.Prefab, shooter.position + new Vector3(0, 0.5f, 0), rotation);
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
             StatHolder statHolder = new StatHolder(ball, ballModel.BallConfig.EntityType, ballModel.BallConfig);
             statHolder.InitStats();
-            MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], ball.transform, _updateService, rigidbody);
+            MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], ball.transform, rigidbody);
+            _objectResolver.Inject(mover);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
             {
@@ -57,50 +56,22 @@ namespace BigBalls.Factories
             DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
             ballDeathHandler.Subscribe();
 
-            var collisions = new List<ICollisionStrategy>();
+            var collisions = new List<ICollisionStrategy>(strategies);
 
             if (type == EntityType.Player)
             {
                 ball.EventHandler.Died += OnReturnToPlayer;
                 ball.EventHandler.Returned += OnReturnToPlayer;
-                collisions = CreateCollisionStrategies();
             }
             else
             {
                 ball.EventHandler.Died += OnReturn;
                 ball.EventHandler.Returned += OnReturn;
-                collisions = CreateCollisionStrategiesToEnemy();
             }
 
-            ball.Construct(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler, _ballEffectFactory);
+            ball.Construct(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler, _effectFactory);
             _entityRepository.Add(ball, statHolder, null);
             return ball;
-        }
-
-        private List<ICollisionStrategy> CreateCollisionStrategies ()
-        {
-            List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
-            {
-                new BallCollisionStrategy(),
-                new PlayerCollisionStrategy(),
-                new BackWallCollisionStrategy(_playerProvider.Player),
-                new EnemyCollisionStrategy(),
-                new ReflectCollisionStrategy()
-            };
-
-            return collisionStrategies;
-        }
-
-        private List<ICollisionStrategy> CreateCollisionStrategiesToEnemy ()
-        {
-            List<ICollisionStrategy> collisionStrategies = new List<ICollisionStrategy>
-            {
-                new BallCollisionStrategy(),
-                new HitPlayerStrategy(),
-                new WallColllisionStrategy()
-            };
-
-            return collisionStrategies;
         }
 
         private void OnReturnToPlayer (IEntity entity)
@@ -128,7 +99,7 @@ namespace BigBalls.Factories
             ball.DeathHandler.Unsubscribe();
             ball.EventHandler.Died -= OnReturn;
             ball.EventHandler.Returned -= OnReturn;
-            _poolService.ReleaseObject(ball);
+            _poolService.Release(ball);
 
             ball.transform.position = new Vector3(1000, 1000, 1000);
         }

@@ -4530,7 +4530,6 @@ MonoBehaviour:
   _ground: {fileID: 4435854211105538056}
   _boxCollider: {fileID: 7565620261769141167}
   _scaleDuration: 1
-  _water: {fileID: 0}
   _tileLines: []
 --- !u!1 &2120839031439768280
 GameObject:
@@ -14684,6 +14683,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a516463947c15c14290ba4073fe25cb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tile: {fileID: 0}
+  _walls: []
+  _wallPlefab: {fileID: 0}
+  _columnPlefab: {fileID: 0}
   _gridSize: 15
   _tileSize: 1
   _noiseScale: 0.2
@@ -18303,7 +18306,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 15}
+  m_Size: {x: 1, y: 3, z: 15}
   m_Center: {x: 8, y: 1, z: 0}
 --- !u!114 &7554056259341593935
 MonoBehaviour:
@@ -18317,6 +18320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60940e1c063554c46bd2a93bb5abb6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _walls: []
+  _column: []
 --- !u!1 &7611782332701067295
 GameObject:
   m_ObjectHideFlags: 0
@@ -19443,6 +19448,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60940e1c063554c46bd2a93bb5abb6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _walls: []
+  _column: []
 --- !u!65 &167212339535519634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19462,7 +19469,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 15}
+  m_Size: {x: 1, y: 3, z: 15}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &8101740792633656812
 GameObject:

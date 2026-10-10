@@ -1,8 +1,7 @@
+using System.Collections;
 using BigBalls.Configs;
-using BigBalls.Factories;
 using BigBalls.Services;
 using DG.Tweening;
-using System.Collections;
 using UnityEngine;
 using VContainer;
 
@@ -16,13 +15,14 @@ namespace BigBalls.GameplayObjects
         private readonly EntityTrigger _entityTrigger;
         private readonly EntityCollision _entityCollision;
 
+        private SoundSpawner _soundSpawner;
         private IEntityRepository _entityRepository;
         private IPlayerProvider _playerProvider;
         private IDamageService _damageService;
         private ICoroutineRunner _coroutineRunner;
         private bool _canAttack;
 
-        public EnemyAttacker(Stat damage, Enemy owner, EnemyConfig config)
+        public EnemyAttacker (Stat damage, Enemy owner, EnemyConfig config)
         {
             _damage = damage;
             _owner = owner;
@@ -32,29 +32,31 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        public void Construst(
+        public void Construst (
             IPlayerProvider playerProvider,
             IDamageService damageService,
             ICoroutineRunner coroutineRunner,
-            IEntityRepository entityRepository)
+            IEntityRepository entityRepository,
+            SoundSpawner soundSpawner)
         {
             _coroutineRunner = coroutineRunner;
             _playerProvider = playerProvider;
             _damageService = damageService;
             _entityRepository = entityRepository;
+            _soundSpawner = soundSpawner;
         }
 
-        public void Subscribe()
+        public void Subscribe ()
         {
             _canAttack = true;
             _entityTrigger.WallDetected += JumpAttack;
             _entityTrigger.PlayerStayedLongEnough += JumpAttack;
 
-            if(_entityCollision != null)
+            if (_entityCollision != null)
                 _entityCollision.PlayerCollision += CollisionAttack;
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe ()
         {
             _entityTrigger.PlayerStayedLongEnough -= JumpAttack;
             _entityTrigger.WallDetected -= JumpAttack;
@@ -63,13 +65,14 @@ namespace BigBalls.GameplayObjects
                 _entityCollision.PlayerCollision -= CollisionAttack;
         }
 
-        private void CollisionAttack()
+        private void CollisionAttack ()
         {
             _damageService.ApplyDamage(_playerProvider.Player, _damage.CurrentValue);
+            _soundSpawner.Spawn(SoundType.PlayerTouchEnemy);
             PlayerKnockBack();
         }
 
-        private void JumpAttack()
+        private void JumpAttack ()
         {
             if (_config.HasMeeleAttack == false)
                 return;
@@ -77,9 +80,11 @@ namespace BigBalls.GameplayObjects
             _coroutineRunner.StartCoroutine(JumpAttackRoutine(_config.CanSuiside));
         }
 
-        private IEnumerator JumpAttackRoutine(bool needSuiside)
+        private IEnumerator JumpAttackRoutine (bool needSuiside)
         {
+            _owner.EntityCollision.Disable();
             _canAttack = false;
+
             Vector3 startPosition = _owner.transform.position;
             Vector3 playerPosition = _playerProvider.Player.transform.position;
             Vector3 targetPosition = playerPosition;
@@ -104,20 +109,24 @@ namespace BigBalls.GameplayObjects
             );
 
             yield return attackSequence.WaitForCompletion();
-
+            _owner.EntityCollision.Enable();
             _canAttack = true;
         }
 
-        private void ApplyMeeleDamage(bool needSuiside)
+        private void ApplyMeeleDamage (bool needSuiside)
         {
             var player = _playerProvider.Player;
             _damageService.ApplyDamage(player, _damage.CurrentValue);
 
+            if (_config.AttackSound.Clip != null)
+                _soundSpawner.Spawn(_config.AttackSound);
+
             if (needSuiside)
                 _owner.EventHandler.Suiside(_owner);
+
         }
 
-        private void PlayerKnockBack()
+        private void PlayerKnockBack ()
         {
             MoverPhythics mover = _entityRepository.GetContainer(_playerProvider.Player).Get<MoverPhythics>();
 

@@ -23,6 +23,7 @@ namespace BigBalls.UI
         BallTree,
         OpenChest,
         Root,
+        MergeWindow,
     }
 }
 

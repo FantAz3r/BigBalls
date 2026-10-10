@@ -6,8 +6,8 @@ public class LootFactory : ILootFactory
     private ILootMediator _lootMediator;
     private IUpdateService _updateService;
     private LootMover _lootMover;
-    
-    public LootFactory(IPoolService poolService, ILootMediator lootMediator, IUpdateService updateService)
+
+    public LootFactory (IPoolService poolService, ILootMediator lootMediator, IUpdateService updateService)
     {
         _poolService = poolService;
         _lootMediator = lootMediator;
@@ -18,7 +18,7 @@ public class LootFactory : ILootFactory
         _lootMover.OnLootMissed += OnLootMissedHandler;
     }
 
-    public void Disable()
+    public void Disable ()
     {
         _lootMover.Stop();
         _lootMover.OnLootMissed -= OnLootMissedHandler;
@@ -26,7 +26,7 @@ public class LootFactory : ILootFactory
 
     public Loot Create (Loot prefab)
     {
-        Loot loot = _poolService.GetObject(prefab);
+        Loot loot = _poolService.Get(prefab);
         loot.OnCollected += OnCollectedHandler;
         _lootMover.AddObject(loot);
         return loot;
@@ -37,14 +37,15 @@ public class LootFactory : ILootFactory
         loot.OnCollected -= OnCollectedHandler;
         _lootMover.RemoveObject(loot);
         _lootMediator.RegisterLoot(loot);
-        OnLootMissedHandler(loot);
+        //OnLootMissedHandler(loot);
+        _poolService.Release(loot);
     }
 
-    private void OnLootMissedHandler(Loot loot)
+    private void OnLootMissedHandler (Loot loot)
     {
         loot.OnCollected -= OnCollectedHandler;
         _lootMover.OnLootMissed -= OnLootMissedHandler;
         _lootMover.RemoveObject(loot);
-        _poolService.ReleaseObject(loot);
+        _poolService.Release(loot);
     }
 }

@@ -292,9 +292,16 @@ namespace BigBalls.Localization
 
         private static readonly Dictionary<string, string> DamageDict = new Dictionary<string, string>
         {
-            { Russian, "урон" },
+            { Russian, "Урон" },
             { English, "damage" },
             { Turkish, "hasar" },
+        };
+
+        private static readonly Dictionary<string, string> ExplosionDamageDict = new Dictionary<string, string>
+        {
+            { Russian, "Взрывной Урон" },
+            { English, "Explosion Damage" },
+            { Turkish, "Patlama Hasarı" },
         };
 
         private static readonly Dictionary<string, string> LaserDamageDict = new Dictionary<string, string>
@@ -486,6 +493,7 @@ namespace BigBalls.Localization
         };
 
 
+        public static string ExplosionDamage => GetText(ExplosionDamageDict);
         public static string YourBestScore => GetText(YourBestScoreDict);
         public static string Unlock => GetText(UnlockDict);
         public static string Upgrade => GetText(UpgradeDict);

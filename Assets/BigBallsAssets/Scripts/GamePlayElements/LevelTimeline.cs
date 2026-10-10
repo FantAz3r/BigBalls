@@ -16,13 +16,14 @@ public class LevelTimeline
     private readonly TileFactory _tileFactory;
     private readonly ISaveService _saveService;
     private readonly IEnemyFactory _enemyFactory;
-
+    private readonly SoundSpawner _soundSpawner;
     private WaitForSeconds _updateInterval = new WaitForSeconds(UpdateIntervalSeconds);
     private WaitForSeconds _lineSpawnDelay;
     private Coroutine _mainCoroutine;
     private Coroutine _timeCoroutine;
     private LevelConfig _levelConfig;
     private bool _isLevelEnded = false;
+    private bool _isLevelStarted = false;
     private float _levelTimer = 0f;
 
     public LevelTimeline(
@@ -30,13 +31,15 @@ public class LevelTimeline
         EnemySpawner enemySpawner,
         TileFactory tileFactory,
         ISaveService saveService,
-        IEnemyFactory enemyFactory)
+        IEnemyFactory enemyFactory,
+        SoundSpawner soundSpawner)
     {
         _coroutineRunner = coroutineRunner;
         _enemySpawner = enemySpawner;
         _tileFactory = tileFactory;
         _saveService = saveService;
         _enemyFactory = enemyFactory;
+        _soundSpawner = soundSpawner;
     }
 
     public event Action<int> NewWaveStarted;
@@ -48,6 +51,7 @@ public class LevelTimeline
     public void Start(LevelConfig levelConfig)
     {
         _lineSpawnDelay = new WaitForSeconds(levelConfig.LineSpawnDelay);
+        _isLevelStarted = true;
         _levelConfig = levelConfig;
         _enemyFactory.Died += CountKills;
 
@@ -60,6 +64,10 @@ public class LevelTimeline
 
     public void Stop()
     {
+
+        if(_isLevelStarted == false)
+            return;
+
         _isLevelEnded = true;
         _enemyFactory.Died -= CountKills;
 
@@ -120,6 +128,7 @@ public class LevelTimeline
             {
                 yield return _lineSpawnDelay;
                 _enemySpawner.SpawnLine();
+                _soundSpawner.Spawn(SoundType.SpawnEnemyLine);
             }
 
             _enemySpawner.Reset();
@@ -134,11 +143,10 @@ public class LevelTimeline
         _mainCoroutine = null;
     }
 
-   
-
     private void ScaleField()
     {
         _enemySpawner.ScaleField(_tileFactory.ScaleRoad());
+        _soundSpawner.Spawn(SoundType.FieldExpand);
     }
 
     private IEnumerator TimeRoutine()

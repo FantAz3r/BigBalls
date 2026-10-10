@@ -21,7 +21,7 @@ namespace BigBalls.UI
         {
             if(LevelID == LevelID.None)
             {
-                _loadingService.Reload();
+                _loadingService.Load(_loadingService.CurrentLevel);
             }
             else
             {

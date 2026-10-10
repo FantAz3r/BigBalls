@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace BigBalls.Services
@@ -34,7 +35,7 @@ namespace BigBalls.Services
         private Transform _miscContainer;
         private HashSet<string> _initializedPools = new HashSet<string>();
 
-        public PoolService(ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
+        public PoolService (ObjectContainer objectContainer, IResourceLoader resourceLoader, IObjectResolverProvider resolverProvider)
         {
             _objectContainer = objectContainer;
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
@@ -46,46 +47,50 @@ namespace BigBalls.Services
             _resolverProvider = resolverProvider;
         }
 
-        public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
+        public void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
         {
             _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
         }
 
-        public T GetObject<T>(T prefab) where T : Component
+        public T Get<T> (T prefab) where T : Component
         {
             if (prefab == null)
                 throw new ArgumentNullException(nameof(prefab));
             return GetOrCreatePool(prefab)?.Get();
         }
 
-        public T GetObject<T>(T prefab, Vector3 position) where T : Component
+        public T Get<T> (T prefab, Vector3 position) where T : Component
         {
             if (prefab == null)
                 throw new ArgumentNullException(nameof(prefab));
             return GetOrCreatePool(prefab)?.Get(position);
         }
 
-        public T GetObject<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component
+        public T Get<T> (T prefab, Vector3 position, Quaternion rotation) where T : Component
         {
-            if (prefab == null) throw new ArgumentNullException(nameof(prefab));
+            if (prefab == null)
+                throw new ArgumentNullException(nameof(prefab));
+
             return GetOrCreatePool(prefab)?.Get(position, rotation);
         }
 
-        public T GetObject<T>(T prefab, Transform parent) where T : Component
+        public T Get<T> (T prefab, Transform parent) where T : Component
         {
-            if (prefab == null) throw new ArgumentNullException(nameof(prefab));
+            if (prefab == null)
+                throw new ArgumentNullException(nameof(prefab));
+
             return GetOrCreatePool(prefab)?.Get(parent);
         }
 
-        public T GetObject<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Component
+        public T Get<T> (T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Component
         {
             if (prefab == null)
                 throw new ArgumentNullException(nameof(prefab));
             return GetOrCreatePool(prefab)?.Get(position, rotation, parent);
         }
 
-        public void ReleaseObject<T>(T obj) where T : Component
+        public void Release<T> (T obj) where T : Component
         {
             if (obj == null) return;
 
@@ -101,17 +106,18 @@ namespace BigBalls.Services
             }
         }
 
-        public void ClearAllPools()
+        public void ClearAllPools ()
         {
             foreach (ObjectPoolBase obj in _objectPools.Values)
             {
                 obj.Clear();
             }
+
             _objectPools.Clear();
             _initializedPools.Clear();
         }
 
-        public void InitializePools()
+        public void InitializePools ()
         {
             CreatePoolContainer(EnemyPool, out Transform enemyPoolContainer);
             CreatePoolContainer(BallPool, out Transform ballPoolContainer);
@@ -140,14 +146,14 @@ namespace BigBalls.Services
                 CreatePool(particle, particlePoolContainer, particle.gameObject.name, _poolConfig.DefaultPoolSize);
         }
 
-        private void CreatePoolContainer(string name, out Transform container)
+        private void CreatePoolContainer (string name, out Transform container)
         {
             GameObject go = new GameObject(name);
             go.transform.SetParent(_objectContainer.transform);
             container = go.transform;
         }
 
-        private void CreatePool<T>(T prefab, Transform parent, string poolName, int initialSize) where T : Component
+        private void CreatePool<T> (T prefab, Transform parent, string poolName, int initialSize) where T : Component
         {
             if (string.IsNullOrEmpty(poolName))
                 poolName = prefab.name;
@@ -161,7 +167,7 @@ namespace BigBalls.Services
             _initializedPools.Add(poolName);
         }
 
-        private ObjectPool<T> GetOrCreatePool<T>(T prefab) where T : Component
+        private ObjectPool<T> GetOrCreatePool<T> (T prefab) where T : Component
         {
             string poolName = prefab.name;
 
@@ -174,7 +180,7 @@ namespace BigBalls.Services
             return GetPool<T>(poolName);
         }
 
-        private ObjectPool<T> GetPool<T>(string name) where T : Component
+        private ObjectPool<T> GetPool<T> (string name) where T : Component
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
@@ -187,7 +193,7 @@ namespace BigBalls.Services
             throw new ArgumentNullException($"Pool '{cleanName}' not found");
         }
 
-        private void TryReleaseToMiscPool<T>(T obj) where T : Component
+        private void TryReleaseToMiscPool<T> (T obj) where T : Component
         {
             string typeName = typeof(T).Name;
 

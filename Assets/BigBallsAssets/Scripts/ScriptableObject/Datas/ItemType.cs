@@ -4,4 +4,5 @@
     Base,
     Fire,
     Ice,
+    Ground,
 }

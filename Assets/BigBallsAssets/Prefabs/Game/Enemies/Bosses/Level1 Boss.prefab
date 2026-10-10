@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4198694581542161090}
   - component: {fileID: 9196831905899846289}
   - component: {fileID: 8665433301621980661}
-  - component: {fileID: 2711179760491217051}
+  - component: {fileID: 7064760453535648067}
   m_Layer: 3
   m_Name: Level1 Boss
   m_TagString: Untagged
@@ -48,8 +48,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 6317752248337351765}
-  <HitFlash>k__BackingField: {fileID: 8665433301621980661}
-  <EnemyFallAnimator>k__BackingField: {fileID: 2711179760491217051}
+  <EntityCollision>k__BackingField: {fileID: 0}
+  <ColorChanger>k__BackingField: {fileID: 0}
+  <EnemySpawnAnimation>k__BackingField:
+    _underlyingValue: {fileID: 7064760453535648067}
+  <EnemyHitedAnimation>k__BackingField: {fileID: 0}
+  <EffectViewer>k__BackingField: {fileID: 0}
+  <EnemyIdleBob>k__BackingField: {fileID: 0}
+  <EnemyAnimator>k__BackingField: {fileID: 0}
+  <RotationPart>k__BackingField: {fileID: 0}
+  <DieAnimation>k__BackingField: {fileID: 0}
+  <ShieldView>k__BackingField: {fileID: 0}
 --- !u!114 &8665433301621980661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,13 +71,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c8d62508d6d8f43906c8106bc68361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderers:
-  - {fileID: 7395932934726797433}
   _enabled: 1
   _flashCount: 3
-  _flashColor: {r: 1, g: 1, b: 1, a: 1}
+  _healDuration: 1
   _totalDuration: 0.2
---- !u!114 &2711179760491217051
+  <Renderers>k__BackingField: []
+--- !u!114 &7064760453535648067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3433841478738700639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 728ac4c6507f5e34caa0dcd4d08f901c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8518b64ffa288514abfea1abae25aa82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _startOffsetY: 10
@@ -264,12 +272,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1498948324190777287}
   m_SourcePrefab: {fileID: 100100000, guid: fd1e8dd8e6819654eb37433305068e40, type: 3}
---- !u!23 &7395932934726797433 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: fd1e8dd8e6819654eb37433305068e40,
-    type: 3}
-  m_PrefabInstance: {fileID: 8170150330980521213}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8568253378870588182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fd1e8dd8e6819654eb37433305068e40,

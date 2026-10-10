@@ -46,10 +46,12 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<EnemySpawner>(Lifetime.Scoped);
             builder.Register<LootSpawner>(Lifetime.Scoped);
             builder.Register<DamageTextFactory>(Lifetime.Scoped);
+            builder.Register<SoundSpawner>(Lifetime.Scoped);
         }
 
         private void RegisterServices (IContainerBuilder builder)
         {
+            builder.Register<IMergeService, MergeService>(Lifetime.Scoped);
             builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
             builder.Register<InputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
@@ -59,6 +61,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IWinService, WinService>(Lifetime.Scoped);
             builder.Register<IDropService, DropService>(Lifetime.Scoped);
             builder.Register<ISpatialService, SpatialService>(Lifetime.Scoped);
+            builder.Register<ISoundService, SoundService>(Lifetime.Scoped);
             builder.Register<CardSelector>(Lifetime.Scoped);
         }
 

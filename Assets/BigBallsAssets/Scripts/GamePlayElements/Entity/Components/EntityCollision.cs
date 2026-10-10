@@ -4,13 +4,27 @@ using UnityEngine;
 
 public class EntityCollision : MonoBehaviour
 {
+    private bool _canCollision = true;
     public event Action PlayerCollision;
 
     private void OnCollisionEnter (Collision collision)
     {
-        if (collision.collider.TryGetComponent<Player>(out _))
+        if (_canCollision)
         {
-            PlayerCollision?.Invoke();
+            if (collision.collider.TryGetComponent<Player>(out _))
+            {
+                PlayerCollision?.Invoke();
+            }
         }
+    }
+
+    public void Enable ()
+    {
+        _canCollision = true;
+    }
+
+    public void Disable ()
+    {
+        _canCollision = false;
     }
 }

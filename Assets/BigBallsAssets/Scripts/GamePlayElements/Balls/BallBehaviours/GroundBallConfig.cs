@@ -14,6 +14,8 @@ public class GroundBallConfig : EffectConfig
     public float DamagePerSecond = 5f;
     public float Duration = 3f;
     public float Radius = 1f;
+    public Color Color;
+    public SoundStruct Sound;
 
     public float DPSPerLevel = 1f;
     public float DurationPerLevel = 0.3f;

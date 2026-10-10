@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -8,7 +7,7 @@ namespace BigBalls.GameplayObjects
         public readonly StatType Type;
         private readonly float _startMaxValue;
 
-        public Stat(StatType statType, float startMaxValue, float minValue, float startCurrentValue)
+        public Stat (StatType statType, float startMaxValue, float minValue, float startCurrentValue)
         {
             if (startCurrentValue > startMaxValue && startCurrentValue < minValue)
                 throw new InvalidOperationException(nameof(startCurrentValue));
@@ -30,6 +29,7 @@ namespace BigBalls.GameplayObjects
         public event Action ValueRedused;
         public event Action ValueIncreased;
 
+        public bool CanReduce { get; private set; } = true;
         public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float CurrentValue { get; private set; }
@@ -49,8 +49,11 @@ namespace BigBalls.GameplayObjects
             return actualAdd;
         }
 
-        public float ReduceCurrentValue(float valueToResource)
+        public float ReduceCurrentValue (float valueToResource)
         {
+            if (CanReduce == false)
+                return 0;
+
             if (valueToResource <= 0)
                 return 0;
 
@@ -67,7 +70,7 @@ namespace BigBalls.GameplayObjects
             return actualReduced;
         }
 
-        public void AddMaxValue(float valueToAdd)
+        public void AddMaxValue (float valueToAdd)
         {
             if (valueToAdd <= 0)
                 return;
@@ -78,7 +81,7 @@ namespace BigBalls.GameplayObjects
             ValueChanged?.Invoke(this);
         }
 
-        public void ReduceMaxStat(float valueToResuce)
+        public void ReduceMaxStat (float valueToResuce)
         {
             if (valueToResuce <= 0)
                 return;
@@ -88,5 +91,7 @@ namespace BigBalls.GameplayObjects
             CurrentValue = percent * MaxValue;
             ValueChanged?.Invoke(this);
         }
+
+        public void SetImmune (bool isImmune) => CanReduce = isImmune == false;
     }
 }

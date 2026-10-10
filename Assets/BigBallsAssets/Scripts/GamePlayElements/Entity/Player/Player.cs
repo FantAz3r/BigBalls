@@ -14,6 +14,9 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public Transform WeaponSpawnPoint { get; private set; }
         [field: SerializeField] public Transform FirePoint { get; private set; }
         [field: SerializeField] public Cannon Cannon { get; private set; }
+        [field: SerializeField] public WeaponViewer WeaponViewer { get; private set; }
+        [field: SerializeField] public ArmorViewer ArmorViewer { get; private set; }
+        [field: SerializeField] public EffectViewer EffectViewer { get; private set; }
 
         public DeathHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }

@@ -1,7 +1,7 @@
-﻿using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BigBalls.GameplayObjects;
+using BigBalls.StaticData;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -15,35 +15,39 @@ namespace BigBalls.Configs
         [field: SerializeField] public bool CanSuiside { get; private set; }
         [field: SerializeField] public bool HasRangeAttack { get; private set; }
         [field: SerializeField] public bool HasMeeleAttack { get; private set; }
-        
+        [field: SerializeField] public SoundStruct DieSound { get; private set; }
+        [field: SerializeField] public SoundStruct AttackSound { get; private set; }
+        [field: SerializeField] public SoundStruct RangeAttackSound { get; private set; }
+
         [field: SerializeField] public List<Vector2Int> BlocksPositions { get; private set; } = new();
-        [field: SerializeField] public List<StatStruct> Stats { get; private set; } = new ();
+        [field: SerializeField] public List<StatStruct> Stats { get; private set; } = new();
         [field: SerializeField] public LayerMask ObstacleLayers { get; private set; }
 
         [field: SerializeField] public BallConfig BallConfig { get; private set; }
-        
+        [field: SerializeField] public AudioClip ShootSound { get; private set; }
+
         [Header("Loot Settings")]
         [field: SerializeField] public List<LootInfo> PossibleLoot = new List<LootInfo>();
         [field: SerializeField] public int BaseExperience = 10;
         [field: SerializeField] public int BaseCoins = 5;
-        
-        public StatStruct Get(StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
+
+        public StatStruct Get (StatType statType) => Stats.Where(stat => stat.StatType == statType).FirstOrDefault();
         public int Weight => BlocksPositions.Count;
 
-        public int GetWidth()
+        public int GetWidth ()
         {
             int width = 0;
 
-            foreach(var block in BlocksPositions)
+            foreach (var block in BlocksPositions)
             {
-                if(block.x > width)
+                if (block.x > width)
                     width = block.x;
             }
 
             return width;
         }
 
-        public List<Vector2Int> GetEnemyRow(int rowIndex)
+        public List<Vector2Int> GetEnemyRow (int rowIndex)
         {
             List<Vector2Int> blocksPositionsInRow = new List<Vector2Int>();
 
@@ -56,7 +60,7 @@ namespace BigBalls.Configs
             return blocksPositionsInRow;
         }
 
-        public List<Vector2Int> GetBlocksWithoutFrontNeighbor()
+        public List<Vector2Int> GetBlocksWithoutFrontNeighbor ()
         {
             List<Vector2Int> result = new List<Vector2Int>();
 

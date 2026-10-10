@@ -15,6 +15,7 @@ public class BombConfig : EffectConfig
     public float Radius = 1f;
     public float Damage = 10f;
     public float RespawnDelay = 3f;
+    public Color Color;
 
     public float RadiusPerLevel = 1f;
     public float DamagePerLevel = 10f;
@@ -29,7 +30,7 @@ public class BombConfig : EffectConfig
 
         return new List<ItemStat>()
             {
-                new ItemStat(TextLocalizator.Damage,  GetDamage(level),  GetDamage(nextLevel)),
+                new ItemStat(TextLocalizator.ExplosionDamage,  GetDamage(level),  GetDamage(nextLevel)),
                 new ItemStat(TextLocalizator.Radius, GetRadius(level), GetRadius(nextLevel))
             };
     }

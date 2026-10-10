@@ -1,15 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
-using BigBalls.UI;
-using System.Collections.Generic;
-using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
 
-public class BallTreeUI : WindowBase, IResetble
+public class BallTreeUI : PopupWindow, IResetble
 {
     [SerializeField] private RectTransform _treeContainer;
     [SerializeField] private BallTreeNodeUI _nodePrefab;
@@ -20,13 +21,14 @@ public class BallTreeUI : WindowBase, IResetble
     private IObjectResolverProvider _objectResolverProvider;
     private ISaveService _saveService;
     private IBallUnlockService _unlockService;
+    private ICoroutineRunner _coroutineRunner;
+    private WaitForSeconds _wait = new WaitForSeconds(0.51f);
     private BallTreeModel _treeModel;
     private Dictionary<BallType, BallTreeNodeUI> _nodeUIs = new();
     private List<BallTreeConnectionUI> _connections = new();
 
-    private void OnDestroy()
+    private void OnDestroy ()
     {
-        _upgradePanel.Upgraded += UpdateUI;
         foreach (var node in _nodeUIs.Values)
         {
             node.OnClick -= OnNodeClicked;
@@ -34,24 +36,28 @@ public class BallTreeUI : WindowBase, IResetble
     }
 
     [Inject]
-    public void Construct(
+    public void Construct (
         BallTreeModel treeModel,
         ISaveService saveService,
         IBallUnlockService unlockService,
         IResourceLoader resourceLoader,
-        IObjectResolverProvider objectResolverProvider)
+        IObjectResolverProvider objectResolverProvider,
+        ICoroutineRunner coroutineRunner)
     {
         _objectResolverProvider = objectResolverProvider;
         _saveService = saveService;
+        _coroutineRunner = coroutineRunner;
         _treeModel = treeModel;
         _unlockService = unlockService;
         _upgradePanel.Init(resourceLoader.Load<StatTextHolder>());
         saveService.RegisterResetable(this);
+
+        _upgradePanel.Upgraded += UpdateUI;
         BuildTreeUI();
-        ViewNodes();
+        _coroutineRunner.StartCoroutine(UpdateRoutine());
     }
 
-    public void ViewNodes(BallTreeNodeUI ballTreeNodeUI = null)
+    public void ViewNodes (BallTreeNodeUI ballTreeNodeUI = null)
     {
         foreach (var ui in _nodeUIs.Values)
         {
@@ -62,13 +68,13 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    public void Reset()
+    public void Reset ()
     {
         BuildTreeUI();
         UpdateUI();
     }
 
-    private void BuildTreeUI()
+    private void BuildTreeUI ()
     {
         if (_treeContainer.childCount > 0)
         {
@@ -111,6 +117,7 @@ public class BallTreeUI : WindowBase, IResetble
                         childUI.RectTransform
                     );
 
+                    connection.UpdateLine();
                     _connections.Add(connection);
                     parentUI.AddChildConnection(connection);
                     childUI.AddParentConnection(connection);
@@ -119,7 +126,7 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    private void UpdateContainerSize()
+    private void UpdateContainerSize ()
     {
         if (_nodeUIs.Count == 0)
             return;
@@ -144,14 +151,20 @@ public class BallTreeUI : WindowBase, IResetble
         }
     }
 
-    private void OnNodeClicked(BallTreeNodeUI node)
+    private void OnNodeClicked (BallTreeNodeUI node)
     {
         _upgradePanel.SetNode(node);
         ViewNodes();
     }
 
-    private void UpdateUI()
+    private void UpdateUI ()
     {
+        ViewNodes();
+    }
+
+    private IEnumerator UpdateRoutine()
+    {
+        yield return _wait;
         ViewNodes();
     }
 }

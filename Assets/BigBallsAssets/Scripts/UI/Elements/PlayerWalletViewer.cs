@@ -15,13 +15,18 @@ public class PlayerWalletViewer : MonoBehaviour
         _valueText.text = $"{_walletModel.CurrentValue}";
 
         HandlerOnOnValueChanged(_walletModel);
+    }
 
-        _walletModel.OnValueChanged += HandlerOnOnValueChanged;
+    private void OnEnable ()
+    {
+        if (_walletModel != null)
+            _walletModel.OnValueChanged += HandlerOnOnValueChanged;
     }
 
     private void OnDisable ()
     {
-        _walletModel.OnValueChanged -= HandlerOnOnValueChanged;
+        if (_walletModel != null)
+            _walletModel.OnValueChanged -= HandlerOnOnValueChanged;
     }
 
     private void HandlerOnOnValueChanged (IWalletModel walletModel)

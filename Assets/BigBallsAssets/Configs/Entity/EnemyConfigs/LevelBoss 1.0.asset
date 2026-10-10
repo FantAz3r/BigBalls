@@ -38,28 +38,28 @@ MonoBehaviour:
     StartMaxValue: 99999
     StartCurrentValue: 15
     MinValue: 0
+  - StatType: 11
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: 0
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 0}
   PossibleLoot:
-  - LootPrefab: {fileID: -7175670180899759876, guid: 82b395a1eaf410e469c360a614cd2cc5,
-      type: 3}
+  - LootType: 0
     DropChance: 0.8
     MinAmount: 30
     MaxAmount: 55
-  - LootPrefab: {fileID: 5482572451439400547, guid: d74df00e31f496846a775572af229b2f,
-      type: 3}
+  - LootType: 0
     DropChance: 0.6
     MinAmount: 15
     MaxAmount: 40
-  - LootPrefab: {fileID: 7755661948603910049, guid: a1c71bd3d62ccde4691eef79ca692bb0,
-      type: 3}
+  - LootType: 0
     DropChance: 0.6
     MinAmount: 30
     MaxAmount: 50
-  - LootPrefab: {fileID: -4572743106270791901, guid: 7850d0d4b55586a4bbefbbc8307ee768,
-      type: 3}
+  - LootType: 0
     DropChance: 0.6
     MinAmount: 40
     MaxAmount: 60

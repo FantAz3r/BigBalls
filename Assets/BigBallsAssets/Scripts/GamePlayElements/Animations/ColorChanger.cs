@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using DG.Tweening;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class ColorChanger : MonoBehaviour
 {
@@ -9,9 +9,11 @@ public class ColorChanger : MonoBehaviour
 
     [SerializeField] private bool _enabled = true;
     [SerializeField] private int _flashCount = 1;
-    [SerializeField] private Color _flashColor = Color.white;
+    [SerializeField] private float _healDuration = 1f;
     [SerializeField] private float _totalDuration = 0.2f;
 
+    private Color _healColor = new Color(0, 1, 0, 0.5f);
+    private Color _flashColor = new Color(1, 1, 1, 0.5f);
     private Tween _colorTween;
     private Stat _health;
     private List<Material> _materials = new List<Material>();
@@ -22,7 +24,8 @@ public class ColorChanger : MonoBehaviour
     {
         foreach (var renderer in Renderers)
         {
-            if (renderer == null) continue;
+            if (renderer == null)
+                continue;
 
             Material[] mats = renderer.materials;
 
@@ -38,14 +41,22 @@ public class ColorChanger : MonoBehaviour
     private void OnEnable ()
     {
         if (_health != null)
-            _health.ValueChanged += OnHit;
+        {
+            _health.ValueRedused += OnHit;
+            _health.ValueIncreased += OnHeal;
+        }
+
     }
 
     private void OnDisable ()
     {
         _colorTween?.Kill();
+
         if (_health != null)
-            _health.ValueChanged -= OnHit;
+        {
+            _health.ValueRedused -= OnHit;
+            _health.ValueIncreased -= OnHeal;
+        }
     }
 
     public void Init (Stat stat)
@@ -53,12 +64,25 @@ public class ColorChanger : MonoBehaviour
         _health = stat;
 
         if (_health != null)
-            _health.ValueChanged += OnHit;
+        {
+            _health.ValueRedused += OnHit;
+            _health.ValueIncreased += OnHeal;
+        }
     }
 
-    private void OnHit (IReadonlyStat useles)
+    public void SetHitColor (Color color)
+    {
+        _flashColor = color;
+    }
+
+    private void OnHit ()
     {
         SwapColor(_flashColor, _totalDuration / (_flashCount * 2), _flashCount * 2);
+    }
+
+    private void OnHeal ()
+    {
+        SwapColor(_healColor, _healDuration / (_flashCount * 2), _flashCount * 2);
     }
 
     public void SwapColor (Color color, float duration, int loops)

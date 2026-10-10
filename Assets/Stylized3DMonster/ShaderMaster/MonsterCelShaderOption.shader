@@ -1,10 +1,17 @@
-﻿Shader "PVFX/PVFX_URP_Low_CelShader1.0"
+﻿Shader "PVFX/PVFX_URP_Low_CelShader1.1_Detail"
 {
     Properties
     {
         [Header(Base Map)]
         _MainTex ("Base Texture", 2D) = "white" {}
         _Color ("Main Color", Color) = (1,1,1,1)
+
+        [Header(Detail Map)]
+        _DetailTex ("Detail Texture", 2D) = "gray" {}
+        _DetailColor ("Detail Color", Color) = (1,1,1,1)
+        _DetailStrength ("Detail Strength", Range(0,2)) = 1
+        _DetailTiling ("Detail Tiling (XY) / Offset (ZW)", Vector) = (1,1,0,0)
+        [KeywordEnum(Multiply, Overlay, Add)] _DetailMode ("Detail Blend Mode", Float) = 0
 
         [Header(Outline Settings)]
         _OutlineColor ("Outline Color", Color) = (0,0,0,1)
@@ -87,11 +94,18 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_local _DETAILMODE_MULTIPLY _DETAILMODE_OVERLAY _DETAILMODE_ADD
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
-            float4 _MainTex_ST; 
+            float4 _MainTex_ST;
             fixed4 _Color;
+
+            sampler2D _DetailTex;
+            float4 _DetailTex_ST;
+            fixed4 _DetailColor;
+            float _DetailStrength;
+            float4 _DetailTiling;
 
             fixed4 _RimColor;
             float _RimPower;
@@ -118,6 +132,7 @@
                 float2 uv : TEXCOORD0;
                 float3 worldNormal : TEXCOORD1;
                 float3 worldPos : TEXCOORD2;
+                float2 uvDetail : TEXCOORD3;
             };
 
             v2f vert(appdata v)
@@ -127,7 +142,33 @@
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+
+                // Detail UV: собственный tiling/offset, масштабируется _DetailTiling
+                o.uvDetail = TRANSFORM_TEX(v.uv, _DetailTex) * _DetailTiling.xy + _DetailTiling.zw;
                 return o;
+            }
+
+            // Функция наложения detail-карты
+            fixed3 ApplyDetail(fixed3 baseCol, fixed3 detailCol)
+            {
+                fixed3 d = detailCol * _DetailColor.rgb;
+                // "нейтральное" значение = 0.5 (серая карта не меняет цвет)
+                fixed3 dSigned = d * 2.0 - 1.0;
+
+                #if defined(_DETAILMODE_OVERLAY)
+                    // Overlay: контрастнее, хорошо для трещин
+                    fixed3 overlay = lerp(
+                        2.0 * baseCol * d,
+                        1.0 - 2.0 * (1.0 - baseCol) * (1.0 - d),
+                        step(0.5, baseCol)
+                    );
+                    return lerp(baseCol, overlay, _DetailStrength);
+                #elif defined(_DETAILMODE_ADD)
+                    return baseCol + dSigned * _DetailStrength;
+                #else
+                    // Multiply (по умолчанию)
+                    return baseCol * lerp(1.0, d, _DetailStrength);
+                #endif
             }
 
             fixed4 frag(v2f i) : SV_Target
@@ -144,9 +185,13 @@
                 float litMask = 1.0 - shadeMask;
 
                 fixed3 litCol = baseCol.rgb;
-                // Shadow color darkened by Intensity
                 fixed3 shadeCol = baseCol.rgb * _ShadeColor.rgb * (1.0 - _ShadeIntensity);
                 fixed3 lightingCol = (litCol * litMask) + (shadeCol * shadeMask);
+
+                // === DETAIL MAP (трещины) ===
+                fixed3 detailSample = tex2D(_DetailTex, i.uvDetail).rgb;
+                lightingCol = ApplyDetail(lightingCol, detailSample);
+                lightingCol = saturate(lightingCol);
 
                 // Rim Light
                 float rim = pow(1.0 - saturate(dot(viewDir, normal)), _RimPower) * _RimIntensity;
@@ -158,7 +203,7 @@
                 fixed3 specCol = _MetallicColor.rgb * spec;
 
                 fixed3 finalCol = lightingCol + rimCol + specCol + _EmissionColor.rgb;
-                
+
                 return fixed4(finalCol, 1.0);
             }
             ENDCG

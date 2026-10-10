@@ -27,6 +27,8 @@ namespace BigBalls.GameplayObjects
             _winService = winService;
         }
 
+        public IEnumerable<Vector2Int> OccupiedPositions => _occupiedPositions;
+
         public void SetEnemies(List<EnemyConfig> enemies)
         {
             _enemies = enemies;
@@ -210,11 +212,16 @@ namespace BigBalls.GameplayObjects
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             Enemy enemy = _enemyFactory.Create(prefab, spawnPosition);
-            enemy.EnemyFallAnimator.PlayFall(spawnPosition);
+            enemy.EnemySpawnAnimation?.Value.PlaySpawn(spawnPosition);
             return enemy;
         }
 
         public void AddEffects(ArtefactModel artefactModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveEffects (ArtefactModel artefactModel)
         {
             throw new NotImplementedException();
         }

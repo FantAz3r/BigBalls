@@ -4,6 +4,9 @@ using UnityEngine;
 public class ReflectCollisionStrategy : ICollisionStrategy
 {
     private bool _isReflect;
+    private SoundSpawner _soundSpawner;
+    public ReflectCollisionStrategy (SoundSpawner soundSpawner = null) => _soundSpawner = soundSpawner;
+
     public bool HandleCollision (Ball ball, Collision collision)
     {
         if (ball.IsMaterial)
@@ -14,11 +17,12 @@ public class ReflectCollisionStrategy : ICollisionStrategy
 
         if (collision.gameObject.TryGetComponent<Wall>(out _))
         {
-            if(_isReflect == false)
+            if (_isReflect == false)
             {
                 ReflectBall(collision, ball);
             }
 
+            _soundSpawner?.Spawn(SoundType.BallHitWall);
             ball.SetCanReturnToBag(true);
         }
 

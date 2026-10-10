@@ -31,9 +31,15 @@ namespace BigBalls.Services
             float finalDamage = damage;
             float actualDamage = 0;
 
+
             if (statHolder.Stats.ContainsKey(StatType.Armor))
             {
                 finalDamage = ApplyArmor(statHolder[StatType.Armor], finalDamage);
+            }
+
+            if (statHolder.Stats.ContainsKey(StatType.Shield))
+            {
+                finalDamage = ApplyShield(statHolder[StatType.Shield], finalDamage);
             }
 
             if (statHolder.Stats.ContainsKey(StatType.Health))
@@ -42,9 +48,32 @@ namespace BigBalls.Services
             }
 
             if (actualDamage > 0)
+            {
                 _damageTextFactory.Create(entity.Transform.position, actualDamage, color);
+            }
 
-            return finalDamage;
+            return actualDamage;
+        }
+
+        public float ApplyHeal (IEntity entity, float healValue, Color color)
+        {
+            StatHolder statHolder = _entityRepository.GetStatHolder(entity);
+
+            if (statHolder == null)
+                return 0;
+
+            float finalHeal = healValue;
+            float actualHeal = 0;
+
+            if (statHolder.Stats.ContainsKey(StatType.Health))
+            {
+                actualHeal = ApplyHealHealth(statHolder[StatType.Health], finalHeal);
+            }
+
+            if (actualHeal > 0)
+                _damageTextFactory.Create(entity.Transform.position, actualHeal, color);
+
+            return actualHeal;
         }
 
         private bool ApplyEvasion (Stat evasion)
@@ -60,7 +89,8 @@ namespace BigBalls.Services
 
         private float ApplyArmor (Stat armor, float damage)
         {
-            if (armor.CurrentValue <= 0) return damage;
+            if (armor.CurrentValue <= 0)
+                return damage;
 
             float armorValue = armor.CurrentValue;
             float damageReduction = (ArmorMultiplyer * armorValue) / (1 + ArmorMultiplyer * armorValue);
@@ -69,12 +99,29 @@ namespace BigBalls.Services
             return MathF.Max(0f, finalDamage);
         }
 
+        private float ApplyShield (Stat shield, float damage)
+        {
+            if (shield.CurrentValue <= 0)
+                return damage;
+
+            float value = damage - shield.ReduceCurrentValue(damage);
+            return value;
+        }
+
         private float ApplyHealthDamage (Stat health, float damage)
         {
             if (damage <= 0)
                 return 0;
 
             return health.ReduceCurrentValue(damage);
+        }
+
+        private float ApplyHealHealth (Stat health, float healValue)
+        {
+            if (healValue <= 0)
+                return 0;
+
+            return health.AddCurrentValue(healValue);
         }
     }
 }

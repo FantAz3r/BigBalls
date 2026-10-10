@@ -1,6 +1,6 @@
-using BigBalls.Services;
 using System;
 using System.Collections;
+using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 
@@ -17,18 +17,21 @@ namespace BigBalls.GameplayObjects
         private bool _canDetectWall = true;
         private WaitForSeconds _waitDelay;
         private ICoroutineRunner _coroutineRunner;
+        private SoundSpawner _soundSpawner;
+        private EntityType _entityType;
 
         public event Action WallDetected;
         public event Action PlayerDetected;
+        public event Action PlayerLost;
         public event Action PlayerStayedLongEnough;
 
 
-        private void Awake()
+        private void Awake ()
         {
             _waitDelay = new WaitForSeconds(_playerDetectionDelay);
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter (Collider other)
         {
             if (other.TryGetComponent<BackWall>(out _))
             {
@@ -40,15 +43,17 @@ namespace BigBalls.GameplayObjects
             {
                 _isPlayerInZone = true;
                 PlayerDetected?.Invoke();
+                _soundSpawner.Spawn(SoundType.EnemyDetectPlayer);
 
                 _detectionCoroutine = _coroutineRunner.StartCoroutine(PlayerDetectionTimer());
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnTriggerExit (Collider other)
         {
             if (other.TryGetComponent<Player>(out _))
             {
+                PlayerLost?.Invoke();
                 _isPlayerInZone = false;
 
                 if (_detectionCoroutine != null)
@@ -66,9 +71,13 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        public void Construct(ICoroutineRunner coroutineRunner) => _coroutineRunner = coroutineRunner;
+        public void Construct (ICoroutineRunner coroutineRunner, SoundSpawner soundSpawner)
+        {
+            _soundSpawner = soundSpawner;
+            _coroutineRunner = coroutineRunner;
+        }
 
-        private IEnumerator PlayerDetectionTimer()
+        private IEnumerator PlayerDetectionTimer ()
         {
             yield return _waitDelay;
 
@@ -78,7 +87,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private IEnumerator WallDetectionDelay()
+        private IEnumerator WallDetectionDelay ()
         {
             _canDetectWall = false;
             yield return _waitDelay;

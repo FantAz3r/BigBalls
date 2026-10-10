@@ -50,14 +50,20 @@ namespace BigBalls.UI
 
         private void OnEnable()
         {
-            _levelTimeline.TimeElapsed += View;
-            _levelTimeline.NewWaveStarted += OnNewWaveStarted;
+            if (_levelTimeline != null)
+            {
+                _levelTimeline.TimeElapsed += View;
+                _levelTimeline.NewWaveStarted += OnNewWaveStarted;
+            }
         }
 
         private void OnDisable()
         {
-            _levelTimeline.TimeElapsed -= View;
-            _levelTimeline.NewWaveStarted -= OnNewWaveStarted;
+            if (_levelTimeline != null)
+            {
+                _levelTimeline.TimeElapsed -= View;
+                _levelTimeline.NewWaveStarted -= OnNewWaveStarted;
+            }
         }
 
         private void DrawFlags()

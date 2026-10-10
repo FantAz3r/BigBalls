@@ -13,21 +13,21 @@ public class ParticleFactory : IParticleFactory
 
     public ParticleObject Create(ParticleObject prefab, Vector3 position)
     {
-        var particle = _poolService.GetObject(prefab, position);
+        var particle = _poolService.Get(prefab, position);
         SetupParticle(particle);
         return particle;
     }
 
     public ParticleObject Create(ParticleObject prefab, Vector3 position, Quaternion rotation)
     {
-        var particle = _poolService.GetObject(prefab, position, rotation);
+        var particle = _poolService.Get(prefab, position, rotation);
         SetupParticle(particle);
         return particle;
     }
 
     public ParticleObject Create(ParticleObject prefab, Transform parent)
     {
-        var particle = _poolService.GetObject(prefab, parent);
+        var particle = _poolService.Get(prefab, parent);
         particle.transform.position = Vector3.zero;
         SetupParticle(particle);
         return particle;
@@ -47,6 +47,6 @@ public class ParticleFactory : IParticleFactory
 
         particle.Returned -= OnReturn;
         particle.ParticleSystem?.Clear(true);
-        _poolService.ReleaseObject(particle);
+        _poolService.Release(particle);
     }
 }

@@ -30,6 +30,7 @@ namespace BigBalls.Services
                 [typeof(CardInventory)] = uiFactory.CreateInventoryMenu,
                 [typeof(Background)] = uiFactory.CreateBackgroung,
                 [typeof(ChestItemDropView)] = uiFactory.CreateChestWindow,
+                [typeof(SplitingPanel)] = uiFactory.CreateSplitingPanel,
             };
         }
 

@@ -44,35 +44,35 @@ public struct DotweenAnimationSettings
     public Ease Ease => _ease;
     public float Delay => _delay;
 
-    public bool TryGetTargetScale(out Vector3 targetScale)
+    public bool TryGetTargetScale (out Vector3 targetScale)
     {
         targetScale = _targetScale;
 
         return _useScale;
     }
 
-    public bool TryGetAnchoredOffset(out Vector2 anchoredOffset)
+    public bool TryGetAnchoredOffset (out Vector2 anchoredOffset)
     {
         anchoredOffset = _anchoredOffset;
 
         return _usePosition;
     }
 
-    public bool TryGetTargetRotation(out Vector3 targetRotation)
+    public bool TryGetTargetRotation (out Vector3 targetRotation)
     {
         targetRotation = _targetRotation;
 
         return _useRotation;
     }
 
-    public bool TryGetTargetAlpha(out float targetAlpha)
+    public bool TryGetTargetAlpha (out float targetAlpha)
     {
         targetAlpha = _targetAlpha;
 
         return _useFade;
     }
 
-    public override string ToString()
+    public override string ToString ()
     {
         string scale = _useScale ? _targetScale.ToString() : "none";
         string position = _usePosition ? _anchoredOffset.ToString() : "none";

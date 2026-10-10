@@ -62,18 +62,23 @@ namespace BigBalls.StaticData
             }
         }
 
-        public void UpgradeNoneGameLevel()
+        public bool TryUpgradeNoneGameLevel()
         {
             if (NoneGameLevel < MaxNoneGameLevel)
             {
-                if (true)//ItemEXP >= EXPForNextLevel)
+                if (ItemEXP >= EXPForNextLevel)
                 {
-                    //ItemEXP -= EXPForNextLevel;
+                    ItemEXP -= EXPForNextLevel;
                     NoneGameLevel++;
                     Upgraded?.Invoke(this);
                     BindStats();
+                    return true;
                 }
+
+                return false;
             }
+
+            return false;
         }
 
         public void AddToPlayer()

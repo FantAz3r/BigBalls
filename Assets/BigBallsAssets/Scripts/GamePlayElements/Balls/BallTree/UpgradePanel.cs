@@ -1,9 +1,11 @@
-﻿using BigBalls.Localization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BigBalls.Localization;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 public class UpgradePanel : MonoBehaviour
 {
@@ -18,17 +20,21 @@ public class UpgradePanel : MonoBehaviour
     [SerializeField] private TMP_Text _updateText;
     [SerializeField] private TMP_Text _costText;
     [SerializeField] private TMP_Text _expProgresText;
-    
+
     private BallTreeNodeUI _node;
     private BallModel _cardModel;
     private StatTextHolder _statTextHolder;
+    private GlobalWallet _globalWallet;
     private List<StatTextHolder> _statTextHolders = new();
+    private SoundSpawner _soundSpawner;
+    private Tween _notEnoughXpTween;
 
     public event Action Upgraded;
+    public event Action PurchaseRejected;
 
-    private void Start() => gameObject.SetActive(false);
+    private void Start () => gameObject.SetActive(false);
 
-    private void OnDestroy()
+    private void OnDestroy ()
     {
         _upgradeButton.Clicked -= Upgrade;
 
@@ -36,12 +42,19 @@ public class UpgradePanel : MonoBehaviour
             _cardModel.Upgraded -= View;
     }
 
-    public void Init(StatTextHolder statTextHolder)
+    [Inject]
+    public void Construct (GlobalWallet globalWallet, SoundSpawner soundSpawner)
+    {
+        _globalWallet = globalWallet;
+        _soundSpawner = soundSpawner;
+    }
+
+    public void Init (StatTextHolder statTextHolder)
     {
         _statTextHolder = statTextHolder;
     }
 
-    public void SetNode(BallTreeNodeUI ballTreeNodeUI)
+    public void SetNode (BallTreeNodeUI ballTreeNodeUI)
     {
         _node = ballTreeNodeUI;
         _cardModel = ballTreeNodeUI.BallModel;
@@ -59,7 +72,7 @@ public class UpgradePanel : MonoBehaviour
         View(_cardModel);
     }
 
-    public void View(ICardModel useles)
+    public void View (ICardModel useles)
     {
         ClearStats();
 
@@ -70,8 +83,7 @@ public class UpgradePanel : MonoBehaviour
         _expSlider.maxValue = _cardModel.EXPForNextLevel;
         _expSlider.minValue = 0;
         _expSlider.value = _cardModel.ItemEXP;
-        _expProgresText.text = $"{_cardModel.ItemEXP} / {_cardModel.EXPForNextLevel}";
-
+        _expProgresText.text = $"{(int) _cardModel.ItemEXP} / {(int) _cardModel.EXPForNextLevel:0}";
 
         if (_cardModel.IsOpen)
         {
@@ -92,7 +104,20 @@ public class UpgradePanel : MonoBehaviour
         Upgraded?.Invoke();
     }
 
-    private void RenderStats(ICardModel card, bool showNextLevel)
+    private void OnUpgradeFailed ()
+    {
+        RectTransform sliderRect = _expSlider.transform as RectTransform;
+        Vector2 originPos = sliderRect.anchoredPosition;
+
+        _notEnoughXpTween?.Kill();
+
+        _notEnoughXpTween = sliderRect
+            .DOPunchAnchorPos(new Vector2(10f, 0f), 0.3f, 10, 0.5f)
+            .SetUpdate(true)
+            .OnComplete(() => sliderRect.anchoredPosition = originPos);
+    }
+
+    private void RenderStats (ICardModel card, bool showNextLevel)
     {
         if (card is not BallModel ball)
             return;
@@ -107,9 +132,10 @@ public class UpgradePanel : MonoBehaviour
         }
     }
 
-    private void ClearStats() => ClearCollection(_statTextHolders);
 
-    private void ClearCollection<T>(List<T> collection) where T : MonoBehaviour
+    private void ClearStats () => ClearCollection(_statTextHolders);
+
+    private void ClearCollection<T> (List<T> collection) where T : MonoBehaviour
     {
         if (collection.Count == 0)
             return;
@@ -122,11 +148,18 @@ public class UpgradePanel : MonoBehaviour
         collection.Clear();
     }
 
-    private void Upgrade()
+    private void Upgrade ()
     {
         if (_node.BallModel.IsOpen)
         {
             _node.UpdateConnections();
+
+            if (_node.Upgrade() == false)
+            {
+                OnUpgradeFailed();
+                _soundSpawner.Spawn(SoundType.Error);
+                return;
+            }
         }
         else
         {
@@ -134,6 +167,7 @@ public class UpgradePanel : MonoBehaviour
         }
 
         _node.UpdateState();
+        _soundSpawner.Spawn(SoundType.Upgrade);
         View(_cardModel);
     }
 }

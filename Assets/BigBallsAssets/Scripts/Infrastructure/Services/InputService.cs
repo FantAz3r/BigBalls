@@ -8,6 +8,7 @@ namespace BigBalls.Services
 {
     public class InputService : IInputService, IStartable
     {
+        private bool _isActive;
         private readonly IWindowService _windowService;
         private PlayerInputActions _inputActions;
 

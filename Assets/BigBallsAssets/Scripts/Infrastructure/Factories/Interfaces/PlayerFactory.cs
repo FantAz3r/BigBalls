@@ -1,12 +1,11 @@
-using BigBalls.Configs;
+using System.Collections.Generic;
+using System.Linq;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Providers;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using BigBalls.UI;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -35,10 +34,12 @@ namespace BigBalls.Factories
         private readonly ArtefactsRepository _artefactsRepository;
         private readonly WeaponRepository _weaponRepository;
         private readonly ICameraProvider _cameraProvider;
+        private readonly IMergeService _mergeService;
 
         private PlayerConfig _playerConfig;
         private Shooter _shooter;
-        public PlayerFactory(
+
+        public PlayerFactory (
             IInputService inputService,
             IObjectResolverProvider objectResolver,
             ISceneContainerProvider sceneContainerProvider,
@@ -59,7 +60,8 @@ namespace BigBalls.Factories
             BallRepository ballRepository,
             ArtefactsRepository artefactsRepository,
             WeaponRepository weaponRepository,
-            ICameraProvider cameraProvider)
+            ICameraProvider cameraProvider,
+            IMergeService mergeService)
         {
             _inputService = inputService;
             _objectResolver = objectResolver;
@@ -82,10 +84,11 @@ namespace BigBalls.Factories
             _artefactsRepository = artefactsRepository;
             _weaponRepository = weaponRepository;
             _cameraProvider = cameraProvider;
+            _mergeService = mergeService;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
         }
 
-        public Player Create()
+        public Player Create ()
         {
             int playerID = _identifierService.ID;
             Vector3 spawnPoint = _sceneContainerProvider.PlayerSpawnPoints.First().transform.position;
@@ -93,8 +96,8 @@ namespace BigBalls.Factories
             Player player = _objectResolver.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
             StatHolder statHolder = new StatHolder(player, EntityType.Player, _playerConfig, _effectFactory);
-            statHolder.Set(_itemConainerProvider.Armor);
             statHolder.InitStats();
+            player.ArmorViewer.Init(statHolder);
 
             _playerExperience.Init(statHolder[StatType.Experience]);
 
@@ -126,7 +129,7 @@ namespace BigBalls.Factories
             return player;
         }
 
-        private void OnDied(IEntity entity)
+        private void OnDied (IEntity entity)
         {
             if (entity is not Player player)
                 return;
@@ -136,33 +139,46 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents(out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents (out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
         {
-            MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, _updateService, player.Rigidbody , _raycastService, _playerConfig);
+            MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, player.Rigidbody, _playerConfig);
+            _objectResolver.CurrentResolver.Inject(mover);
+
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);
             _objectResolver.CurrentResolver.Inject(playerBallContainer);
+
             ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
 
             cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);
             cardHolder.AddItem(_itemConainerProvider.Helmet);
             cardHolder.AddItem(_itemConainerProvider.Gun);
+            _mergeService.Init(cardHolder);
+            SplitingPanel splitingPanel = _uIFactory.Get<SplitingPanel>(WindowType.MergeWindow);
+            splitingPanel.MergeWindow.Init(cardHolder);
+            splitingPanel.SplitingWindow.Init(cardHolder);
 
-            if (_itemConainerProvider.Gun != null)
-            {
-                Cannon cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
-                player.SetFirePoint(cannon);
-            }
-            else
-            {
-                Cannon cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
-                player.SetFirePoint(cannon);
-            }
+            if(_itemConainerProvider.Gun != null)
+                Debug.Log(_itemConainerProvider.Gun.Config.name);
 
-            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.Cannon, playerBallContainer);
+           //Cannon cannon = null;
+           //
+           //if (_itemConainerProvider.Gun != null)
+           //{
+           //    cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
+           //}
+           //else
+           //{
+           //    cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
+           //}
+           //
+           //player.SetFirePoint(cannon);
+
+            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponViewer.CurrentCannon, playerBallContainer);
             _objectResolver.CurrentResolver.Inject(_shooter);
 
+            player.WeaponViewer.Init(_shooter, cardHolder);
             player.SquashOnShot.Init(_shooter);
             player.TiltOnShot.Init(_shooter);
 
@@ -185,10 +201,15 @@ namespace BigBalls.Factories
             return subscribables;
         }
 
-        public void OnPlayerSpawned()
+        public void OnPlayerSpawned ()
         {
             _shooter.StartShoot();
             _inputService.Enable();
+        }
+
+        public void CreateWeapon ()
+        {
+
         }
     }
 }

@@ -15,6 +15,7 @@ public class Bomb : EffectBehaviour
     private ISpatialService _spatialService;
     private ICoroutineRunner _coroutineRunner;
     private WaitForSeconds _respawnDelay;
+    private SoundSpawner _soundSpawner;
     private IParticleFactory _particleFactory;
 
     public Bomb (BombConfig config, int level) : base(config, level)
@@ -24,12 +25,13 @@ public class Bomb : EffectBehaviour
     }
 
     [Inject]
-    public void Construct (IDamageService damageService, ISpatialService spatialService, ICoroutineRunner coroutineRunner, IParticleFactory particleFactory)
+    public void Construct (IDamageService damageService, ISpatialService spatialService, ICoroutineRunner coroutineRunner, IParticleFactory particleFactory, SoundSpawner soundSpawner)
     {
         _damageService = damageService;
         _spatialService = spatialService;
         _coroutineRunner = coroutineRunner;
         _particleFactory = particleFactory;
+        _soundSpawner = soundSpawner;
     }
 
     private void OnHit (IEntity entity)
@@ -37,6 +39,7 @@ public class Bomb : EffectBehaviour
         if (Host is Ball ball)
         {
             float totalDamage = ExecuteExplosion (ball.Transform.position, _config.GetRadius(Level), _config.GetDamage(Level));
+            _soundSpawner.Spawn(ball.Config.HitSound);
             _particleFactory.Create(_config.ParticleObject, ball.Transform.position);
             ball.AddDamage(totalDamage);
             ball.gameObject.SetActive(false);
@@ -59,7 +62,7 @@ public class Bomb : EffectBehaviour
 
         foreach (var target in targets)
         {
-            totalDamage += _damageService.ApplyDamage(target, damage);
+            totalDamage += _damageService.ApplyDamage(target, damage, _config.Color);
         }
 
         return totalDamage;

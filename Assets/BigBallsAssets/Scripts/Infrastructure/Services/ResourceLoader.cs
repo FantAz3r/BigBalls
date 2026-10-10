@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
 using BigBalls.UI;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -23,23 +23,26 @@ namespace BigBalls.Services
             { typeof(CardsData), "Data/CardsData"},
             { typeof(ParticleData), "Data/Particle Data"},
             { typeof(LootData), "Data/LootData"},
+            { typeof(SoundData), "Data/SoundData"},
 
             { typeof(Player), "Player/Player"},
-            { typeof(UIRoot), "UI/UIRoot"},
+            { typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
             { typeof(PlayerConfig), "Configs/PlayerConfig"},
-            { typeof(Camera), "Prefabs/Main Camera"},
-            { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
-            //{ typeof(BallBehaivourData), "Data/BallBehaivourData"},
-            {typeof(PoolServiceConfig), "Configs/PoolServiceConfig"},
-            {typeof(CardView), "UI/CardView"},
-            {typeof(DamageText), "Prefabs/DamageTextObject"},
-            {typeof(StatTextHolder), "UI/StatTextHolder"},
-            {typeof(StatsSlot), "UI/StatSlot"},
             {typeof(LightningBolt), "LightningBolt"},
 
+            { typeof(SoundObject), "Prefabs/SoundObject"},
+            { typeof(DamageText), "Prefabs/DamageTextObject"},
+            { typeof(Camera), "Prefabs/Main Camera"},
+            { typeof(ObjectContainer), "Prefabs/GameObjectContainer"},
+
+            { typeof(UIRoot), "UI/UIRoot"},
+            { typeof(CardView), "UI/CardView"},
+            { typeof(StatTextHolder), "UI/StatTextHolder"},
+            { typeof(StatsSlot), "UI/StatSlot"},
+            { typeof(SplitingCard), "UI/MergeSlot"},
         };
 
-        public T Load<T>() where T : Object
+        public T Load<T> () where T : Object
         {
             string path = _staticObjects[typeof(T)];
             Type type = typeof(T);
@@ -50,7 +53,7 @@ namespace BigBalls.Services
                 _cashedObjects.Add(type, @object);
             }
 
-            if ((T)@object == null)
+            if ((T) @object == null)
             {
                 throw new ArgumentNullException(nameof(T));
             }

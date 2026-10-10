@@ -41,6 +41,10 @@ public class BallUnlockService : IBallUnlockService
         if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
             return false;
 
+        if (_globalWallet.CanSpendCoins(ball.BallConfig.UnlockPrice) == false)
+            return false;
+
+
         foreach (var parentType in node.BallConfig.ParentTypes)
         {
             if (_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall) == false)
@@ -53,6 +57,8 @@ public class BallUnlockService : IBallUnlockService
                 return false;
         }
 
+
+        _globalWallet.TrySpendCoins(ball.BallConfig.UnlockPrice);
         return true;
     }
 }

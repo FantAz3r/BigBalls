@@ -16,6 +16,7 @@ namespace BigBalls.Configs
         [SerializeField] private SerializedDictionary<StatType, StatStruct> _baseStats;
         [SerializeField] private SerializedDictionary<StatType, StatStruct> _statsUpgradePerLevel;
 
+        [field: SerializeField] public ItemType ItemType { get; private set; }
         public Dictionary<StatType, StatStruct> Stats => _baseStats;
 
         public float GetMaxStatValue(int level, StatType type)

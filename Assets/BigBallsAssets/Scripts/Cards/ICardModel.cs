@@ -16,6 +16,8 @@ public interface ICardModel
     float EXPForNextLevel { get; }
     string Name { get; }
     string Description { get; }
+    int MaxNoneGameLevel { get; }
+    int InGameLevel { get; }
 
     event Action<ICardModel> Upgraded;
     event Action<ICardModel> Changed;
@@ -26,6 +28,6 @@ public interface ICardModel
     List<List<string>> GetStatsText(bool isViewNextLevel);
     void InitFromData(CardSaveData data);
     void OpenItem();
+    bool TryUpgradeNoneGameLevel ();
     void Upgrade();
-    void UpgradeNoneGameLevel();
 }

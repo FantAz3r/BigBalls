@@ -13,5 +13,6 @@
         Ground,
         HorizontalLaser,
         VerticalLaser,
+        Scarab,
     }
 }

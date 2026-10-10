@@ -1,9 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
-using System;
-using System.Collections;
 using UnityEngine;
 using VContainer;
 
@@ -13,6 +14,7 @@ public class EnemyShooter : ISubscribable
     private readonly EnemyConfig _config;
     private readonly Stat _attackSpeed;
 
+    private SoundSpawner _soundSpawner;
     private WaitForSeconds _attackDelay;
     private Coroutine _shootRoutine;
     private ICoroutineRunner _coroutineRunner;
@@ -20,8 +22,10 @@ public class EnemyShooter : ISubscribable
     private Transform _target;
     private IIdentifierService _identifierService;
     private IBallFactory _ballFactory;
+    private List<ICollisionStrategy> _collisionStrategies = new List<ICollisionStrategy>();
+    private Transform _firePoint;
 
-    public EnemyShooter(Stat attackSpeed,
+    public EnemyShooter (Stat attackSpeed,
             Enemy firePoint,
             EnemyConfig config,
             Transform target)
@@ -30,26 +34,31 @@ public class EnemyShooter : ISubscribable
         _enemy = firePoint;
         _config = config;
         _target = target;
+        OnStatChanged(_attackSpeed);
     }
 
     public event Action Shooted;
 
     [Inject]
-    public void Construct(ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory)
+    public void Construct (ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory, SoundSpawner soundSpawner)
     {
         _coroutineRunner = coroutineRunner;
         _identifierService = identifierService;
         _ballFactory = ballFactory;
+        _soundSpawner = soundSpawner;
+        CreateCollisionStrategiesToEnemy();
+
+        _firePoint = _enemy.transform;
     }
 
-    public void Subscribe()
+    public void Subscribe ()
     {
         _attackSpeed.ValueChanged += OnStatChanged;
         _canShoot = true;
         _shootRoutine = _coroutineRunner?.StartCoroutine(ShootRoutine());
     }
 
-    public void Unsubscribe()
+    public void Unsubscribe ()
     {
         _canShoot = false;
         _attackSpeed.ValueChanged -= OnStatChanged;
@@ -61,7 +70,7 @@ public class EnemyShooter : ISubscribable
         }
     }
 
-    public void Shoot()
+    public void Shoot ()
     {
         BallModel ballModel = new BallModel(_identifierService.ID, _config.BallConfig);
         Vector3 direction = _target.position - _enemy.transform.position;
@@ -69,19 +78,28 @@ public class EnemyShooter : ISubscribable
         direction.Normalize();
         Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
 
-        Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy, _enemy.Transform, rotation);
+        Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy, _enemy.Transform, _collisionStrategies, rotation);
+        ball.transform.position = _firePoint.position;
         ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
-        ball.transform.position = _enemy.transform.position;
         ball.Subscribe();
+
+        if (_config.RangeAttackSound.Clip != null)
+        {
+            Debug.Log(123);
+            _soundSpawner.Spawn(_config.RangeAttackSound);
+        }
+
         Shooted?.Invoke();
     }
 
-    private void OnStatChanged(IReadonlyStat stat)
+    public void Set (List<ICollisionStrategy> collisionStrategies) => _collisionStrategies = collisionStrategies;
+    public void Set (Transform firePoint) => _firePoint = firePoint;
+    private void OnStatChanged (IReadonlyStat stat)
     {
         _attackDelay = new WaitForSeconds((1 / stat.CurrentValue) * UnityEngine.Random.Range(0.6f, 1.4f));
     }
 
-    private IEnumerator ShootRoutine()
+    private IEnumerator ShootRoutine ()
     {
         while (_canShoot)
         {
@@ -99,5 +117,15 @@ public class EnemyShooter : ISubscribable
                 _enemy.EnemyAnimator.Shoot(Shoot);
             }
         }
+    }
+
+    private void CreateCollisionStrategiesToEnemy ()
+    {
+        _collisionStrategies = new List<ICollisionStrategy>
+        {
+            new BallCollisionStrategy(),
+            new HitPlayerStrategy(),
+            new WallColllisionStrategy()
+        };
     }
 }

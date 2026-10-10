@@ -5,6 +5,7 @@ namespace BigBalls.Providers
 {
     public interface ISceneContainerProvider
     {
+        BackgroundLooper BackgroundLooper { get; }
         List<PlayerSpawnPoint> PlayerSpawnPoints { get; }
     }
 }

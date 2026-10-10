@@ -22,5 +22,6 @@ namespace BigBalls.Services
         CardSelectionMenu CreateCardMenu();
         Background CreateBackgroung ();
         ChestItemDropView CreateChestWindow();
+        SplitingPanel CreateSplitingPanel ();
     }
 }

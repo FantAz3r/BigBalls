@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.UI;
-using System.Collections.Generic;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -16,7 +16,7 @@ namespace BigBalls.Factories
 
         private WindowData _windowData;
 
-        public UIFactory(
+        public UIFactory (
             IObjectResolverProvider resolverProvider,
             IResourceLoader resourceLoader)
         {
@@ -27,72 +27,74 @@ namespace BigBalls.Factories
 
         public UIRoot UIRoot { get; private set; }
 
-        public T Get<T>(WindowType type) where T : WindowBase
+        public T Get<T> (WindowType type) where T : WindowBase
         {
             if (_windowCache.ContainsKey(type) == false)
             {
                 WindowBase window = GetOrCreateWindow(type);
                 window.Close();
-                return (T)window;
+                return (T) window;
             }
 
-            return (T)_windowCache[type];
+            return (T) _windowCache[type];
         }
 
-        public void CreateUIRoot()
+        public void CreateUIRoot ()
         {
             UIRoot = _resolverProvider.CurrentResolver.Instantiate(_resourceLoader.Load<UIRoot>());
         }
 
-        public HUD CreateHUD() => GetOrCreateWindow(WindowType.HUD) as HUD;
+        public HUD CreateHUD () => GetOrCreateWindow(WindowType.HUD) as HUD;
 
-        public SettingsView CreateSettings() => GetOrCreateWindow(WindowType.Settings) as SettingsView;
+        public SettingsView CreateSettings () => GetOrCreateWindow(WindowType.Settings) as SettingsView;
 
-        public MainMenu CreateMainMenu() => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
+        public MainMenu CreateMainMenu () => GetOrCreateWindow(WindowType.MainMenu) as MainMenu;
 
-        public PauseWindow CreatePauseWindow() => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
+        public PauseWindow CreatePauseWindow () => GetOrCreateWindow(WindowType.Pause) as PauseWindow;
 
-        public LouseLevelMenu CreateLouseMenu() => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
+        public LouseLevelMenu CreateLouseMenu () => GetOrCreateWindow(WindowType.LouseLevelMenu) as LouseLevelMenu;
 
-        public WinLevelMenu CreateWinMenu() => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
+        public WinLevelMenu CreateWinMenu () => GetOrCreateWindow(WindowType.WinLevelMenu) as WinLevelMenu;
 
-        public BallTreeUI CreateBallTree() => GetOrCreateWindow(WindowType.BallTree) as BallTreeUI;
+        public BallTreeUI CreateBallTree () => GetOrCreateWindow(WindowType.BallTree) as BallTreeUI;
 
-        public CardSelectionMenu CreateCardMenu() => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
+        public CardSelectionMenu CreateCardMenu () => GetOrCreateWindow(WindowType.CardMenu) as CardSelectionMenu;
 
-        public CardInventory CreateInventoryMenu() => GetOrCreateWindow(WindowType.Inventory) as CardInventory;
+        public CardInventory CreateInventoryMenu () => GetOrCreateWindow(WindowType.Inventory) as CardInventory;
 
-        public Background CreateBackgroung() => GetOrCreateWindow(WindowType.Background, UIRoot.BackgroundUIHolder) as Background;
+        public SplitingPanel CreateSplitingPanel () => GetOrCreateWindow(WindowType.MergeWindow) as SplitingPanel;
 
-        public ChestItemDropView CreateChestWindow() => GetOrCreateWindow(WindowType.OpenChest, UIRoot.BackgroundUIHolder) as ChestItemDropView;
+        public Background CreateBackgroung () => GetOrCreateWindow(WindowType.Background, UIRoot.BackgroundUIHolder) as Background;
 
-        public void CreateJoystick()
+        public ChestItemDropView CreateChestWindow () => GetOrCreateWindow(WindowType.OpenChest, UIRoot.BackgroundUIHolder) as ChestItemDropView;
+
+        public void CreateJoystick ()
 
         {
         }
 
-        public LevelSelectionPanel CreateLevelSelect() => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
+        public LevelSelectionPanel CreateLevelSelect () => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;
 
-        public void ClearCache()
+        public void ClearCache ()
         {
             _windowCache.Clear();
         }
 
-        private WindowBase GetOrCreateWindow(WindowType windowType, Transform parent = null)
+        private WindowBase GetOrCreateWindow (WindowType windowType, Transform parent = null)
         {
             if (_windowCache.TryGetValue(windowType, out var cachedWindow))
             {
-                cachedWindow.Open();
+                //cachedWindow.Open();
                 return cachedWindow;
             }
 
             var newWindow = CreateWindow(windowType, parent);
             _windowCache.Add(windowType, newWindow);
-            newWindow.Open();
+            //newWindow.Open();
             return newWindow;
         }
 
-        private WindowBase CreateWindow(WindowType windowType, Transform parent = null)
+        private WindowBase CreateWindow (WindowType windowType, Transform parent = null)
         {
             WindowBase window;
             WindowBase prefab = _windowData.Get(windowType);

@@ -50,7 +50,7 @@ public class Tunder : EffectBehaviour
             currentTarget = FindNextTarget(currentTarget.Transform.position, searchRadius, hitEntities);
         }
 
-        LightningBolt lightningBolt = _poolService.GetObject(_lightningBoltPrefab);
+        LightningBolt lightningBolt = _poolService.Get(_lightningBoltPrefab);
         List<Transform> enemies = new();
 
         foreach (var entity in hitEntities)
@@ -89,7 +89,7 @@ public class Tunder : EffectBehaviour
     public void OnRelease(LightningBolt lightningBolt)
     {
         lightningBolt.LightFinished -= OnRelease;
-        _poolService.ReleaseObject(lightningBolt);
+        _poolService.Release(lightningBolt);
     }
 
     protected override IDisposable SubscribeInternal(IEntity host)

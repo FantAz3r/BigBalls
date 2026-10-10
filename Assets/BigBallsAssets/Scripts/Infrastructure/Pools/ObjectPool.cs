@@ -89,7 +89,7 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : Component
     private T CreateObject (Vector3 position, Quaternion rotation, Transform parent)
     {
         T obj = _resolverProvider.CurrentResolver.Instantiate(_prefab, position, rotation);
-        _resolverProvider.CurrentResolver.Inject(obj);
+        _resolverProvider.CurrentResolver.Inject(obj.gameObject);
         obj.name = _nameParent;
 
         if (parent != null)

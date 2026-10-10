@@ -55,6 +55,12 @@ public class Slot : MonoBehaviour, IDropHandler
         _text.text = card.Level.ToString();
     }
 
+    public void Clear ()
+    {
+        Card = null;
+        gameObject.SetActive(false);
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
         if (CurrentItem != null)
@@ -87,6 +93,7 @@ public class Slot : MonoBehaviour, IDropHandler
 
         if (IsActiveSlot)
             _itemContainer.Add(item.Model);
+
     }
 
     public void RemoveItem(UIItem item)

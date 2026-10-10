@@ -21,7 +21,7 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
     public ICardModel Model { get; private set; }
 
 
-    private void OnDestroy () => Model.Upgraded -= Render;
+    private void OnDisable () => Model.Upgraded -= Render;
 
     public void Init (Transform inventory, Canvas mainCanvas)
     {
@@ -98,5 +98,4 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
         _canvasGroup.blocksRaycasts = true;
     }
-
 }

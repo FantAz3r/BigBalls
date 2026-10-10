@@ -12,6 +12,9 @@ public class SpatialService : ISpatialService
         {
             if (collider.TryGetComponent<IEntity>(out var entity))
             {
+                if (entity is Player)
+                    continue;
+
                 if (entity is not Ball)
                 {
                     yield return entity;

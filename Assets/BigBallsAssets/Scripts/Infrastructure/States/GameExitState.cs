@@ -23,5 +23,6 @@ public class GameExitState : IState
 
     public void Exit()
     {
+
     }
 }

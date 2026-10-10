@@ -1,9 +1,9 @@
-using BigBalls.Services;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using BigBalls.Services;
 using UI_Spline_Renderer;
 using UnityEngine;
+using UnityEngine.Splines;
 using VContainer;
 
 public class BallTreeConnectionUI : MonoBehaviour
@@ -21,8 +21,11 @@ public class BallTreeConnectionUI : MonoBehaviour
     [Header("Animation Settings")]
     [SerializeField] private float _animationDuration = 0.5f;
 
+    private Vector2 _originalSize;
     private ICoroutineRunner _coroutineRunner;
     private Coroutine _fillCoroutine;
+    private RectTransform _from;
+    private RectTransform _to;
 
     public bool IsConnected { get; private set; }
 
@@ -31,20 +34,28 @@ public class BallTreeConnectionUI : MonoBehaviour
         transform.SetAsFirstSibling();
     }
 
-    public void OnDisable()
+    public void OnDisable ()
     {
         if (_fillCoroutine != null)
             _coroutineRunner.StopCoroutine(_fillCoroutine);
     }
 
+    private void OnEnable ()
+    {
+        _coroutineRunner.StartCoroutine(UpdateRoutine());
+    }
+
     [Inject]
-    public void Construct(ICoroutineRunner coroutineRunner)
-    { 
+    public void Construct (ICoroutineRunner coroutineRunner)
+    {
         _coroutineRunner = coroutineRunner;
     }
 
     public void SetConnection (RectTransform from, RectTransform to)
     {
+        _from = from;
+        _to = to;
+
         var positions = new List<Vector3>
         {
             new Vector3(from.localPosition.x, from.localPosition.y, 0),
@@ -70,6 +81,9 @@ public class BallTreeConnectionUI : MonoBehaviour
         _splineRenderer.texture = _texture;
 
         _splineRenderer.color = _lockedColor;
+
+        _originalSize = _splineRenderer.rectTransform.sizeDelta;
+
     }
 
     public void UpdateLine ()
@@ -81,7 +95,7 @@ public class BallTreeConnectionUI : MonoBehaviour
         _fillCoroutine = _coroutineRunner.StartCoroutine(FillRoutine());
     }
 
-    public void UpgradeConnaction()
+    public void UpgradeConnaction ()
     {
         _splineRenderer.color = _upgradedColor;
     }
@@ -116,5 +130,16 @@ public class BallTreeConnectionUI : MonoBehaviour
         IsConnected = true;
         _splineRenderer.clipRange = new Vector2(0, 1);
         _splineRenderer.color = _unlockedColor;
+    }
+
+    private IEnumerator UpdateRoutine()
+    {
+        yield return null;
+
+        if (_splineRenderer != null)
+        {
+            _splineRenderer.rectTransform.sizeDelta = _originalSize;
+
+        }
     }
 }

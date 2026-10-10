@@ -1,8 +1,6 @@
-using BigBalls.Infrastructure.DI;
-using BigBalls.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using BigBalls.Infrastructure.DI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,13 +24,13 @@ public class CardInventory : PopupWindow
 
     [field: SerializeField] public InventoryStatsView StatsView { get; private set; }
 
-    private void OnEnable()
+    private void OnEnable ()
     {
-        ViewAll();
+        OnFilterChanged(0);
     }
 
     [Inject]
-    public void Construct(
+    public void Construct (
         ArmorRepository armorRepository,
         WeaponRepository weaponRepository,
         HelmetRepository helmetRepository,
@@ -44,17 +42,31 @@ public class CardInventory : PopupWindow
         _objectResolverProvider = objectResolverProvider;
 
         _canvas = GetComponent<Canvas>();
+
+        _models.Clear();
         _models.AddRange(_weaponRepository.AllModels.Values);
         _models.AddRange(_armorRepository.AllModels.Values);
         _models.AddRange(_helmetRepository.AllModels.Values);
     }
 
-    public void ViewAll() => ViewSlots(card => card is WeaponModel || card is ArmorModel || card is HelmetModel);
-    public void ViewWeapons() => ViewSlots(card => card is WeaponModel);
-    public void ViewHelmets() => ViewSlots(card => card is HelmetModel);
-    public void ViewArmors() => ViewSlots(card => card is ArmorModel);
+    public void OnFilterChanged (int filterType)
+    {
+        switch (filterType)
+        {
+            case 0: ViewAll(); break;
+            case 1: ViewWeapons(); break;
+            case 2: ViewHelmets(); break;
+            case 3: ViewArmors(); break;
+        }
+    }
 
-    private void ViewSlots(Func<ICardModel, bool> filter)
+
+    public void ViewAll () => ViewSlots(card => card is WeaponModel || card is ArmorModel || card is HelmetModel);
+    public void ViewWeapons () => ViewSlots(card => card is WeaponModel);
+    public void ViewHelmets () => ViewSlots(card => card is HelmetModel);
+    public void ViewArmors () => ViewSlots(card => card is ArmorModel);
+
+    private void ViewSlots (Func<ICardModel, bool> filter)
     {
         RemoveAllSlots();
 
@@ -82,25 +94,16 @@ public class CardInventory : PopupWindow
             }
         }
 
-        if (_slots.Count == 0)
-        {
-            _tipText.gameObject.SetActive(true);
-        }
-        else
-        {
-            _tipText.gameObject.SetActive(false);
-        }
+        _tipText.gameObject.SetActive(_slots.Count == 0);
     }
 
-    private void RemoveAllSlots()
+    private void RemoveAllSlots ()
     {
-        var children = _parent.GetComponentsInChildren<Slot>();
+        _slots.Clear();
 
-        foreach (var child in children)
+        foreach (Transform child in _parent.transform)
         {
             Destroy(child.gameObject);
         }
-
-        _slots.Clear();
     }
 }

@@ -8,6 +8,7 @@ public class ParticleObject : MonoBehaviour
 {
     private ICoroutineRunner _coroutineRunner;
     private Coroutine _watcherCoroutine;
+
     [field: SerializeField] public ParticleSystem ParticleSystem { get; private set; }
 
     public event Action<ParticleObject> Returned;
@@ -23,11 +24,13 @@ public class ParticleObject : MonoBehaviour
         if (ParticleSystem == null)
             return;
 
-        ParticleSystem.Clear();
+        ParticleSystem.Stop();
 
         gameObject.SetActive(true);
         ParticleSystem.Play();
-        _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
+
+        if(_watcherCoroutine == null)
+            _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
     }
 
     public void Stop ()
@@ -35,7 +38,7 @@ public class ParticleObject : MonoBehaviour
         if (ParticleSystem == null)
             return;
 
-        if (_watcherCoroutine != null)
+        if (_watcherCoroutine != null && _coroutineRunner != null)
         {
             _coroutineRunner.StopCoroutine(_watcherCoroutine);
             _watcherCoroutine = null;

@@ -43,8 +43,6 @@ public class WinService : IWinService
         _winReason.Won -= OnWin;
         WinLevelMenu winMenu = _windowService.Open<WinLevelMenu>() as WinLevelMenu;
         winMenu.LevelComplite(_level, _levelConfig.Waves.Count);
-
-        _walletModel.PutAccumulatedCoins();
         _timeService.StopGame();
     }
 }

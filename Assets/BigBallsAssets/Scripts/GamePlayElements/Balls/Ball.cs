@@ -1,18 +1,23 @@
+using System.Collections.Generic;
+using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Factories;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
     public class Ball : MonoBehaviour, IEntity
     {
+        [SerializeField] private LayerMask _playerLayer;
+
         private List<ICollisionStrategy> _collisionStrategies;
         private IEffectFactory _effectFactory;
         private float _stackCount;
+        private Collider _body;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         [field: SerializeField] public ParticleObject Particle { get; private set; }
+
         public List<EffectBehaviour> EffectBehaviours { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
         public BallModel Model { get; private set; }
@@ -24,24 +29,24 @@ namespace BigBalls.GameplayObjects
         public EntityEventHandler EventHandler { get; private set; }
         public float AppliedDamage { get; private set; }
 
-        private void Awake()
+        private void Awake ()
         {
             EventHandler = new EntityEventHandler();
             IsMaterial = Config.IsMaterial;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter (Collision collision)
         {
             _stackCount = 0;
 
-            foreach (var strategy in _collisionStrategies)
+            foreach (var strategy in _collisionStrategies.ToList())
             {
                 if (strategy.HandleCollision(this, collision))
                     break;
             }
         }
 
-        private void OnCollisionStay(Collision collision)
+        private void OnCollisionStay (Collision collision)
         {
             _stackCount += Time.deltaTime;
 
@@ -49,7 +54,7 @@ namespace BigBalls.GameplayObjects
             {
                 _stackCount = 0;
 
-                foreach (var strategy in _collisionStrategies)
+                foreach (var strategy in _collisionStrategies.ToList())
                 {
                     if (strategy.HandleCollision(this, collision))
                         break;
@@ -57,12 +62,34 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        private void OnDestroy()
+        private void OnEnable ()
+        {
+            if (EffectBehaviours != null && EffectBehaviours.Count > 0)
+            {
+                foreach (var effect in EffectBehaviours)
+                {
+                    effect.Subscribe(this);
+                }
+            }
+        }
+
+        private void OnDisable ()
+        {
+            if (EffectBehaviours != null && EffectBehaviours.Count > 0)
+            {
+                foreach (var effect in EffectBehaviours)
+                {
+                    effect.Unsubscribe(this);
+                }
+            }
+        }
+
+        private void OnDestroy ()
         {
             UnsubscribeEffects();
         }
 
-        public void Construct(
+        public void Construct (
             int id,
             BallModel model,
             IMover mover,
@@ -77,11 +104,12 @@ namespace BigBalls.GameplayObjects
             Mover = mover;
             _collisionStrategies = collisionStrategies;
             _effectFactory = ballEffectFactory;
-
+            _body = GetComponent<Collider>();
             EffectBehaviours = _effectFactory.Create(Config.Effects, Model.Level);
         }
 
-        public void AddEffects(List<ArtefactModel> artefacts)
+
+        public void AddEffects (List<ArtefactModel> artefacts)
         {
             foreach (var artefact in artefacts)
             {
@@ -89,7 +117,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void Subscribe()
+        public void Subscribe ()
         {
             foreach (var effect in EffectBehaviours)
             {
@@ -97,7 +125,7 @@ namespace BigBalls.GameplayObjects
             }
         }
 
-        public void UnsubscribeEffects()
+        public void UnsubscribeEffects ()
         {
             CanReturnToBag = false;
 
@@ -109,15 +137,20 @@ namespace BigBalls.GameplayObjects
             EffectBehaviours.Clear();
         }
 
-        public void SetCanReturnToBag(bool canReturnToBag) => CanReturnToBag = canReturnToBag;
-        public void SetIsMaterial(bool isMaterial) => IsMaterial = isMaterial;
+        public void SetCanReturnToBag (bool canReturnToBag)
+        {
+            CanReturnToBag = canReturnToBag;
+            _body.excludeLayers = canReturnToBag ? _body.excludeLayers & ~_playerLayer : _body.excludeLayers | _playerLayer;
+        }
 
-        public void ClearCollisionStrategies()
+        public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
+
+        public void ClearCollisionStrategies ()
         {
             _collisionStrategies.Clear();
         }
 
-        public void AddDamage(float damage)
+        public void AddDamage (float damage)
         {
             AppliedDamage += damage;
         }

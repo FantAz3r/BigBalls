@@ -17,6 +17,8 @@ namespace BigBalls.Configs
         [field: SerializeField] public EnemyConfig LevelBoss { get; private set; }
         public float LineSpawnDelay { get; private set; } = 5;
 
+        public List<EnemyConfig> ConfigsForPool = new();
+
         public List<EnemyConfig> GetAllLevelEnemies()
         {
             List<EnemyConfig> enemyConfigs = new ();
@@ -33,6 +35,7 @@ namespace BigBalls.Configs
             }
 
             enemyConfigs.Add(LevelBoss);
+            enemyConfigs.AddRange(ConfigsForPool);
 
             return enemyConfigs;
         }

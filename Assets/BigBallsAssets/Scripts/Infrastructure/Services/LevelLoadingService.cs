@@ -7,22 +7,17 @@ namespace BigBalls.Services
     public class LevelLoadingService : ILevelLoadingService
     {
         private readonly IGameStateMachine _stateMachine;
-        private LevelID _currentLevel;
+
         public LevelLoadingService(IGameStateMachine stateMachine)
         {
             _stateMachine = stateMachine;
         }
+        public LevelID CurrentLevel { get; private set; } = LevelID.Level1;
 
         public void Load(LevelID level)
         {
-            Debug.Log(level);
-            _currentLevel = level;
+            CurrentLevel = level;
             _stateMachine.EnterIn<LoadingLevelState, LevelID>(level);
-        }
-
-        public void Reload()
-        {
-            _stateMachine.EnterIn<LoadingLevelState, LevelID>(_currentLevel);
         }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,23 +7,55 @@ public class BackgroundLooper : MonoBehaviour
     [SerializeField] private float _startZ = 30f;
     [SerializeField] private float _endZ = -10f;
     [SerializeField] private float _duration = 5f;
+    [SerializeField] private bool _useCurrentPosition = true;
+    [SerializeField] private int _loopCount = -1;
+    [SerializeField] private LoopType _loopType = LoopType.Restart;
+    [SerializeField] private Ease _ease = Ease.Linear;
 
-    private void Start ()
+    private Tween _currentTween;
+    private Vector3 _startPosition;
+
+    private void OnDestroy ()
+    {
+        StopMove();
+    }
+
+    public void StartMove ()
     {
         AnimateBackground();
     }
 
-    private void AnimateBackground ()
+    public void StopMove ()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y, _startZ);
-
-        transform.DOMoveZ(_endZ, _duration)
-            .SetEase(Ease.Linear)
-            .SetLoops(-1, LoopType.Restart);
+        _currentTween?.Kill();
+        _currentTween = null;
     }
 
-    private void OnDestroy ()
+    private void AnimateBackground ()
     {
-        transform.DOKill();
+        if (_useCurrentPosition)
+        {
+            _startPosition = transform.position;
+        }
+        else
+        {
+            _startPosition = new Vector3(transform.position.x, transform.position.y, _startZ);
+        }
+
+        if (!_useCurrentPosition)
+        {
+            transform.position = _startPosition;
+        }
+
+        _currentTween = transform.DOMoveZ(_endZ, _duration)
+            .SetEase(_ease)
+            .SetLoops(_loopCount, _loopType)
+            .OnComplete(() =>
+            {
+                if (_loopCount != -1)
+                {
+                    transform.position = _startPosition;
+                }
+            });
     }
 }

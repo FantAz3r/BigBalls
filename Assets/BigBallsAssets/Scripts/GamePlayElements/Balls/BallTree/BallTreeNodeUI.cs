@@ -35,7 +35,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
     private void OnEnable ()
     {
-        if(BallModel != null)
+        if (BallModel != null)
         {
             UpdateState();
         }
@@ -100,17 +100,13 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         OnClick?.Invoke(this);
     }
 
-    public void Upgrade ()
+    public bool Upgrade ()
     {
-        BallModel.UpgradeNoneGameLevel();
         UpdateState();
+        return BallModel.TryUpgradeNoneGameLevel();
     }
 
-    public void Unlock()
-    {
-        _unlockService.TryUnlockBall(BallModel.BallConfig.BallType);
-    }
-
+    public bool Unlock () => _unlockService.TryUnlockBall(BallModel.BallConfig.BallType);
     public void AddChildConnection (BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
     public void AddParentConnection (BallTreeConnectionUI connectionUI) => _parentConnections.Add(connectionUI);
 

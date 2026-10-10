@@ -6,5 +6,6 @@ namespace BigBalls.Configs
     {
         [field: SerializeField] public Transform FirePoint { get; private set; }
         [field: SerializeField] public ParticleObject Particle { get; private set; }
+        [field: SerializeField] public ItemType WeaponType { get; private set; }
     }
 }

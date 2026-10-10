@@ -3,22 +3,23 @@ using BigBalls.Services;
 
 public class LootMediator : ILootMediator
 {
-    private IWalletModel _walletModel;
-    private IPlayerProvider _playerProvider;
     private readonly IPlayerExperience _playerExperience;
     private readonly IEntityRepository _entityRepository;
+    private readonly IWindowService _windowService;
+    private IWalletModel _walletModel;
+    private IPlayerProvider _playerProvider;
 
-    public LootMediator(IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience, IEntityRepository entityRepository)
+    public LootMediator (IWalletModel walletModel, IPlayerProvider playerProvider, IPlayerExperience playerExperience, IEntityRepository entityRepository, IWindowService windowService)
     {
         _walletModel = walletModel;
         _playerProvider = playerProvider;
         _playerExperience = playerExperience;
         _entityRepository = entityRepository;
+        _windowService = windowService;
     }
 
-    public void RegisterLoot(Loot loot)
+    public void RegisterLoot (Loot loot)
     {
-        StatHolder statHolder = _entityRepository.GetStatHolder(_playerProvider.Player);
         switch (loot.Type)
         {
             case LootType.Coin:
@@ -26,6 +27,7 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.HealthPotion:
+                StatHolder statHolder = _entityRepository.GetStatHolder(_playerProvider.Player);
                 statHolder[StatType.Health].AddCurrentValue(loot.Value);
                 break;
 
@@ -34,7 +36,7 @@ public class LootMediator : ILootMediator
                 break;
 
             case LootType.Ball:
-                statHolder[StatType.BallBag].AddCurrentValue(loot.Value);
+                _windowService.Open<SplitingPanel>();
                 break;
         }
     }

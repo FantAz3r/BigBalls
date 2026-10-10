@@ -15,6 +15,7 @@ namespace BigBalls.Configs
         [HideInInspector] public LayerMask ObstacleLayers { get; private set; }
         [field: SerializeField] public Ball Prefab { get; private set; }
         [field: SerializeField] public Color DamageColor { get; private set; }
+        [field: SerializeField] public SoundStruct HitSound { get; private set; }
         [field: SerializeField] public EntityType EntityType { get; private set; }
         [field: SerializeField] public BallType BallType { get; private set; }
         [field: SerializeField] public bool IsMaterial { get; private set; }

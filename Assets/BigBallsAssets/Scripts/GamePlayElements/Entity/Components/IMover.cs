@@ -2,7 +2,7 @@
 
 namespace BigBalls.GameplayObjects
 {
-    public interface IMover
+    public interface IMover : ISubscribable
     {
         Vector2 Direction { get; }
         Transform MovableObject { get; }
@@ -13,6 +13,8 @@ namespace BigBalls.GameplayObjects
 
         Vector3 GetCurrentVelocity();
         void SetDirection(Vector2 direction);
+        void SetDirection (Vector3 direction);
+        void SetMovableObject (Transform transform);
         void SetReycastInfo(Vector3[] directions, Vector3[] points);
         void SetTarget(Transform target);
     }

@@ -3,6 +3,7 @@ using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StatHolder : IArtefactUser
 {
@@ -14,7 +15,7 @@ public class StatHolder : IArtefactUser
     private IEntityConfig _config;
     private IArmor _armor;
 
-    public StatHolder(IEntity entity, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
+    public StatHolder (IEntity entity, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
         EntityType = entityType;
         _owner = entity;
@@ -28,13 +29,16 @@ public class StatHolder : IArtefactUser
 
     public Stat this[StatType type] => _stats[type];
 
-    public void Set(ArmorModel item)
+    public void Set (ArmorModel item)
     {
         _armor = item;
+        InitStats();
     }
 
     public void InitStats()
     {
+        _stats.Clear();
+
         foreach (var stat in _config.Stats)
         {
             float maxValue = stat.StartMaxValue;
@@ -67,5 +71,10 @@ public class StatHolder : IArtefactUser
         }
 
         return false;
+    }
+
+    public void RemoveEffects (ArtefactModel artefactModel)
+    {
+        //_effectBehaviours.Remove(artefactModel.)
     }
 }

@@ -25,6 +25,9 @@ public class WeaponModel : ItemModel
     {
         List<BallModel> balls = new List<BallModel>();
 
+        if (WeaponConfig.UniqueBallConfigs.Count == 0)
+            return balls;
+
         foreach (var config in WeaponConfig.UniqueBallConfigs)
         {
             BallModel ballModel = _ballRepository.AllModels[config.BallType];

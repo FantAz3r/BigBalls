@@ -5,7 +5,7 @@ using VContainer;
 public class PlayerLevelViewer : MonoBehaviour
 {
     [SerializeField] private TMP_Text _valueText;
-    
+
     private IPlayerExperience _experience;
     private int _currentValue = 0;
 
@@ -23,7 +23,8 @@ public class PlayerLevelViewer : MonoBehaviour
 
     private void OnDisable()
     {
-        _experience.LevelUpped -= CreateNewLevelView;
+        if(_experience != null)
+            _experience.LevelUpped -= CreateNewLevelView;
     }
 
     private void CreateNewLevelView()

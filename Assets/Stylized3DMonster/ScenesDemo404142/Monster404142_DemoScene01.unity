@@ -533,6 +533,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2437191962619350021, guid: b1140348f91dcee4f854e69fb0af0737,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ed7156f742a6479458c1215eecd029bc, type: 2}
     - target: {fileID: 3064182496570947963, guid: b1140348f91dcee4f854e69fb0af0737,
         type: 3}
       propertyPath: m_Name
@@ -611,8 +616,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2588021973034710160, guid: b1140348f91dcee4f854e69fb0af0737,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1482550863}
   m_SourcePrefab: {fileID: 100100000, guid: b1140348f91dcee4f854e69fb0af0737, type: 3}
+--- !u!1 &1482550862 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2588021973034710160, guid: b1140348f91dcee4f854e69fb0af0737,
+    type: 3}
+  m_PrefabInstance: {fileID: 1482550861}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1482550863
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482550862}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: c19ce943e13da0f4a9f1c27b541e4be0, type: 3}
+  m_Controller: {fileID: 9100000, guid: 322c5ab072d5bcc4a94149236062fd1d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'middle2.l'\n\tTransform 'arm_stretch.l'\n\tTransform
+    'spine_02.x'\n\tTransform 'spine_01.x'\n\tTransform 'toes_01.r'\n\tTransform
+    'thigh_stretch.r'\n\tTransform 'thumb3.r'\n\tTransform 'middle1.r'\n\tTransform
+    'root.x'\n\tTransform 'index1.l'\n\tand more ...\n\tFrom animation clip 'Monster38_Attack01'\n\tFrom
+    animation clip 'Monster38_Attack02'\n\tFrom animation clip 'Monster38_Attack03'\n\tFrom
+    animation clip 'Monster38_Die01'\n\tFrom animation clip 'Monster38_Die02'\n\tFrom
+    animation clip 'Monster38_Die03'\n\tFrom animation clip 'Monster38_Idle02'\n\tFrom
+    animation clip 'Monster38_Idle03'\n\tFrom animation clip 'Monster38_Run'\n\tFrom
+    animation clip 'Monster38_Walk'\n\tand more ..."
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1536719355 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6629656068395026288, guid: 47f6a8f66346bd242a8f304feb9aa476,
@@ -903,6 +949,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2392417116163090513, guid: 2ee6994c02e56834e9231bf1627d2b49,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 322c5ab072d5bcc4a94149236062fd1d, type: 2}
+    - target: {fileID: 2392417116163090513, guid: 2ee6994c02e56834e9231bf1627d2b49,
+        type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'middle2.l'\n\tTransform 'arm_stretch.l'\n\tTransform
+        'spine_02.x'\n\tTransform 'spine_01.x'\n\tTransform 'toes_01.r'\n\tTransform
+        'thigh_stretch.r'\n\tTransform 'thumb3.r'\n\tTransform 'middle1.r'\n\tTransform
+        'root.x'\n\tTransform 'index1.l'\n\tand more ...\n\tFrom animation clip 'Monster38_Attack01'\n\tFrom
+        animation clip 'Monster38_Attack02'\n\tFrom animation clip 'Monster38_Attack03'\n\tFrom
+        animation clip 'Monster38_Die01'\n\tFrom animation clip 'Monster38_Die02'\n\tFrom
+        animation clip 'Monster38_Die03'\n\tFrom animation clip 'Monster38_Idle02'\n\tFrom
+        animation clip 'Monster38_Idle03'\n\tFrom animation clip 'Monster38_Run'\n\tFrom
+        animation clip 'Monster38_Walk'\n\tand more ..."
+      objectReference: {fileID: 0}
+    - target: {fileID: 2392417116163090513, guid: 2ee6994c02e56834e9231bf1627d2b49,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3064182496570947963, guid: 2ee6994c02e56834e9231bf1627d2b49,
         type: 3}
       propertyPath: m_Name

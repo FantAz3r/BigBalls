@@ -1,11 +1,12 @@
-﻿using BigBalls.Configs;
+﻿using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
+using BigBalls.Providers;
 using BigBalls.Services;
 using BigBalls.UI;
-using log4net.Core;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -32,9 +33,14 @@ namespace BigBalls.Infrastructure
         private readonly ICameraProvider _cameraProvider;
         private readonly ISaveService _saveService;
         private readonly IInputService _inputService;
+        private readonly ISceneContainerProvider _sceneContainerProvider;
+        private readonly IWalletModel _walletModel;
+        private readonly ISoundService _soundService;
+        private readonly SoundSpawner _soundSpawner;
         private LevelConfig _levelConfig;
-        private List<EnemyConfig> _currentEnemyConfig;
+        private List<EnemyConfig> _currentEnemyConfigs;
         private LevelID _currentLevel;
+
         public CreateLevelState(
             IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
@@ -55,7 +61,11 @@ namespace BigBalls.Infrastructure
             ILouseService louseService,
             ICameraProvider cameraProvider,
             ISaveService saveService,
-            IInputService inputService)
+            IInputService inputService,
+            ISceneContainerProvider sceneContainerProvider,
+            IWalletModel walletModel,
+            ISoundService soundService,
+            SoundSpawner soundSpawner)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -76,47 +86,58 @@ namespace BigBalls.Infrastructure
             _cameraProvider = cameraProvider;
             _saveService = saveService;
             _inputService = inputService;
+            _sceneContainerProvider = sceneContainerProvider;
+            _walletModel = walletModel;
+            _soundService = soundService;
+            _soundSpawner = soundSpawner;
         }
 
         public void Enter(LevelID level)
         {
-            Debug.Log(level);
             _currentLevel = level;
             _windowService.CreateUIRoot();
             _windowService.Open<MainMenu>();
             _uIFactory.UIRoot.GlobalWalletView.Enable();
-
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
-            _currentEnemyConfig = _levelConfig.GetAllLevelEnemies();
+            _currentEnemyConfigs = _levelConfig.GetAllLevelEnemies();
+            _tileGenerator.StartSpawn(_levelConfig);
 
-            _poolService.SetCurrentLevelConfig(_currentEnemyConfig, _levelConfig);
+            _poolService.SetCurrentLevelConfig(_currentEnemyConfigs, _levelConfig);
             _poolService.InitializePools();
-
             Camera camera = CreateCamera();
             CameraOrbit cameraOrbit = camera.GetComponent<CameraOrbit>();
             cameraOrbit = camera.GetComponent<CameraOrbit>();
             Player player = _playerFactory.Create();
             cameraOrbit.StartOrbit(player.transform);
-            _dropService.SetCurrentLevelConfig(_currentEnemyConfig);
+            _dropService.SetCurrentLevelConfig(_currentEnemyConfigs);
+
+            _soundSpawner.Enable();
         }
 
         public void StartLevel()
         {
             CameraOrbit cameraOrbit = _cameraProvider.Camera.GetComponent<CameraOrbit>();
             cameraOrbit.StopOrbit();
-            RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
             CameraSmoothTransition cameraTransition = _cameraProvider.Camera.GetComponent<CameraSmoothTransition>();
-            cameraTransition.MoveCamera(colliderPlacer.PlaceWalls);
+            cameraTransition.MoveCamera(OnCameraReplaced);
 
+            _sceneContainerProvider.BackgroundLooper.StartMove();
+            _soundSpawner.Spawn(SoundType.StartGame);
             _uIFactory.Get<MainMenu>(WindowType.MainMenu).Close();
-            _playerFactory.OnPlayerSpawned();
-            _inputService.Start();
+            _uIFactory.UIRoot.GlobalWalletView.Disable();
             _levelTimeline.Start(_levelConfig);
-            _tileGenerator.StartSpawn(_levelConfig);
-            _tileMover.Start();
             _winService.SetLevel(_currentLevel);
             _louseService.SetLevel(_currentLevel);
             CreateUI();
+        }
+
+        private void OnCameraReplaced()
+        {
+            RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
+            colliderPlacer.PlaceWalls();
+            _tileMover.Start();
+            _inputService.Start();
+            _playerFactory.OnPlayerSpawned();
         }
 
         private Camera CreateCamera()
@@ -137,18 +158,20 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
-            _saveService.Save();
+            _tileMover.Stop();
             _levelTimeline.Stop();
-            _uIFactory.ClearCache();
             _updateService.Clear();
             _timeService.ResumeGame();
             _poolService.ClearAllPools();
+            _walletModel.PutAccumulatedCoins();
+            _soundService.StopAll();
+
+            _saveService.Save();
             _ballsRepository.Save();
-
-
             _artefactsRepository.Save();
             _ballsRepository.Save();
             _saveService.Save();
+
             _uIFactory.ClearCache();
         }
     }

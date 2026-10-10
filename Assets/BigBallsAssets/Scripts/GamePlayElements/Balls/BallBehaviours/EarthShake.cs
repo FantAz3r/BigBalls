@@ -1,10 +1,11 @@
-using BigBalls.Factories;
-using BigBalls.GameplayObjects;
-using BigBalls.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using BigBalls.Factories;
+using BigBalls.GameplayObjects;
+using BigBalls.Services;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using VContainer;
 
@@ -15,7 +16,7 @@ public class EarthShake : EffectBehaviour
     private ISpatialService _spatialService;
     private ICoroutineRunner _coroutineRunner;
     private IParticleFactory _particleFactory;
-
+    private SoundSpawner _soundSpawner;
     private WaitForSeconds _oneSecond;
 
     public EarthShake(GroundBallConfig config, int level) : base(config, level)
@@ -25,12 +26,18 @@ public class EarthShake : EffectBehaviour
     }
 
     [Inject]
-    public void Construct(IDamageService damageService, ISpatialService spatialService, ICoroutineRunner coroutineRunner, IParticleFactory particleFactory)
+    public void Construct(
+        IDamageService damageService,
+        ISpatialService spatialService,
+        ICoroutineRunner coroutineRunner,
+        IParticleFactory particleFactory,
+        SoundSpawner soundSpawner)
     {
         _damageService = damageService;
         _spatialService = spatialService;
         _coroutineRunner = coroutineRunner;
         _particleFactory = particleFactory;
+        _soundSpawner = soundSpawner;
     }
 
     public void OnHit(IEntity entity)
@@ -45,6 +52,7 @@ public class EarthShake : EffectBehaviour
     {
         float elapsed = 0;
         float totalDamage = 0;
+        SoundStruct sound = _config.Sound; 
         Vector3 position = ball.Transform.position;
 
         while (_config.Duration > elapsed)
@@ -53,6 +61,10 @@ public class EarthShake : EffectBehaviour
             particleObject.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
             totalDamage += ApplyAreaDamage(position, _config.Radius, _config.GetDamage(Level));
             yield return _oneSecond;
+
+            sound.Volume = (_config.Duration - elapsed) / _config.Duration;
+            _soundSpawner.Spawn(sound);
+
             elapsed ++;
         }
 
@@ -68,7 +80,7 @@ public class EarthShake : EffectBehaviour
 
         foreach (var target in targets)
         {
-            totalDamage += _damageService.ApplyDamage(target, damage);
+            totalDamage += _damageService.ApplyDamage(target, damage, _config.Color);
         }
 
         return totalDamage;

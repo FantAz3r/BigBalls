@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BigBalls.Factories
@@ -20,7 +20,7 @@ namespace BigBalls.Factories
         private readonly IPoolService _poolService;
         private readonly IDropService _dropService;
 
-        public EnemyFactory(
+        public EnemyFactory (
             IObjectResolverProvider resolverProvider,
             IIdentifierService identifierService,
             IUpdateService updateService,
@@ -45,9 +45,9 @@ namespace BigBalls.Factories
 
         public event Action<IEntity> Died;
 
-        public Enemy Create(EnemyConfig enemyConfig, Vector3 spawnPosition)
+        public Enemy Create (EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
-            Enemy enemy = _poolService.GetObject(enemyConfig.Prefab, spawnPosition, enemyConfig.Prefab.transform.rotation);
+            Enemy enemy = _poolService.Get(enemyConfig.Prefab, spawnPosition, enemyConfig.Prefab.transform.rotation);
             int enemyID = _identifierService.ID;
 
             StatHolder statHolder = new StatHolder(enemy, enemyConfig.Type, enemyConfig);
@@ -59,38 +59,68 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             enemy.EventHandler.Died += OnDied;
 
-            enemy.Init(enemyID, deathHandler, enemyConfig, statHolder);
+            Rotator enemyRotator = null;
+            Mover enemyMover = null;
+            EnemyShooter enemyShooter = null;
+
+            foreach (var subscriber in subscribables)
+            {
+                if (subscriber is Mover mover)
+                    enemyMover = mover;
+
+                if (subscriber is Rotator rotator)
+                    enemyRotator = rotator;
+
+                if (subscriber is EnemyShooter shooter)
+                    enemyShooter = shooter;
+            }
+
+            enemy.Init(enemyID, deathHandler, enemyConfig, statHolder, enemyRotator, enemyMover, enemyShooter);
             _entityRepository.Add(enemy, statHolder, null);
 
-            enemy.ColorChanger.Init(statHolder[StatType.Health]);
+            enemy.ColorChanger?.Init(statHolder[StatType.Health]);
+            enemy.ShieldView?.Init(statHolder[StatType.Shield]);
 
             return enemy;
         }
 
-        private void OnDied(IEntity entity)
+        private void OnDied (IEntity entity)
         {
             if (entity is not Enemy enemy)
                 return;
 
-            if (enemy.DeathHandler.IsBallAttacked)
-                _dropService.DropLoot(enemy.transform.position, enemy);
-
             enemy.DeathHandler.Unsubscribe();
             enemy.EventHandler.Died -= OnDied;
             enemy.EventHandler.Suisided -= OnDied;
-
-            _poolService.ReleaseObject(enemy);
             _entityRepository.Remove(enemy);
+
+            if (enemy.DieAnimation != null)
+            {
+                enemy.DieAnimation.Play(enemy, enemy => ReleaseToPool(enemy));
+                return;
+            }
+
+            ReleaseToPool(enemy);
+        }
+
+        private void ReleaseToPool (Enemy enemy)
+        {
+            if (enemy.DeathHandler.IsBallAttacked)
+                _dropService.DropLoot(enemy.transform.position, enemy);
+
+            _poolService.Release(enemy);
             Died?.Invoke(enemy);
         }
 
-        private List<ISubscribable> CreateComponents(StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
+        private List<ISubscribable> CreateComponents (StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
         {
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, _updateService, _raycastService, enemyConfig);
+            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, true, enemyConfig);
+            _resolverProvider.CurrentResolver.Inject(mover);
             Init(mover, enemyConfig);
 
             EnemyShooter shooter = null;
             Rotator rotator = null;
+            EnemyAttacker enemyAttacker = null;
 
             if (enemyConfig.HasRangeAttack)
             {
@@ -98,14 +128,18 @@ namespace BigBalls.Factories
                 _resolverProvider.CurrentResolver.Inject(shooter);
             }
 
-            if (statHolder.TryGetStat(out Stat stat, StatType.RotationSpeed) && enemy.RotationPart != null)
+            if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed) && enemy.RotationPart != null)
             {
-                rotator = new Rotator(statHolder[StatType.RotationSpeed], enemy.RotationPart, _updateService);
+                rotator = new Rotator(rotationSpeed, enemy.RotationPart, _updateService);
                 rotator.SetTarget(_playerProvider.Player.transform);
             }
 
-            EnemyAttacker enemyAttacker = new EnemyAttacker(statHolder[StatType.Damage], enemy, enemyConfig);
-            _resolverProvider.CurrentResolver.Inject(enemyAttacker);
+            if (statHolder.TryGetStat(out Stat damage, StatType.Damage))
+            {
+                enemyAttacker = new EnemyAttacker(damage, enemy, enemyConfig);
+                _resolverProvider.CurrentResolver.Inject(enemyAttacker);
+            }
+
             enemy.EventHandler.Suisided += OnDied;
 
             List<ISubscribable> subscribables = new List<ISubscribable>()
@@ -119,7 +153,7 @@ namespace BigBalls.Factories
             return subscribables;
         }
 
-        private void Init(Mover mover, EnemyConfig enemyConfig)
+        private void Init (Mover mover, EnemyConfig enemyConfig)
         {
             mover.SetDirection(new Vector2(0, -1));
 

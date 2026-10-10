@@ -5,11 +5,10 @@ namespace BigBalls.Factories
 {
     public class HitPlayerStrategy : ICollisionStrategy
     {
-        public bool HandleCollision(Ball ball, Collision collision)
+        public bool HandleCollision (Ball ball, Collision collision)
         {
             if (collision.gameObject.TryGetComponent(out Player player))
             {
-                Debug.Log("hit");
                 ball.EventHandler.HitEntity(player);
                 ball.EventHandler.Return(ball);
 

@@ -35,11 +35,11 @@ RectTransform:
   - {fileID: 5952820935315087161}
   m_Father: {fileID: 3782576842348542147}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20, y: -60}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 450, y: 700}
-  m_Pivot: {x: 1, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6656598414129885880
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -286,8 +286,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1258573322931756119}
-  - {fileID: 1505383654759816438}
   - {fileID: 232253588175813991}
+  - {fileID: 1505383654759816438}
   - {fileID: 7229428623534928383}
   m_Father: {fileID: 6153435432920615264}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1240,11 +1240,11 @@ RectTransform:
   - {fileID: 7961777359527226243}
   m_Father: {fileID: 3782576842348542147}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 96.088}
-  m_SizeDelta: {x: 450, y: 387.82}
-  m_Pivot: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -100, y: 250}
+  m_SizeDelta: {x: 450, y: 200}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &1401148887865669763
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1848,6 +1848,7 @@ GameObject:
   - component: {fileID: 232253588175813991}
   - component: {fileID: 7143767264481177444}
   - component: {fileID: 508543658433453056}
+  - component: {fileID: 4223257818096279515}
   m_Layer: 5
   m_Name: Toggle (5)
   m_TagString: Untagged
@@ -1921,19 +1922,7 @@ MonoBehaviour:
   m_Group: {fileID: 3774012437557217646}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3033777212626129756}
-        m_TargetAssemblyTypeName: CardInventory, BigBalls
-        m_MethodName: ViewWeapons
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 0
 --- !u!114 &508543658433453056
 MonoBehaviour:
@@ -1955,6 +1944,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &4223257818096279515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6029106201217358368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b3274798f309349b9ae28c70c0f32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _filterIndex: 1
+  _inventory: {fileID: 3033777212626129756}
 --- !u!1 &6095955484656888157
 GameObject:
   m_ObjectHideFlags: 0
@@ -2347,6 +2350,7 @@ GameObject:
   - component: {fileID: 7229428623534928383}
   - component: {fileID: 3012432047028401191}
   - component: {fileID: 4434277803730546348}
+  - component: {fileID: 3076802621897135830}
   m_Layer: 5
   m_Name: Toggle (6)
   m_TagString: Untagged
@@ -2420,20 +2424,8 @@ MonoBehaviour:
   m_Group: {fileID: 3774012437557217646}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3033777212626129756}
-        m_TargetAssemblyTypeName: CardInventory, BigBalls
-        m_MethodName: ViewArmors
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_IsOn: 1
+      m_Calls: []
+  m_IsOn: 0
 --- !u!114 &4434277803730546348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2454,6 +2446,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &3076802621897135830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6546888232397209842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b3274798f309349b9ae28c70c0f32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _filterIndex: 3
+  _inventory: {fileID: 3033777212626129756}
 --- !u!1 &6991750753008790855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3188,6 +3194,7 @@ GameObject:
   - component: {fileID: 1505383654759816438}
   - component: {fileID: 2595706068270141840}
   - component: {fileID: 2977917213132260061}
+  - component: {fileID: 3869012510189364393}
   m_Layer: 5
   m_Name: Toggle (4)
   m_TagString: Untagged
@@ -3261,19 +3268,7 @@ MonoBehaviour:
   m_Group: {fileID: 3774012437557217646}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3033777212626129756}
-        m_TargetAssemblyTypeName: CardInventory, BigBalls
-        m_MethodName: ViewHelmets
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_IsOn: 0
 --- !u!114 &2977917213132260061
 MonoBehaviour:
@@ -3295,6 +3290,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &3869012510189364393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7534675401936129359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b3274798f309349b9ae28c70c0f32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _filterIndex: 2
+  _inventory: {fileID: 3033777212626129756}
 --- !u!1 &7651685365069563390
 GameObject:
   m_ObjectHideFlags: 0
@@ -3782,6 +3791,7 @@ GameObject:
   - component: {fileID: 1258573322931756119}
   - component: {fileID: 5394289720127225491}
   - component: {fileID: 4335749116081446127}
+  - component: {fileID: 991351552865683828}
   m_Layer: 5
   m_Name: Toggle (3)
   m_TagString: Untagged
@@ -3855,20 +3865,8 @@ MonoBehaviour:
   m_Group: {fileID: 3774012437557217646}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3033777212626129756}
-        m_TargetAssemblyTypeName: CardInventory, BigBalls
-        m_MethodName: ViewAll
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_IsOn: 0
+      m_Calls: []
+  m_IsOn: 1
 --- !u!114 &4335749116081446127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3889,6 +3887,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &991351552865683828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8821901755926776353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b3274798f309349b9ae28c70c0f32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _filterIndex: 0
+  _inventory: {fileID: 3033777212626129756}
 --- !u!1001 &1652365760285946617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4041,6 +4053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _armorTip
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
+        type: 3}
+      propertyPath: _slotType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
         type: 3}
@@ -4395,12 +4412,12 @@ PrefabInstance:
     - target: {fileID: 1070804078466441318, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_fontSize
-      value: 60
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 1643268615314516924, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_fontSize
-      value: 50.2
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 2968846180489443999, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4435,7 +4452,7 @@ PrefabInstance:
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4445,7 +4462,7 @@ PrefabInstance:
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4455,7 +4472,7 @@ PrefabInstance:
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4470,7 +4487,7 @@ PrefabInstance:
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 312.18
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4510,12 +4527,12 @@ PrefabInstance:
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 245.5
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -253.91
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 4533082937971831614, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4575,7 +4592,7 @@ PrefabInstance:
     - target: {fileID: 5970898839317504580, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       propertyPath: m_fontSize
-      value: 50.2
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 6059836145079254337, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
@@ -4955,6 +4972,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
         type: 3}
+      propertyPath: _slotType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
+        type: 3}
       propertyPath: _helmetTip
       value: 
       objectReference: {fileID: 2307320920458866293}
@@ -5216,7 +5238,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9188509256693790805, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7982391389235095880}
+      addedObject: {fileID: 8450360044084384249}
   m_SourcePrefab: {fileID: 100100000, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
 --- !u!1 &1615932501790100951 stripped
 GameObject:
@@ -5224,7 +5246,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7631585345282913666}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7982391389235095880
+--- !u!114 &8450360044084384249
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5233,7 +5255,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1615932501790100951}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccca758a66080a246bb81583ab344245, type: 3}
+  m_Script: {fileID: 11500000, guid: 30f6db536b60dd3408a57005f30892c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _closeWindow: {fileID: 3033777212626129756}
@@ -5397,6 +5419,11 @@ PrefabInstance:
       propertyPath: _armorTip
       value: 
       objectReference: {fileID: 1465825222342260400}
+    - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
+        type: 3}
+      propertyPath: _slotType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8950251280545057356, guid: e597936e8aaff06479c616f7105dd493,
         type: 3}
       propertyPath: <IsActiveSlot>k__BackingField

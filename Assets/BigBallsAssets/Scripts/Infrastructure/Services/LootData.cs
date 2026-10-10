@@ -11,6 +11,7 @@ namespace BigBalls.Services
         [SerializeField] private SerializedDictionary<int, Loot> _coins = new SerializedDictionary<int, Loot>();
         [SerializeField] private SerializedDictionary<int, Loot> _exp = new SerializedDictionary<int, Loot>();
         [SerializeField] private SerializedDictionary<int, Loot> _health = new SerializedDictionary<int, Loot>();
+        [SerializeField] private SerializedDictionary<int, Loot> _ball = new SerializedDictionary<int, Loot>();
 
         public List<Loot> GetAllLoot()
         {
@@ -18,6 +19,7 @@ namespace BigBalls.Services
             loots.AddRange(_coins.Values);
             loots.AddRange(_exp.Values);
             loots.AddRange(_health.Values);
+            loots.AddRange(_ball.Values);
             return loots;
         }
 
@@ -28,6 +30,7 @@ namespace BigBalls.Services
                 LootType.Coin => _coins,
                 LootType.Experience => _exp,
                 LootType.HealthPotion => _health,
+                LootType.Ball => _ball,
                 _ => null
             };
 

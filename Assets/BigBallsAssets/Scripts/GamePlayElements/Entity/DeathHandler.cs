@@ -43,13 +43,18 @@ namespace BigBalls.GameplayObjects
             _health.ValueChanged -= HandleDeath;
         }
 
-        private void HandleDeath(IReadonlyStat stat)
+        public void Kill()
+        {
+            IsBallAttacked = true;
+            _diebleObject.EventHandler.Die(_diebleObject);
+            Died?.Invoke();
+        }
+
+        private void HandleDeath (IReadonlyStat stat)
         {
             if (stat.CurrentValue <= stat.MinValue)
             {
-                IsBallAttacked = true;
-                _diebleObject.EventHandler.Die(_diebleObject);
-                Died?.Invoke();
+                Kill();
             }
         }
     }

@@ -2,13 +2,14 @@
 using BigBalls.Services;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.GameplayObjects
 {
     public class Mover : IUpdateble, ISubscribable, IMover
     {
-        private readonly IUpdateService _updateService;
-        private readonly IRaycastService _raycastService;
+        private IUpdateService _updateService;
+        private IRaycastService _raycastService;
 
         private readonly LayerMask _obstacleLayerMask;
         private readonly Stat _moveSpeed;
@@ -16,17 +17,22 @@ namespace BigBalls.GameplayObjects
         private Transform _target;
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
-
+        private bool _needRaycast;
         public Transform MovableObject { get; private set; }
         public Vector2 Direction { get; private set; }
 
-        public Mover(Stat moveSpeed, Transform movableObject, IUpdateService updateService, IRaycastService raycastService = null, IEntityConfig playerConfig = null)
+        public Mover(Stat moveSpeed, Transform movableObject, bool needRaycast = false, IEntityConfig playerConfig = null)
         {
-            _updateService = updateService;
-            _raycastService = raycastService;
             MovableObject = movableObject;
             _moveSpeed = moveSpeed;
             _obstacleLayerMask = playerConfig?.ObstacleLayers ?? 0;
+        }
+
+        [Inject]
+        public void Construct (IUpdateService updateService, IRaycastService raycastService)
+        {
+            _updateService = updateService;
+            _raycastService = raycastService;
         }
 
         public void Subscribe() => _updateService.Register(this);
@@ -35,6 +41,11 @@ namespace BigBalls.GameplayObjects
         {
             _target = null;
             Direction = direction;
+        }
+
+        public void SetDirection(Vector3 direction)
+        {
+            SetDirection(new Vector2(direction.x, direction.z));
         }
 
         public void SetTarget(Transform target) => _target = target;
@@ -72,7 +83,7 @@ namespace BigBalls.GameplayObjects
             Vector3 moveDirection = new Vector3(direction.x, 0f, direction.y).normalized;
             float moveStep = _moveSpeed.CurrentValue * Time.deltaTime;
 
-            if (_raycastService != null)
+            if (_needRaycast)
             {
                 hasCollision = _raycastService.CheckCollisions(MovableObject, _raycastDirections, _raycastPoints, 0.5f, _obstacleLayerMask, out List<Vector3> hitNormalsResult);
                 hitNormals = hitNormalsResult;
@@ -116,5 +127,7 @@ namespace BigBalls.GameplayObjects
         {
             throw new System.NotImplementedException();
         }
+
+        public void SetMovableObject (Transform transform) => MovableObject = transform;
     }
 }

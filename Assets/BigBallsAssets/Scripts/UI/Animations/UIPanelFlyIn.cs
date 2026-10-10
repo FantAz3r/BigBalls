@@ -14,7 +14,7 @@ public class UIPanelFlyIn : MonoBehaviour
     private Vector2 _targetPosition;
     private RectTransform _rectTransform;
 
-    private void Awake ()
+    private void Start ()
     {
         _rectTransform = GetComponent<RectTransform>();
         _targetPosition = _rectTransform.anchoredPosition;
@@ -22,6 +22,9 @@ public class UIPanelFlyIn : MonoBehaviour
 
     private void OnEnable ()
     {
+        if (_rectTransform == null)
+            return;
+
         if (_playOnEnable)
         {
             PlayAnimation();

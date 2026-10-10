@@ -1,4 +1,4 @@
-﻿using BigBalls.StaticData;
+﻿using System;
 
 namespace BigBalls.Providers
 {
@@ -8,7 +8,16 @@ namespace BigBalls.Providers
         HelmetModel Helmet { get; }
         ArmorModel Armor { get; }
 
-        void Add(ICardModel item);
-        void Remove(ICardModel item);
+        event Action<WeaponModel> WeaponSeted;
+        event Action<ArmorModel> ArmorSeted;
+        event Action<HelmetModel> HelmetSeted;
+
+        event Action WeaponRemoved;
+        event Action ArmorRemoved;
+        event Action HelmetRemoved;
+
+        void Add (ICardModel item);
+
+        void Remove (ICardModel item);
     }
 }
