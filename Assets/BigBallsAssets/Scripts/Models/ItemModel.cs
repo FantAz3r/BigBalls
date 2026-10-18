@@ -122,7 +122,7 @@ namespace BigBalls.StaticData
             {
                 if (isViewNextLevel)
                 {
-                    string nextValue = (stat.NextValue - stat.Value).ToString();
+                    string nextValue = stat.NextValue.ToString();
                     table.Add(new List<string> { stat.Name, stat.Value.ToString(), nextValue });
                 }
                 else

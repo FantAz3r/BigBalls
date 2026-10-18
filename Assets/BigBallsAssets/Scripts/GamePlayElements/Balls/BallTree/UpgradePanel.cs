@@ -20,6 +20,7 @@ public class UpgradePanel : MonoBehaviour
     [SerializeField] private TMP_Text _updateText;
     [SerializeField] private TMP_Text _costText;
     [SerializeField] private TMP_Text _expProgresText;
+    [SerializeField] private TMP_Text _maxLevelText;
 
     private BallTreeNodeUI _node;
     private BallModel _cardModel;
@@ -68,6 +69,17 @@ public class UpgradePanel : MonoBehaviour
         _upgradeButton.Clicked -= Upgrade;
         _upgradeButton.Clicked += Upgrade;
         _upgradeButton.Init(_cardModel);
+
+        if (_cardModel.NoneGameLevel == _cardModel.MaxNoneGameLevel)
+        {
+            _upgradeButton.gameObject.SetActive(false);
+            _maxLevelText.gameObject.SetActive(true);
+        }
+        else
+        {
+            _upgradeButton.gameObject.SetActive(true);
+            _maxLevelText.gameObject.SetActive(false);
+        }
 
         View(_cardModel);
     }
@@ -154,7 +166,16 @@ public class UpgradePanel : MonoBehaviour
         {
             _node.UpdateConnections();
 
-            if (_node.Upgrade() == false)
+            bool isUpgradeComplite = _node.Upgrade();
+
+            if (_node.BallModel.NoneGameLevel == _node.BallModel.MaxNoneGameLevel)
+            {
+                _upgradeButton.gameObject.SetActive(false);
+                _maxLevelText.gameObject.SetActive(true);
+                return;
+            }
+
+            if (isUpgradeComplite == false)
             {
                 OnUpgradeFailed();
                 _soundSpawner.Spawn(SoundType.Error);
@@ -167,7 +188,7 @@ public class UpgradePanel : MonoBehaviour
         }
 
         _node.UpdateState();
-        _soundSpawner.Spawn(SoundType.Upgrade);
+        _soundSpawner.Spawn(SoundType.Upgrade, _node.BallModel.NoneGameLevel - 1, _node.BallModel.MaxNoneGameLevel);
         View(_cardModel);
     }
 }

@@ -29,9 +29,9 @@ public class GroundBallConfig : EffectConfig
         int nextLevel = level + 1;
 
         return new List<ItemStat>()
-            {
-                new ItemStat(TextLocalizator.Damage,  GetDamage(level),  GetDamage(nextLevel)),
-                new ItemStat(TextLocalizator.Duration, GetDuration(level), GetDuration(nextLevel))
-            };
+        {
+            new ItemStat(TextLocalizator.Damage,  GetDamage(level),  GetDamage(nextLevel)),
+            new ItemStat(TextLocalizator.Duration, GetDuration(level), GetDuration(nextLevel))
+        };
     }
 }

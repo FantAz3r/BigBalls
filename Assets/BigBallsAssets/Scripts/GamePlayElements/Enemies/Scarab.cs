@@ -90,7 +90,7 @@ public class Scarabey : Enemy
            new ScarabCollisionStrategy()
         };
 
-        ball.Construct(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler, _effectFactory);
+        ball.Init(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler);
         _entityRepository.Add(ball, statHolder, null);
         return ball;
     }

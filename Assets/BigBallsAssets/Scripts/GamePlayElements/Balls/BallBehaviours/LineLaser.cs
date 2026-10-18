@@ -1,7 +1,7 @@
+using System;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
-using System;
 using UnityEngine;
 using VContainer;
 
@@ -11,19 +11,19 @@ public class LineLaser : EffectBehaviour
     private IParticleFactory _particleFactory;
     private IDamageService _damageService;
 
-    public LineLaser(LaserConfig config, int level) : base(config, level)
+    public LineLaser (LaserConfig config, int level) : base(config, level)
     {
         _config = config;
     }
 
     [Inject]
-    public void Construct(IParticleFactory particleFactory, IDamageService damageService)
+    public void Construct (IParticleFactory particleFactory, IDamageService damageService)
     {
         _particleFactory = particleFactory;
         _damageService = damageService;
     }
 
-    public void OnHit(IEntity entity)
+    public void OnHit (IEntity entity)
     {
         if (entity is not Enemy enemy)
             return;
@@ -42,10 +42,7 @@ public class LineLaser : EffectBehaviour
         baseDirection.Normalize();
         float baseAngle = Mathf.Atan2(baseDirection.x, baseDirection.z) * Mathf.Rad2Deg;
 
-        float angleStep = _config.RayCount > 1
-            ? _config.SpreadAngle / (_config.RayCount - 1)
-            : 0;
-
+        float angleStep = _config.RayCount > 1 ? _config.SpreadAngle / _config.RayCount : 0;
         float startAngle = baseAngle - (_config.SpreadAngle / 2f) + _config.Offset;
 
         for (int i = 0; i < _config.RayCount; i++)
@@ -59,7 +56,7 @@ public class LineLaser : EffectBehaviour
         }
     }
 
-    private void ExecuteRaycast(Vector3 origin, Vector3 direction, float damage)
+    private void ExecuteRaycast (Vector3 origin, Vector3 direction, float damage)
     {
         ParticleObject particle = _particleFactory.Create(_config.Particle, origin);
         particle.transform.rotation = Quaternion.LookRotation(-direction);
@@ -81,7 +78,7 @@ public class LineLaser : EffectBehaviour
     }
 
 
-    private Vector3? GetClosestBlockCenter(Enemy enemy, Vector3 hitPoint)
+    private Vector3? GetClosestBlockCenter (Enemy enemy, Vector3 hitPoint)
     {
         Vector3 enemyPos = enemy.Transform.position;
         Vector3 closestCenter = Vector3.zero;
@@ -101,10 +98,10 @@ public class LineLaser : EffectBehaviour
             }
         }
 
-        return found ? closestCenter : (Vector3?)null;
+        return found ? closestCenter : (Vector3?) null;
     }
 
-    protected override IDisposable SubscribeInternal(IEntity host)
+    protected override IDisposable SubscribeInternal (IEntity host)
     {
         host.EventHandler.HitedEntity += OnHit;
         return new DisposableObject(() => host.EventHandler.HitedEntity -= OnHit);

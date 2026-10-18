@@ -247,6 +247,33 @@ namespace BigBalls.Services
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Timescale1"",
+                    ""type"": ""Button"",
+                    ""id"": ""a54655b5-6ac7-4b37-91d8-aa19f023a7d5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Timescale2"",
+                    ""type"": ""Button"",
+                    ""id"": ""ac1bb056-79bd-491e-871a-4990325960e4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Timescale3"",
+                    ""type"": ""Button"",
+                    ""id"": ""48df02ae-815f-488f-b3e3-436b415eb417"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -258,6 +285,39 @@ namespace BigBalls.Services
                     ""processors"": """",
                     ""groups"": ""KeyboardAndMouse"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b266754d-34c7-4b60-9986-a4d7db57f88a"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Timescale1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c17debb9-6b44-4989-980f-ae4084b9c68f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Timescale2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b61f510d-bb00-4405-9cbd-e6956696d539"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";KeyboardAndMouse"",
+                    ""action"": ""Timescale3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -302,6 +362,9 @@ namespace BigBalls.Services
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
+            m_UI_Timescale1 = m_UI.FindAction("Timescale1", throwIfNotFound: true);
+            m_UI_Timescale2 = m_UI.FindAction("Timescale2", throwIfNotFound: true);
+            m_UI_Timescale3 = m_UI.FindAction("Timescale3", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
@@ -502,6 +565,9 @@ namespace BigBalls.Services
         private readonly InputActionMap m_UI;
         private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
         private readonly InputAction m_UI_Pause;
+        private readonly InputAction m_UI_Timescale1;
+        private readonly InputAction m_UI_Timescale2;
+        private readonly InputAction m_UI_Timescale3;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
         /// </summary>
@@ -517,6 +583,18 @@ namespace BigBalls.Services
             /// Provides access to the underlying input action "UI/Pause".
             /// </summary>
             public InputAction @Pause => m_Wrapper.m_UI_Pause;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/Timescale1".
+            /// </summary>
+            public InputAction @Timescale1 => m_Wrapper.m_UI_Timescale1;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/Timescale2".
+            /// </summary>
+            public InputAction @Timescale2 => m_Wrapper.m_UI_Timescale2;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/Timescale3".
+            /// </summary>
+            public InputAction @Timescale3 => m_Wrapper.m_UI_Timescale3;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -546,6 +624,15 @@ namespace BigBalls.Services
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Timescale1.started += instance.OnTimescale1;
+                @Timescale1.performed += instance.OnTimescale1;
+                @Timescale1.canceled += instance.OnTimescale1;
+                @Timescale2.started += instance.OnTimescale2;
+                @Timescale2.performed += instance.OnTimescale2;
+                @Timescale2.canceled += instance.OnTimescale2;
+                @Timescale3.started += instance.OnTimescale3;
+                @Timescale3.performed += instance.OnTimescale3;
+                @Timescale3.canceled += instance.OnTimescale3;
             }
 
             /// <summary>
@@ -560,6 +647,15 @@ namespace BigBalls.Services
                 @Pause.started -= instance.OnPause;
                 @Pause.performed -= instance.OnPause;
                 @Pause.canceled -= instance.OnPause;
+                @Timescale1.started -= instance.OnTimescale1;
+                @Timescale1.performed -= instance.OnTimescale1;
+                @Timescale1.canceled -= instance.OnTimescale1;
+                @Timescale2.started -= instance.OnTimescale2;
+                @Timescale2.performed -= instance.OnTimescale2;
+                @Timescale2.canceled -= instance.OnTimescale2;
+                @Timescale3.started -= instance.OnTimescale3;
+                @Timescale3.performed -= instance.OnTimescale3;
+                @Timescale3.canceled -= instance.OnTimescale3;
             }
 
             /// <summary>
@@ -662,6 +758,27 @@ namespace BigBalls.Services
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnPause(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Timescale1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnTimescale1(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Timescale2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnTimescale2(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Timescale3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnTimescale3(InputAction.CallbackContext context);
         }
     }
 }

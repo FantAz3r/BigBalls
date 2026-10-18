@@ -45,6 +45,9 @@ namespace BigBalls.Factories
 
         public event Action<IEntity> Died;
 
+        public int DiedCount { get; private set; }
+        public int SuisidedCount { get; private set; }
+
         public Enemy Create (EnemyConfig enemyConfig, Vector3 spawnPosition)
         {
             Enemy enemy = _poolService.Get(enemyConfig.Prefab, spawnPosition, enemyConfig.Prefab.transform.rotation);
@@ -84,14 +87,25 @@ namespace BigBalls.Factories
             return enemy;
         }
 
+        private void OnSuisided (IEntity entity)
+        {
+            if (entity is not Enemy enemy)
+                return;
+
+            enemy.EventHandler.Suisided -= OnSuisided;
+            SuisidedCount++;
+
+            OnDied(entity);
+        }
+
         private void OnDied (IEntity entity)
         {
             if (entity is not Enemy enemy)
                 return;
 
+            DiedCount++;
             enemy.DeathHandler.Unsubscribe();
             enemy.EventHandler.Died -= OnDied;
-            enemy.EventHandler.Suisided -= OnDied;
             _entityRepository.Remove(enemy);
 
             if (enemy.DieAnimation != null)
@@ -106,7 +120,7 @@ namespace BigBalls.Factories
         private void ReleaseToPool (Enemy enemy)
         {
             if (enemy.DeathHandler.IsBallAttacked)
-                _dropService.DropLoot(enemy.transform.position, enemy);
+                _dropService.DropLoot(enemy);
 
             _poolService.Release(enemy);
             Died?.Invoke(enemy);
@@ -114,13 +128,17 @@ namespace BigBalls.Factories
 
         private List<ISubscribable> CreateComponents (StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
         {
-            Mover mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, true, enemyConfig);
-            _resolverProvider.CurrentResolver.Inject(mover);
-            Init(mover, enemyConfig);
-
+            Mover mover = null;
             EnemyShooter shooter = null;
             Rotator rotator = null;
             EnemyAttacker enemyAttacker = null;
+
+            if (statHolder.TryGetStat(out Stat moveSpeed, StatType.MoveSpeed))
+            {
+                mover = new Mover(statHolder[StatType.MoveSpeed], enemy.transform, true, enemyConfig);
+                _resolverProvider.CurrentResolver.Inject(mover);
+                Init(mover, enemyConfig);
+            }
 
             if (enemyConfig.HasRangeAttack)
             {
@@ -130,7 +148,8 @@ namespace BigBalls.Factories
 
             if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed) && enemy.RotationPart != null)
             {
-                rotator = new Rotator(rotationSpeed, enemy.RotationPart, _updateService);
+                rotator = new Rotator(rotationSpeed, enemy.RotationPart);
+                _resolverProvider.CurrentResolver.Inject(rotator);
                 rotator.SetTarget(_playerProvider.Player.transform);
             }
 

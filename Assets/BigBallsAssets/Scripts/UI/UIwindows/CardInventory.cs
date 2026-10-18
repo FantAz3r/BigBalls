@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BigBalls.Infrastructure.DI;
 using TMPro;
 using UnityEngine;
@@ -44,7 +45,12 @@ public class CardInventory : PopupWindow
         _canvas = GetComponent<Canvas>();
 
         _models.Clear();
-        _models.AddRange(_weaponRepository.AllModels.Values);
+
+        List<WeaponModel> weapons = _weaponRepository.AllModels.Values.ToList();
+        WeaponModel weaponModel = _weaponRepository.AllModels[ItemType.Base];
+        weapons.Remove(weaponModel);
+
+        _models.AddRange(weapons);
         _models.AddRange(_armorRepository.AllModels.Values);
         _models.AddRange(_helmetRepository.AllModels.Values);
     }
@@ -53,10 +59,18 @@ public class CardInventory : PopupWindow
     {
         switch (filterType)
         {
-            case 0: ViewAll(); break;
-            case 1: ViewWeapons(); break;
-            case 2: ViewHelmets(); break;
-            case 3: ViewArmors(); break;
+            case 0:
+                ViewAll();
+                break;
+            case 1:
+                ViewWeapons();
+                break;
+            case 2:
+                ViewHelmets();
+                break;
+            case 3:
+                ViewArmors();
+                break;
         }
     }
 

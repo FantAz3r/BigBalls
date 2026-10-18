@@ -14,5 +14,6 @@
         BallBag,
         Experience,
         Shield,
+        Accuracy,
     }
 }

@@ -40,6 +40,7 @@ namespace BigBalls.Factories
 
         public Ball Create (BallModel ballModel, EntityType type, Transform shooter, List<ICollisionStrategy> strategies, Quaternion rotation)
         {
+
             Ball ball = _poolService.Get(ballModel.BallConfig.Prefab, shooter.position + new Vector3(0, 0.5f, 0), rotation);
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
@@ -69,10 +70,12 @@ namespace BigBalls.Factories
                 ball.EventHandler.Returned += OnReturn;
             }
 
-            ball.Construct(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler, _effectFactory);
+            ball.Init(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler);
             _entityRepository.Add(ball, statHolder, null);
             return ball;
         }
+
+
 
         private void OnReturnToPlayer (IEntity entity)
         {

@@ -94,12 +94,6 @@ public class MergeService : IMergeService
 
     private HashSet<BallType> GetOwnedBallTypes ()
     {
-        Debug.Log("Balls:");
-        foreach(var ball in _cardHolder.Balls)
-        {
-            Debug.Log(ball.Config.name);
-        }
-
         return _cardHolder.Balls
             .Select(b => b.BallConfig.BallType)
             .ToHashSet();

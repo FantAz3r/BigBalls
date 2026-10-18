@@ -21,18 +21,13 @@ namespace BigBalls.Factories
         private readonly IIdentifierService _identifierService;
         private readonly IUIFactory _uIFactory;
         private readonly IEntityRepository _entityRepository;
-        private readonly IRaycastService _raycastService;
         private readonly IPlayerProvider _playerProvider;
-        private readonly IBallFactory _ballFactory;
-        private readonly ICoroutineRunner _coroutineRunner;
         private readonly ILouseService _louseService;
         private readonly IItemConainerProvider _itemConainerProvider;
         private readonly IEffectFactory _effectFactory;
         private readonly IPlayerExperience _playerExperience;
         private readonly EnemySpawner _enemySpawner;
-        private readonly BallRepository _ballRepository;
         private readonly ArtefactsRepository _artefactsRepository;
-        private readonly WeaponRepository _weaponRepository;
         private readonly ICameraProvider _cameraProvider;
         private readonly IMergeService _mergeService;
 
@@ -48,18 +43,13 @@ namespace BigBalls.Factories
             IIdentifierService identifierService,
             IUIFactory uIFactory,
             IEntityRepository entityRepository,
-            IRaycastService raycastService,
             IPlayerProvider playerProvider,
-            IBallFactory ballFactory,
-            ICoroutineRunner coroutineRunner,
             ILouseService louseService,
             IItemConainerProvider itemConainerProvider,
             IEffectFactory effectFactory,
             IPlayerExperience playerExperience,
             EnemySpawner enemySpawner,
-            BallRepository ballRepository,
             ArtefactsRepository artefactsRepository,
-            WeaponRepository weaponRepository,
             ICameraProvider cameraProvider,
             IMergeService mergeService)
         {
@@ -71,18 +61,13 @@ namespace BigBalls.Factories
             _identifierService = identifierService;
             _uIFactory = uIFactory;
             _entityRepository = entityRepository;
-            _raycastService = raycastService;
             _playerProvider = playerProvider;
-            _ballFactory = ballFactory;
-            _coroutineRunner = coroutineRunner;
             _louseService = louseService;
             _itemConainerProvider = itemConainerProvider;
             _effectFactory = effectFactory;
             _playerExperience = playerExperience;
             _enemySpawner = enemySpawner;
-            _ballRepository = ballRepository;
             _artefactsRepository = artefactsRepository;
-            _weaponRepository = weaponRepository;
             _cameraProvider = cameraProvider;
             _mergeService = mergeService;
             _playerConfig = resourceLoader.Load<PlayerConfig>();
@@ -144,7 +129,8 @@ namespace BigBalls.Factories
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, player.Rigidbody, _playerConfig);
             _objectResolver.CurrentResolver.Inject(mover);
 
-            Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform, _updateService);
+            Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform);
+            _objectResolver.CurrentResolver.Inject(rotator); 
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);
             _objectResolver.CurrentResolver.Inject(playerBallContainer);
@@ -159,23 +145,25 @@ namespace BigBalls.Factories
             splitingPanel.MergeWindow.Init(cardHolder);
             splitingPanel.SplitingWindow.Init(cardHolder);
 
-            if(_itemConainerProvider.Gun != null)
-                Debug.Log(_itemConainerProvider.Gun.Config.name);
+            //Cannon cannon = null;
+            //
+            //if (_itemConainerProvider.Gun != null)
+            //{
+            //    cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
+            //}
+            //else
+            //{
+            //    cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
+            //}
+            //
+            //player.SetFirePoint(cannon);
 
-           //Cannon cannon = null;
-           //
-           //if (_itemConainerProvider.Gun != null)
-           //{
-           //    cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
-           //}
-           //else
-           //{
-           //    cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
-           //}
-           //
-           //player.SetFirePoint(cannon);
+            _shooter = new Shooter(
+                statHolder[StatType.AttackSpeed],
+                statHolder[StatType.Accuracy],
+                player.WeaponViewer.CurrentCannon,
+                playerBallContainer);
 
-            _shooter = new Shooter(statHolder[StatType.AttackSpeed], player.WeaponViewer.CurrentCannon, playerBallContainer);
             _objectResolver.CurrentResolver.Inject(_shooter);
 
             player.WeaponViewer.Init(_shooter, cardHolder);
@@ -204,12 +192,6 @@ namespace BigBalls.Factories
         public void OnPlayerSpawned ()
         {
             _shooter.StartShoot();
-            _inputService.Enable();
-        }
-
-        public void CreateWeapon ()
-        {
-
         }
     }
 }

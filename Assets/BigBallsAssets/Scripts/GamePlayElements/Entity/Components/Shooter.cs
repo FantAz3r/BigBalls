@@ -5,16 +5,20 @@ using BigBalls.Configs;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
+using Random = UnityEngine.Random;
 
 namespace BigBalls.GameplayObjects
 {
     public class Shooter : ISubscribable
     {
         private const int MaxBallCount = 20;
+        private const float MaxDeviationDegrees = 30f;
+
         private readonly Vector3 _fireOffset = new Vector3(0.5f, 0.5f, 0.5f);
         private readonly IBallContainer _ballContainer;
         private readonly WaitForSeconds _attackDelay;
 
+        private Stat _accuracy;
         private Cannon _cannon;
         private Coroutine _shootRoutine;
         private ICoroutineRunner _coroutineRunner;
@@ -25,6 +29,7 @@ namespace BigBalls.GameplayObjects
 
         public Shooter (
             Stat attackSpeed,
+            Stat accuracy,
             Cannon cannon,
             IBallContainer ballContainer
             )
@@ -32,6 +37,7 @@ namespace BigBalls.GameplayObjects
             _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
             _cannon = cannon;
             _ballContainer = ballContainer;
+            _accuracy = accuracy;
         }
 
         public event Action Shooted;
@@ -77,9 +83,15 @@ namespace BigBalls.GameplayObjects
         {
             Vector3 forward = _cannon.FirePoint.forward;
 
-            ball.Mover.SetDirection(new Vector2(forward.x, forward.z));
+            float maxDeviation = Mathf.Lerp(MaxDeviationDegrees, 0f, _accuracy.CurrentValue / _accuracy.MaxValue);
+            float yaw = Random.Range(-maxDeviation, maxDeviation);
+
+            Quaternion deviation = Quaternion.Euler(0f, yaw, 0f);
+            Vector3 direction = deviation * forward;
+
+            ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
             ball.transform.position = _cannon.FirePoint.position;
-            ball.transform.rotation = _cannon.FirePoint.rotation;
+            ball.transform.rotation = _cannon.FirePoint.rotation * deviation;
 
             Shooted?.Invoke();
             _soundSpawner.Spawn(SoundType.ShootBall);

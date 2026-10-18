@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using BigBalls.Services;
 using BigBalls.UI;
 using DG.Tweening;
@@ -12,11 +13,13 @@ using VContainer;
 public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private Image _image;
+    [SerializeField] private Image _background;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _level;
     [SerializeField] private RectTransform _statsParent;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private SoundStruct _appearSpound;
+    [SerializeField] private SerializedDictionary<Rarity,Color> _colorMap = new(); 
 
     [Header("Appear/Disappear Animation")]
     [SerializeField] private float _appearDuration = 0.3f;
@@ -81,6 +84,7 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
     {
         ClearStats();
         Card = card;
+        _background.color = _colorMap[card.Config.Rarity];
         _image.sprite = card.Config.Icon;
         _name.text = card.Name;
         _level.text = card.Level.ToString();
@@ -93,7 +97,7 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
         {
             _playerCardHolder.Add(Card);
             Card.AddToPlayer();
-            Card.Upgrade();
+            //Card.Upgrade();
         }
         else
         {
@@ -213,10 +217,10 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
 
     private void RenderStats (ICardModel card)
     {
-        foreach (var item in card.GetStatsText(true))
+        foreach (var item in card.GetStatsText(card.HasPlayer))
         {
             StatTextHolder statTextHolder = _poolService.Get(_statTextHolder, _statsParent);
-            statTextHolder.RenderText(item);
+            statTextHolder.RenderText(item, card.HasPlayer);
             _statTextHolders.Add(statTextHolder);
         }
     }
@@ -234,7 +238,6 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerClick (PointerEventData eventData)
     {
-        Debug.Log("click");
         PlayClickPop();
         SelectCard();
         Selected?.Invoke(this);

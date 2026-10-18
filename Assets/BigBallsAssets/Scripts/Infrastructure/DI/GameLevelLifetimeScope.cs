@@ -28,12 +28,6 @@ namespace BigBalls.Infrastructure.DI
             RegisterModels(builder);
         }
 
-        private void OnDisable ()
-        {
-            ILootFactory lootFactory = Container.Resolve<ILootFactory>();
-            lootFactory.Disable();
-        }
-
         private void RegisterFactories (IContainerBuilder builder)
         {
             builder.Register<IParticleFactory, ParticleFactory>(Lifetime.Scoped);

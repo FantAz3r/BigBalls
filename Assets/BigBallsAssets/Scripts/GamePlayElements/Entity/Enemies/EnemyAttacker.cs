@@ -82,6 +82,9 @@ namespace BigBalls.GameplayObjects
 
         private IEnumerator JumpAttackRoutine (bool needSuiside)
         {
+            if (_owner == null)
+                yield break;
+
             _owner.EntityCollision.Disable();
             _canAttack = false;
 

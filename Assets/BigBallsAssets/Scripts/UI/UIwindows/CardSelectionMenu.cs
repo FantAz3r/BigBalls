@@ -214,8 +214,8 @@ public class CardSelectionMenu : PauseWindow
     private void CloseCardMenu ()
     {
         Close();
-        _timeService.SmoothEditTimeScalse(0, 0);
+        _timeService.SmoothReduceTimescale(0, 0);
         _windowService.Open<HUD>();
-        _timeService.SmoothEditTimeScalse(1, 1);
+        _timeService.SmoothRecoverTimescale(1);
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BigBalls.Services;
 using BigBalls.UI;
 using DG.Tweening;
 using UnityEngine;
@@ -8,11 +9,13 @@ using VContainer;
 public class ChestItemDropView : WindowBase
 {
     [Header("Chest References")]
-    [SerializeField] private Image _chestImage;
+    [SerializeField] private Image _closeChestImage;
+    [SerializeField] private Image _openChestImage;
     [SerializeField] private RectTransform _chestTransform;
     [SerializeField] private Button _openButton;
     [SerializeField] private CanvasGroup _chestCanvasGroup;
     [SerializeField] private ChestConfig _chestConfig;
+    [SerializeField] private Button _exitButton;
 
     [Header("Cards Container")]
     [SerializeField] private Transform _cardsContainer;
@@ -37,6 +40,9 @@ public class ChestItemDropView : WindowBase
     private ChestCalculator _chestCalculator;
     private Sequence _currentAnimation;
     private ChestModel _chestModel;
+    private IPoolService _poolService;
+    private ITimeService _timeService;
+    private LevelButton _levelButton;
 
     private void Awake ()
     {
@@ -49,14 +55,29 @@ public class ChestItemDropView : WindowBase
         DOTween.Kill(transform);
     }
 
-    [Inject]
-    public void Construct (ChestCalculator chestCalculator) => _chestCalculator = chestCalculator;
-
-    public void Init (ChestModel chestModel)
+    public override void Open ()
     {
-        Debug.Log("inited");
+        base.Open();
+        _timeService.StopGame();
+        _levelButton?.gameObject.SetActive(true);
+    }
+
+    [Inject]
+    public void Construct (ChestCalculator chestCalculator, IPoolService poolService, ITimeService timeService)
+    {
+        _poolService = poolService;
+        _chestCalculator = chestCalculator;
+        _timeService = timeService;
+    }
+
+    public void Init (ChestModel chestModel, LevelButton levelButton)
+    {
         _chestModel = chestModel;
-        _chestImage.sprite = _chestModel.Config.CloseIcon;
+        _levelButton = levelButton;
+        _closeChestImage.sprite = _chestModel.Config.CloseIcon;
+        _openChestImage.sprite = _chestModel.Config.OpenIcon;
+        _openChestImage.gameObject.SetActive(false);
+        _exitButton.gameObject.SetActive(false);
         ResetChest();
 
         if (_openButton != null)
@@ -81,18 +102,17 @@ public class ChestItemDropView : WindowBase
 
         foreach (var card in _activeCards)
         {
-            Destroy(card);
+            _poolService.Release(card);
         }
 
         _activeCards.Clear();
     }
 
     private void CreateCards ()
-
     {
         for (int i = 0; i < _poolSize; i++)
         {
-            ChestCardView card = Instantiate(_cardPrefab, _cardsContainer);
+            ChestCardView card = _poolService.Get(_cardPrefab, _cardsContainer);
             card.gameObject.SetActive(false);
             _cardPool.Enqueue(card);
         }
@@ -100,62 +120,50 @@ public class ChestItemDropView : WindowBase
 
     private ChestCardView GetCard ()
     {
-        ChestCardView card = Instantiate(_cardPrefab, _cardsContainer);
+        ChestCardView card = _poolService.Get(_cardPrefab, _cardsContainer);
         _activeCards.Add(card);
         return card;
     }
 
     private void OnOpenChestClicked ()
-
     {
         _openButton.interactable = false;
         AnimateChestOpening();
     }
 
     private void AnimateChestOpening ()
-
     {
         KillCurrentAnimation();
-
         _currentAnimation = DOTween.Sequence();
-
-        // Устанавливаем независимость от Time.timeScale для всей последовательности
         _currentAnimation.SetUpdate(true);
 
-
-        // Звук открытия
         if (_audioSource != null && _openSound != null)
         {
             _currentAnimation.AppendCallback(() => _audioSource.PlayOneShot(_openSound));
         }
 
-        // Анимация тряски сундука
         _currentAnimation.Append(
             _chestTransform.DOShakeRotation(_chestShakeDuration, _chestShakeStrength, 10, 90)
-                .SetUpdate(true)  // Тряска не зависит от timeScale
+                .SetUpdate(true)
         );
 
         _currentAnimation.Join(
             _chestTransform.DOShakeScale(_chestShakeDuration, 0.2f, 10, 90)
-                .SetUpdate(true)  // Тряска не зависит от timeScale
+                .SetUpdate(true)
         );
 
         _currentAnimation.AppendCallback(() =>
         {
-            _chestImage.sprite = _chestCalculator.ChestModel.Config.OpenIcon;
-
+            Debug.Log(111);
+            _openChestImage.gameObject.SetActive(true);
+            _closeChestImage.gameObject.SetActive(false);
         });
 
-        // Небольшая пауза перед появлением карт
         _currentAnimation.AppendInterval(0.5f);
-
-        // Появление карт
         _currentAnimation.AppendCallback(() => DropCards());
-
-        // Автоматический сбор карт через заданное время
         _currentAnimation.AppendInterval(_cardDisplayDuration);
+        _currentAnimation.AppendCallback(() => { _exitButton.gameObject.SetActive(true); });
         _currentAnimation.AppendCallback(() => CollectAllCards());
-
         _currentAnimation.Play();
     }
 
@@ -164,7 +172,6 @@ public class ChestItemDropView : WindowBase
         ChestOpenResult result = _chestCalculator.OpenChest(_chestModel);
 
         List<ICardModel> cards = result.Cards;
-
         Dictionary<ICardModel, int> cardDrop = new Dictionary<ICardModel, int>();
 
         foreach (var card in cards)
@@ -180,13 +187,14 @@ public class ChestItemDropView : WindowBase
         }
 
         int goldAmount = result.GoldAmount;
-
         int i = 0;
 
         foreach (var card in cardDrop)
         {
             ChestCardView cardView = GetCard();
+
             cardView.RenderCard(card.Key, card.Value);
+            card.Key.AddItemEXP(card.Value);
 
             i++;
             float delay = i * _cardAppearDelay;
@@ -200,22 +208,18 @@ public class ChestItemDropView : WindowBase
 
         if (goldAmount > 0)
         {
-            ShowGoldAnimation(goldAmount, cards.Count);
+            ShowGoldAnimation(goldAmount, cardDrop.Count);
         }
     }
 
     private void ShowGoldAnimation (int amount, int cardCount)
-
     {
-        // Создаем карту для золота
         ChestCardView goldCard = GetCard();
-        float delay = cardCount * _cardAppearDelay;
+        float delay = (cardCount + 1) * _cardAppearDelay;
 
         goldCard.RenderGold(_chestModel.Config.GoldSprite, amount);
-
         goldCard.CreateAppearAnimation(delay);
 
-        // Звук золота
         if (_audioSource != null && _goldSound != null)
         {
             DOVirtual.DelayedCall(delay, () => _audioSource.PlayOneShot(_goldSound));
@@ -223,26 +227,21 @@ public class ChestItemDropView : WindowBase
     }
 
     private void CollectAllCards ()
-
     {
         KillCurrentAnimation();
 
         _currentAnimation = DOTween.Sequence();
 
         // Смена спрайта на ShowIcon
-        if (_chestImage != null)
+        if (_closeChestImage != null)
         {
             _currentAnimation.AppendCallback(() =>
             {
-                _chestImage.sprite = _chestCalculator.ChestModel.Config.ShowIcon;
+                _closeChestImage.sprite = _chestCalculator.ChestModel.Config.ShowIcon;
 
             });
         }
 
-        // Затухание сундука
-        _currentAnimation.Append(_chestCanvasGroup.DOFade(0f, 0.5f));
-
-        // Собираем все карты
         for (int i = _activeCards.Count - 1; i >= 0; i--)
         {
             ChestCardView card = _activeCards[i];
@@ -264,23 +263,12 @@ public class ChestItemDropView : WindowBase
     }
 
     private Transform FindTargetForCard (int index)
-
     {
-        // Здесь нужно реализовать логику поиска целевого слота для карты
-        // Например, найти соответствующий слот в UI инвентаря
-        // Пока возвращаем null для примера
-
-        // Пример:
-        // if (InventoryUI.Instance != null)
-        // {
-        //     return InventoryUI.Instance.GetSlotForCard(index);
-        // }
 
         return null;
     }
 
     private void KillCurrentAnimation ()
-
     {
         if (_currentAnimation != null && _currentAnimation.IsActive())
         {

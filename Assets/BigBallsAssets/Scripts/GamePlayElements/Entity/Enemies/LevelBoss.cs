@@ -7,7 +7,7 @@ namespace BigBalls.GameplayObjects
         public event Action Won;
 
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             Won?.Invoke();
         }

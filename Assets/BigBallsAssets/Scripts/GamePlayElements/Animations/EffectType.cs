@@ -5,4 +5,6 @@ public enum EffectType
     Freeze,
     Heal,
     Upgrade,
+    LeftStep,
+    RightStep,
 }

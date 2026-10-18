@@ -17,5 +17,6 @@ namespace BigBalls.GameplayObjects
         void SetMovableObject (Transform transform);
         void SetReycastInfo(Vector3[] directions, Vector3[] points);
         void SetTarget(Transform target);
+        void Stop ();
     }
 }

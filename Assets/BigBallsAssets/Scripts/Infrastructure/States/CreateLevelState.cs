@@ -37,6 +37,7 @@ namespace BigBalls.Infrastructure
         private readonly IWalletModel _walletModel;
         private readonly ISoundService _soundService;
         private readonly SoundSpawner _soundSpawner;
+        private readonly ILootFactory _lootFactory;
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfigs;
         private LevelID _currentLevel;
@@ -65,7 +66,8 @@ namespace BigBalls.Infrastructure
             ISceneContainerProvider sceneContainerProvider,
             IWalletModel walletModel,
             ISoundService soundService,
-            SoundSpawner soundSpawner)
+            SoundSpawner soundSpawner,
+            ILootFactory lootFactory)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -90,6 +92,7 @@ namespace BigBalls.Infrastructure
             _walletModel = walletModel;
             _soundService = soundService;
             _soundSpawner = soundSpawner;
+            _lootFactory = lootFactory;
         }
 
         public void Enter(LevelID level)
@@ -136,7 +139,11 @@ namespace BigBalls.Infrastructure
             RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
             colliderPlacer.PlaceWalls();
             _tileMover.Start();
+
             _inputService.Start();
+            _inputService.EnableUI();
+            _inputService.EnablePlayer();
+
             _playerFactory.OnPlayerSpawned();
         }
 
@@ -150,7 +157,6 @@ namespace BigBalls.Infrastructure
 
         private void CreateUI()
         {
-            _windowService.CreateUIRoot();
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
             _uIFactory.UIRoot.GlobalWalletView.Disable();
@@ -158,13 +164,15 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            _lootFactory.Disable();
             _tileMover.Stop();
             _levelTimeline.Stop();
             _updateService.Clear();
             _timeService.ResumeGame();
+            _soundService.StopAll();
+            _soundSpawner.Disable();
             _poolService.ClearAllPools();
             _walletModel.PutAccumulatedCoins();
-            _soundService.StopAll();
 
             _saveService.Save();
             _ballsRepository.Save();
@@ -173,6 +181,7 @@ namespace BigBalls.Infrastructure
             _saveService.Save();
 
             _uIFactory.ClearCache();
+            _timeService.SetTimescale(1);
         }
     }
 }

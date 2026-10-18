@@ -1,10 +1,10 @@
+using System;
+using System.Collections;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.Saves;
 using BigBalls.Services;
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class LevelTimeline
@@ -26,7 +26,7 @@ public class LevelTimeline
     private bool _isLevelStarted = false;
     private float _levelTimer = 0f;
 
-    public LevelTimeline(
+    public LevelTimeline (
         ICoroutineRunner coroutineRunner,
         EnemySpawner enemySpawner,
         TileFactory tileFactory,
@@ -48,7 +48,7 @@ public class LevelTimeline
     public int CompliteWaves { get; private set; }
     public int Kills { get; private set; }
 
-    public void Start(LevelConfig levelConfig)
+    public void Start (LevelConfig levelConfig)
     {
         _lineSpawnDelay = new WaitForSeconds(levelConfig.LineSpawnDelay);
         _isLevelStarted = true;
@@ -62,10 +62,10 @@ public class LevelTimeline
             _timeCoroutine = _coroutineRunner.StartCoroutine(TimeRoutine());
     }
 
-    public void Stop()
+    public void Stop ()
     {
 
-        if(_isLevelStarted == false)
+        if (_isLevelStarted == false)
             return;
 
         _isLevelEnded = true;
@@ -83,12 +83,12 @@ public class LevelTimeline
             _timeCoroutine = null;
         }
 
-        var currentLevelId = (int)_levelConfig.Level;
+        var currentLevelId = (int) _levelConfig.Level;
         var newStars = CompliteWaves;
         var newData = new LevelSaveData(currentLevelId, CompliteWaves, _levelTimer, Kills);
 
         var existingLevelSave = _saveService.GameProgress.Levels
-            .Find(l => l.LevelID == currentLevelId); 
+            .Find(l => l.LevelID == currentLevelId);
 
         if (existingLevelSave != null)
         {
@@ -108,7 +108,7 @@ public class LevelTimeline
         CompliteWaves = 0;
     }
 
-    private IEnumerator WaveRoutine()
+    private IEnumerator WaveRoutine ()
     {
         var waves = _levelConfig.Waves;
 
@@ -124,6 +124,7 @@ public class LevelTimeline
             if (wave.BossConfig != null)
                 _enemySpawner.SpawnBoss(wave.BossConfig);
 
+
             for (int line = 0; line < wave.LineCount; line++)
             {
                 yield return _lineSpawnDelay;
@@ -138,18 +139,18 @@ public class LevelTimeline
         }
 
         yield return new WaitForSeconds(_levelConfig.BossTimeDelay);
-
         _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
+
         _mainCoroutine = null;
     }
 
-    private void ScaleField()
+    private void ScaleField ()
     {
         _enemySpawner.ScaleField(_tileFactory.ScaleRoad());
         _soundSpawner.Spawn(SoundType.FieldExpand);
     }
 
-    private IEnumerator TimeRoutine()
+    private IEnumerator TimeRoutine ()
     {
         _levelTimer = 0f;
         TimeElapsed?.Invoke(_levelTimer);
@@ -162,7 +163,7 @@ public class LevelTimeline
         }
     }
 
-    private void CountKills(IEntity entity)
+    private void CountKills (IEntity entity)
     {
         Kills++;
     }

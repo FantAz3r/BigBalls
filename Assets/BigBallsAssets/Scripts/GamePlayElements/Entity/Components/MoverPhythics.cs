@@ -18,6 +18,7 @@ namespace BigBalls.GameplayObjects
         private Transform _target;
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
+        private bool _canMove = true;
 
         private List<MovementModifier> _movementModifiers = new List<MovementModifier>();
 
@@ -41,7 +42,7 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        private void Construct (IUpdateService updateService, IRaycastService raycastService)
+        public void Construct (IUpdateService updateService, IRaycastService raycastService)
         {
             _updateService = updateService;
             _raycastService = raycastService;
@@ -105,32 +106,35 @@ namespace BigBalls.GameplayObjects
             if (_rigidbody == null)
                 return;
 
-            _movementModifiers.RemoveAll(m => m is PushModifier pm && pm.IsActive == false);
-            _movementModifiers.RemoveAll(m => m is ConstantForceModifier cfm && !cfm.IsActive);
-
-            Vector3 moveDirection;
-
-            if (_target != null)
+            if (_canMove)
             {
-                Vector3 dirToTarget = _target.position - MovableObject.position;
-                dirToTarget.y = 0;
+                _movementModifiers.RemoveAll(m => m is PushModifier pm && pm.IsActive == false);
+                _movementModifiers.RemoveAll(m => m is ConstantForceModifier cfm && !cfm.IsActive);
 
-                if (dirToTarget.sqrMagnitude > 0.001f)
+                Vector3 moveDirection;
+
+                if (_target != null)
                 {
-                    moveDirection = dirToTarget.normalized;
+                    Vector3 dirToTarget = _target.position - MovableObject.position;
+                    dirToTarget.y = 0;
+
+                    if (dirToTarget.sqrMagnitude > 0.001f)
+                    {
+                        moveDirection = dirToTarget.normalized;
+                    }
+                    else
+                    {
+                        _rigidbody.velocity = Vector3.zero;
+                        return;
+                    }
                 }
                 else
                 {
-                    _rigidbody.velocity = Vector3.zero;
-                    return;
+                    moveDirection = new Vector3(Direction.x, 0f, Direction.y).normalized;
                 }
-            }
-            else
-            {
-                moveDirection = new Vector3(Direction.x, 0f, Direction.y).normalized;
-            }
 
-            Move(moveDirection);
+                Move(moveDirection);
+            }
         }
 
         public Vector3 GetCurrentVelocity ()
@@ -143,13 +147,10 @@ namespace BigBalls.GameplayObjects
 
         public bool HasActiveModifiers () => _movementModifiers.Count > 0;
 
+        public void Stop () => _canMove = false;
+
         private void Move (Vector3 moveDirection)
         {
-            if (MovableObject.TryGetComponent<Scarabey>(out _))
-            {
-                Debug.Log(_rigidbody.velocity);
-            }
-
             Vector3 velocity = moveDirection * _moveSpeed.CurrentValue;
 
             foreach (var modifier in _movementModifiers)

@@ -1,45 +1,23 @@
 using BigBalls.Infrastructure;
-using BigBalls.Services;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using VContainer;
 
 namespace BigBalls.UI
 {
-    public class WinLevelMenu : WindowBase
+    public class WinLevelMenu : LevelResultMenu
     {
-        [SerializeField] private Image _chestImage;
         [SerializeField] private TMP_Text _compliteText;
-        [SerializeField] private List<Image> _stars;
         [SerializeField] private TMP_Text _levelStats;
+        [SerializeField] private LevelButton _levelButton;
 
-        private IUIFactory _windowService;
-        private ChestData _chestData;
-
-        [Inject]
-        public void Construct(IResourceLoader resourceLoader, IUIFactory windowService)
+        public void LevelComplite (LevelID level, int compliteWaves)
         {
-            _windowService = windowService;
-            _chestData = resourceLoader.Load<ChestData>();
+            ApplyResult(level, compliteWaves, _levelButton);
         }
 
-        public void LevelComplite(LevelID level, int compliteWaves)
+        protected override void OnResultApplied (LevelID level, int compliteWaves, LevelButton levelButton)
         {
-            ChestConfig chestConfig = _chestData.GetChest((Rarity)compliteWaves);
-            _chestImage.sprite = chestConfig.CloseIcon;
-            ChestModel chestModel = new ChestModel((int)level, chestConfig);
-            _windowService.Get<ChestItemDropView>(WindowType.OpenChest).Init(chestModel);
-            RenderStars(compliteWaves);
-        }
-
-        private void RenderStars(int compliteWaves)
-        {
-            for (int i = 0; i < compliteWaves; i++)
-            {
-                _stars[i].gameObject.SetActive(true);
-            }
+            levelButton.Set(level + 1);
         }
     }
 }

@@ -14,9 +14,16 @@ namespace BigBalls.Configs
         [field: SerializeField] public ArtefactType ArtefactType { get; private set; }
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
 
-        public override List<ItemStat> GetStats(int level)
+        public override List<ItemStat> GetStats (int level)
         {
-            throw new System.NotImplementedException();
+            List<ItemStat> stats = new List<ItemStat>();
+
+            foreach (var item in Effects)
+            {
+                stats.AddRange(item.GetStats(level));
+            }
+
+            return stats;
         }
 
         public bool TryGetEffect(out EffectConfig behaviourConfig, BehaviourType type)

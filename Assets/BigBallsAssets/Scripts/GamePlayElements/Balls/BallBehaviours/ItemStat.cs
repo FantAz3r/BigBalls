@@ -6,7 +6,7 @@
         public float Value;
         public float NextValue;
 
-        public ItemStat(string name, float value, float nextValue)
+        public ItemStat(string name, float value, float nextValue = 0)
         {
             Name = name;
             Value = value;

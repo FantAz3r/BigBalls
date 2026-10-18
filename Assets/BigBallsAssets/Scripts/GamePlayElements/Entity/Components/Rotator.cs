@@ -1,20 +1,26 @@
 ﻿using BigBalls.Services;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.GameplayObjects
 {
     public class Rotator : IUpdateble, ISubscribable
     {
-        private readonly IUpdateService _updateService;
+        private IUpdateService _updateService;
 
         private bool _canRotate = true;
         private Stat _rotationSpeed;
         private Transform _target;
-        public Rotator(Stat rotationSpeed, Transform rotatebleObject, IUpdateService updateService)
+        public Rotator(Stat rotationSpeed, Transform rotatebleObject)
         {
-            _updateService = updateService;
             RotatebleObject = rotatebleObject;
             _rotationSpeed = rotationSpeed;
+        }
+
+        [Inject]
+        public void Construct(IUpdateService updateService)
+        {
+            _updateService = updateService;
         }
 
         public Transform RotatebleObject { get; private set; }

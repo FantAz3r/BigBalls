@@ -1,137 +1,131 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BigBalls.GameplayObjects;
 using DG.Tweening;
 using UnityEngine;
 
-namespace BigBalls.GameplayObjects
+public class Tile : MonoBehaviour
 {
-    public class Tile : MonoBehaviour
+    private const int CenterLineIndex = 7;
+    private const int AdditionalLines = 2;
+    private const float LineWidth = 1f; 
+
+    [SerializeField] private Wall _leftWall;
+    [SerializeField] private Wall _rightWall;
+    [SerializeField] private Ground _ground;
+    [SerializeField] private BoxCollider _boxCollider;
+    [SerializeField] private float _scaleDuration = 1.0f;
+    [SerializeField] private List<TileLine> _tileLines = new();
+
+    private int _halfWidth;
+    private int _currentWidth;
+    private bool _isActionComplete = false;
+    private bool _isScaling = false;
+    private Tweener _scaleTweener;
+
+    private Vector3 _leftWallBasePos = new Vector3(7, 0, 7);
+    private Vector3 _rightWallBasePos = new Vector3(-1, 0, 7);
+
+    public event Action Finished;
+
+    private void Awake ()
     {
-        private const int CenterLineIndex = 7;
-        private const int AdditionalLines = 2;
+        _tileLines = GetComponentsInChildren<TileLine>(true).ToList();
+    }
 
-        [SerializeField] private Wall _leftWall;
-        [SerializeField] private Wall _rightWall;
-        [SerializeField] private Ground _ground;
-        [SerializeField] private BoxCollider _boxCollider;
-        [SerializeField] private float _scaleDuration = 1.0f;
-        [SerializeField] private List<TileLine> _tileLines = new();
+    public void Init (int width)
+    {
+        _currentWidth = width + AdditionalLines;
+        _halfWidth = _currentWidth / 2;
+        ActivateLines(_halfWidth);
+        ApplyWallsForHalfWidth(_halfWidth);
+    }
 
-        private int _halfWidth;
-        private int _currentWidth;
-        private bool _isActionComplete = false;
-        private bool _isScaling = false;
-        private Tweener _scaleTweener;
+    public void ScaleTile (int newWidth)
+    {
+        int newCurrentWidth = newWidth + AdditionalLines;
+        int newHalfWidth = newCurrentWidth / 2;
 
-        public event Action Finished;
+        if (newHalfWidth == _halfWidth && _isScaling == false)
+            return;
 
-        private void Awake ()
-        {
-            _tileLines = GetComponentsInChildren<TileLine>(true).ToList();
-        }
+        _currentWidth = newCurrentWidth;
+        _halfWidth = newHalfWidth;
 
-        public void Construct (int width)
-        {
-            _currentWidth = width + AdditionalLines;
-            _halfWidth = _currentWidth / 2;
-            ActivateLinesFromCenter(width);
-        }
+        ActivateLines(_halfWidth);
+        AnimateWallsTo(_halfWidth);
+    }
 
-        public void ScaleTile (int newWidth)
-        {
-            if (_isScaling == false)
+    private void ActivateLines (int halfWidth)
+    {
+        foreach (var line in _tileLines)
+            line.gameObject.SetActive(false);
+
+        int startIndex = Mathf.Max(0, CenterLineIndex - halfWidth);
+        int endIndex = Mathf.Min(_tileLines.Count - 1, CenterLineIndex + halfWidth);
+
+        for (int i = startIndex; i <= endIndex; i++)
+            _tileLines[i].gameObject.SetActive(true);
+    }
+
+    private void ApplyWallsForHalfWidth (int halfWidth)
+    {
+        float offset = halfWidth * LineWidth;
+        _leftWall.transform.localPosition = _leftWallBasePos + new Vector3(offset, 0f, 0f);
+        _rightWall.transform.localPosition = _rightWallBasePos + new Vector3(-offset, 0f, 0f);
+    }
+
+    private void AnimateWallsTo (int halfWidth)
+    {
+        if (_scaleTweener != null && _scaleTweener.IsActive())
+            _scaleTweener.Kill();
+
+        _isScaling = true;
+
+        Vector3 leftStart = _leftWall.transform.localPosition;
+        Vector3 rightStart = _rightWall.transform.localPosition;
+
+        float offset = halfWidth * LineWidth;
+        Vector3 leftTarget = _leftWallBasePos + new Vector3(offset, 0f, 0f);
+        Vector3 rightTarget = _rightWallBasePos + new Vector3(-offset, 0f, 0f);
+
+        _scaleTweener = DOTween.To(
+            () => 0f,
+            t =>
             {
-                _currentWidth = newWidth;
-                ScaleTileAnimation(newWidth);
-            }
-        }
-
-        private void OnTriggerEnter (Collider other)
+                float progress = Mathf.SmoothStep(0f, 1f, t);
+                _leftWall.transform.localPosition = Vector3.Lerp(leftStart, leftTarget, progress);
+                _rightWall.transform.localPosition = Vector3.Lerp(rightStart, rightTarget, progress);
+            },
+            1f,
+            _scaleDuration
+        ).SetEase(Ease.OutQuad).OnComplete(() =>
         {
-            if (other.TryGetComponent<Player>(out _))
-            {
-                if (_isActionComplete == false)
-                {
-                    _isActionComplete = true;
-                    Finished?.Invoke();
-                }
-            }
-        }
+            _leftWall.transform.localPosition = leftTarget;
+            _rightWall.transform.localPosition = rightTarget;
+            _isScaling = false;
+            _scaleTweener = null;
+        });
+    }
 
-        private void ActivateLinesFromCenter (int width)
+    private void OnTriggerEnter (Collider other)
+    {
+        if (other.TryGetComponent<Player>(out _) && !_isActionComplete)
         {
-            foreach (var line in _tileLines)
-                line.gameObject.SetActive(false);
-
-            int startIndex = Mathf.Max(0, CenterLineIndex - _halfWidth);
-            int endIndex = Mathf.Min(_tileLines.Count - 1, CenterLineIndex + _halfWidth);
-
-            for (int i = startIndex; i <= endIndex; i++)
-            {
-                _tileLines[i].gameObject.SetActive(true);
-            }
-        }
-
-        private void ScaleTileAnimation (int newWidth)
-        {
-            if (_scaleTweener != null && _scaleTweener.IsActive())
-                _scaleTweener.Kill();
-
-            _isScaling = true;
-            Vector3 leftStart = _leftWall.transform.localPosition;
-            Vector3 rightStart = _rightWall.transform.localPosition;
-
-            Vector3 leftTarget = new Vector3(leftStart.x + 1, leftStart.y, leftStart.z);
-            Vector3 rightTarget = new Vector3(rightStart.x - 1, rightStart.y, rightStart.z);
-
-            _scaleTweener = DOTween.To(
-                () => 0f,
-                t =>
-                {
-                    float progress = Mathf.SmoothStep(0, 1, t);
-                    _leftWall.transform.localPosition = Vector3.Lerp(leftStart, leftTarget, progress);
-                    _rightWall.transform.localPosition = Vector3.Lerp(rightStart, rightTarget, progress);
-                },
-                1f,
-                _scaleDuration
-            ).SetEase(Ease.OutQuad).OnComplete(() =>
-            {
-                ActivateExtraLines(newWidth);
-                SetScale(leftTarget, rightTarget);
-
-                _isScaling = false;
-                _scaleTweener = null;
-            });
-        }
-
-        private void ActivateExtraLines (int width)
-        {
-            int leftExtraIndex = Mathf.Max(0, CenterLineIndex - _halfWidth - 1);
-            int rightExtraIndex = Mathf.Min(_tileLines.Count - 1, CenterLineIndex + _halfWidth + 1);
-
-            if (leftExtraIndex >= 0 && leftExtraIndex < _tileLines.Count)
-                _tileLines[leftExtraIndex].gameObject.SetActive(true);
-
-            if (rightExtraIndex >= 0 && rightExtraIndex < _tileLines.Count)
-                _tileLines[rightExtraIndex].gameObject.SetActive(true);
-        }
-
-        private void SetScale (Vector3 leftWallPosition, Vector3 rightWallPosition)
-        {
-            _leftWall.transform.localPosition = leftWallPosition;
-            _rightWall.transform.localPosition = rightWallPosition;
-        }
-
-        private void OnDisable ()
-        {
-            if (_scaleTweener != null && _scaleTweener.IsActive())
-                _scaleTweener.Kill();
-        }
-
-        public void SetLines(List<TileLine> tileLines)
-        {
-            _tileLines = tileLines;
+            _isActionComplete = true;
+            Finished?.Invoke();
         }
     }
+
+    private void OnDisable ()
+    {
+        if (_scaleTweener != null && _scaleTweener.IsActive())
+            _scaleTweener.Kill();
+        _scaleTweener = null;
+        _isScaling = false;
+        _isActionComplete = false;
+    }
+
+    public void SetLines (List<TileLine> tileLines) => _tileLines = tileLines;
 }

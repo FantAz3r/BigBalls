@@ -14,16 +14,17 @@ public class EnemyShooter : ISubscribable
     private readonly EnemyConfig _config;
     private readonly Stat _attackSpeed;
 
+    private List<ICollisionStrategy> _collisionStrategies = new List<ICollisionStrategy>();
+    private ICoroutineRunner _coroutineRunner;
+    private IIdentifierService _identifierService;
+    private IBallFactory _ballFactory;
     private SoundSpawner _soundSpawner;
     private WaitForSeconds _attackDelay;
     private Coroutine _shootRoutine;
-    private ICoroutineRunner _coroutineRunner;
-    private bool _canShoot = true;
     private Transform _target;
-    private IIdentifierService _identifierService;
-    private IBallFactory _ballFactory;
-    private List<ICollisionStrategy> _collisionStrategies = new List<ICollisionStrategy>();
+    private Vector3 _direction;
     private Transform _firePoint;
+    private bool _canShoot = true;
 
     public EnemyShooter (Stat attackSpeed,
             Enemy firePoint,
@@ -73,14 +74,20 @@ public class EnemyShooter : ISubscribable
     public void Shoot ()
     {
         BallModel ballModel = new BallModel(_identifierService.ID, _config.BallConfig);
-        Vector3 direction = _target.position - _enemy.transform.position;
-        direction.y = 0;
-        direction.Normalize();
-        Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
+
+        if (_target != null)
+        {
+            _direction = _target.position - _firePoint.transform.position;
+        }
+
+        _direction.y = 0;
+        _direction.Normalize();
+
+        Quaternion rotation = Quaternion.LookRotation(_direction, Vector3.up);
 
         Ball ball = _ballFactory.Create(ballModel, EntityType.Enemy, _enemy.Transform, _collisionStrategies, rotation);
         ball.transform.position = _firePoint.position;
-        ball.Mover.SetDirection(new Vector2(direction.x, direction.z));
+        ball.Mover.SetDirection(new Vector2(_direction.x, _direction.z));
         ball.Subscribe();
 
         if (_config.RangeAttackSound.Clip != null)
@@ -94,6 +101,13 @@ public class EnemyShooter : ISubscribable
 
     public void Set (List<ICollisionStrategy> collisionStrategies) => _collisionStrategies = collisionStrategies;
     public void Set (Transform firePoint) => _firePoint = firePoint;
+    public void SetTarget (Transform target) => _target = target;
+    public void Set (Vector3 direction)
+    {
+        _target = null;
+        _direction = direction;
+    }
+
     private void OnStatChanged (IReadonlyStat stat)
     {
         _attackDelay = new WaitForSeconds((1 / stat.CurrentValue) * UnityEngine.Random.Range(0.6f, 1.4f));

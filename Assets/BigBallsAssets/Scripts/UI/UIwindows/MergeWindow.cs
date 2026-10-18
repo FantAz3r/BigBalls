@@ -48,7 +48,6 @@ public class MergeWindow : MonoBehaviour
 
         foreach (var card in _spawned)
         {
-            Debug.Log("release");
             _poolService.Release(card);
         }
 

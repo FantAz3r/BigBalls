@@ -297,6 +297,20 @@ namespace BigBalls.Localization
             { Turkish, "hasar" },
         };
 
+        private static readonly Dictionary<string, string> StartBallMoveSpeedDict = new Dictionary<string, string>
+        {
+            { Russian, "Начальная скорость" },
+            { English, "Start speed" },
+            { Turkish, "Başlangıç hızı" },
+        };
+
+        private static readonly Dictionary<string, string> AddMoveSpeedPerHitDict = new Dictionary<string, string>
+        {
+            { Russian, "Скорость за отскок" },
+            { English, "Speed per bounce" },
+            { Turkish, "Ribaund başına hız" },
+        };
+
         private static readonly Dictionary<string, string> ExplosionDamageDict = new Dictionary<string, string>
         {
             { Russian, "Взрывной Урон" },
@@ -492,8 +506,18 @@ namespace BigBalls.Localization
             { Turkish, "PUAN YOK" },
         };
 
+        private static readonly Dictionary<string, string> MaxMoveSpeedMultiplyerDict = new Dictionary<string, string>
+        {
+            { Russian, "Предельная скорость" },
+            { English, "Maximum speed" },
+            { Turkish, "Marjinal hız" },
+        };
+
 
         public static string ExplosionDamage => GetText(ExplosionDamageDict);
+        public static string MaxMoveSpeedMultiplyer => GetText(MaxMoveSpeedMultiplyerDict);
+        public static string StartBallMoveSpeed => GetText(StartBallMoveSpeedDict);
+        public static string AddMoveSpeedPerHit => GetText(AddMoveSpeedPerHitDict);
         public static string YourBestScore => GetText(YourBestScoreDict);
         public static string Unlock => GetText(UnlockDict);
         public static string Upgrade => GetText(UpgradeDict);

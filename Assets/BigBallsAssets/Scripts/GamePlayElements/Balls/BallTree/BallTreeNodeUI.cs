@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using BigBalls.StaticData;
 using TMPro;
 using UnityEngine;
@@ -14,16 +15,20 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private TMP_Text _priceText;
     [SerializeField] private GameObject _lockIcon;
-    [SerializeField] private GameObject _unlockIcon;
     [SerializeField] private Button _unlockButton;
     [SerializeField] private Color _lockedColor = Color.gray;
     [SerializeField] private Color _unlockedColor = Color.white;
     [SerializeField] private Color _availableColor = Color.green;
     [SerializeField] private Slider _slider;
 
+    [SerializeField] private SerializedDictionary<Rarity, Color> _colors = new();
+
 
     private List<BallTreeConnectionUI> _childConnections = new List<BallTreeConnectionUI>();
     private List<BallTreeConnectionUI> _parentConnections = new List<BallTreeConnectionUI>();
+
+    private List<BallTreeNodeUI> _parentNodes = new List<BallTreeNodeUI>();
+
     private bool _isOpen;
     private IBallUnlockService _unlockService;
 
@@ -70,20 +75,22 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         int level = BallModel.Level;
 
         _lockIcon.SetActive(_isOpen == false);
-        _unlockIcon.SetActive(_isOpen);
         _levelText.text = level.ToString();
+        _background.color = _colors[BallModel.Config.Rarity];
 
         if (_isOpen == false)
         {
-            _background.color = canUnlock ? _availableColor : _lockedColor;
+            //_background.color = canUnlock ? _availableColor : _lockedColor;
             _priceText.text = canUnlock ? $"{BallModel.BallConfig.UnlockPrice} EXP" : "Locked";
             _priceText.gameObject.SetActive(true);
             DisableConnections();
             TryUpgradeConnaction();
+
+            UpdateConnections();
         }
         else
         {
-            _background.color = _unlockedColor;
+            //_background.color = _unlockedColor;
             _priceText.gameObject.SetActive(false);
 
             foreach (var connection in _parentConnections)
@@ -92,6 +99,8 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
             }
 
             UpdateConnections();
+
+
         }
     }
 

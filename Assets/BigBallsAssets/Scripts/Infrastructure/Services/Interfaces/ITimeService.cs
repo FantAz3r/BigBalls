@@ -5,6 +5,8 @@
         bool IsPaused { get; }
         void StopGame();
         void ResumeGame();
-        void SmoothEditTimeScalse(float targetTimeScale, float duration);
+        void SmoothRecoverTimescale(float duration);
+        void SetTimescale (float value);
+        void SmoothReduceTimescale (float targetTimescale, float duration);
     }
 }

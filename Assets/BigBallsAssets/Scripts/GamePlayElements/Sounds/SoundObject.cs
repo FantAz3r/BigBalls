@@ -50,7 +50,7 @@ public class SoundObject : MonoBehaviour
         RemoveSound();
     }
 
-    public void StopSound ()
+    public void PauseSound ()
     {
         if (_coroutine != null)
         {
@@ -59,6 +59,17 @@ public class SoundObject : MonoBehaviour
         }
 
         AudioSource.Pause();
+    }
+
+    public void StopSound()
+    {
+        if (_coroutine != null)
+        {
+            _coroutineRunner.StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+
+        AudioSource.Stop();
     }
 
     public void ContinueSound ()

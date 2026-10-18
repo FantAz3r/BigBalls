@@ -9,21 +9,25 @@ public class WinService : IWinService
     private readonly IWindowService _windowService;
     private readonly ITimeService _timeService;
     private readonly IResourceLoader _resourceLoader;
+    private readonly IInputService _inputService;
     private IWinReason _winReason;
     private IWalletModel _walletModel;
     private LevelID _level;
     private LevelConfig _levelConfig;
 
+
     public WinService(
         IWindowService windowService,
         ITimeService timeService,
         IWalletModel walletModel,
-        IResourceLoader resourceLoader)
+        IResourceLoader resourceLoader,
+        IInputService inputService)
     {
         _windowService = windowService;
         _timeService = timeService;
         _walletModel = walletModel;
         _resourceLoader = resourceLoader;
+        _inputService = inputService;
     }
 
     public void SetLevel(LevelID level)
@@ -40,6 +44,7 @@ public class WinService : IWinService
 
     public void OnWin()
     {
+        _inputService.DisablePlayer();
         _winReason.Won -= OnWin;
         WinLevelMenu winMenu = _windowService.Open<WinLevelMenu>() as WinLevelMenu;
         winMenu.LevelComplite(_level, _levelConfig.Waves.Count);

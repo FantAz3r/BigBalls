@@ -159,6 +159,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Timescale1",
+                    "type": "Button",
+                    "id": "a54655b5-6ac7-4b37-91d8-aa19f023a7d5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Timescale2",
+                    "type": "Button",
+                    "id": "ac1bb056-79bd-491e-871a-4990325960e4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Timescale3",
+                    "type": "Button",
+                    "id": "48df02ae-815f-488f-b3e3-436b415eb417",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -170,6 +197,39 @@
                     "processors": "",
                     "groups": "KeyboardAndMouse",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b266754d-34c7-4b60-9986-a4d7db57f88a",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Timescale1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c17debb9-6b44-4989-980f-ae4084b9c68f",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Timescale2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b61f510d-bb00-4405-9cbd-e6956696d539",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardAndMouse",
+                    "action": "Timescale3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

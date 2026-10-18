@@ -14,5 +14,6 @@
         HorizontalLaser,
         VerticalLaser,
         Scarab,
+        LaserX,
     }
 }

@@ -7,5 +7,6 @@ public interface ISoundService
     void Add (SoundObject soundObject);
     void Remove (SoundObject soundObject);
     void ContinueAll ();
+    void PauseAll ();
     void StopAll ();
 }

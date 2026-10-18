@@ -21,4 +21,5 @@
     PurchaseRejected,
     Upgrade,
     Error,
+    BossStep,
 }

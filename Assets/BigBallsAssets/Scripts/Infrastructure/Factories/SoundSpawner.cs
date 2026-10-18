@@ -28,9 +28,23 @@ public class SoundSpawner
     public void Enable () => _canSpawn = true;
     public void Disable () => _canSpawn = false;
 
-    public void Spawn (SoundType type)
+    public SoundObject Spawn (SoundType type)
     {
-        Spawn(_soundData[type]);
+        return Spawn(_soundData[type]);
+    }
+
+    public SoundObject Spawn (SoundType type, int index, int count)
+    {
+        float pitch = _soundData[type].Pitch == 0 ? 1f : _soundData[type].Pitch;
+        SoundStruct soundStruct = new SoundStruct(_soundData[type].Clip, _soundData[type].Volume, GetPitchForIndex(pitch, index, count));
+        return Spawn(soundStruct);
+    }
+
+    public SoundObject Spawn (SoundStruct sound, int index, int count )
+    {
+        float pitch = sound.Pitch == 0 ? 1f : sound.Pitch;
+        SoundStruct soundStruct = new SoundStruct(sound.Clip, sound.Volume, GetPitchForIndex(pitch, index, count));
+        return Spawn(soundStruct);
     }
 
     public SoundObject Spawn (SoundStruct sound, bool isBackgroundSound = false)
@@ -75,5 +89,15 @@ public class SoundSpawner
     {
         soundObject.Ended -= OnClipEnded;
         _poolService.Release(soundObject);
+    }
+
+    private float GetPitchForIndex (float basePitch, int index, int count, float range = 0.2f)
+    {
+        if (count <= 1)
+            return basePitch;
+
+        float t = (float) index / (count - 1);
+        float multiplier = 1f + Mathf.Lerp(-range, range, t);
+        return basePitch * multiplier;
     }
 }

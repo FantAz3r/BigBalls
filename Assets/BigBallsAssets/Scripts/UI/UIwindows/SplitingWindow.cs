@@ -27,7 +27,9 @@ public class SplitingWindow : MonoBehaviour
     [SerializeField] private float _animationDuration = 0.6f;
     [SerializeField] private float _delayBetweenCards = 0.1f;
     [SerializeField] private Ease _animationEase = Ease.OutBack;
+    [SerializeField] private SoundStruct _spawnSound;
 
+    private SoundSpawner _spawner;
     private int _spawnCountOffset = 2;
     private SplitingPanel _splitingPanel;
     private PlayerCardHolder _cardHolder;
@@ -42,11 +44,13 @@ public class SplitingWindow : MonoBehaviour
     public void Construct (
         IPoolService poolService,
         IUIFactory windowService,
-        IWalletModel wallet)
+        IWalletModel wallet,
+        SoundSpawner soundSpawner)
     {
         _poolService = poolService;
         _windowService = windowService;
         _wallet = wallet;
+        _spawner = soundSpawner;
     }
 
     public void Init (PlayerCardHolder playerCardHolder)
@@ -166,6 +170,7 @@ public class SplitingWindow : MonoBehaviour
 
         DOTween.Sequence()
             .AppendInterval(index * _delayBetweenCards)
+            .AppendCallback(() => _spawner.Spawn(_spawnSound, index, cardCount))
             .Append(cardTransform
                     .DOAnchorPos(targetPosition, _animationDuration)
                     .SetEase(_animationEase))

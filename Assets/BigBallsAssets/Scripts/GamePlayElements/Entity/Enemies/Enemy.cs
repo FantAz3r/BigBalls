@@ -30,7 +30,7 @@ namespace BigBalls.GameplayObjects
         public EnemyShooter Shooter { get; private set; }
         public Vector3 LocalScale { get; private set; }
 
-        private void Awake ()
+        protected virtual void Awake ()
         {
             LocalScale = transform.localScale;
             EventHandler = new EntityEventHandler();

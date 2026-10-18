@@ -9,8 +9,10 @@ namespace BigBalls.Services
         event Action<Vector2> RotateDirectionSeted;
         event Action Attack;
         IInputService GetSelf();
-        void Enable();
-        void Disable();
         void Start();
+        void EnableUI ();
+        void DisableUI ();
+        void EnablePlayer ();
+        void DisablePlayer ();
     }
 }

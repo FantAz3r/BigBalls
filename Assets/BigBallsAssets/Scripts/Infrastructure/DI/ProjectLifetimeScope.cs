@@ -1,6 +1,7 @@
 using BigBalls.Factories;
 using BigBalls.Providers;
 using BigBalls.Services;
+using BigBalls.UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -53,6 +54,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<GlobalWallet>(Lifetime.Singleton);
             builder.Register<PlayerAttackService>(Lifetime.Singleton);
             builder.Register<ChestCalculator>(Lifetime.Singleton);
+            builder.Register<DamageCalculator>(Lifetime.Singleton);
         }
 
         private void BindProviders(IContainerBuilder builder)

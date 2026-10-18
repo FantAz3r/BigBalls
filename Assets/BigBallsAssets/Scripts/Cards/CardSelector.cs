@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BigBalls.StaticData;
 using UnityEngine;
 
 public class CardSelector
 {
-    private const int MaxLevel = 10;
+    private const int MaxLevel = 5;
     private const int CardsPerSelect = 3;
 
     private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly Dictionary<Rarity, float> _rarityChances = new()
     {
-        { Rarity.Common, 60f },
-        { Rarity.Rare, 25f },
-        { Rarity.Epic, 10f },
-        { Rarity.Legendary, 5f }
+        { Rarity.Common, 80f },
+        { Rarity.Rare, 15f },
+        { Rarity.Epic, 5f },
+        { Rarity.Legendary, 0f }
     };
 
     private List<ICardModel> _currentCards = new();
@@ -51,11 +52,16 @@ public class CardSelector
     private List<ICardModel> GetAvailableModels ()
     {
         var allModels = new List<ICardModel>();
-        allModels.AddRange(_ballsRepository.AllModels.Values);
+
+        List<BallModel> ballModels = _ballsRepository.AllModels.Values.ToList();
+        BallModel ball = _ballsRepository.AllModels[BallType.Base];
+        ballModels.Remove(ball);
+
+        allModels.AddRange(ballModels);
         allModels.AddRange(_artefactsRepository.AllModels.Values);
 
         var filteredModels = allModels
-            .Where(model => model.IsOpen && model.Level < MaxLevel)
+            .Where(model => model.IsOpen && model.InGameLevel < MaxLevel)
             .ToList();
 
         return filteredModels;

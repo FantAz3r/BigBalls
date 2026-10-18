@@ -17,6 +17,8 @@ namespace BigBalls.UI
             _loadingService = levelLoadingService;
         }
 
+        public void Set (LevelID level) => LevelID = level;
+
         protected override void OnClick()
         {
             if(LevelID == LevelID.None)

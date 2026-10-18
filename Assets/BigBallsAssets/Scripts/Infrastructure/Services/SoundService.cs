@@ -17,10 +17,19 @@ public class SoundService : ISoundService
         _soundObjects.Remove(soundObject);
     }
 
+    public void PauseAll ()
+    {
+        foreach (var item in _soundObjects.ToList())
+        {
+            item.PauseSound();
+        }
+    }
+
     public void StopAll ()
     {
         foreach (var item in _soundObjects.ToList())
         {
+            Debug.Log(item.name);
             item.StopSound();
         }
     }

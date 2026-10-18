@@ -1,7 +1,6 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using BigBalls.Configs;
-using BigBalls.GameplayObjects;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
@@ -17,10 +16,10 @@ namespace BigBalls.Factories
         private readonly IObjectResolverProvider _resolverProvider;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly IPoolService _poolService;
+        private readonly Dictionary<Tile, Action> _spawnHandlers = new();
 
         private List<Tile> _tilePrefabs;
         private List<Tile> _activeTiles = new List<Tile>();
-
         public TileFactory (IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner, IPoolService poolService)
         {
             _resolverProvider = resolverProvider;
@@ -43,7 +42,7 @@ namespace BigBalls.Factories
             SpawnNextTile();
         }
 
-        public void SpawnNextTile(float offsetZ = 0)
+        public void SpawnNextTile (float offsetZ = 0)
         {
             Tile prefab = _tilePrefabs[Random.Range(0, _tilePrefabs.Count)];
             Vector3 spawnPoint = new Vector3(-7, -0.5f, GetLNextSpawnPointZ() - offsetZ);
@@ -51,10 +50,25 @@ namespace BigBalls.Factories
             Tile newTile = _poolService.Get(prefab);
             newTile.transform.position = spawnPoint;
             newTile.transform.rotation = Quaternion.identity;
-            newTile.Construct(RoadWidth);
-            newTile.Finished += () => SpawnNextTile();
+            newTile.Init(RoadWidth);
+
+            Action handler = () => SpawnNextTile();
+            _spawnHandlers[newTile] = handler;
+            newTile.Finished += handler;
 
             _activeTiles.Add(newTile);
+        }
+
+        public void RemoveTile (int index)
+        {
+            Tile tile = _activeTiles[index];
+            if (_spawnHandlers.TryGetValue(tile, out var handler))
+            {
+                tile.Finished -= handler;
+                _spawnHandlers.Remove(tile);
+            }
+            _poolService.Release(tile);
+            _activeTiles.RemoveAt(index);
         }
 
         public int ScaleRoad()
@@ -76,15 +90,6 @@ namespace BigBalls.Factories
 
             Tile lastTile = _activeTiles[_activeTiles.Count - 1];
             return lastTile.transform.position.z + 15;
-        }
-
-        public void RemoveTile(int index)
-        {
-            Tile tile = _activeTiles[index];
-            _poolService.Release(tile);
-            tile.Finished -= () => SpawnNextTile();
-
-            _activeTiles.RemoveAt(index);
         }
     }
 }

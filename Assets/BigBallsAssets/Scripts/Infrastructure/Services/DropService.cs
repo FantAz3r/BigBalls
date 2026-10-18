@@ -18,7 +18,7 @@ public class DropService : IDropService
         _lootData = resourceLoader.Load<LootData>();
     }
 
-    public void DropLoot(Vector3 position, Enemy enemy)
+    public void DropLoot( Enemy enemy)
     {
         EnemyConfig config = _enemyConfigs[enemy.name];
 
@@ -31,7 +31,7 @@ public class DropService : IDropService
 
             foreach (var loot in _lootData.GetLoot(lootInfo.LootType, count))
             {
-                _lootSpawner.SpawnLootItem(position, loot.Prefab);
+                _lootSpawner.SpawnLootItem(enemy.transform.position, loot.Prefab);
 
             }
         }

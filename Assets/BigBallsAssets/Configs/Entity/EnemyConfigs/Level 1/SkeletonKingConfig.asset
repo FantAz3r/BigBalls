@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739eb649ec78bbd4381c21bf4e4dcd88, type: 3}
+  m_Name: SkeletonKingConfig
+  m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 1490265801483822583, guid: 8c35b77871de26349839dd592a5d676a,
+    type: 3}
+  <Type>k__BackingField: 4
+  <CanSuiside>k__BackingField: 0
+  <HasRangeAttack>k__BackingField: 1
+  <HasMeeleAttack>k__BackingField: 0
+  <DieSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <BlocksPositions>k__BackingField:
+  - {x: 0, y: 0}
+  <Stats>k__BackingField:
+  - StatType: 3
+    StartMaxValue: 10
+    StartCurrentValue: 0.2
+    MinValue: 0
+  - StatType: 1
+    StartMaxValue: 10
+    StartCurrentValue: 10
+    MinValue: 0
+  - StatType: 8
+    StartMaxValue: 0
+    StartCurrentValue: 0
+    MinValue: 0
+  <ObstacleLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0
+  <BallConfig>k__BackingField: {fileID: 11400000, guid: e10fc69066a19a24799905a635e07338,
+    type: 2}
+  <ShootSound>k__BackingField: {fileID: 0}
+  PossibleLoot: []
+  BaseExperience: 10
+  BaseCoins: 5
+  IdleMinDuration: 5
+  IdleMaxDuration: 6
+  BoneCloudDuration: 0
+  BoneCloudSpreadAngle: 15
+  BoneCloudShotDelay: 0.05
+  VolleyDelay: 5
+  VolleyCount: 3
+  MinBoneCount: 20
+  MaxBoneCount: 30
+  BoneCloudEffect: {fileID: 0}
+  HandDamage: 15
+  HandAttackDuration: 7
+  HandFlyDistance: 15
+  HandTravelTime: 2.5
+  HandReturnTime: 2.5
+  FanBoneDuration: 0
+  FanBoneCount: 7
+  FanShotInterval: 0.15
+  FanSpreadAngle: 90
+  FanSpawnOffset: 0.8

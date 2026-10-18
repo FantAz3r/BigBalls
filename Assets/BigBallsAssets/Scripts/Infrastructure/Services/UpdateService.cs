@@ -9,7 +9,6 @@ namespace BigBalls.Services
         private List<IUpdateble> _tickables = new();
         private List<IUpdateble> _fixedTickables = new();
         private ITimeService _timeService;
-        private bool _isPaused = false;
 
         [Inject]
         public void Construct(ITimeService timeService)
@@ -66,11 +65,6 @@ namespace BigBalls.Services
         {
             _tickables.Clear();
             _fixedTickables.Clear();
-        }
-
-        public void SetPaused(bool isPaused)
-        {
-            _isPaused = isPaused;
         }
     }
 }

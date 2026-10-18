@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Factories;
+using BigBalls.UI;
 using UnityEngine;
+using VContainer;
 
 namespace BigBalls.GameplayObjects
 {
@@ -14,6 +16,7 @@ namespace BigBalls.GameplayObjects
         private IEffectFactory _effectFactory;
         private float _stackCount;
         private Collider _body;
+        private DamageCalculator _damageCalculator;
 
         [field: SerializeField] public BallConfig Config { get; private set; }
         [field: SerializeField] public ParticleObject Particle { get; private set; }
@@ -28,11 +31,14 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
         public float AppliedDamage { get; private set; }
+        public float TotalDamage { get; private set; }
+
 
         private void Awake ()
         {
             EventHandler = new EntityEventHandler();
             IsMaterial = Config.IsMaterial;
+            TotalDamage = 0;
         }
 
         private void OnCollisionEnter (Collision collision)
@@ -89,13 +95,20 @@ namespace BigBalls.GameplayObjects
             UnsubscribeEffects();
         }
 
-        public void Construct (
+        [Inject]
+        public void Construct (IEffectFactory ballEffectFactory, DamageCalculator damageCalculator)
+        {
+            _effectFactory = ballEffectFactory;
+            _damageCalculator = damageCalculator;
+            _damageCalculator.Add(this);
+        }
+
+        public void Init (
             int id,
             BallModel model,
             IMover mover,
             List<ICollisionStrategy> collisionStrategies,
-            DeathHandler<Ball> deathHandler,
-            IEffectFactory ballEffectFactory)
+            DeathHandler<Ball> deathHandler)
         {
             AppliedDamage = 0;
             DeathHandler = deathHandler;
@@ -103,7 +116,6 @@ namespace BigBalls.GameplayObjects
             Model = model;
             Mover = mover;
             _collisionStrategies = collisionStrategies;
-            _effectFactory = ballEffectFactory;
             _body = GetComponent<Collider>();
             EffectBehaviours = _effectFactory.Create(Config.Effects, Model.Level);
         }
@@ -153,6 +165,7 @@ namespace BigBalls.GameplayObjects
         public void AddDamage (float damage)
         {
             AppliedDamage += damage;
+            TotalDamage += damage;
         }
     }
 }

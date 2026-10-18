@@ -10,20 +10,33 @@ public class EnemyCollisionStrategy : ICollisionStrategy
             return false;
         }
 
-        if (collision.gameObject.TryGetComponent(out Enemy entity))
+        if (collision.gameObject.TryGetComponent(out Enemy enemy))
         {
-            ball.SetCanReturnToBag(true);
-            ball.EventHandler.HitEntity(entity);
+            if (enemy == null)
+                return false;
 
-            if (entity.EnemyHitedAnimation != null)
-            {
-                entity.EnemyHitedAnimation.OnHit(ball);
-            }
+            OnHit(enemy, ball);
+        }
+        else if (collision.gameObject.TryGetComponent(out EnemyPart component))
+        {
+            if (component.Enemy == null)
+                return false;
 
+            OnHit(component.Enemy, ball);
         }
 
         ball.EventHandler.Hit();
-
         return false;
+    }
+
+    private void OnHit (Enemy enemy, Ball ball)
+    {
+        ball.SetCanReturnToBag(true);
+        ball.EventHandler.HitEntity(enemy);
+
+        if (enemy.EnemyHitedAnimation != null)
+        {
+            enemy.EnemyHitedAnimation.OnHit(ball);
+        }
     }
 }

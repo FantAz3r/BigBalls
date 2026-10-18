@@ -36,7 +36,7 @@ public class BallTreeConnectionUI : MonoBehaviour
 
     public void OnDisable ()
     {
-        if (_fillCoroutine != null)
+        if (_coroutineRunner != null)
             _coroutineRunner.StopCoroutine(_fillCoroutine);
     }
 
@@ -92,6 +92,7 @@ public class BallTreeConnectionUI : MonoBehaviour
 
         if (IsConnected)
             return;
+
         _fillCoroutine = _coroutineRunner.StartCoroutine(FillRoutine());
     }
 
@@ -99,6 +100,12 @@ public class BallTreeConnectionUI : MonoBehaviour
     {
         _splineRenderer.color = _upgradedColor;
     }
+
+    public void UnlockConnection ()
+    {
+        _splineRenderer.color = _unlockedColor;
+    }
+
 
     public void DisableLine ()
     {
@@ -129,7 +136,6 @@ public class BallTreeConnectionUI : MonoBehaviour
 
         IsConnected = true;
         _splineRenderer.clipRange = new Vector2(0, 1);
-        _splineRenderer.color = _unlockedColor;
     }
 
     private IEnumerator UpdateRoutine()

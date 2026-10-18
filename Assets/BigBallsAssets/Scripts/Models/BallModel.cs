@@ -13,6 +13,7 @@ public class BallModel : ItemModel
     }
 
     public BallConfig BallConfig { get; private set; }
+    public float InGameDamage { get; private set; }
 
 
     public override CardSaveData CreateSaveData() => new BallSaveData((int)BallConfig.BallType, ItemEXP, IsOpen, NoneGameLevel);

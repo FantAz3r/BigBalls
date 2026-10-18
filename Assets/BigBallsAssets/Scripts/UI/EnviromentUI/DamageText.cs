@@ -20,11 +20,17 @@ public class DamageText : MonoBehaviour
     public event Action<DamageText> Removed;
     private Camera _camera;
     private Vector3 _startLocalPos;
+    private Tween _tween;
 
     private void OnEnable ()
     {
         _canvasGroup.alpha = 1f;
         transform.localScale = Vector3.one * _startScale;
+    }
+
+    private void OnDestroy ()
+    {
+        _tween.Kill();
     }
 
     public void Init (ICameraProvider cameraProvider)
@@ -49,7 +55,7 @@ public class DamageText : MonoBehaviour
         _startLocalPos = transform.localPosition + _offset;
         float elapsed = 0f;
 
-        DOTween.To(() => elapsed, x => elapsed = x, _animationDuration, _animationDuration)
+        _tween = DOTween.To(() => elapsed, x => elapsed = x, _animationDuration, _animationDuration)
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
             {

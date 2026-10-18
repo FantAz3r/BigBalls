@@ -1,6 +1,6 @@
-﻿using BigBalls.Configs;
+﻿using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Services;
-using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 
@@ -18,6 +18,8 @@ namespace BigBalls.GameplayObjects
         private Vector3[] _raycastDirections;
         private Vector3[] _raycastPoints;
         private bool _needRaycast;
+        private bool _canMove = true;
+
         public Transform MovableObject { get; private set; }
         public Vector2 Direction { get; private set; }
 
@@ -58,23 +60,47 @@ namespace BigBalls.GameplayObjects
 
         public void Tick()
         {
-            if (_target != null)
+            if (_canMove)
             {
-                Vector3 dirToTarget = (_target.position - MovableObject.position);
-                dirToTarget.y = 0;
-
-                if (dirToTarget.sqrMagnitude > 0.001f)
+                if (_target != null)
                 {
-                    Move(new Vector2(dirToTarget.x, dirToTarget.z).normalized);
+                    Vector3 dirToTarget = (_target.position - MovableObject.position);
+                    dirToTarget.y = 0;
+
+                    if (dirToTarget.sqrMagnitude > 0.001f)
+                    {
+                        Move(new Vector2(dirToTarget.x, dirToTarget.z).normalized);
+                    }
                 }
-            }
-            else
-            {
-                Move(Direction);
+                else
+                {
+                    Move(Direction);
+                }
             }
         }
 
-        public void Move(Vector2 direction)
+        public Vector3 GetCurrentVelocity() => _moveSpeed.CurrentValue * Direction;
+
+        public void AddConstantForce(Vector3 force, float duration)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AddInstantPush (Vector3 pushDirection, float force)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void AddPush (Vector3 pushDirection, float force, float duration = 0.5F)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetMovableObject (Transform transform) => MovableObject = transform;
+
+        public void Stop () => _canMove = false;
+
+        private void Move (Vector2 direction)
         {
             if (direction.sqrMagnitude < 0.001f) return;
 
@@ -110,24 +136,5 @@ namespace BigBalls.GameplayObjects
                 MovableObject.Translate(moveDirection * moveStep, Space.World);
             }
         }
-
-        public Vector3 GetCurrentVelocity() => _moveSpeed.CurrentValue * Direction;
-
-        public void AddConstantForce(Vector3 force, float duration)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void AddInstantPush (Vector3 pushDirection, float force)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void AddPush (Vector3 pushDirection, float force, float duration = 0.5F)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetMovableObject (Transform transform) => MovableObject = transform;
     }
 }

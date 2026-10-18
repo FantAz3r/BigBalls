@@ -73,25 +73,19 @@ public class WeaponViewer : MonoBehaviour
 
     private void ViewCannon (WeaponModel weapon)
     {
-        Debug.Log(1);
         if (_itemConainerProvider.Gun == null)
         {
             ViewBaseCannon();
             return;
         }
-        Debug.Log(2);
 
         if(CurrentCannon != null)
             CurrentCannon.gameObject.SetActive(false);
 
         foreach (var cannon in _cannons)
         {
-            Debug.Log(3);
             if (cannon.WeaponType == weapon.WeaponConfig.Cannon.WeaponType)
             {
-                Debug.Log(4);
-
-
                 WeaponModel = weapon;
                 cannon.gameObject.SetActive(true);
                 _playerCardHolder.AddItem(weapon);

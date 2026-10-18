@@ -7,15 +7,15 @@ namespace BigBalls.Services
     {
         private readonly ICoroutineRunner _coroutineRunner;
         private Coroutine _slowMotionCoroutine;
-
+        private float _currentTimescale = 1;
         public bool IsPaused { get; private set; }
 
-        public TimeService(ICoroutineRunner coroutineRunner)
+        public TimeService (ICoroutineRunner coroutineRunner)
         {
             _coroutineRunner = coroutineRunner;
         }
 
-        public void StopGame()
+        public void StopGame ()
         {
             if (_slowMotionCoroutine != null)
                 _coroutineRunner.StopCoroutine(_slowMotionCoroutine);
@@ -24,21 +24,36 @@ namespace BigBalls.Services
             IsPaused = true;
         }
 
-        public void ResumeGame()
+        public void ResumeGame ()
         {
-            Time.timeScale = 1;
+            Time.timeScale = _currentTimescale;
             IsPaused = false;
         }
 
-        public void SmoothEditTimeScalse(float targetTimeScale, float duration)
+        public void SetTimescale (float value)
+        {
+            _currentTimescale = value;
+            Time.timeScale = _currentTimescale;
+        }
+
+        public void SmoothRecoverTimescale (float duration)
         {
             if (_slowMotionCoroutine != null)
                 _coroutineRunner.StopCoroutine(_slowMotionCoroutine);
 
-            _slowMotionCoroutine = _coroutineRunner.StartCoroutine(EditRoutine(targetTimeScale, duration));
+            _slowMotionCoroutine = _coroutineRunner.StartCoroutine(EditRoutine(_currentTimescale, duration));
         }
 
-        private IEnumerator EditRoutine(float targetTimeScale, float duration)
+        public void SmoothReduceTimescale (float targetTimescale, float duration)
+        {
+            if (_slowMotionCoroutine != null)
+                _coroutineRunner.StopCoroutine(_slowMotionCoroutine);
+
+            _slowMotionCoroutine = _coroutineRunner.StartCoroutine(EditRoutine(targetTimescale, duration));
+        }
+
+
+        private IEnumerator EditRoutine (float targetTimeScale, float duration)
         {
             float startTimeScale = Time.timeScale;
             float elapsed = 0f;
