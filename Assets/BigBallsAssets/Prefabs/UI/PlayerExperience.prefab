@@ -162,8 +162,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 99
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0a8439d4c91bea4ba1c025928b8416d, type: 2}
-  m_sharedMaterial: {fileID: 942589445191879500, guid: f0a8439d4c91bea4ba1c025928b8416d,
+  m_fontAsset: {fileID: 11400000, guid: 13ac34ac449b13d42b9605190a6af68a, type: 2}
+  m_sharedMaterial: {fileID: 7284469098369566807, guid: 13ac34ac449b13d42b9605190a6af68a,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -558,8 +558,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 100/100
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0a8439d4c91bea4ba1c025928b8416d, type: 2}
-  m_sharedMaterial: {fileID: 942589445191879500, guid: f0a8439d4c91bea4ba1c025928b8416d,
+  m_fontAsset: {fileID: 11400000, guid: 13ac34ac449b13d42b9605190a6af68a, type: 2}
+  m_sharedMaterial: {fileID: 7284469098369566807, guid: 13ac34ac449b13d42b9605190a6af68a,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -761,8 +761,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6aea10b0434ba64eaf9866880cd83ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slider: {fileID: 5855290602388959244}
-  _valueText: {fileID: 7505553459673339364}
+  _experienceSlider: {fileID: 0}
+  _experienceText: {fileID: 0}
+  _smoothSpeed: 10
 --- !u!114 &5855290602388959244
 MonoBehaviour:
   m_ObjectHideFlags: 0

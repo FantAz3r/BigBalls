@@ -5,6 +5,8 @@ using VContainer;
 
 public class LanguageSetting : MonoBehaviour
 {
+    private const string AutoLang = "auto";
+
     [SerializeField] private ToggleGroup _toggleGroup;
     [SerializeField] private List<LanguageToggleData> _languageToggles;
 
@@ -20,14 +22,14 @@ public class LanguageSetting : MonoBehaviour
     }
 
     [Inject]
-    public void Construct(ITranslateService translateService, ISaveService saveService)
+    public void Construct (ITranslateService translateService, ISaveService saveService)
     {
         _translateService = translateService;
         _saveService = saveService;
         LoadAndApplyLanguage();
     }
 
-    private void Start()
+    private void Start ()
     {
         foreach (var data in _languageToggles)
         {
@@ -38,7 +40,7 @@ public class LanguageSetting : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDestroy ()
     {
         foreach (var data in _languageToggles)
         {
@@ -49,15 +51,21 @@ public class LanguageSetting : MonoBehaviour
         }
     }
 
-    private void OnToggleChanged(bool isOn, string language)
+    private void OnToggleChanged (bool isOn, string language)
     {
         if (isOn == false || _isInitializing)
             return;
 
+        if (language == AutoLang)
+        {
+            _translateService.SetDefaulteLanguage();
+            return;
+        }
+
         _translateService.SwitchLanguage(language);
     }
 
-    private void LoadAndApplyLanguage()
+    private void LoadAndApplyLanguage ()
     {
         _isInitializing = true;
         string currentLanguage = _saveService.GameProgress.Language;

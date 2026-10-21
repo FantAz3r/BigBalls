@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BigBalls.StaticData;
-using UnityEngine;
 
 public class CardSelector
 {
@@ -13,10 +12,10 @@ public class CardSelector
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly Dictionary<Rarity, float> _rarityChances = new()
     {
-        { Rarity.Common, 80f },
-        { Rarity.Rare, 15f },
+        { Rarity.Common, 75f },
+        { Rarity.Rare, 17.5f },
         { Rarity.Epic, 5f },
-        { Rarity.Legendary, 0f }
+        { Rarity.Legendary, 2.5f }
     };
 
     private List<ICardModel> _currentCards = new();
@@ -51,20 +50,43 @@ public class CardSelector
 
     private List<ICardModel> GetAvailableModels ()
     {
-        var allModels = new List<ICardModel>();
+        var result = new List<ICardModel>();
+        var ballByType = _ballsRepository.AllModels.Values
+            .ToDictionary(b => b.BallConfig.BallType);
 
-        List<BallModel> ballModels = _ballsRepository.AllModels.Values.ToList();
-        BallModel ball = _ballsRepository.AllModels[BallType.Base];
-        ballModels.Remove(ball);
+        foreach (var ball in ballByType.Values)
+        {
+            if (ball.BallConfig.BallType == BallType.Base)
+                continue;
 
-        allModels.AddRange(ballModels);
-        allModels.AddRange(_artefactsRepository.AllModels.Values);
+            if (IsAvailable(ball, ballByType))
+                result.Add(ball);
+        }
 
-        var filteredModels = allModels
-            .Where(model => model.IsOpen && model.InGameLevel < MaxLevel)
-            .ToList();
+        foreach (var artefact in _artefactsRepository.AllModels.Values)
+        {
+            if (artefact.IsOpen && artefact.InGameLevel < MaxLevel)
+                result.Add(artefact);
+        }
 
-        return filteredModels;
+        return result;
+    }
+
+    private bool IsAvailable (BallModel ball, Dictionary<BallType, BallModel> ballByType)
+    {
+        if (ball.InGameLevel >= MaxLevel)
+            return false;
+
+        if (ball.BallConfig.IsRoot)
+            return true;
+
+        foreach (var parentType in ball.BallConfig.ParentTypes)
+        {
+            if (ballByType.TryGetValue(parentType, out var parent) == false || parent.IsOpen == false)
+                return false;
+        }
+
+        return true;
     }
 
     public void ClearCurrentSelection ()

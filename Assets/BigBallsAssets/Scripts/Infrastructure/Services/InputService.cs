@@ -1,5 +1,5 @@
-using BigBalls.UI;
 using System;
+using BigBalls.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer.Unity;
@@ -17,7 +17,7 @@ namespace BigBalls.Services
         public event Action<Vector2> RotateDirectionSeted;
         public event Action Attack;
 
-        public InputService(IWindowService windowService, ITimeService timeService)
+        public InputService (IWindowService windowService, ITimeService timeService)
         {
             _inputActions = new PlayerInputActions();
             _windowService = windowService;
@@ -26,7 +26,7 @@ namespace BigBalls.Services
 
         public Vector2 CursorOrigin { get; set; }
 
-        public void Start()
+        public void Start ()
         {
             _inputActions.UI.Pause.performed += PauseGame;
             _inputActions.UI.Timescale1.performed += SetTimescale1;
@@ -40,18 +40,18 @@ namespace BigBalls.Services
             _inputActions.Player.Attack.performed += OnAttack;
         }
 
-        private void OnMovePerformed(InputAction.CallbackContext context)
+        private void OnMovePerformed (InputAction.CallbackContext context)
         {
             Vector2 direction = context.ReadValue<Vector2>();
             MoveDirectionSeted?.Invoke(direction);
         }
 
-        private void OnMoveCanceled(InputAction.CallbackContext context)
+        private void OnMoveCanceled (InputAction.CallbackContext context)
         {
             MoveDirectionSeted?.Invoke(Vector2.zero);
         }
 
-        private void PauseGame(InputAction.CallbackContext context)
+        private void PauseGame (InputAction.CallbackContext context)
         {
             _windowService.Open<PauseWindow>();
         }
@@ -71,27 +71,27 @@ namespace BigBalls.Services
             _timeService.SetTimescale(3);
         }
 
-        private void OnRotatePerformed(InputAction.CallbackContext context)
+        private void OnRotatePerformed (InputAction.CallbackContext context)
         {
             RotateDirectionSeted?.Invoke(context.ReadValue<Vector2>());
         }
 
-        private void OnRotateCanceled(InputAction.CallbackContext context)
+        private void OnRotateCanceled (InputAction.CallbackContext context)
         {
             RotateDirectionSeted?.Invoke(Vector2.zero);
         }
 
-        private void OnAttack(InputAction.CallbackContext context)
+        private void OnAttack (InputAction.CallbackContext context)
         {
             Attack?.Invoke();
         }
 
-        public void EnableUI()
+        public void EnableUI ()
         {
             _inputActions.UI.Enable();
         }
 
-        public void DisableUI()
+        public void DisableUI ()
         {
             _inputActions.UI.Disable();
         }
@@ -105,8 +105,7 @@ namespace BigBalls.Services
             _inputActions.Player.Disable();
         }
 
-
-        public void Dispose()
+        public void Dispose ()
         {
             if (_inputActions == null)
                 return;
@@ -125,7 +124,7 @@ namespace BigBalls.Services
             _inputActions = null;
         }
 
-        public IInputService GetSelf()
+        public IInputService GetSelf ()
         {
             return this;
         }

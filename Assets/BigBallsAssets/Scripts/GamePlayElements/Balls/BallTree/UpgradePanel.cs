@@ -29,6 +29,7 @@ public class UpgradePanel : MonoBehaviour
     private List<StatTextHolder> _statTextHolders = new();
     private SoundSpawner _soundSpawner;
     private Tween _notEnoughXpTween;
+    private int _currentCost;
 
     public event Action Upgraded;
     public event Action PurchaseRejected;
@@ -102,15 +103,16 @@ public class UpgradePanel : MonoBehaviour
             _updateText.text = TextLocalizator.Upgrade;
             _expSlider.gameObject.SetActive(true);
             RenderStats(_cardModel, true);
-
+            _costPanel.gameObject.SetActive(false);
         }
         else
         {
             _updateText.text = TextLocalizator.Unlock;
             _expSlider.gameObject.SetActive(false);
+            _costPanel.gameObject.SetActive(true);
+
             _costText.text = _cardModel.BallConfig.UnlockPrice.ToString();
             RenderStats(_cardModel, false);
-
         }
 
         Upgraded?.Invoke();
@@ -165,7 +167,6 @@ public class UpgradePanel : MonoBehaviour
         if (_node.BallModel.IsOpen)
         {
             _node.UpdateConnections();
-
             bool isUpgradeComplite = _node.Upgrade();
 
             if (_node.BallModel.NoneGameLevel == _node.BallModel.MaxNoneGameLevel)
@@ -184,6 +185,12 @@ public class UpgradePanel : MonoBehaviour
         }
         else
         {
+            if (_globalWallet.TrySpendCoins(_node.BallModel.BallConfig.UnlockPrice) == false)
+            {
+                _soundSpawner.Spawn(SoundType.Error);
+                return;
+            }
+
             _node.Unlock();
         }
 

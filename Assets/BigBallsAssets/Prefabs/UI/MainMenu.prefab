@@ -601,7 +601,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Continue Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f0a8439d4c91bea4ba1c025928b8416d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 13ac34ac449b13d42b9605190a6af68a, type: 2}
   m_sharedMaterial: {fileID: 942589445191879500, guid: f0a8439d4c91bea4ba1c025928b8416d,
     type: 2}
   m_fontSharedMaterials: []
@@ -666,7 +666,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &3487216339044531728
@@ -903,8 +903,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Big Balls
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 18571c9a925e5114a93626b16f52694b, type: 2}
-  m_sharedMaterial: {fileID: 942589445191879500, guid: 18571c9a925e5114a93626b16f52694b,
+  m_fontAsset: {fileID: 11400000, guid: 13ac34ac449b13d42b9605190a6af68a, type: 2}
+  m_sharedMaterial: {fileID: 7284469098369566807, guid: 13ac34ac449b13d42b9605190a6af68a,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1906,17 +1906,17 @@ PrefabInstance:
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: en
-      value: 
+      value: Play
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: ru
-      value: 
+      value: "\u0418\u0433\u0440\u0430\u0442\u044C"
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: tr
-      value: 
+      value: Oyna
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -2050,6 +2050,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 13ac34ac449b13d42b9605190a6af68a,
+        type: 2}
+    - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
       propertyPath: m_fontColor.b
       value: 0.88197994
       objectReference: {fileID: 0}
@@ -2068,6 +2074,12 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 110
       objectReference: {fileID: 0}
+    - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7284469098369566807, guid: 13ac34ac449b13d42b9605190a6af68a,
+        type: 2}
     - target: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: m_characterSpacing
@@ -2090,7 +2102,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
-    - {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

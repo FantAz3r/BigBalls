@@ -11,15 +11,14 @@ namespace BigBalls.GameplayObjects
     public class Ball : MonoBehaviour, IEntity
     {
         [SerializeField] private LayerMask _playerLayer;
+        [field: SerializeField] public BallConfig Config { get; private set; }
+        [field: SerializeField] public ParticleObject Particle { get; private set; }
 
         private List<ICollisionStrategy> _collisionStrategies;
         private IEffectFactory _effectFactory;
         private float _stackCount;
         private Collider _body;
         private DamageCalculator _damageCalculator;
-
-        [field: SerializeField] public BallConfig Config { get; private set; }
-        [field: SerializeField] public ParticleObject Particle { get; private set; }
 
         public List<EffectBehaviour> EffectBehaviours { get; private set; }
         public DeathHandler<Ball> DeathHandler { get; private set; }
@@ -117,6 +116,7 @@ namespace BigBalls.GameplayObjects
             Mover = mover;
             _collisionStrategies = collisionStrategies;
             _body = GetComponent<Collider>();
+            SetCanReturnToBag(false);
             EffectBehaviours = _effectFactory.Create(Config.Effects, Model.Level);
         }
 

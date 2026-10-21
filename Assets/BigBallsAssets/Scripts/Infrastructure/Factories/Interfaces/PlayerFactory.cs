@@ -173,7 +173,9 @@ namespace BigBalls.Factories
             ScreenShake screenShake = _cameraProvider.Camera.GetComponent<ScreenShake>();
             screenShake.Init(_shooter, statHolder[StatType.Health]);
 
-            PlayerMover playerMover = new PlayerMover(_inputService, rotator, mover);
+            PlayerMover playerMover = new PlayerMover( rotator, mover);
+            _objectResolver.CurrentResolver.Inject(playerMover);
+
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
 
             List<ISubscribable> subscribables = new List<ISubscribable>()

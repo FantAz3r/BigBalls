@@ -2257,6 +2257,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1390000833021334706}
     m_Modifications:
+    - target: {fileID: 2956172682204818806, guid: a5e1410271bf2f24d8a5a9b69b42b370,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1c60294d7acd9384fb5940c4959ff97d, type: 2}
     - target: {fileID: 3604730267730152611, guid: a5e1410271bf2f24d8a5a9b69b42b370,
         type: 3}
       propertyPath: m_Name
@@ -2385,7 +2390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af39815683a76e94a9ca217baf3b0748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _axis: 1
+  _axis: 2
   _scaleMultiplier: 1.1
   _duration: 0.4
   _ease: 4

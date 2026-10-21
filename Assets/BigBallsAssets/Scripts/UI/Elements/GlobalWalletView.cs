@@ -10,42 +10,45 @@ public class GlobalWalletView : MonoBehaviour
     private GlobalWallet _globalWallet;
     private SoundSpawner _soundSpawner;
     private Tween _rejectedTween;
+    private RectTransform _textTransform;
+
+    private Vector2 _basePosition;
+    private Color _baseColor;
 
     [Inject]
-    public void Construct(GlobalWallet globalWallet, SoundSpawner soundSpawner)
+    public void Construct (GlobalWallet globalWallet, SoundSpawner soundSpawner)
     {
         _globalWallet = globalWallet;
         _soundSpawner = soundSpawner;
         _globalWallet.OnValueChange += View;
         _globalWallet.Rejected += OnPurchaseRejected;
+        _textTransform = _moneyText.rectTransform;
+
+        _basePosition = _textTransform.anchoredPosition;
+        _baseColor = _moneyText.color;
+
         View();
     }
 
-    public void Enable()
-    {
-        gameObject.SetActive(true);
-    }
+    public void Enable () => gameObject.SetActive(true);
+    public void Disable () => gameObject.SetActive(false);
 
-    public void Disable()
+    private void OnDestroy ()
     {
-        gameObject.SetActive(false);
-    }
-
-    private void OnDestroy()
-    {
-        if(_globalWallet != null)
+        if (_globalWallet != null)
         {
             _globalWallet.OnValueChange -= View;
             _globalWallet.Rejected -= OnPurchaseRejected;
         }
+        _rejectedTween?.Kill();
     }
 
-    private void View()
+    private void View ()
     {
         _moneyText.text = _globalWallet.Coins.ToString();
     }
 
-    private void OnPurchaseRejected()
+    private void OnPurchaseRejected ()
     {
         _soundSpawner.Spawn(SoundType.PurchaseRejected);
         PlayNotEnoughMoney();
@@ -53,22 +56,21 @@ public class GlobalWalletView : MonoBehaviour
 
     private void PlayNotEnoughMoney ()
     {
-        RectTransform rect = _moneyText.rectTransform;
-        Vector2 originPos = rect.anchoredPosition;
-
-        Color originColor = _moneyText.color;
         Color errorColor = new Color(1f, 0.25f, 0.25f, 1f);
 
         _rejectedTween?.Kill();
+        _textTransform.anchoredPosition = _basePosition;
+        _moneyText.color = _baseColor;
 
         Sequence seq = DOTween.Sequence().SetUpdate(true);
 
-        seq.Append(rect.DOPunchAnchorPos(new Vector2(10f, 0f), 0.3f, 10, 0.5f));
+        seq.Append(_textTransform.DOPunchAnchorPos(new Vector2(10f, 0f), 0.3f, 10, 0.5f));
         seq.Join(_moneyText.DOColor(errorColor, 0.15f).SetLoops(2, LoopType.Yoyo));
+
         seq.OnComplete(() =>
         {
-            _moneyText.color = originColor;
-            rect.anchoredPosition = originPos;
+            _moneyText.color = _baseColor;
+            _textTransform.anchoredPosition = _basePosition;
         });
 
         _rejectedTween = seq;
