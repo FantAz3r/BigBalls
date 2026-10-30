@@ -30,7 +30,7 @@ public class GroundBallConfig : EffectConfig
 
         return new List<ItemStat>()
         {
-            new ItemStat(TextLocalizator.Damage,  GetDamage(level),  GetDamage(nextLevel)),
+            new ItemStat(TextLocalizator.EarthquakeDamage,  GetDamage(level),  GetDamage(nextLevel)),
             new ItemStat(TextLocalizator.Duration, GetDuration(level), GetDuration(nextLevel))
         };
     }

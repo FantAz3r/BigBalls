@@ -212,7 +212,7 @@ namespace BigBalls.GameplayObjects
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             Enemy enemy = _enemyFactory.Create(prefab, spawnPosition);
-            enemy.EnemySpawnAnimation?.Value.PlaySpawn(spawnPosition);
+            //enemy.EnemySpawnAnimation?.Value.PlaySpawn(spawnPosition);
             return enemy;
         }
 

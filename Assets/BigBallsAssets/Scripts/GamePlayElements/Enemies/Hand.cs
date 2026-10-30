@@ -21,11 +21,13 @@ public class Hand : MonoBehaviour
     private IIdentifierService _identifierService;
     private IDamageService _damageService;
     private Collider _collider;
+    private Transform _parent;
     public bool IsBusy { get; private set; }
 
     private void Awake ()
     {
         _collider = GetComponent<Collider>();
+        _parent = transform.parent;
     }
 
     private void OnTriggerEnter (Collider other)
@@ -62,7 +64,9 @@ public class Hand : MonoBehaviour
         _collider.isTrigger = true;
         _homeLocalPosition = transform.localPosition;
         _homeLocalRotation = transform.localRotation;
+        transform.SetParent(null);
         _tween?.Kill();
+
 
         Vector3 startWorld = transform.position;
         Vector3 dir = worldDirection;
@@ -72,6 +76,7 @@ public class Hand : MonoBehaviour
             dir = transform.forward;
 
         dir.Normalize();
+        Quaternion lookRot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(0f, -90f, 0f);
 
         Vector3 targetWorld = startWorld + dir * distance;
         Vector3 targetLocal = transform.parent != null
@@ -96,12 +101,23 @@ public class Hand : MonoBehaviour
         _tween.Append(transform.DOLocalMove(_homeLocalPosition, returnTime).SetEase(Ease.InQuad));
         _tween.OnComplete(() =>
         {
+            transform.SetParent(_parent);
+            transform.localPosition = _homeLocalPosition;
+            transform.localRotation = _homeLocalRotation;
+            IsBusy = false;
+            onFinished?.Invoke();
+            _collider.isTrigger = false;
+        });
+        _tween.OnKill(() =>
+        {
+            transform.SetParent(_parent);
             transform.localPosition = _homeLocalPosition;
             transform.localRotation = _homeLocalRotation;
             IsBusy = false;
             onFinished?.Invoke();
             _collider.isTrigger = false;
         })
+
         .SetLink(gameObject);
     }
 

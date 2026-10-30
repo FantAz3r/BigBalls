@@ -14,5 +14,6 @@ namespace BigBalls.Services
         void DisableUI ();
         void EnablePlayer ();
         void DisablePlayer ();
+        void Dispose ();
     }
 }

@@ -14,12 +14,9 @@ public class SkeletonKing : LevelBoss
     [field: SerializeField] public Transform BoneSpawnPoint { get; private set; }
     [field: SerializeField] public Hand RightHand { get; private set; }
     [field: SerializeField] public Hand LeftHand { get; private set; }
+    [field: SerializeField] public Animator Animator { get; private set; }
 
-
-    private IPoolService _poolService;
     private IObjectResolverProvider _resolverProvider;
-    private ICoroutineRunner _coroutineRunner;
-    private bool _isSpawned;
 
     public event Action Spawned;
     public EnemyStateMachine StateMachine { get; private set; }
@@ -33,11 +30,9 @@ public class SkeletonKing : LevelBoss
     }
 
     [Inject]
-    public void Construct (IPoolService poolService, IObjectResolverProvider objectResolverProvider, ICoroutineRunner coroutineRunner)
+    public void Construct (IObjectResolverProvider objectResolverProvider)
     {
-        _poolService = poolService;
         _resolverProvider = objectResolverProvider;
-        _coroutineRunner = coroutineRunner;
     }
 
     protected override void ChildInit ()
@@ -57,7 +52,7 @@ public class SkeletonKing : LevelBoss
         AttackStates.Add(bossBoneFanState);
         StateMachine.Register(bossBoneFanState);
 
-        _coroutineRunner.StartCoroutine(SpawnRoutine());
+        EnemyAnimator.BossEnter(OnSpawnEnded);
     }
 
     public void SpawnBoneProjectile (Transform position, Vector3 direction)
@@ -71,22 +66,10 @@ public class SkeletonKing : LevelBoss
         LastAttackState = stateType;
     }
 
-    private IEnumerator SpawnRoutine ()
-    {
-        EnemyAnimator.BossEnter(OnSpawnEnded);
-
-        while (_isSpawned == false)
-        {
-            yield return null;
-        }
-
-        Spawned?.Invoke();
-        StateMachine.Start<BossIdleState>();
-    }
-
     private void OnSpawnEnded ()
     {
-        _isSpawned = true;
         Mover.Stop();
+        Spawned?.Invoke();
+        StateMachine.Start<BossIdleState>();
     }
 }

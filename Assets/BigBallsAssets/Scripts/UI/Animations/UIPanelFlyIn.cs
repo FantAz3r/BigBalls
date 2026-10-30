@@ -18,6 +18,7 @@ public class UIPanelFlyIn : MonoBehaviour
     {
         _rectTransform = GetComponent<RectTransform>();
         _targetPosition = _rectTransform.anchoredPosition;
+        PlayAnimation();
     }
 
     private void OnEnable ()

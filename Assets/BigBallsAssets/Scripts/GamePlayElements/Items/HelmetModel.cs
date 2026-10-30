@@ -1,7 +1,7 @@
-using BigBalls.Configs;
-using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
 using System.Collections.Generic;
+using BigBalls.Configs;
+using BigBalls.Saves;
+using BigBalls.StaticData;
 
 public class HelmetModel : ItemModel, IBuffer
 {
@@ -22,6 +22,8 @@ public class HelmetModel : ItemModel, IBuffer
     public HelmetConfig HelmetConfig { get; private set; }
     public List<ArtefactConfig> Artefacts => HelmetConfig.Artefacts;
 
+    public override CardSaveData CreateSaveData () => new HelmetSaveData((int) HelmetConfig.ItemType, IsOpen, ItemEXP, NoneGameLevel, HasPlayer);
+
     public List<ArtefactModel> GetArtefacts()
     {
         List<ArtefactModel> atrefacts = new();
@@ -29,10 +31,27 @@ public class HelmetModel : ItemModel, IBuffer
         foreach (var config in HelmetConfig.Artefacts)
         {
             ArtefactModel artefact = _artefactsRepository.AllModels[config.ArtefactType];
-            artefact.AddEquipmentLevel(Level);
             atrefacts.Add(artefact);
         }
 
         return atrefacts;
+    }
+
+    public void AddEquipmentLevel ()
+    {
+        foreach (var config in HelmetConfig.Artefacts)
+        {
+            ArtefactModel artefact = _artefactsRepository.AllModels[config.ArtefactType];
+            artefact.SetEquipmentLevel(Level);
+        }
+    }
+
+    public void RemoveEquipmentLevel ()
+    {
+        foreach (var config in HelmetConfig.Artefacts)
+        {
+            ArtefactModel artefact = _artefactsRepository.AllModels[config.ArtefactType];
+            artefact.SetEquipmentLevel(0);
+        }
     }
 }

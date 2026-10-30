@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using BigBalls.Localization;
 using BigBalls.StaticData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using VContainer;
 
 public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 {
@@ -52,11 +54,16 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         //_unlockButton?.onClick.RemoveListener(Unlock);
     }
 
-    public void Init (BallType type, BallModel node, IBallUnlockService unlockService)
+    [Inject]
+    public void Construct (IBallUnlockService unlockService)
+    {
+        _unlockService = unlockService;
+    }
+
+    public void Init (BallType type, BallModel node)
     {
         BallType = type;
         BallModel = node;
-        _unlockService = unlockService;
         _icon.sprite = node.Config.Icon;
         UpdateState();
     }
@@ -80,8 +87,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 
         if (_isOpen == false)
         {
-            //_background.color = canUnlock ? _availableColor : _lockedColor;
-            _priceText.text = canUnlock ? $"{BallModel.BallConfig.UnlockPrice} EXP" : "Locked";
+            _priceText.text = canUnlock ? $"{BallModel.BallConfig.UnlockPrice} {TextLocalizator.EXP}" : $"{TextLocalizator.Locked}";
             _priceText.gameObject.SetActive(true);
             DisableConnections();
             TryUpgradeConnaction();
@@ -90,7 +96,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            //_background.color = _unlockedColor;
             _priceText.gameObject.SetActive(false);
 
             foreach (var connection in _parentConnections)
@@ -99,8 +104,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
             }
 
             UpdateConnections();
-
-
         }
     }
 

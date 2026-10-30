@@ -154,7 +154,6 @@ public class ChestItemDropView : WindowBase
 
         _currentAnimation.AppendCallback(() =>
         {
-            Debug.Log(111);
             _openChestImage.gameObject.SetActive(true);
             _closeChestImage.gameObject.SetActive(false);
         });

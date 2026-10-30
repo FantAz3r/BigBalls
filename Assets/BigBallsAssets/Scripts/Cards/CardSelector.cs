@@ -5,11 +5,16 @@ using BigBalls.StaticData;
 
 public class CardSelector
 {
+    private const int MaxBallSlots = 5;
+    private const int MaxArtefactSlots = 5;
+
     private const int MaxLevel = 5;
     private const int CardsPerSelect = 3;
 
     private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
+    private PlayerCardHolder _playerCardHolder;
+
     private readonly Dictionary<Rarity, float> _rarityChances = new()
     {
         { Rarity.Common, 75f },
@@ -24,6 +29,11 @@ public class CardSelector
     {
         _ballsRepository = ballsRepository;
         _artefactsRepository = artefactsRepository;
+    }
+
+    public void Init (PlayerCardHolder playerCardHolder)
+    {
+        _playerCardHolder = playerCardHolder;
     }
 
     public IEnumerable<ICardModel> GetCardsForSelection ()
@@ -51,22 +61,40 @@ public class CardSelector
     private List<ICardModel> GetAvailableModels ()
     {
         var result = new List<ICardModel>();
-        var ballByType = _ballsRepository.AllModels.Values
-            .ToDictionary(b => b.BallConfig.BallType);
 
-        foreach (var ball in ballByType.Values)
+        bool ballsFull = _playerCardHolder.Balls.Count() >= MaxBallSlots;
+        bool artefactsFull = _playerCardHolder.Artefacts.Count() >= MaxArtefactSlots;
+
+        if (ballsFull)
         {
-            if (ball.BallConfig.BallType == BallType.Base)
-                continue;
+            result.AddRange(_playerCardHolder.Balls);
+        }
+        else
+        {
+            var ballByType = _ballsRepository.AllModels.Values
+                .ToDictionary(b => b.BallConfig.BallType);
 
-            if (IsAvailable(ball, ballByType))
-                result.Add(ball);
+            foreach (var ball in ballByType.Values)
+            {
+                if (ball.BallConfig.BallType == BallType.Base)
+                    continue;
+
+                if (IsAvailable(ball, ballByType))
+                    result.Add(ball);
+            }
         }
 
-        foreach (var artefact in _artefactsRepository.AllModels.Values)
+        if (artefactsFull)
         {
-            if (artefact.IsOpen && artefact.InGameLevel < MaxLevel)
-                result.Add(artefact);
+            result.AddRange(_playerCardHolder.Artefacts);
+        }
+        else
+        {
+            foreach (var artefact in _artefactsRepository.AllModels.Values)
+            {
+                if (artefact.IsOpen && artefact.InGameLevel < MaxLevel)
+                    result.Add(artefact);
+            }
         }
 
         return result;
@@ -74,7 +102,7 @@ public class CardSelector
 
     private bool IsAvailable (BallModel ball, Dictionary<BallType, BallModel> ballByType)
     {
-        if (ball.InGameLevel >= MaxLevel)
+        if (ball.InGameLevel >= ball.MaxInGameLevel)
             return false;
 
         if (ball.BallConfig.IsRoot)

@@ -92,7 +92,6 @@ public class EnemyShooter : ISubscribable
 
         if (_config.RangeAttackSound.Clip != null)
         {
-            Debug.Log(123);
             _soundSpawner.Spawn(_config.RangeAttackSound);
         }
 

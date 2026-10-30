@@ -10,6 +10,8 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(EnemyLocator))]
 public class NetherButcher : Enemy
 {
+    private readonly bool _canThrow = true;
+    
     [SerializeField] private Hook _hook;
     [SerializeField] private Transform _trowPoint;
     [SerializeField] private float _pullDistance = 1f;
@@ -24,7 +26,6 @@ public class NetherButcher : Enemy
     private IDamageService _damageService;
     private Stat _attackSpeed;
     private Coroutine _coroutine;
-    private bool _canThrow = true;
     private EnemyLocator _enemyLocator;
 
     [Inject]
@@ -40,16 +41,16 @@ public class NetherButcher : Enemy
         _attackSpeed = StatHolder[StatType.AttackSpeed];
         _enemyLocator = GetComponent<EnemyLocator>();
 
-        _hook.ÑatchedEnemy += OnEnemyCached;
-        _hook.ÑatchedPlayer += OnPlayerCached;
+        _hook.CatchedEnemy += OnEnemyCached;
+        _hook.CatchedPlayer += OnPlayerCached;
 
         _coroutine = _coroutineRunner.StartCoroutine(HookRoutine());
     }
 
     private void OnDisable ()
     {
-        _hook.ÑatchedEnemy -= OnEnemyCached;
-        _hook.ÑatchedPlayer -= OnPlayerCached;
+        _hook.CatchedEnemy -= OnEnemyCached;
+        _hook.CatchedPlayer -= OnPlayerCached;
 
         if (_coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
@@ -150,7 +151,7 @@ public class NetherButcher : Enemy
         Action<Collision> hitHandler = null;
         hitHandler = (collision) =>
         {
-            _hook.ÑatchedPlayer -= OnPlayerCached;
+            _hook.CatchedPlayer -= OnPlayerCached;
         };
 
         Tween flyTween = _hook.transform.DOMove(targetDestination, _hookMaxDistance / _hookSpeed)

@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
   m_Name: BaseBall
   m_EditorClassIdentifier: 
-  <NameEN>k__BackingField: 
-  <NameRU>k__BackingField: 
-  <NameTR>k__BackingField: 
-  <DescriptionEN>k__BackingField: a
-  <DescriptionRU>k__BackingField: a
-  <DescriptionTR>k__BackingField: a
+  <NameEN>k__BackingField: Base ball
+  <NameRU>k__BackingField: "\u0428\u0430\u0440\u0438\u043A"
+  <NameTR>k__BackingField: Taban topu
+  <DescriptionEN>k__BackingField: No effects
+  <DescriptionRU>k__BackingField: "\u0411\u0435\u0437 \u044D\u0444\u0444\u0435\u043A\u0442\u043E\u0432"
+  <DescriptionTR>k__BackingField: Etkisi olmayan
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 0
-  <Icon>k__BackingField: {fileID: 1052482072, guid: a383d350c3f8e9f4a9fde8e2c67f2e84,
+  <Icon>k__BackingField: {fileID: 1754731806, guid: f7576473f002db348b054e52b59dfcd3,
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
@@ -45,6 +45,10 @@ MonoBehaviour:
   - StatType: 1
     StartMaxValue: 1
     StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 999
+    StartCurrentValue: 5
     MinValue: 0
   <Effects>k__BackingField:
   - {fileID: 11400000, guid: a94bd66777f5baa4ab3d47ad8c6b2fff, type: 2}

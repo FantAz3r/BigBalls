@@ -128,12 +128,12 @@ namespace BigBalls.GameplayObjects
 
                 if (adjustedDirection.sqrMagnitude > 0.001f)
                 {
-                    MovableObject.Translate(adjustedDirection * moveStep, Space.World);
+                    MovableObject?.Translate(adjustedDirection * moveStep, Space.World);
                 }
             }
             else
             {
-                MovableObject.Translate(moveDirection * moveStep, Space.World);
+                MovableObject?.Translate(moveDirection * moveStep, Space.World);
             }
         }
     }

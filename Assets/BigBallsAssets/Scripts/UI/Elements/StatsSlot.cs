@@ -10,6 +10,6 @@ public class StatsSlot : MonoBehaviour
     public void RenderSlots(ICardModel cardModel, ICardModel itemModel)
     {
         _image.sprite = cardModel.Config.Icon;
-        _level.text = (cardModel.Level + itemModel.Level).ToString();
+        _level.text = (cardModel.NoneGameLevel + itemModel.NoneGameLevel).ToString();
     }
 }

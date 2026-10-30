@@ -15,5 +15,6 @@
         Experience,
         Shield,
         Accuracy,
+        CollectRange,
     }
 }

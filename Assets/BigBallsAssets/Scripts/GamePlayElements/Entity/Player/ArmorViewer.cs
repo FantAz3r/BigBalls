@@ -37,7 +37,7 @@ public class ArmorViewer : MonoBehaviour
         }
     }
 
-    private void OnRemoveArmor()
+    private void OnRemoveArmor(ArmorModel armorModel = null)
     {
         if (_currentArmor != null)
         {
@@ -72,7 +72,5 @@ public class ArmorViewer : MonoBehaviour
                 _statHolder.Set(armor);
             }
         }
-
-        Debug.Log(_currentArmor);
     }
 }

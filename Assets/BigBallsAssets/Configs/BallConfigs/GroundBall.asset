@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
   m_Name: GroundBall
   m_EditorClassIdentifier: 
-  <NameEN>k__BackingField: 
-  <NameRU>k__BackingField: 
-  <NameTR>k__BackingField: 
-  <DescriptionEN>k__BackingField: 
-  <DescriptionRU>k__BackingField: 
-  <DescriptionTR>k__BackingField: 
+  <NameEN>k__BackingField: Ground ball
+  <NameRU>k__BackingField: "\u0417\u0435\u043C\u043B\u044F\u043D\u043E\u0439 \u0448\u0430\u0440"
+  <NameTR>k__BackingField: Toprak topu
+  <DescriptionEN>k__BackingField: On impact, it causes an earthquake, causing damage
+    to the area
+  <DescriptionRU>k__BackingField: "\u041F\u0440\u0438 \u0443\u0434\u0430\u0440\u0435
+    \u0432\u044B\u0437\u044B\u0432\u0430\u0435\u0442 \u0437\u0435\u043C\u043B\u0435\u0442\u0440\u044F\u0441\u0435\u043D\u0438\u0435,
+    \u043D\u0430\u043D\u043E\u0441\u044F \u0443\u0440\u043E\u043D \u043F\u043E \u043E\u0431\u043B\u0430\u0441\u0442\u0438"
+  <DescriptionTR>k__BackingField: "\xC7arpma an\u0131nda depreme neden olur ve b\xF6lgeye
+    hasar verir."
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 1
-  <Icon>k__BackingField: {fileID: -309324032, guid: a383d350c3f8e9f4a9fde8e2c67f2e84,
+  <Icon>k__BackingField: {fileID: -1185931568, guid: 4ce091df3220b624d9a2697460736ec8,
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
@@ -45,6 +49,10 @@ MonoBehaviour:
   - StatType: 1
     StartMaxValue: 1
     StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 8
     MinValue: 0
   <Effects>k__BackingField:
   - {fileID: 11400000, guid: 2f16d097d61ea51428ea19f81f9d7a30, type: 2}

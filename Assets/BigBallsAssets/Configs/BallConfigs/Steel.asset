@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
   m_Name: Steel
   m_EditorClassIdentifier: 
-  <NameEN>k__BackingField: "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0448\u0430\u0440"
-  <NameRU>k__BackingField: 
-  <NameTR>k__BackingField: 
-  <DescriptionEN>k__BackingField: "\u0411\u043E\u043B\u044C\u0448\u0435 \u0443\u0440\u043E\u043D\u0430
+  <NameEN>k__BackingField: Steel ball
+  <NameRU>k__BackingField: "\u0421\u0442\u0430\u043B\u044C\u043D\u043E\u0439 \u0448\u0430\u0440"
+  <NameTR>k__BackingField: "\xC7elik bilye"
+  <DescriptionEN>k__BackingField: More damage but reduced speed
+  <DescriptionRU>k__BackingField: "\u0411\u043E\u043B\u044C\u0448\u0435 \u0443\u0440\u043E\u043D\u0430
     \u043D\u043E \u0441\u043D\u0438\u0436\u0435\u043D\u0430 \u0441\u043A\u043E\u0440\u043E\u0441\u0442\u044C"
-  <DescriptionRU>k__BackingField: 
-  <DescriptionTR>k__BackingField: 
+  <DescriptionTR>k__BackingField: "Daha fazla hasar ancak h\u0131z d\xFC\u015F\xFCr\xFCld\xFC"
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 1
-  <Icon>k__BackingField: {fileID: 21300000, guid: e0970a2b4faab2f4e8b64efc8533b2cf,
+  <Icon>k__BackingField: {fileID: 1025279977, guid: d28d8b92dd7670448a9a2a80463962a8,
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
@@ -46,6 +46,10 @@ MonoBehaviour:
   - StatType: 1
     StartMaxValue: 1
     StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 8
     MinValue: 0
   <Effects>k__BackingField:
   - {fileID: 11400000, guid: faf8c666fa860c844a36c0916f757533, type: 2}

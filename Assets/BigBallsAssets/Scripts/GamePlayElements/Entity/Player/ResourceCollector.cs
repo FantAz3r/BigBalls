@@ -1,10 +1,18 @@
 using System.Collections;
+using BigBalls.GameplayObjects;
+using DG.Tweening;
 using UnityEngine;
 
 public class ResourceCollector : MonoBehaviour
 {
+    [SerializeField] private SphereCollider _sphereCollider;
+
     private float _moveSpeed = 9f;
     private float _arrivalThreshold = 0.3f;
+    private Stat _stat;
+
+    public float SrartRange { get; private set; }
+    public float CurrentRange => _sphereCollider.radius;
 
     private void OnTriggerEnter (Collider other)
     {
@@ -12,6 +20,24 @@ public class ResourceCollector : MonoBehaviour
         {
             StartCoroutine(RelocateCoroutine(loot));
         }
+    }
+
+    private void OnDestroy ()
+    {
+        if (_stat != null)
+            _stat.ValueChanged -= SetRange;
+    }
+
+    public void Init (Stat range)
+    {
+        _stat = range;
+        _stat.ValueChanged += SetRange;
+        SetRange(range);
+    }
+
+    public void SetRange(IReadonlyStat readonlyStat)
+    {
+        _sphereCollider.radius = readonlyStat.CurrentValue;
     }
 
     private IEnumerator RelocateCoroutine (Loot loot)

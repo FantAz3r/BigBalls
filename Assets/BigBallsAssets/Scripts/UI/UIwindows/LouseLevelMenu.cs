@@ -26,6 +26,7 @@ namespace BigBalls.UI
         public void LevelFailed (LevelID level, int compliteWaves)
         {
             ApplyResult(level, compliteWaves, _levelButton);
+            _levelButton.Set(level);
         }
     }
 }

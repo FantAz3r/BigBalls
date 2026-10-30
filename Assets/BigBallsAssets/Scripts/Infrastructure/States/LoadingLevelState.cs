@@ -19,7 +19,6 @@ namespace BigBalls.Infrastructure
 
         public void Enter(LevelID level)
         {
-            Debug.Log(level);
             InitCurrentLevel(level);
         }
 

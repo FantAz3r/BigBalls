@@ -5,7 +5,7 @@ namespace BigBalls.GameplayObjects
 {
     public abstract class EffectBehaviour
     {
-        protected readonly int Level;
+        protected int Level;
         protected EffectConfig Config;
         private IDisposable _disposable;
         public IEntity Host { get; protected set; }
@@ -18,15 +18,20 @@ namespace BigBalls.GameplayObjects
 
         protected abstract IDisposable SubscribeInternal(IEntity host);
 
-        protected virtual void OnUnsubscribe() { }
+        protected virtual void OnUnsubscribe(IEntity host = null) { }
 
-        public void Subscribe(IEntity host)
+        public void Subscribe(IEntity host = null)
         {
             Host = host;
             _disposable = SubscribeInternal(host);
         }
 
-        public void Unsubscribe(IEntity host)
+        public virtual void OnUpgrade(int level)
+        {
+            Level = level;
+        }
+
+        public void Unsubscribe(IEntity host = null)
         {
             if (_disposable != null)
             {
@@ -34,7 +39,7 @@ namespace BigBalls.GameplayObjects
                 _disposable = null;
             }
 
-            OnUnsubscribe();
+            OnUnsubscribe(host);
             Host = null;
         }
     }

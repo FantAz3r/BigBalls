@@ -92,7 +92,7 @@ public class BallTreeUI : PopupWindow, IResetble
             var node = _treeModel.GetNode(type);
             var uiElement = _objectResolverProvider.CurrentResolver.Instantiate(_nodePrefab, _treeContainer);
 
-            uiElement.Init(type, node, _unlockService);
+            uiElement.Init(type, node);
             uiElement.OnClick += OnNodeClicked;
 
             _nodeUIs[type] = uiElement;

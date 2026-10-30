@@ -9,6 +9,7 @@ namespace BigBalls.Saves
     {
         public int Coins;
         public int Score;
+        public int Level;
 
         public List<WeaponSaveData> Weapons = new();
         public List<ArmorSaveData> Armors = new();

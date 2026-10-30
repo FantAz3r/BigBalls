@@ -11,9 +11,8 @@ using VContainer.Unity;
 
 namespace BigBalls.Factories
 {
-    public class PlayerFactory : IPlayerFactory
+    public class PlayerFactory : IPlayerFactory//, IArtefactUser
     {
-        private readonly IInputService _inputService;
         private readonly IObjectResolverProvider _objectResolver;
         private readonly ISceneContainerProvider _sceneContainerProvider;
         private readonly IResourceLoader _resourceLoader;
@@ -32,10 +31,10 @@ namespace BigBalls.Factories
         private readonly IMergeService _mergeService;
 
         private PlayerConfig _playerConfig;
+        private PlayerCardHolder _cardHolder;
         private Shooter _shooter;
 
         public PlayerFactory (
-            IInputService inputService,
             IObjectResolverProvider objectResolver,
             ISceneContainerProvider sceneContainerProvider,
             IResourceLoader resourceLoader,
@@ -53,7 +52,6 @@ namespace BigBalls.Factories
             ICameraProvider cameraProvider,
             IMergeService mergeService)
         {
-            _inputService = inputService;
             _objectResolver = objectResolver;
             _resourceLoader = resourceLoader;
             _sceneContainerProvider = sceneContainerProvider;
@@ -88,7 +86,7 @@ namespace BigBalls.Factories
 
             ComponentContainer container = new ComponentContainer();
 
-            List<ISubscribable> components = CreateComponents(out PlayerCardHolder cardHolder, statHolder, player);
+            List<ISubscribable> components = CreateComponents(statHolder, player);
 
             DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], components, player);
             deathHandler.Subscribe();
@@ -100,8 +98,8 @@ namespace BigBalls.Factories
 
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerExperienceViewer.Init(_playerExperience);
-            _uIFactory.Get<CardSelectionMenu>(WindowType.CardMenu).Init(cardHolder);
-            _uIFactory.Get<HUD>(WindowType.HUD).PlayerSlots.Init(cardHolder);
+            _uIFactory.Get<CardSelectionMenu>(WindowType.CardMenu).Init(_cardHolder);
+            _uIFactory.Get<HUD>(WindowType.HUD).PlayerSlots.Init(_cardHolder);
 
             foreach (var component in components)
             {
@@ -119,44 +117,36 @@ namespace BigBalls.Factories
             if (entity is not Player player)
                 return;
 
+
             player.DeathHandler.Unsubscribe();
             player.EventHandler.Died -= OnDied;
             player.gameObject.SetActive(false);
         }
 
-        private List<ISubscribable> CreateComponents (out PlayerCardHolder cardHolder, StatHolder statHolder, Player player)
+        private List<ISubscribable> CreateComponents (StatHolder statHolder, Player player)
         {
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, player.Rigidbody, _playerConfig);
             _objectResolver.CurrentResolver.Inject(mover);
 
             Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform);
-            _objectResolver.CurrentResolver.Inject(rotator); 
+            _objectResolver.CurrentResolver.Inject(rotator);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);
             _objectResolver.CurrentResolver.Inject(playerBallContainer);
 
             ArtefactContainer artefactContainer = new ArtefactContainer(_effectFactory, _enemySpawner, playerBallContainer, statHolder, _artefactsRepository);
 
-            cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer);
-            cardHolder.AddItem(_itemConainerProvider.Helmet);
-            cardHolder.AddItem(_itemConainerProvider.Gun);
-            _mergeService.Init(cardHolder);
-            SplitingPanel splitingPanel = _uIFactory.Get<SplitingPanel>(WindowType.MergeWindow);
-            splitingPanel.MergeWindow.Init(cardHolder);
-            splitingPanel.SplitingWindow.Init(cardHolder);
+            _cardHolder = new PlayerCardHolder(playerBallContainer, artefactContainer, _itemConainerProvider);
+            _mergeService.Init(_cardHolder);
 
-            //Cannon cannon = null;
-            //
-            //if (_itemConainerProvider.Gun != null)
-            //{
-            //    cannon = GameObject.Instantiate(_itemConainerProvider.Gun.WeaponConfig.Cannon, player.WeaponSpawnPoint);
-            //}
-            //else
-            //{
-            //    cannon = GameObject.Instantiate(_weaponRepository.AllModels[ItemType.Base].WeaponConfig.Cannon, player.WeaponSpawnPoint);
-            //}
-            //
-            //player.SetFirePoint(cannon);
+            if (statHolder.TryGetStat(out Stat collectRange, StatType.CollectRange))
+            {
+                player.ResourceCollector.Init(collectRange);
+            }
+
+            SplitingPanel splitingPanel = _uIFactory.Get<SplitingPanel>(WindowType.MergeWindow);
+            splitingPanel.MergeWindow.Init(_cardHolder);
+            splitingPanel.SplitingWindow.Init(_cardHolder);
 
             _shooter = new Shooter(
                 statHolder[StatType.AttackSpeed],
@@ -166,14 +156,14 @@ namespace BigBalls.Factories
 
             _objectResolver.CurrentResolver.Inject(_shooter);
 
-            player.WeaponViewer.Init(_shooter, cardHolder);
+            player.WeaponViewer.Init(_shooter, _cardHolder);
             player.SquashOnShot.Init(_shooter);
             player.TiltOnShot.Init(_shooter);
 
             ScreenShake screenShake = _cameraProvider.Camera.GetComponent<ScreenShake>();
             screenShake.Init(_shooter, statHolder[StatType.Health]);
 
-            PlayerMover playerMover = new PlayerMover( rotator, mover);
+            PlayerMover playerMover = new PlayerMover(rotator, mover);
             _objectResolver.CurrentResolver.Inject(playerMover);
 
             HealthRegenerator healthRegenerator = new HealthRegenerator(statHolder[StatType.Health], statHolder[StatType.HealthRegen], _updateService);
@@ -194,6 +184,7 @@ namespace BigBalls.Factories
         public void OnPlayerSpawned ()
         {
             _shooter.StartShoot();
+            _cardHolder.Init();
         }
     }
 }

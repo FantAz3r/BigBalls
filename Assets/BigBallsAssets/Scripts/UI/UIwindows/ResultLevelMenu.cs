@@ -57,17 +57,20 @@ namespace BigBalls.UI
 
         private void SetupChest (LevelID level, int compliteWaves, LevelButton levelButton)
         {
-            ChestConfig chestConfig = _chestData.GetChest((Rarity) compliteWaves);
+            if (compliteWaves > 0)
+            {
+                ChestConfig chestConfig = _chestData.GetChest((Rarity) compliteWaves);
 
-            if (_chestImage)
-                _chestImage.sprite = chestConfig.CloseIcon;
+                if (_chestImage)
+                    _chestImage.sprite = chestConfig.CloseIcon;
 
-            ChestModel chestModel = new ChestModel((int) level, chestConfig);
-            ChestItemDropView chestItemDrop = UIFactory.Get<ChestItemDropView>(WindowType.OpenChest);
+                ChestModel chestModel = new ChestModel((int) level, chestConfig);
+                ChestItemDropView chestItemDrop = UIFactory.Get<ChestItemDropView>(WindowType.OpenChest);
 
-            UIFactory.Get<HUD>(WindowType.HUD).Close();
-            chestItemDrop.Init(chestModel, levelButton);
-            chestItemDrop.Close();
+                UIFactory.Get<HUD>(WindowType.HUD).Close();
+                chestItemDrop.Init(chestModel, levelButton);
+                chestItemDrop.Close();
+            }
         }
 
         protected virtual void OnResultApplied (LevelID level, int compliteWaves, LevelButton levelButton) { }

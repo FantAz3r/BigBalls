@@ -14,5 +14,9 @@
         Steel,
         EarthShake,
         LineLaser,
+        Magnet,
+        Horn,
+        VimpireKnife,
+        Lava,
     }
 }

@@ -1,7 +1,6 @@
-﻿using BigBalls.Configs;
+﻿using System;
+using BigBalls.Configs;
 using BigBalls.Services;
-using System;
-using UnityEngine;
 using VContainer;
 
 namespace BigBalls.GameplayObjects
@@ -11,33 +10,41 @@ namespace BigBalls.GameplayObjects
         private readonly DamageConfig _config;
         private IDamageService _damageService;
         private SoundSpawner _soundSpawner;
+        private IEntityRepository _entityRepository;
 
-        public Damage(DamageConfig config, int level) : base(config, level)
+        public Damage (DamageConfig config, int level) : base(config, level)
         {
             _config = config;
         }
 
         [Inject]
-        public void Construct(IDamageService damageService, SoundSpawner soundSpawner)
+        public void Construct (IDamageService damageService, SoundSpawner soundSpawner, IEntityRepository entityRepository)
         {
             _damageService = damageService;
             _soundSpawner = soundSpawner;
+            _entityRepository = entityRepository;
         }
 
-        private void OnHit(IEntity entity)
-        {
-            if (Host is Ball ball)
-            {
-                _soundSpawner.Spawn(ball.Config.HitSound);
-                float damage = _damageService.ApplyDamage(entity, _config.GetDamage(Level), ball.Config.DamageColor);
-                ball.AddDamage(damage);
-            }
-        }
-
-        protected override IDisposable SubscribeInternal(IEntity host)
+        protected override IDisposable SubscribeInternal (IEntity host)
         {
             host.EventHandler.HitedEntity += OnHit;
+            StatHolder statHolder = _entityRepository.GetStatHolder(host);
+
+            if (statHolder.TryGetStat(out Stat damage, StatType.Damage))
+            {
+                damage.ReduceCurrentValue(damage.CurrentValue);
+                damage.AddCurrentValue(_config.GetDamage(Level));
+            }
+
             return new DisposableObject(() => host.EventHandler.HitedEntity -= OnHit);
+        }
+
+        private void OnHit (IEntity host)
+        {
+            if (Host is not Ball ball)
+                return;
+
+            _soundSpawner.Spawn(ball.Config.HitSound);
         }
     }
 }

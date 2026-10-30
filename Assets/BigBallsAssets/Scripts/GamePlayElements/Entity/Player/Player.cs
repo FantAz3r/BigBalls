@@ -24,6 +24,8 @@ namespace BigBalls.GameplayObjects
         public Transform Transform => transform;
         public EntityEventHandler EventHandler { get; private set; }
 
+        public Collider TriggerCollider => throw new System.NotImplementedException();
+
         private void Awake()
         {
             EventHandler = new EntityEventHandler();

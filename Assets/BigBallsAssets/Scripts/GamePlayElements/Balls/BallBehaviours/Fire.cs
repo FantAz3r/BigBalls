@@ -11,48 +11,24 @@ namespace BigBalls.GameplayObjects
     public class Fire : EffectBehaviour
     {
         private readonly FireConfig _config;
-        private IDamageService _damageService;
-        private ICoroutineRunner _coroutineRunner;
-        private WaitForSeconds _oneSecond = new WaitForSeconds(1);
+        private DebuffService _debuffService;
 
-        public Fire(FireConfig config, int level) : base(config, level)
-        {
-            _config = config;
-        }
+        public Fire (FireConfig config, int level) : base(config, level) => _config = config;
 
         [Inject]
-        public void Construct (IDamageService damageService, ICoroutineRunner coroutineRunner)
+        public void Construct (DebuffService debuffService) => _debuffService = debuffService;
+
+        private void OnHit (IEntity entity)
         {
-            _damageService = damageService;
-            _coroutineRunner = coroutineRunner;
+            _debuffService.ApplyDamageOverTime(
+                EffectType.Burn,
+                entity,
+                _config.GetBurnDPS(Level),
+                _config.BurnDuration,
+                _config.Color);
         }
 
-        private void OnHit(IEntity entity)
-        {
-            _coroutineRunner.StartCoroutine(Burn(entity));
-        }
-
-        private IEnumerator Burn(IEntity entity)
-        {
-            var elapsed = 0f;
-
-            if (entity is Enemy enemy)
-            {
-                enemy.EffectViewer.EnableEffect(EffectType.Burn, _config.GetBurnDuration(Level));
-            }
-
-            while (elapsed <= _config.BurnDuration)
-            {
-                if (entity.Transform.gameObject.activeSelf == false)
-                    yield break;
-
-                float damage = _damageService.ApplyDamage(entity, _config.BurnDPS, _config.Color);
-                elapsed += Time.deltaTime;
-                yield return _oneSecond;
-            }
-        }
-
-        protected override IDisposable SubscribeInternal(IEntity host)
+        protected override IDisposable SubscribeInternal (IEntity host)
         {
             host.EventHandler.HitedEntity += OnHit;
             return new DisposableObject(() => host.EventHandler.HitedEntity -= OnHit);

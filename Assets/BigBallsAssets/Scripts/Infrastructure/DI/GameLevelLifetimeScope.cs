@@ -47,15 +47,17 @@ namespace BigBalls.Infrastructure.DI
         {
             builder.Register<IMergeService, MergeService>(Lifetime.Scoped);
             builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
-            builder.Register<InputService>(Lifetime.Singleton)
-                .AsImplementedInterfaces();
+            builder.Register<DebuffService>(Lifetime.Scoped);
+            builder.Register<InputService>(Lifetime.Scoped);
+            builder.Register<MobileInputService>(Lifetime.Scoped);
+            builder.Register<InputServiceAdapter>(Lifetime.Scoped);
+
             builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
             builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);
             builder.Register<ILouseService, LouseService>(Lifetime.Scoped);
             builder.Register<IWinService, WinService>(Lifetime.Scoped);
             builder.Register<IDropService, DropService>(Lifetime.Scoped);
             builder.Register<ISpatialService, SpatialService>(Lifetime.Scoped);
-            builder.Register<ISoundService, SoundService>(Lifetime.Scoped);
             builder.Register<CardSelector>(Lifetime.Scoped);
         }
 

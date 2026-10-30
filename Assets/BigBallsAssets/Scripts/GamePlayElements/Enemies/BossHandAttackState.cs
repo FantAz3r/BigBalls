@@ -26,6 +26,7 @@ public class BossHandAttackState : BossStateBase
 
     private void OnShoot ()
     {
+        _skeletonKing.Animator.enabled = false;
         var config = _skeletonKing.BossConfig;
         Duration = config.HandAttackDuration;
 
@@ -54,6 +55,8 @@ public class BossHandAttackState : BossStateBase
 
     protected override void OnComplete ()
     {
+        _skeletonKing.Animator.enabled = true;
+        _skeletonKing.EnemyAnimator.EnterIdle();
         StateMachine.ChangeState<BossIdleState>();
     }
 

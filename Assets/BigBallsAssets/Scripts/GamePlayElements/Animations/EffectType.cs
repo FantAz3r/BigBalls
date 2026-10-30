@@ -7,4 +7,7 @@ public enum EffectType
     Upgrade,
     LeftStep,
     RightStep,
+    Stun,
+    Disarm,
+    Poison,
 }

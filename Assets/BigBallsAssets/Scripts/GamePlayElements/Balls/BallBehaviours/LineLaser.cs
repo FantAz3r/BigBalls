@@ -62,11 +62,8 @@ public class LineLaser : EffectBehaviour
         particle.transform.rotation = Quaternion.LookRotation(-direction);
         particle.Play();
 
-        // 4. Физика (используем direction как направление)
         RaycastHit[] hits = Physics.RaycastAll(origin, direction, _config.MaxRange);
         Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
-
-        Debug.DrawRay(origin, direction * _config.MaxRange, Color.red, 2f);
 
         foreach (var hit in hits)
         {
@@ -76,7 +73,6 @@ public class LineLaser : EffectBehaviour
             }
         }
     }
-
 
     private Vector3? GetClosestBlockCenter (Enemy enemy, Vector3 hitPoint)
     {

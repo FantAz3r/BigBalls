@@ -13,6 +13,7 @@ namespace BigBalls.GameplayObjects
         [SerializeField] private LayerMask _playerLayer;
         [field: SerializeField] public BallConfig Config { get; private set; }
         [field: SerializeField] public ParticleObject Particle { get; private set; }
+        [field: SerializeField] public Collider TriggerCollider { get; private set; }
 
         private List<ICollisionStrategy> _collisionStrategies;
         private IEffectFactory _effectFactory;

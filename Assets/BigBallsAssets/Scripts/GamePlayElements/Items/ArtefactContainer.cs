@@ -3,7 +3,7 @@ using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
-using BigBalls.StaticData;
+using UnityEngine;
 
 public class ArtefactContainer : IArtefactContainer
 {
@@ -35,31 +35,36 @@ public class ArtefactContainer : IArtefactContainer
 
     public void Enable (ArtefactModel artefact)
     {
-        if (artefact == null) return;
-        if (_artefacts.Contains(artefact)) return; 
+        if (artefact == null)
+            return;
 
+        if (_artefacts.Contains(artefact))
+            return;
+
+        artefact.Upgraded += OnUpgrade;
         _artefacts.Add(artefact);
         ApplyToUsers(artefact, add: true);
     }
 
     public void Disable (ArtefactModel artefact)
     {
-        if (artefact == null) return;
-        if (!_artefacts.Remove(artefact)) return;
+        if (artefact == null)
+            return;
 
+        if (_artefacts.Remove(artefact) == false)
+            return;
+
+        artefact.Upgraded -= OnUpgrade;
         ApplyToUsers(artefact, add: false);
     }
 
-    public bool Has (ArtefactModel artefact) =>
-        artefact != null && _artefacts.Contains(artefact);
+    public bool Has (ArtefactModel artefact) => artefact != null && _artefacts.Contains(artefact);
 
     public void Clear ()
     {
         foreach (var artefact in _artefacts.ToList())
             Disable(artefact);
     }
-
-    // ---------- INTERNAL ----------
 
     private void ApplyToUsers (ArtefactModel artefact, bool add)
     {
@@ -72,6 +77,17 @@ public class ArtefactContainer : IArtefactContainer
                 user.Key.AddEffects(artefact);
             else
                 user.Key.RemoveEffects(artefact);
+        }
+    }
+
+    private void OnUpgrade(ICardModel card)
+    {
+        if (card is not ArtefactModel artefact)
+            return;
+
+        foreach (var effect in artefact.Effects)
+        {
+            effect.OnUpgrade(card.Level);
         }
     }
 }

@@ -14,8 +14,9 @@ namespace BigBalls.GameplayObjects
         private float _upgrageTime = 1f;
         private WaitForSeconds _wait;
 
+        public int Level { get; private set; }
         public Stat Stat { get; private set; }
-        public float CurrentEXP { get; private set; } = 0;
+        public float CurrentEXP { get; private set; }
         public float EXPForNextLevel { get; private set; }
 
         public event Action ValueChanged;
@@ -49,7 +50,7 @@ namespace BigBalls.GameplayObjects
 
         private void LevelUp ()
         {
-            Stat.AddCurrentValue(1);
+            Level++;
             _soundSpawner.Spawn(SoundType.LevelUP);
             _playerProvider.Player.EffectViewer.EnableEffect(EffectType.Upgrade, _upgrageTime);
             _coroutineRunner.StartCoroutine(LevelUPRoutine());

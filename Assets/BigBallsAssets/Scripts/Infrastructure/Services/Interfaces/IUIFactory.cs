@@ -8,7 +8,6 @@ namespace BigBalls.Services
 
         HUD CreateHUD();
         void ClearCache();
-        void CreateJoystick();
         void CreateUIRoot();
         MainMenu CreateMainMenu();
         SettingsView CreateSettings();
@@ -23,5 +22,6 @@ namespace BigBalls.Services
         Background CreateBackgroung ();
         ChestItemDropView CreateChestWindow();
         SplitingPanel CreateSplitingPanel ();
+        void CreateJoystick (IInputService inputService);
     }
 }

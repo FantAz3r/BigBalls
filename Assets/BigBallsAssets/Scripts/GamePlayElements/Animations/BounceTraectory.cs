@@ -20,10 +20,10 @@ public class BounceTraectory : MonoBehaviour
     private Transform _firePoint;
 
     [Inject]
-    public void Construct (IInputService inputService)
+    public void Construct (InputServiceAdapter inputServiceAdapter)
     {
         _firePoint = GetComponent<Player>().WeaponSpawnPoint;
-        _inputService = inputService;
+        _inputService = inputServiceAdapter.Get();
         _inputService.RotateDirectionSeted += OnMoveDirectionSeted;
     }
 
@@ -43,13 +43,22 @@ public class BounceTraectory : MonoBehaviour
 
     private void OnMoveDirectionSeted (Vector2 cursorScreenPos)
     {
-        Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-        Vector2 direction = cursorScreenPos - new Vector2(playerScreenPos.x, playerScreenPos.y);
+        Vector2 direction;
 
-        if (direction.sqrMagnitude > 0f)
-            direction.Normalize();
+        if (_inputService.GetSelf() is InputService)
+        {
+            Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+            direction = cursorScreenPos - new Vector2(playerScreenPos.x, playerScreenPos.y);
+
+            if (direction.sqrMagnitude > 0f)
+                direction.Normalize();
+            else
+                direction = Vector2.zero;
+        }
         else
-            direction = Vector2.zero;
+        {
+            direction = cursorScreenPos;
+        }
 
         Vector3 direction3D = new Vector3(direction.x, 0f, direction.y).normalized;
 

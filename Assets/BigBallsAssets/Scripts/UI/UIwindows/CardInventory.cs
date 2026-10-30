@@ -25,8 +25,9 @@ public class CardInventory : PopupWindow
 
     [field: SerializeField] public InventoryStatsView StatsView { get; private set; }
 
-    private void OnEnable ()
+    public override void Open ()
     {
+        base.Open();
         OnFilterChanged(0);
     }
 
@@ -74,7 +75,6 @@ public class CardInventory : PopupWindow
         }
     }
 
-
     public void ViewAll () => ViewSlots(card => card is WeaponModel || card is ArmorModel || card is HelmetModel);
     public void ViewWeapons () => ViewSlots(card => card is WeaponModel);
     public void ViewHelmets () => ViewSlots(card => card is HelmetModel);
@@ -86,29 +86,27 @@ public class CardInventory : PopupWindow
 
         foreach (var card in _models)
         {
-            if (filter(card))
-            {
-                if (card.IsOpen || card.Level > 1 || true)
-                {
-                    Slot slot = Instantiate(_slotPrefab, _parent.transform);
-                    _slots.Add(slot);
-                    slot.Init(CardType.Any, false);
 
-                    if (card.HasPlayer == false)
-                    {
-                        UIItem item = _objectResolverProvider.CurrentResolver.Instantiate(_itemPrefab, slot.transform);
-                        item.Init(transform, _canvas);
-                        item.StatsButton.Init(StatsView);
-                        item.Render(card);
-                        slot.AddItem(item);
-                    }
+            Slot slot = Instantiate(_slotPrefab, _parent.transform);
+            _slots.Add(slot);
+            slot.Init(CardType.Any, false);
 
-                    slot.transform.SetAsFirstSibling();
-                }
-            }
+            if (filter(card) == false) continue;
+            //if (card.IsOpen == false) continue;
+            if (card.HasPlayer) continue;
+
+
+            UIItem item = _objectResolverProvider.CurrentResolver.Instantiate(_itemPrefab, slot.transform);
+            item.Init(transform, _canvas);
+            item.StatsButton.Init(StatsView);
+            item.Render(card);
+            slot.PlaceItem(item);
+            item.SetSourceSlot(slot);
+
+            slot.transform.SetAsFirstSibling();
         }
 
-        _tipText.gameObject.SetActive(_slots.Count == 0);
+        _tipText?.gameObject.SetActive(_slots.Count == 0);
     }
 
     private void RemoveAllSlots ()

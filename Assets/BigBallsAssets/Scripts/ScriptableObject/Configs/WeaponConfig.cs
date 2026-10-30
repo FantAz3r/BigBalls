@@ -10,6 +10,7 @@ namespace BigBalls.Configs
         [SerializeField] private List<BallConfig> _uniqueBalls;
 
         [field: SerializeField] public Cannon Cannon { get; set; }
+        [field: SerializeField] public ItemType ItemType { get; set; }
 
         public List<BallConfig> UniqueBallConfigs => _uniqueBalls;
 

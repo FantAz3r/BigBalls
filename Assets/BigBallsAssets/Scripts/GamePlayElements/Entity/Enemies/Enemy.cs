@@ -30,6 +30,8 @@ namespace BigBalls.GameplayObjects
         public EnemyShooter Shooter { get; private set; }
         public Vector3 LocalScale { get; private set; }
 
+        public Collider TriggerCollider => throw new System.NotImplementedException();
+
         protected virtual void Awake ()
         {
             LocalScale = transform.localScale;

@@ -21,13 +21,13 @@ public class WinService : IWinService
         ITimeService timeService,
         IWalletModel walletModel,
         IResourceLoader resourceLoader,
-        IInputService inputService)
+        InputServiceAdapter  inputServiceAdapter)
     {
         _windowService = windowService;
         _timeService = timeService;
         _walletModel = walletModel;
         _resourceLoader = resourceLoader;
-        _inputService = inputService;
+        _inputService = inputServiceAdapter.Get();
     }
 
     public void SetLevel(LevelID level)

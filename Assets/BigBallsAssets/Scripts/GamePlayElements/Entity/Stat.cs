@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -20,7 +21,7 @@ namespace BigBalls.GameplayObjects
             _startMaxValue = startMaxValue;
             MinValue = minValue;
             CurrentValue = startCurrentValue;
-
+            StartCurrentValue = startCurrentValue;
             MaxValue = _startMaxValue;
         }
 
@@ -30,6 +31,9 @@ namespace BigBalls.GameplayObjects
         public event Action ValueIncreased;
 
         public bool CanReduce { get; private set; } = true;
+        public bool CanExceedMaxValue { get; private set; }
+
+        public float StartCurrentValue { get; private set; }
         public float MinValue { get; private set; }
         public float MaxValue { get; private set; }
         public float CurrentValue { get; private set; }
@@ -40,12 +44,15 @@ namespace BigBalls.GameplayObjects
                 return 0;
 
             float before = CurrentValue;
-            CurrentValue = MathF.Min(CurrentValue + valueToAdd, MaxValue);
+
+            if (CanExceedMaxValue)
+                CurrentValue += valueToAdd;
+            else
+                CurrentValue = MathF.Min(CurrentValue + valueToAdd, MaxValue);
             float actualAdd = CurrentValue - before;
 
             ValueChanged?.Invoke(this);
             ValueIncreased?.Invoke();
-
             return actualAdd;
         }
 
@@ -67,6 +74,23 @@ namespace BigBalls.GameplayObjects
             if (CurrentValue == MinValue)
                 ResetedToMiValue?.Invoke(this);
 
+            return actualReduced;
+        }
+
+        public float SelfReduceCurrentValue(float valueToResource)
+        {
+            if (CanReduce == false)
+                return 0;
+
+            if (valueToResource <= 0)
+                return 0;
+
+            float before = CurrentValue;
+            CurrentValue = MathF.Max(CurrentValue - valueToResource, 1);
+            float actualReduced = before - CurrentValue;
+
+            //ValueRedused?.Invoke();
+            ValueChanged?.Invoke(this);
             return actualReduced;
         }
 
@@ -93,5 +117,6 @@ namespace BigBalls.GameplayObjects
         }
 
         public void SetImmune (bool isImmune) => CanReduce = isImmune == false;
+        public void SetExceedMax (bool canExceedMaxValue) => CanExceedMaxValue = canExceedMaxValue;
     }
 }

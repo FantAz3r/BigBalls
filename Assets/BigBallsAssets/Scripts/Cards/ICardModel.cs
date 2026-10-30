@@ -18,16 +18,21 @@ public interface ICardModel
     string Description { get; }
     int MaxNoneGameLevel { get; }
     int InGameLevel { get; }
+    int ID { get; }
+    int NoneGameLevel { get; }
+    int MaxInGameLevel { get; }
 
     event Action<ICardModel> Upgraded;
     event Action<ICardModel> Changed;
 
     void AddItemEXP(float value);
     void AddToPlayer();
+
     CardSaveData CreateSaveData();
     List<List<string>> GetStatsText(bool isViewNextLevel);
     void InitFromData(CardSaveData data);
     void OpenItem();
+    void RemoveFromPlayer ();
     bool TryUpgradeNoneGameLevel ();
     void Upgrade();
 }

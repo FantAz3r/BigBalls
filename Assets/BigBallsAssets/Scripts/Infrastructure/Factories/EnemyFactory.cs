@@ -44,7 +44,9 @@ namespace BigBalls.Factories
         }
 
         public event Action<IEntity> Died;
+        public event Action<IEntity> Killed;
 
+        public int KillCount { get; private set; }
         public int DiedCount { get; private set; }
         public int SuisidedCount { get; private set; }
 
@@ -120,7 +122,11 @@ namespace BigBalls.Factories
         private void ReleaseToPool (Enemy enemy)
         {
             if (enemy.DeathHandler.IsBallAttacked)
+            {
+                KillCount++;
                 _dropService.DropLoot(enemy);
+                Killed?.Invoke(enemy);
+            }
 
             _poolService.Release(enemy);
             Died?.Invoke(enemy);

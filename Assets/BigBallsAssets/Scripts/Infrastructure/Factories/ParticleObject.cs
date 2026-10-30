@@ -6,6 +6,7 @@ using VContainer;
 
 public class ParticleObject : MonoBehaviour
 {
+    private const int  InfinityTime = 9999;
     private ICoroutineRunner _coroutineRunner;
     private Coroutine _watcherCoroutine;
 
@@ -23,6 +24,9 @@ public class ParticleObject : MonoBehaviour
     {
         if (ParticleSystem == null)
             return;
+
+        if (duration == -1)
+            duration = InfinityTime;
 
         ParticleSystem.Stop();
 

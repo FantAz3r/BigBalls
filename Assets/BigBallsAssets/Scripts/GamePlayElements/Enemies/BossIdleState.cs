@@ -41,7 +41,6 @@ public class BossIdleState : BossStateBase
 
         IEnemyState nextState = _candidates[_rng.Next(_candidates.Count)];
         _skeletonKing.SetLastAttackState(nextState);
-        Debug.Log(nextState);
         return nextState;
     }
 }

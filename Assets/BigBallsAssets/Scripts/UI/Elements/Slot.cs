@@ -22,33 +22,23 @@ public class Slot : MonoBehaviour, IDropHandler
     public ICardModel Card { get; private set; }
     public Image CurrentImage { get; private set; }
     public UIItem CurrentItem { get; private set; }
+    public CardType SlotType => _slotType;
 
     [Inject]
-    public void Construct(IItemConainerProvider itemConainerProvider)
+    public void Construct (IItemConainerProvider itemConainerProvider)
     {
         _itemContainer = itemConainerProvider;
     }
 
-    public void Init(CardType slotType, bool isActiveSlot)
+    public void Init (CardType slotType, bool isActiveSlot)
     {
         _slotType = slotType;
         IsActiveSlot = isActiveSlot;
 
-        if (_slotType == CardType.Weapon)
-        {
-            _weaponTip.enabled = true;
-        }
-        else if (_slotType == CardType.Armor)
-        {
-            _armorTip.enabled = true;
-        }
-        else if (_slotType == CardType.Helmet)
-        {
-            _helmetTip.enabled = true;
-        }
+        ShowTip(true);
     }
 
-    public void View(ICardModel card)
+    public void View (ICardModel card)
     {
         Card = card;
         _image.sprite = card.Config.Icon;
@@ -61,46 +51,104 @@ public class Slot : MonoBehaviour, IDropHandler
         gameObject.SetActive(false);
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public void OnDrop (PointerEventData eventData)
     {
-        if (CurrentItem != null)
+        var draggedItem = eventData.pointerDrag.GetComponent<UIItem>();
+
+        if (draggedItem == null)
             return;
 
         if (_slotType == CardType.None)
             return;
 
-        var itemTransform = eventData.pointerDrag.transform;
-        var draggedItem = itemTransform.GetComponent<UIItem>();
-
         if (_slotType != CardType.Any && draggedItem.Model.Config.Type != _slotType)
             return;
 
-        itemTransform.SetParent(transform);
-        itemTransform.localPosition = Vector3.zero;
+        if (CurrentItem == draggedItem)
+            return;
 
-        if (CurrentImage != null)
-            CurrentImage.enabled = false;
+        if (CurrentItem != null)
+        {
+            var otherItem = CurrentItem;
+            var sourceSlot = draggedItem.SourceSlot;
+
+            if (sourceSlot == null || sourceSlot == this)
+                return;
+
+            if (sourceSlot.SlotType != CardType.Any
+                && sourceSlot.SlotType != CardType.None
+                && otherItem.Model.Config.Type != sourceSlot.SlotType)
+                return;
+
+            sourceSlot.RemoveItem(draggedItem);
+            RemoveItem(otherItem);
+            PlaceItem(draggedItem);
+            sourceSlot.PlaceItem(otherItem);
+
+            draggedItem.MarkDropHandled();
+            otherItem.MarkDropHandled();
+
+            return;
+        }
+
+        PlaceItem(draggedItem);
+        draggedItem.MarkDropHandled();
+        draggedItem.StatsButton.View();
     }
 
-    public void SetItem(UIItem item)
+    public void PlaceItem (UIItem item)
     {
-        CurrentItem = item;
-    }
+        if (CurrentItem == item)
+            return;
 
-    public void AddItem(UIItem item)
-    {
+        var oldSlot = item.SourceSlot;
+        if (oldSlot != null && oldSlot != this)
+        {
+            oldSlot.RemoveItem(item);
+        }
+
         SetItem(item);
+
+        item.transform.SetParent(transform);
+        item.transform.localPosition = Vector3.zero;
+        item.SetSourceSlot(this);
 
         if (IsActiveSlot)
             _itemContainer.Add(item.Model);
-
     }
 
-    public void RemoveItem(UIItem item)
+    public void RemoveItem (UIItem item)
     {
         if (IsActiveSlot)
+        {
             _itemContainer.Remove(item.Model);
 
+        }
+
+        item.SetSourceSlot(null);
         SetItem(null);
+        ShowTip(true);
+    }
+
+    public void SetItem (UIItem item)
+    {
+        CurrentItem = item;
+        ShowTip(false);
+    }
+
+    private void ShowTip (bool isShow)
+    {
+        if (_slotType == CardType.Weapon)
+        {
+            _weaponTip.enabled = isShow;
+        }
+        else if (_slotType == CardType.Armor)
+        {
+            _armorTip.enabled = isShow;
+        }
+        else if (_slotType == CardType.Helmet)
+        {
+            _helmetTip.enabled = isShow;
+        }
     }
 }

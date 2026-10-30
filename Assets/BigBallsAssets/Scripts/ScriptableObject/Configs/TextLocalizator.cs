@@ -1,6 +1,6 @@
-﻿using BigBalls.GameplayObjects;
+﻿using System.Collections.Generic;
+using BigBalls.GameplayObjects;
 using BigBalls.UI;
-using System.Collections.Generic;
 using YG;
 
 namespace BigBalls.Localization
@@ -290,25 +290,103 @@ namespace BigBalls.Localization
                 },
             };
 
+
+        private static readonly Dictionary<string, string> MergeDict = new Dictionary<string, string>
+        {
+            { Russian, "Слияние" },
+            { English, "Merge" },
+            { Turkish, "Birleşme" },
+        };
+
+        private static readonly Dictionary<string, string> GoldDict = new Dictionary<string, string>
+        {
+            { Russian, "Золото" },
+            { English, "Gold" },
+            { Turkish, "Altın" },
+        };
+
+        private static readonly Dictionary<string, string> CardsDict = new Dictionary<string, string>
+        {
+            { Russian, "Карты" },
+            { English, "Cards" },
+            { Turkish, "Kartlar" },
+        };
+
         private static readonly Dictionary<string, string> DamageDict = new Dictionary<string, string>
         {
             { Russian, "Урон" },
-            { English, "damage" },
-            { Turkish, "hasar" },
+            { English, "Damage" },
+            { Turkish, "Hasar" },
+        };
+
+        private static readonly Dictionary<string, string> ArmorReductionDict = new Dictionary<string, string>
+        {
+            { Russian, "Снижение Брони" },
+            { English, "Armor Reduction" },
+            { Turkish, "Zırhın Azaltılması" },
+        };
+
+        private static readonly Dictionary<string, string> EarthquakeDamageDict = new Dictionary<string, string>
+        {
+            { Russian, "Урон От Землетрясения" },
+            { English, "Earthquake Damage" },
+            { Turkish, "Deprem Hasarı" },
+        };
+
+        private static readonly Dictionary<string, string> LightningDamageDict = new Dictionary<string, string>
+        {
+            { Russian, "Урон От Молнии" },
+            { English, "Lightning Damage" },
+            { Turkish, "Yıldırım Hasarı" },
+        };
+
+        private static readonly Dictionary<string, string> LevelUPDict = new Dictionary<string, string>
+        {
+            { Russian, "Уровень Повышен" },
+            { English, "Level UP" },
+            { Turkish, "Seviye Yükseltildi" },
+        };
+
+        private static readonly Dictionary<string, string> NewDict = new Dictionary<string, string>
+        {
+            { Russian, "Новый" },
+            { English, "New" },
+            { Turkish, "Yeni" },
+        };
+
+        private static readonly Dictionary<string, string> VampirismDict = new Dictionary<string, string>
+        {
+            { Russian, "Вампиризм" },
+            { English, "Vampirism" },
+            { Turkish, "Vampirizm" },
+        };
+
+        private static readonly Dictionary<string, string> EXPDict = new Dictionary<string, string>
+        {
+            { Russian, "Опыт" },
+            { English, "EXP" },
+            { Turkish, "Deney" },
+        };
+
+        private static readonly Dictionary<string, string> LockedDict = new Dictionary<string, string>
+        {
+            { Russian, "Закрыто" },
+            { English, "Locked" },
+            { Turkish, "Kapalı" },
         };
 
         private static readonly Dictionary<string, string> StartBallMoveSpeedDict = new Dictionary<string, string>
         {
-            { Russian, "Начальная скорость" },
-            { English, "Start speed" },
-            { Turkish, "Başlangıç hızı" },
+            { Russian, "Начальная Скорость" },
+            { English, "Start Speed" },
+            { Turkish, "Başlangıç Hızı" },
         };
 
         private static readonly Dictionary<string, string> AddMoveSpeedPerHitDict = new Dictionary<string, string>
         {
-            { Russian, "Скорость за отскок" },
-            { English, "Speed per bounce" },
-            { Turkish, "Ribaund başına hız" },
+            { Russian, "Скорость За Отскок" },
+            { English, "Speed Per Bounce" },
+            { Turkish, "Ribaund Başına Hız" },
         };
 
         private static readonly Dictionary<string, string> ExplosionDamageDict = new Dictionary<string, string>
@@ -320,167 +398,168 @@ namespace BigBalls.Localization
 
         private static readonly Dictionary<string, string> LaserDamageDict = new Dictionary<string, string>
         {
-            { Russian, "урон от лазера" },
-            { English, "laser damage" },
-            { Turkish, "lazer hasarı" },
+            { Russian, "Урон От Лазера" },
+            { English, "Laser Damage" },
+            { Turkish, "Lazer Hasarı" },
         };
 
         private static readonly Dictionary<string, string> UnlockDict = new Dictionary<string, string>
         {
-            { Russian, "разблокировать" },
-            { English, "unlock" },
-            { Turkish, "kilidi aç" },
+            { Russian, "Разблокировать" },
+            { English, "Unlock" },
+            { Turkish, "Kilidi Aç" },
         };
+
         private static readonly Dictionary<string, string> UpgradeDict = new Dictionary<string, string>
         {
-            { Russian, "улучшить" },
-            { English, "upgrade" },
-            { Turkish, "güncelleme" },
+            { Russian, "Улучшить" },
+            { English, "Upgrade" },
+            { Turkish, "Güncelleme" },
         };
 
         private static readonly Dictionary<string, string> DurationDict = new Dictionary<string, string>
         {
-            { Russian, "длительность" },
-            { English, "duration" },
-            { Turkish, "süre" },
+            { Russian, "Длительность" },
+            { English, "Duration" },
+            { Turkish, "Süre" },
         };
 
         private static readonly Dictionary<string, string> DamageMultiplyDict = new Dictionary<string, string>
         {
-            { Russian, "множитель урона" },
-            { English, "damage multiply" },
-            { Turkish, "hasar" },
+            { Russian, "Множитель Урона" },
+            { English, "Damage Multiply" },
+            { Turkish, "Hasar Çarpanı" },
         };
 
         private static readonly Dictionary<string, string> AttackDelayDict = new Dictionary<string, string>
         {
-            { Russian, "задержка атаки" },
-            { English, "attack delay" },
-            { Turkish, "saldırı gecikmesi" },
+            { Russian, "Задержка Атаки" },
+            { English, "Attack Delay" },
+            { Turkish, "Saldırı Gecikmesi" },
         };
 
         private static readonly Dictionary<string, string> BurnDPSDict = new Dictionary<string, string>
         {
-            { Russian, "урон от горения" },
-            { English, "burn damage per second" },
-            { Turkish, "yanma hasarı saniye başına" },
+            { Russian, "Урон От Горения" },
+            { English, "Burn Damage Per Second" },
+            { Turkish, "Yanma Hasarı Saniye Başına" },
         };
 
         private static readonly Dictionary<string, string> BurnDurationDict = new Dictionary<string, string>
         {
-            { Russian, "время горения" },
-            { English, "burn duration" },
-            { Turkish, "yanma süresi" },
+            { Russian, "Время Горения" },
+            { English, "Burn Duration" },
+            { Turkish, "Yanma Süresi" },
         };
 
         private static readonly Dictionary<string, string> FreezeDurationDict = new Dictionary<string, string>
         {
-            { Russian, "время заморозки" },
-            { English, "freeze duration" },
-            { Turkish, "donma süresi" },
+            { Russian, "Время Заморозки" },
+            { English, "Freeze Duration" },
+            { Turkish, "Donma Süresi" },
         };
 
         private static readonly Dictionary<string, string> SlowPercentDict = new Dictionary<string, string>
         {
-            { Russian, "процент замедления" },
-            { English, "slow percentage" },
-            { Turkish, "yavaşlatma yüzdesi" },
+            { Russian, "Процент Замедления" },
+            { English, "Slow Percentage" },
+            { Turkish, "Yavaşlatma Yüzdesi" },
         };
 
         private static readonly Dictionary<string, string> AttackRangeDict = new Dictionary<string, string>
         {
-            { Russian, "дальность атаки" },
-            { English, "attack range" },
-            { Turkish, "saldırı menzili" },
+            { Russian, "Дальность Атаки" },
+            { English, "Attack Range" },
+            { Turkish, "Saldırı Menzili" },
         };
 
         private static readonly Dictionary<string, string> FlightDistanceDict = new Dictionary<string, string>
         {
-            { Russian, "дальность полёта" },
-            { English, "flight distance" },
-            { Turkish, "uçuş mesafesi" },
+            { Russian, "Дальность Полёта" },
+            { English, "Flight Distance" },
+            { Turkish, "Uçuş Mesafesi" },
         };
 
         private static readonly Dictionary<string, string> CooldownDict = new Dictionary<string, string>
         {
-            { Russian, "перезарядка" },
-            { English, "cooldown" },
-            { Turkish, "bekleme süresi" },
+            { Russian, "Перезарядка" },
+            { English, "Cooldown" },
+            { Turkish, "Bekleme Süresi" },
         };
 
         private static readonly Dictionary<string, string> HitCountDict = new Dictionary<string, string>
         {
-            { Russian, "количество ударов" },
-            { English, "hit count" },
-            { Turkish, "vuruş sayısı" },
+            { Russian, "Количество Ударов" },
+            { English, "Hit Count" },
+            { Turkish, "Vuruş Sayısı" },
         };
 
         private static readonly Dictionary<string, string> BouncesCountDict = new Dictionary<string, string>
         {
-            { Russian, "количество отскоков" },
-            { English, "bounces count" },
-            { Turkish, "zıplama sayısı" },
+            { Russian, "Количество Отскоков" },
+            { English, "Bounces Count" },
+            { Turkish, "Zıplama Sayısı" },
         };
 
         private static readonly Dictionary<string, string> CooldownPerHitDict = new Dictionary<string, string>
         {
-            { Russian, "перезарядка за удар" },
-            { English, "cooldown per hit" },
-            { Turkish, "vuruş başına bekleme" },
+            { Russian, "Перезарядка За Удар" },
+            { English, "Cooldown Per Hit" },
+            { Turkish, "Vuruş Başına Bekleme" },
         };
 
         private static readonly Dictionary<string, string> BounceRangeDict = new Dictionary<string, string>
         {
-            { Russian, "радиус отскока" },
-            { English, "bounce range" },
-            { Turkish, "zıplama menzili" },
+            { Russian, "Радиус Отскока" },
+            { English, "Bounce Range" },
+            { Turkish, "Zıplama Menzili" },
         };
 
         private static readonly Dictionary<string, string> RadiusDict = new Dictionary<string, string>
         {
-            { Russian, "радиус" },
-            { English, "radius" },
-            { Turkish, "yarıçap" },
+            { Russian, "Радиус" },
+            { English, "Radius" },
+            { Turkish, "Yarıçap" },
         };
 
         private static readonly Dictionary<string, string> RotationSpeedDict = new Dictionary<string, string>
         {
-            { Russian, "скорость вращения" },
-            { English, "rotation speed" },
-            { Turkish, "dönüş hızı" },
+            { Russian, "Скорость Вращения" },
+            { English, "Rotation Speed" },
+            { Turkish, "Dönüş Hızı" },
         };
 
         private static readonly Dictionary<string, string> IncreaseValueDict = new Dictionary<string, string>
         {
-            { Russian, "значение увеличения" },
-            { English, "increase value" },
-            { Turkish, "artış değeri" },
+            { Russian, "Значение Увеличения" },
+            { English, "Increase Value" },
+            { Turkish, "Artış Değeri" },
         };
 
         private static readonly Dictionary<string, string> CountDict = new Dictionary<string, string>
         {
-            { Russian, "количество" },
-            { English, "count" },
-            { Turkish, "saymak" },
+            { Russian, "Количество" },
+            { English, "Count" },
+            { Turkish, "Sayı" },
         };
 
         private static readonly Dictionary<string, string> MultiplierDict = new Dictionary<string, string>
         {
-            { Russian, "Множитель к" },
-            { English, "Multiplier to" },
-            { Turkish, "Çarpan" },
+            { Russian, "Множитель К" },
+            { English, "Multiplier To" },
+            { Turkish, "Çarpan:" },
         };
 
         private static readonly Dictionary<string, string> MaxLevelDict = new Dictionary<string, string>
         {
-            { Russian, "Макс. уровень" },
+            { Russian, "Макс. Уровень" },
             { English, "Max Level" },
             { Turkish, "Maks Seviye" },
         };
 
         private static readonly Dictionary<string, string> ShopDict = new Dictionary<string, string>
         {
-            { Russian, "Maгазин" },
+            { Russian, "Магазин" },
             { English, "Shop" },
             { Turkish, "Mağaza" },
         };
@@ -508,13 +587,21 @@ namespace BigBalls.Localization
 
         private static readonly Dictionary<string, string> MaxMoveSpeedMultiplyerDict = new Dictionary<string, string>
         {
-            { Russian, "Предельная скорость" },
-            { English, "Maximum speed" },
-            { Turkish, "Marjinal hız" },
+            { Russian, "Предельная Скорость" },
+            { English, "Maximum Speed" },
+            { Turkish, "Marjinal Hız" },
         };
 
-
         public static string ExplosionDamage => GetText(ExplosionDamageDict);
+        public static string Cards => GetText(CardsDict);
+        public static string Gold => GetText(GoldDict);
+        public static string Merge => GetText(MergeDict);
+        public static string ArmorReduction => GetText(ArmorReductionDict);
+        public static string EarthquakeDamage => GetText(EarthquakeDamageDict);
+        public static string LightningDamage => GetText(LightningDamageDict);
+        public static string LevelUP => GetText(LevelUPDict);
+        public static string Vampirism => GetText(VampirismDict);
+        public static string New => GetText(NewDict);
         public static string MaxMoveSpeedMultiplyer => GetText(MaxMoveSpeedMultiplyerDict);
         public static string StartBallMoveSpeed => GetText(StartBallMoveSpeedDict);
         public static string AddMoveSpeedPerHit => GetText(AddMoveSpeedPerHitDict);
@@ -526,12 +613,12 @@ namespace BigBalls.Localization
         public static string FreezeDuration => GetText(FreezeDurationDict);
         public static string BurnDPS => GetText(BurnDPSDict);
         public static string SlowPercent => GetText(SlowPercentDict);
-
+        public static string EXP => GetText(EXPDict);
         public static string NoBestScore => GetText(NoBestScoreDict);
-
         public static string Damage => GetText(DamageDict);
         public static string LaserDamage => GetText(LaserDamageDict);
         public static string DamageMultiply => GetText(DamageMultiplyDict);
+        public static string Locked => GetText(LockedDict);
 
         public static string AttackDelay => GetText(AttackDelayDict);
 
@@ -567,13 +654,13 @@ namespace BigBalls.Localization
 
         private static string CurrentLanguage => YG2.lang;
 
-        public static string GetEntityTypeText(EntityType type) => GetLocalizedText(type, EntityTypeDict);
+        public static string GetEntityTypeText (EntityType type) => GetLocalizedText(type, EntityTypeDict);
 
-        public static string GetWindowTypeText(WindowType type) => GetLocalizedText(type, WindowTypeDict);
+        public static string GetWindowTypeText (WindowType type) => GetLocalizedText(type, WindowTypeDict);
 
-        public static string GetStatTypeText(StatType type) => GetLocalizedText(type, StatTypeDict);
+        public static string GetStatTypeText (StatType type) => GetLocalizedText(type, StatTypeDict);
 
-        private static string GetLocalizedText<T>(T key, Dictionary<T, Dictionary<string, string>> dict)
+        private static string GetLocalizedText<T> (T key, Dictionary<T, Dictionary<string, string>> dict)
         {
             if (dict.TryGetValue(key, out var translations))
             {
@@ -591,7 +678,7 @@ namespace BigBalls.Localization
             return key.ToString();
         }
 
-        private static string GetText(Dictionary<string, string> dict)
+        private static string GetText (Dictionary<string, string> dict)
         {
             if (dict.TryGetValue(CurrentLanguage, out string value))
             {

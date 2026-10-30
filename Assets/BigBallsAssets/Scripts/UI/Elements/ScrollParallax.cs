@@ -26,9 +26,6 @@ public class ScrollParallax : MonoBehaviour
 
         if (_scrollRect == null || _scrollRect.content == null)
         {
-            Debug.LogError(
-                "ScrollParallax: назначьте ScrollRect с Content.",
-                this);
             enabled = false;
             return;
         }

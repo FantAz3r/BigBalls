@@ -28,6 +28,9 @@ namespace BigBalls.Infrastructure
         private readonly IDropService _dropService;
         private readonly BallRepository _ballsRepository;
         private readonly ArtefactsRepository _artefactsRepository;
+        private readonly WeaponRepository _weaponRepository;
+        private readonly ArmorRepository _armorRepository;
+        private readonly HelmetRepository _helmetRepository;
         private readonly IWinService _winService;
         private readonly ILouseService _louseService;
         private readonly ICameraProvider _cameraProvider;
@@ -38,6 +41,8 @@ namespace BigBalls.Infrastructure
         private readonly ISoundService _soundService;
         private readonly SoundSpawner _soundSpawner;
         private readonly ILootFactory _lootFactory;
+        private readonly IDeviceService _deviceService;
+
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfigs;
         private LevelID _currentLevel;
@@ -58,16 +63,20 @@ namespace BigBalls.Infrastructure
             IDropService dropService,
             BallRepository ballsRepository,
             ArtefactsRepository artefactsRepository,
+            WeaponRepository weaponRepository,
+            ArmorRepository armorRepository,
+            HelmetRepository helmetRepository,
             IWinService winService,
             ILouseService louseService,
             ICameraProvider cameraProvider,
             ISaveService saveService,
-            IInputService inputService,
+            InputServiceAdapter inputServiceAdapter,
             ISceneContainerProvider sceneContainerProvider,
             IWalletModel walletModel,
             ISoundService soundService,
             SoundSpawner soundSpawner,
-            ILootFactory lootFactory)
+            ILootFactory lootFactory,
+            IDeviceService deviceService)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -81,38 +90,53 @@ namespace BigBalls.Infrastructure
             _tileMover = tileMover;
             _levelTimeline = levelTimeline;
             _dropService = dropService;
+
             _ballsRepository = ballsRepository;
             _artefactsRepository = artefactsRepository;
+            _weaponRepository = weaponRepository;
+            _armorRepository = armorRepository;
+            _helmetRepository = helmetRepository;
+
             _winService = winService;
             _louseService = louseService;
             _cameraProvider = cameraProvider;
             _saveService = saveService;
-            _inputService = inputService;
+            _inputService = inputServiceAdapter.Get();
             _sceneContainerProvider = sceneContainerProvider;
             _walletModel = walletModel;
             _soundService = soundService;
             _soundSpawner = soundSpawner;
             _lootFactory = lootFactory;
+            _deviceService = deviceService;
         }
+
+        public bool IsGameStarted { get; private set; }
 
         public void Enter(LevelID level)
         {
             _currentLevel = level;
+            _saveService.GameProgress.Level = (int) _currentLevel;
             _windowService.CreateUIRoot();
             _windowService.Open<MainMenu>();
+
             _uIFactory.UIRoot.GlobalWalletView.Enable();
+
             _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
             _currentEnemyConfigs = _levelConfig.GetAllLevelEnemies();
             _tileGenerator.StartSpawn(_levelConfig);
 
             _poolService.SetCurrentLevelConfig(_currentEnemyConfigs, _levelConfig);
             _poolService.InitializePools();
+
             Camera camera = CreateCamera();
             CameraOrbit cameraOrbit = camera.GetComponent<CameraOrbit>();
             cameraOrbit = camera.GetComponent<CameraOrbit>();
             Player player = _playerFactory.Create();
             cameraOrbit.StartOrbit(player.transform);
             _dropService.SetCurrentLevelConfig(_currentEnemyConfigs);
+
+            _uIFactory.Get<CardInventory>(WindowType.Inventory);
+            _uIFactory.Get<SettingsView>(WindowType.Settings);
 
             _soundSpawner.Enable();
         }
@@ -131,13 +155,20 @@ namespace BigBalls.Infrastructure
             _levelTimeline.Start(_levelConfig);
             _winService.SetLevel(_currentLevel);
             _louseService.SetLevel(_currentLevel);
-            CreateUI();
+            CreateGameUI();
+            IsGameStarted = true;
         }
 
         private void OnCameraReplaced()
         {
             RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
             colliderPlacer.PlaceWalls();
+
+            if (_deviceService.IsDecktop == false)
+            {
+                _windowService.CreateJoystick(_inputService);
+            }
+
             _tileMover.Start();
 
             _inputService.Start();
@@ -155,7 +186,7 @@ namespace BigBalls.Infrastructure
             return camera;
         }
 
-        private void CreateUI()
+        private void CreateGameUI()
         {
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
@@ -164,6 +195,9 @@ namespace BigBalls.Infrastructure
 
         public void Exit()
         {
+            IsGameStarted = false;
+
+            _inputService.Dispose();
             _lootFactory.Disable();
             _tileMover.Stop();
             _levelTimeline.Stop();
@@ -174,10 +208,11 @@ namespace BigBalls.Infrastructure
             _poolService.ClearAllPools();
             _walletModel.PutAccumulatedCoins();
 
-            _saveService.Save();
             _ballsRepository.Save();
             _artefactsRepository.Save();
-            _ballsRepository.Save();
+            _weaponRepository.Save();
+            _armorRepository.Save();
+            _helmetRepository.Save();
             _saveService.Save();
 
             _uIFactory.ClearCache();

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using BigBalls.Infrastructure.DI;
+using BigBalls.Localization;
 using BigBalls.Services;
 using BigBalls.UI;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using VContainer;
@@ -21,6 +23,7 @@ public class CardSelectionMenu : PauseWindow
     private CardSelector _selector;
     private List<ICardModel> _currentCards;
 
+    private IUIFactory _uIFactory;
     private IWindowService _windowService;
     private ITimeService _timeService;
     private IObjectResolverProvider _objectResolverProvider;
@@ -57,12 +60,14 @@ public class CardSelectionMenu : PauseWindow
     [Inject]
     public void Construct (
         IWindowService windowService,
+        IUIFactory uIFactory,
         IResourceLoader resourceLoader,
         CardSelector cardSelector,
         IObjectResolverProvider objectResolverProvider,
         IPlayerExperience playerExperienceModel,
         ITimeService timeService)
     {
+        _uIFactory = uIFactory;
         _objectResolverProvider = objectResolverProvider;
         _windowService = windowService;
         _selector = cardSelector;
@@ -74,12 +79,14 @@ public class CardSelectionMenu : PauseWindow
     public void Init (PlayerCardHolder playerCardHolder)
     {
         _playerCardHolder = playerCardHolder;
+        _selector.Init(_playerCardHolder);
     }
 
     public void OpenMenu ()
     {
-        Open();
-        _levelText.text = (_playerExperience.Stat.CurrentValue + 1).ToString();
+        _uIFactory.Get<HUD>(WindowType.HUD).Close();
+        base.Open();
+        _levelText.text = $"{TextLocalizator.LevelUP} {_playerExperience.Level + 1}";
 
         if (_currentCards == null)
         {
@@ -172,6 +179,7 @@ public class CardSelectionMenu : PauseWindow
                 _cardsButtons[i].Render(cards[i]);
                 _cardsButtons[i].PlayAppear(delay: i * _appearStagger);
                 _cardsButtons[i].Selected += CloseMenu;
+                _cardsButtons[i].Rewarded += Rerender;
             }
             else
             {
@@ -195,6 +203,12 @@ public class CardSelectionMenu : PauseWindow
         return cards;
     }
 
+    private void Rerender ()
+    {
+        foreach (CardView card in _cardsButtons)
+            card.Render(card.Model);
+    }
+
     private void DestroyCards ()
     {
         if (_cardsButtons == null)
@@ -204,6 +218,7 @@ public class CardSelectionMenu : PauseWindow
         {
             if (cardButton == null) continue;
             cardButton.Selected -= CloseMenu;
+            cardButton.Rewarded -= Rerender;
             cardButton.PlayDisappear();
         }
 
@@ -215,7 +230,7 @@ public class CardSelectionMenu : PauseWindow
     {
         Close();
         _timeService.SmoothReduceTimescale(0, 0);
-        _windowService.Open<HUD>();
+        _uIFactory.Get<HUD>(WindowType.HUD).Open();
         _timeService.SmoothRecoverTimescale(1);
     }
 }

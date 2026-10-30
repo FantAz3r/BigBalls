@@ -68,8 +68,8 @@ public class UpgradePanel : MonoBehaviour
 
         gameObject.SetActive(true);
         _upgradeButton.Clicked -= Upgrade;
-        _upgradeButton.Clicked += Upgrade;
         _upgradeButton.Init(_cardModel);
+        _upgradeButton.Clicked += Upgrade;
 
         if (_cardModel.NoneGameLevel == _cardModel.MaxNoneGameLevel)
         {
@@ -173,7 +173,6 @@ public class UpgradePanel : MonoBehaviour
             {
                 _upgradeButton.gameObject.SetActive(false);
                 _maxLevelText.gameObject.SetActive(true);
-                return;
             }
 
             if (isUpgradeComplite == false)

@@ -29,7 +29,6 @@ public class SoundService : ISoundService
     {
         foreach (var item in _soundObjects.ToList())
         {
-            Debug.Log(item.name);
             item.StopSound();
         }
     }

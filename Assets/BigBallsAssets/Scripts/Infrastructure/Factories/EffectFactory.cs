@@ -28,6 +28,10 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.ElasticBand] = CreateElasticBand,
                 [BehaviourType.EarthShake] = CreateEarthShake,
                 [BehaviourType.Laser] = CreateLaser,
+                [BehaviourType.Magnet] = CreateMagnet,
+                [BehaviourType.Horn] = CreateHorn,
+                [BehaviourType.VimpireKnife] = CreateVimpireKnife,
+                [BehaviourType.Lava] = CreateLava,
             };
         }
 
@@ -59,9 +63,13 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateFireEffect(EffectConfig config, int level) => new Fire(config as FireConfig, level);
         private EffectBehaviour CreateIceEffect(EffectConfig config, int level) => new Ice(config as IceConfig, level);
         private EffectBehaviour CreateBomb(EffectConfig config, int level) => new Bomb (config as BombConfig, level);
-        private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Tunder(config as TunderConfig, level);
+        private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Thunder(config as ThunderConfig, level);
         private EffectBehaviour CreateElasticBand(EffectConfig config, int level) => new ElasticBand(config as ElasticBandConfig, level);
         private EffectBehaviour CreateEarthShake(EffectConfig config, int level) => new EarthShake(config as GroundBallConfig, level);
         private EffectBehaviour CreateLaser(EffectConfig config, int level) => new LineLaser(config as LaserConfig, level);
+        private EffectBehaviour CreateMagnet(EffectConfig config, int level) => new Magnet(config as MagnetConfig, level);
+        private EffectBehaviour CreateHorn(EffectConfig config, int level) => new Horn(config as HornConfig, level);
+        private EffectBehaviour CreateVimpireKnife (EffectConfig config, int level) => new VimpireKnife(config as VimpireKnifeConfig, level);
+        private EffectBehaviour CreateLava (EffectConfig config, int level) => new Lava(config as LavaConfig, level);
     }
 }

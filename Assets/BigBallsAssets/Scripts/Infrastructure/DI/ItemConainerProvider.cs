@@ -14,9 +14,9 @@ namespace BigBalls.Providers
         public event Action<ArmorModel> ArmorSeted;
         public event Action<HelmetModel> HelmetSeted;
 
-        public event Action WeaponRemoved;
-        public event Action ArmorRemoved;
-        public event Action HelmetRemoved;
+        public event Action<WeaponModel> WeaponRemoved;
+        public event Action<ArmorModel>  ArmorRemoved;
+        public event Action<HelmetModel> HelmetRemoved;
 
         public void Add (ICardModel item)
         {
@@ -36,26 +36,30 @@ namespace BigBalls.Providers
                 Armor = armor;
                 ArmorSeted?.Invoke(Armor);
             }
+
+            item.AddToPlayer();
         }
 
         public void Remove (ICardModel item)
         {
             if (item is WeaponModel)
             {
+                WeaponRemoved?.Invoke(Gun);
                 Gun = null;
-                WeaponRemoved?.Invoke();
 
             }
             else if (item is HelmetModel)
             {
-                HelmetRemoved?.Invoke();
+                HelmetRemoved?.Invoke(Helmet);
                 Helmet = null;
             }
             else if (item is ArmorModel)
             {
+                ArmorRemoved?.Invoke(Armor);
                 Armor = null;
-                ArmorRemoved?.Invoke();
             }
+
+            item.RemoveFromPlayer();
         }
     }
 }

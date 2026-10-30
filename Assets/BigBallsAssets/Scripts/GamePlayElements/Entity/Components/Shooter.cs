@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using BigBalls.Configs;
 using BigBalls.Services;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 using Random = UnityEngine.Random;
@@ -31,8 +31,7 @@ namespace BigBalls.GameplayObjects
             Stat attackSpeed,
             Stat accuracy,
             Cannon cannon,
-            IBallContainer ballContainer
-            )
+            IBallContainer ballContainer)
         {
             _attackDelay = new WaitForSeconds(1 / attackSpeed.CurrentValue);
             _cannon = cannon;
@@ -43,11 +42,11 @@ namespace BigBalls.GameplayObjects
         public event Action Shooted;
 
         [Inject]
-        public void Construct (ICoroutineRunner coroutineRunner, PlayerAttackService playerAttackService, IInputService inputService, SoundSpawner soundSpawner)
+        public void Construct (ICoroutineRunner coroutineRunner, PlayerAttackService playerAttackService, InputServiceAdapter inputServiceAdapter, SoundSpawner soundSpawner)
         {
             _playerAttackService = playerAttackService;
             _coroutineRunner = coroutineRunner;
-            _inputService = inputService;
+            _inputService = inputServiceAdapter.Get();
             _soundSpawner = soundSpawner;
         }
 
@@ -69,13 +68,14 @@ namespace BigBalls.GameplayObjects
 
         public void Unsubscribe ()
         {
-            if (_shootRoutine != null && _coroutineRunner != null)
+            if (_coroutineRunner != null && _coroutineRunner is UnityEngine.Object obj && obj != null)
             {
-                _coroutineRunner.StopCoroutine(_shootRoutine);
-                _shootRoutine = null;
-                _canShoot = false;
+                try { _coroutineRunner.StopCoroutine(_shootRoutine); }
+                catch (MissingReferenceException) {}
             }
 
+            _shootRoutine = null;
+            _canShoot = false;
             _inputService.Attack -= HandleShoot;
         }
 

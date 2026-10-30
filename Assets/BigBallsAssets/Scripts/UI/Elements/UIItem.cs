@@ -13,6 +13,10 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
     private Canvas _mainCanvas;
     private Transform _previousParent;
     private Slot _previousSlot;
+    private bool _dropHandled;
+    public Slot SourceSlot { get; private set; }
+
+    public void SetSourceSlot (Slot slot) => SourceSlot = slot;
 
     [field: SerializeField] public Image SlotImag { get; private set; }
     [field: SerializeField] public TMP_Text ItemLevelText { get; private set; }
@@ -58,6 +62,8 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
         _previousParent = transform.parent;
         _previousSlot = _previousParent.GetComponent<Slot>();
+        SourceSlot = _previousSlot;
+        _dropHandled = false;
 
         transform.SetParent(_inventory);
         transform.SetAsLastSibling();
@@ -66,36 +72,17 @@ public class UIItem : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHa
 
     public void OnEndDrag (PointerEventData eventData)
     {
-        Slot newSlot = null;
+        _canvasGroup.blocksRaycasts = true;
 
-        if (transform.parent != null)
-        {
-            newSlot = transform.parent.GetComponent<Slot>();
-        }
+        if (_dropHandled)
+            return;
 
-        if (newSlot == null || newSlot.CurrentItem != null)
+        if (_previousParent != null)
         {
             transform.SetParent(_previousParent);
             transform.localPosition = Vector3.zero;
         }
-        else
-        {
-            if (_previousSlot != null && _previousSlot != newSlot)
-            {
-                _previousSlot.RemoveItem(this);
-                newSlot.AddItem(this);
-
-                if (_previousSlot.CurrentImage != null)
-                {
-                    _previousSlot.CurrentImage.enabled = true;
-                }
-            }
-            else if (_previousSlot == newSlot)
-            {
-                transform.localPosition = Vector3.zero;
-            }
-        }
-
-        _canvasGroup.blocksRaycasts = true;
     }
+
+    public void MarkDropHandled () => _dropHandled = true;
 }

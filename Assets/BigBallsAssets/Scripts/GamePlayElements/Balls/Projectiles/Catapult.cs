@@ -1,7 +1,7 @@
+using System.Collections;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
 using DG.Tweening;
-using System.Collections;
 using UnityEngine;
 using Utils;
 using VContainer;
@@ -32,27 +32,27 @@ public class Catapult : Enemy
     private bool _canShoot = true;
 
     [Inject]
-    public void Construct(IPlayerProvider playerProvider, IPoolService poolService, ICoroutineRunner coroutineRunner)
+    public void Construct (IPlayerProvider playerProvider, IPoolService poolService, ICoroutineRunner coroutineRunner)
     {
         _coroutineRunner = coroutineRunner;
         _poolService = poolService;
         _playerProvider = playerProvider;
     }
 
-    protected override void ChildInit()
+    protected override void ChildInit ()
     {
         _damageStat = StatHolder[StatType.Damage];
         _attackSpeedStat = StatHolder[StatType.AttackSpeed];
         _coroutine = _coroutineRunner.StartCoroutine(AttackLoop());
     }
 
-    private void OnDisable()
+    private void OnDisable ()
     {
-        if (_coroutine != null)
+        if (_coroutineRunner != null && _coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
     }
 
-    private IEnumerator AttackLoop()
+    private IEnumerator AttackLoop ()
     {
         while (_canShoot)
         {
@@ -72,20 +72,20 @@ public class Catapult : Enemy
             yield return new WaitForSeconds(_shotTime);
         }
     }
-    private Tween AnimateReload(float duration)
+    private Tween AnimateReload (float duration)
     {
         _leverTransform.localRotation = Quaternion.Euler(_leverStartAngle, 0, 0);
         return _leverTransform.DOLocalRotate(new Vector3(_leverEndAngle, 0, 0), duration)
             .SetEase(Ease.Linear);
     }
 
-    private Tween AnimateShot()
+    private Tween AnimateShot ()
     {
         return _leverTransform.DOLocalRotate(new Vector3(_leverStartAngle, 0, 0), _shotTime)
             .SetEase(Ease.Linear);
     }
 
-    private void PerformShot()
+    private void PerformShot ()
     {
         if (_playerProvider == null)
             return;
@@ -110,7 +110,7 @@ public class Catapult : Enemy
            .SetEase(Ease.Linear);
     }
 
-    private void OnProjectileReturn(CatapultProjectile projectile)
+    private void OnProjectileReturn (CatapultProjectile projectile)
     {
         _poolService.Release(projectile);
         projectile.OnProjectileReturned -= OnProjectileReturn;

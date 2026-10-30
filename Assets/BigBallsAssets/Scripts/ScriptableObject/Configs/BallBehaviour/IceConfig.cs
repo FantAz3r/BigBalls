@@ -16,14 +16,18 @@ namespace BigBalls.StaticData
         public Color FreezeColor;
         public float FreezeDuration = 3;
         public float SlowPercent = 0.2f;
+        public float StartArmorReduction = 5;
 
         public float FreezeDurationPerLevel = 1;
         public float SlowPercentPerLevel = 0.05f;
+        public float ArmorReductionPerLevel = 2.5f;
+
 
         public override BehaviourType Type => BehaviourType.Freeze;
 
         public float GetFreezeDuration(int level) => Math.Additive(FreezeDuration, FreezeDurationPerLevel, level);
         public float GetSlowPercent(int level) => Math.Additive(SlowPercent, SlowPercentPerLevel, level);
+        public float GetArmorReduction (int level) => Math.Additive(StartArmorReduction, ArmorReductionPerLevel, level);
 
         public override List<ItemStat> GetStats(int level)
         {
@@ -32,7 +36,8 @@ namespace BigBalls.StaticData
             return new List<ItemStat>()
             {
                 new ItemStat(TextLocalizator.FreezeDuration, GetFreezeDuration(level), GetFreezeDuration(nextLevel)),
-                new ItemStat(TextLocalizator.SlowPercent, GetSlowPercent(level), GetSlowPercent(nextLevel))
+                new ItemStat(TextLocalizator.SlowPercent, GetSlowPercent(level), GetSlowPercent(nextLevel)),
+                new ItemStat(TextLocalizator.ArmorReduction, GetArmorReduction(level), GetArmorReduction(nextLevel))
             };
         }
     }

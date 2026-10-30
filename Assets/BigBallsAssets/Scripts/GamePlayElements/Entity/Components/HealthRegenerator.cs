@@ -38,10 +38,10 @@ namespace BigBalls.GameplayObjects
         {
             if (_canRegen)
             {
-                if(_health.CurrentValue < _health.MaxValue)
-                {
-                    _health.AddCurrentValue(_healthRegen.CurrentValue * Time.deltaTime);
-                }
+                //if(_health.CurrentValue < _health.MaxValue)
+                //{
+                //    _health.AddCurrentValue(_healthRegen.CurrentValue * Time.deltaTime);
+                //}
             }
         }
     }

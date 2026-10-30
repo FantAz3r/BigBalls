@@ -60,17 +60,18 @@ public class MergeWindow : MonoBehaviour
     {
         foreach (var ball in _mergeService.GetAvailableMerges())
         {
-            var slot = _poolService.Get(_slotPrefab, _slotsRoot);
-            slot.Init(_cardHolder);
-            slot.Render(ball);
-            slot.Selected += OnMergeClicked;
-            _spawned.Add(slot);
+            var card = _poolService.Get(_slotPrefab, _slotsRoot);
+            card.Init(_cardHolder);
+            card.Render(ball);
+            card.Selected += OnMergeClicked;
+            card.AdvButton.gameObject.SetActive(false);
+            _spawned.Add(card);
         }
     }
 
     private void OnMergeClicked (CardView target)
     {
-        if (target.Card is not BallModel ballModel)
+        if (target.Model is not BallModel ballModel)
             return;
 
         Close();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using BigBalls.Localization;
 using BigBalls.Services;
 using BigBalls.UI;
 using DG.Tweening;
@@ -12,14 +13,21 @@ using VContainer;
 
 public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    private const string CardReward = "CardReward";
+
     [SerializeField] private Image _image;
     [SerializeField] private Image _background;
     [SerializeField] private TMP_Text _name;
     [SerializeField] private TMP_Text _level;
+    [SerializeField] private TMP_Text _descrioptionText;
+    [SerializeField] private Image _descrioptionPanel;
+    [SerializeField] private Toggle _toggle;
+    [SerializeField] private AddButton _advButton;
+
     [SerializeField] private RectTransform _statsParent;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private SoundStruct _appearSpound;
-    [SerializeField] private SerializedDictionary<Rarity,Color> _colorMap = new(); 
+    [SerializeField] private SerializedDictionary<Rarity, Color> _colorMap = new();
 
     [Header("Appear/Disappear Animation")]
     [SerializeField] private float _appearDuration = 0.3f;
@@ -35,7 +43,7 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private float _hoverOffsetY = 8f;
 
     private IPoolService _poolService;
-    private ITranslateService _translateService;
+    private IADVServise _advServise;
     private PlayerCardHolder _playerCardHolder;
     private StatTextHolder _statTextHolder;
     private List<StatTextHolder> _statTextHolders = new();
@@ -46,16 +54,18 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
     private bool _isHovered;
     private bool _isAnimating;
 
-    public ICardModel Card { get; private set; }
 
     public event Action<CardView> Selected;
+    public event Action Rewarded;
+    public ICardModel Model { get; private set; }
+    public AddButton AdvButton => _advButton;
 
     [Inject]
-    public void Construct (ITranslateService translateService, IResourceLoader resourceLoader, IPoolService poolService, SoundSpawner soundSpawner)
+    public void Construct (IResourceLoader resourceLoader, IPoolService poolService, SoundSpawner soundSpawner, IADVServise advServise)
     {
         _poolService = poolService;
         _soundSpawner = soundSpawner;
-        _translateService = translateService;
+        _advServise = advServise;
         _statTextHolder = resourceLoader.Load<StatTextHolder>();
     }
 
@@ -83,26 +93,35 @@ public class CardView : ButtonClickHandler, IPointerEnterHandler, IPointerExitHa
     public void Render (ICardModel card)
     {
         ClearStats();
-        Card = card;
+        Model = card;
         _background.color = _colorMap[card.Config.Rarity];
         _image.sprite = card.Config.Icon;
         _name.text = card.Name;
-        _level.text = card.Level.ToString();
+        _level.text = card.HasPlayer ? (card.Level + 1).ToString() : TextLocalizator.New;
+        _toggle.isOn = card.HasPlayer == false;
+        _descrioptionPanel.gameObject.SetActive(card.HasPlayer == false);
+
+        _advButton.gameObject.SetActive(_advServise.CanShowRewardADV(CardReward));
+        _advButton.SetRewardAction(SelectCard, CardReward);
+
+        _descrioptionText.text = card.Description;
         RenderStats(card);
     }
 
     public void SelectCard ()
     {
-        if (Card.HasPlayer == false)
+        if (Model.HasPlayer == false)
         {
-            _playerCardHolder.Add(Card);
-            Card.AddToPlayer();
-            //Card.Upgrade();
+            _playerCardHolder.Add(Model);
+            Model.AddToPlayer();
         }
         else
         {
-            Card.Upgrade();
+            Model.Upgrade();
         }
+
+        Rewarded?.Invoke();
+        transform.gameObject.SetActive(false);
     }
 
     public void PlayAppear (float delay = 0f)

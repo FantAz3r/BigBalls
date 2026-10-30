@@ -77,7 +77,7 @@ public class SplitingWindow : MonoBehaviour
         minCount = 0;
         maxCount = 0;
         cards = _cardHolder.Cards
-           .Where(card => card.MaxNoneGameLevel - card.InGameLevel > 0)
+           .Where(card => card.MaxInGameLevel > card.InGameLevel)
            .ToList();
 
         if (cards.Count == 0)
@@ -85,7 +85,8 @@ public class SplitingWindow : MonoBehaviour
             return false;
         }
 
-        int availableLevels = cards.Sum(card => card.MaxNoneGameLevel - card.InGameLevel);
+        int availableLevels = cards.Sum(card => card.MaxInGameLevel - card.InGameLevel);
+        Debug.Log(availableLevels);
 
         maxCount = Mathf.Min(_maxUpgrades, availableLevels);
         minCount = Mathf.Max(_minUpgrades, maxCount - _spawnCountOffset);
@@ -99,21 +100,27 @@ public class SplitingWindow : MonoBehaviour
         if (CalculateCardsCount(out int minCount, out int maxCount, out List<ICardModel> cards) == false)
         {
             ShowGoldReward();
+            return;
+        }
+
+        var upgradePool = new List<ICardModel>();
+        foreach (var card in cards)
+        {
+            int free = card.MaxInGameLevel - card.InGameLevel;
+            for (int i = 0; i < free; i++)
+                upgradePool.Add(card);
         }
 
         int totalUpgrades = Random.Range(minCount, maxCount + 1);
-        var selectedCards = new List<ICardModel>();
+        totalUpgrades = Mathf.Min(totalUpgrades, upgradePool.Count);
+
+        var selectedCards = new List<ICardModel>(totalUpgrades);
 
         for (int i = 0; i < totalUpgrades; i++)
         {
-            var candidates = cards
-                .Where(card => card.MaxNoneGameLevel - card.InGameLevel > 0)
-                .ToList();
-
-            if (candidates.Count == 0)
-                break;
-
-            ICardModel target = candidates[Random.Range(0, candidates.Count)];
+            int idx = Random.Range(0, upgradePool.Count);
+            ICardModel target = upgradePool[idx];
+            upgradePool.RemoveAt(idx);
 
             target.Upgrade();
             selectedCards.Add(target);

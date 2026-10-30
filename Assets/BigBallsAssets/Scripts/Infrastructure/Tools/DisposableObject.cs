@@ -1,9 +1,11 @@
 using System;
+using UnityEngine;
 
 public class DisposableObject : IDisposable
 {
     private readonly Action _action;
     private bool _disposed;
+
     public DisposableObject(Action action)
     {
         _action = action;

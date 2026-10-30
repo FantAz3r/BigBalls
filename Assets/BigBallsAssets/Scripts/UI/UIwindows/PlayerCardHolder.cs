@@ -2,21 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using BigBalls.GameplayObjects;
+using BigBalls.Providers;
 using BigBalls.StaticData;
 
 public class PlayerCardHolder
 {
     private readonly IBallContainer _ballContainer;
     private readonly IArtefactContainer _artefactContainer;
+    private readonly IItemConainerProvider _itemConainer;
     private readonly List<ICardModel> _cards = new();
     private readonly Dictionary<ItemModel, List<ICardModel>> _itemCards = new();
-
+    private bool _canEnable;
     private List<BallModel> _balls = new();
+    private List<ArtefactModel> _artefacts = new();
 
-    public PlayerCardHolder (IBallContainer ballContainer, IArtefactContainer artefactContainer)
+    public PlayerCardHolder (IBallContainer ballContainer, IArtefactContainer artefactContainer, IItemConainerProvider itemConainer)
     {
         _ballContainer = ballContainer;
         _artefactContainer = artefactContainer;
+        _itemConainer = itemConainer;
+
+        _itemConainer.HelmetSeted += AddItem;
+        _itemConainer.WeaponSeted += AddItem;
+        _itemConainer.HelmetRemoved += RemoveItem;
+        _itemConainer.WeaponRemoved += RemoveItem;
     }
 
     public event Action<ICardModel> CardAdded;
@@ -27,7 +36,29 @@ public class PlayerCardHolder
 
     public int ArtefactCount { get; private set; }
     public IEnumerable<BallModel> Balls => _balls;
+    public IEnumerable<ArtefactModel> Artefacts => _artefacts;
     public IReadOnlyList<ICardModel> Cards => _cards;
+
+
+    public void Init()
+    {
+        _canEnable = true;
+
+        foreach (var card in _cards)
+        {
+            if (card is BallModel ball)
+            {
+                if (_ballContainer.Balls.Contains(ball))
+                    return;
+
+                _ballContainer.AddUniqueBall(ball);
+            }
+            else if (card is ArtefactModel artefact)
+            {
+                _artefactContainer.Enable(artefact);
+            }
+        }
+    }
 
     public void AddItem (ItemModel item)
     {
@@ -41,13 +72,13 @@ public class PlayerCardHolder
 
         if (item is WeaponModel weapon)
         {
+            weapon.AddEquipmentLevel();
             foreach (var ball in weapon.UniqueBallModels())
-            {
                 cards.Add(ball);
-            }
         }
         else if (item is HelmetModel helmet)
         {
+            helmet.AddEquipmentLevel();
             foreach (var artefact in helmet.GetArtefacts())
                 cards.Add(artefact);
         }
@@ -60,24 +91,32 @@ public class PlayerCardHolder
         ItemAdded?.Invoke(item);
     }
 
-    public bool RemoveItem (ItemModel item)
+    public void RemoveItem (ItemModel item)
     {
         if (item == null)
-            return false;
+            return;
 
-        if (!_itemCards.TryGetValue(item, out var cards))
-            return false;
+        if (_itemCards.TryGetValue(item, out var cards) == false)
+            return;
 
         foreach (var card in cards.ToList())
             Remove(card);
 
+        if (item is WeaponModel weapon)
+        {
+            weapon.RemoveEquipmentLevel();
+        }
+        else if (item is HelmetModel helmet)
+        {
+            helmet.RemoveEquipmentLevel();
+        }
+
         _itemCards.Remove(item);
         ItemRemoved?.Invoke(item);
-        return true;
+        return;
     }
 
     public bool HasItem (ItemModel item) => item != null && _itemCards.ContainsKey(item);
-
 
     public void Add (ICardModel card)
     {
@@ -91,17 +130,21 @@ public class PlayerCardHolder
         card.Changed += OnCardChanged;
 
         _cards.Add(card);
+        card.AddToPlayer();
 
         if (card is BallModel ball)
         {
             if (_ballContainer.Balls.Contains(ball))
                 return;
             _balls.Add(ball);
-            _ballContainer.AddUniqueBall(ball);
+
+            if(_canEnable)
+                _ballContainer.AddUniqueBall(ball);
         }
         else if (card is ArtefactModel artefact)
         {
-            _artefactContainer.Enable(artefact);
+             if(_canEnable)
+                _artefactContainer.Enable(artefact);
             ArtefactCount++;
         }
 
@@ -118,6 +161,7 @@ public class PlayerCardHolder
 
         card.Upgraded -= OnCardChanged;
         card.Changed -= OnCardChanged;
+        card.RemoveFromPlayer();
 
         if (card is BallModel ball)
         {
@@ -141,6 +185,11 @@ public class PlayerCardHolder
 
     public void Clear ()
     {
+        _itemConainer.HelmetSeted -= AddItem;
+        _itemConainer.WeaponSeted -= AddItem;
+        _itemConainer.HelmetRemoved -= RemoveItem;
+        _itemConainer.WeaponRemoved -= RemoveItem;
+
         foreach (var card in _cards.ToList())
             Remove(card);
 

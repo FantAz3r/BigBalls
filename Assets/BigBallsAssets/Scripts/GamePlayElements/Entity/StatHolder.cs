@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StatHolder : IArtefactUser
@@ -10,7 +10,7 @@ public class StatHolder : IArtefactUser
     private readonly IEntity _owner;
     private readonly IEffectFactory _effectFactory;
 
-    private List<EffectBehaviour> _effectBehaviours;
+    private List<EffectBehaviour> _effectBehaviours = new();
     private Dictionary<StatType, Stat> _stats = new();
     private IEntityConfig _config;
     private IArmor _armor;
@@ -32,13 +32,20 @@ public class StatHolder : IArtefactUser
     public void Set (ArmorModel item)
     {
         _armor = item;
-        InitStats();
+
+        foreach (var stat in _stats)
+        {
+            if (_armor.Stats.ContainsKey(stat.Key))
+            {
+                float currentValue = stat.Value.CurrentValue;
+                stat.Value.ReduceCurrentValue(currentValue);
+                stat.Value.AddCurrentValue(currentValue + _armor.Stats[stat.Key].StartCurrentValue);
+            }
+        }
     }
 
-    public void InitStats()
+    public void InitStats ()
     {
-        _stats.Clear();
-
         foreach (var stat in _config.Stats)
         {
             float maxValue = stat.StartMaxValue;
@@ -51,16 +58,22 @@ public class StatHolder : IArtefactUser
                 currentValue += statStruct.StartCurrentValue;
             }
 
-            _stats.Add(stat.StatType, new Stat(stat.StatType, maxValue, stat.MinValue, currentValue));
+            _stats[stat.StatType] = new Stat(stat.StatType, maxValue, stat.MinValue, currentValue);
         }
     }
 
-    public void AddEffects(ArtefactModel artefactModel)
+    public void AddEffects (ArtefactModel artefactModel)
     {
-        _effectBehaviours.AddRange(_effectFactory.Create(artefactModel.ArtefactConfig.Effects, artefactModel.Level));
+        List<EffectBehaviour> behaviours = _effectFactory.Create(artefactModel.ArtefactConfig.Effects, artefactModel.Level);
+        _effectBehaviours.AddRange(behaviours);
+
+        foreach (EffectBehaviour behaviour in _effectBehaviours)
+        {
+            behaviour.Subscribe(_owner);
+        }
     }
 
-    public bool TryGetStat(out Stat stat, StatType type)
+    public bool TryGetStat (out Stat stat, StatType type)
     {
         stat = null;
 
@@ -75,6 +88,9 @@ public class StatHolder : IArtefactUser
 
     public void RemoveEffects (ArtefactModel artefactModel)
     {
-        //_effectBehaviours.Remove(artefactModel.)
+        foreach (EffectBehaviour behaviour in _effectBehaviours)
+        {
+            behaviour.Subscribe(_owner);
+        }
     }
 }

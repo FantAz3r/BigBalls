@@ -6,7 +6,7 @@ namespace BigBalls.Saves
 
     public class ItemSaveData : CardSaveData
     {
-        public ItemSaveData(int id, bool isOpen, float itemExp, int level = 1) : base(id, isOpen, itemExp, level)
+        public ItemSaveData(int id, bool isOpen, float itemExp, int level = 1, bool hasPlayer = false) : base(id, isOpen, itemExp, level, hasPlayer)
         {
         }
     }

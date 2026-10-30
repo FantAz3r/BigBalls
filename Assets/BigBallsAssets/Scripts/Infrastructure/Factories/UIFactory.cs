@@ -68,9 +68,12 @@ namespace BigBalls.Factories
 
         public ChestItemDropView CreateChestWindow () => GetOrCreateWindow(WindowType.OpenChest, UIRoot.BackgroundUIHolder) as ChestItemDropView;
 
-        public void CreateJoystick ()
-
+        public void CreateJoystick (IInputService inputService)
         {
+            if (inputService.GetSelf() is MobileInputService mobileInput)
+            {
+                mobileInput.Init(UIRoot.MoveJoystick, UIRoot.RotateJoystick, UIRoot.AttackButton);
+            }
         }
 
         public LevelSelectionPanel CreateLevelSelect () => GetOrCreateWindow(WindowType.LevelSelect) as LevelSelectionPanel;

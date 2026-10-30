@@ -1,5 +1,5 @@
-﻿using BigBalls.Services;
-using System;
+﻿using System;
+using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 
@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
 
         private IInputService _inputService;
         private IUpdateService _updateService;
-        public PlayerMover(Rotator rotator, IMover mover)
+        public PlayerMover (Rotator rotator, IMover mover)
         {
             _rotator = rotator;
             _mover = mover;
@@ -30,15 +30,15 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        public void Construct(IInputService inputService, IUpdateService updateService)
+        public void Construct (InputServiceAdapter inputServiceAdapter, IUpdateService updateService)
         {
-            _inputService = inputService;
+            _inputService = inputServiceAdapter.Get();
             _updateService = updateService;
         }
 
         public event Action Moved;
 
-        public void Subscribe()
+        public void Subscribe ()
         {
             _updateService.Register(this);
             _inputService.MoveDirectionSeted += OnMove;
@@ -47,10 +47,10 @@ namespace BigBalls.GameplayObjects
 
         public void Tick ()
         {
-            
+
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe ()
         {
             _updateService.Unregister(this);
 
@@ -58,7 +58,7 @@ namespace BigBalls.GameplayObjects
             _inputService.RotateDirectionSeted -= OnRotate;
         }
 
-        private void OnMove(Vector2 direction)
+        private void OnMove (Vector2 direction)
         {
             Vector3 mainDirection = new Vector3(direction.normalized.x, 0, direction.normalized.y);
             Vector3 leftDirection = Quaternion.Euler(0, -_reycastAngle, 0) * mainDirection;
@@ -72,7 +72,7 @@ namespace BigBalls.GameplayObjects
             _mover.SetDirection(direction);
         }
 
-        private void OnRotate(Vector2 cursorScreenPos)
+        private void OnRotate (Vector2 cursorScreenPos)
         {
             if (_rotator.RotatebleObject == null || Camera.main == null || cursorScreenPos == Vector2.zero)
             {
@@ -80,13 +80,22 @@ namespace BigBalls.GameplayObjects
                 return;
             }
 
-            Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(_rotator.RotatebleObject.position);
-            Vector2 direction = cursorScreenPos - new Vector2(playerScreenPos.x, playerScreenPos.y);
+            Vector2 direction;
 
-            if (direction.sqrMagnitude > 0f)
-                direction.Normalize();
+            if (_inputService.GetSelf() is InputService)
+            {
+                Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(_rotator.RotatebleObject.position);
+                direction = cursorScreenPos - new Vector2(playerScreenPos.x, playerScreenPos.y);
+
+                if (direction.sqrMagnitude > 0f)
+                    direction.Normalize();
+                else
+                    direction = Vector2.zero;
+            }
             else
-                direction = Vector2.zero;
+            {
+                direction = cursorScreenPos;
+            }
 
             _rotator.SetDirection(direction);
         }

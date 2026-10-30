@@ -50,6 +50,11 @@ namespace BigBalls.Services
             if (_currentWindow != null && type == _currentWindow.GetType())
                 return null;
 
+            if (_currentWindow != null)
+            {
+                _currentWindow.Close();
+            }
+
             _previousWindow = _currentWindow;
             _currentWindow = _actionMap[type].Invoke();
 
@@ -66,9 +71,9 @@ namespace BigBalls.Services
             _uiFactory.CreateUIRoot();
         }
 
-        public void CreateJoystick ()
+        public void CreateJoystick (IInputService inputService)
         {
-            _uiFactory.CreateJoystick();
+            _uiFactory.CreateJoystick(inputService);
         }
     }
 }

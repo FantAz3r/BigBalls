@@ -6,8 +6,8 @@ public class Hook : MonoBehaviour
 {
     [field: SerializeField] public Collider Collider;
 
-    public event Action<Collision> СatchedPlayer;
-    public event Action<Collision> СatchedEnemy;
+    public event Action<Collision> CatchedPlayer;
+    public event Action<Collision> CatchedEnemy;
 
     private void OnCollisionEnter (Collision collision)
     {
@@ -18,12 +18,12 @@ public class Hook : MonoBehaviour
 
         if (collision.gameObject.TryGetComponent(out Player player))
         {
-            СatchedPlayer?.Invoke(collision);
+            CatchedPlayer?.Invoke(collision);
         }
 
         if (collision.gameObject.TryGetComponent(out Enemy enemy))
         {
-            СatchedEnemy?.Invoke(collision);
+            CatchedEnemy?.Invoke(collision);
         }
     }
 }

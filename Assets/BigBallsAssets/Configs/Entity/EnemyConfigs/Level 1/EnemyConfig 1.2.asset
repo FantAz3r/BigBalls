@@ -23,6 +23,16 @@ MonoBehaviour:
     Volume: 0
     Pitch: 0
     NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
   - {x: 0, y: 1}
@@ -47,6 +57,10 @@ MonoBehaviour:
     StartMaxValue: 99999
     StartCurrentValue: 0.17
     MinValue: 0
+  - StatType: 5
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: -500
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 72

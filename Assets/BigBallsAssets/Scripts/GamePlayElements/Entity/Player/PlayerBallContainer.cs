@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace BigBalls.GameplayObjects
         private IBallFactory _ballFactory;
         private IIdentifierService _identifierService;
         private IPlayerProvider _playerProvider;
+        private IEntityRepository _entityRepository;
+        private IObjectResolverProvider _objectResolverProvider;
         private CardsData _cardsData;
         private BallConfig _baseBallConfig;
         private SoundSpawner _soundSpawner;
@@ -37,14 +40,18 @@ namespace BigBalls.GameplayObjects
             IBallFactory ballFactory,
             IIdentifierService identifierService,
             IPlayerProvider playerProvider,
-            SoundSpawner soundSpawner)
+            SoundSpawner soundSpawner,
+            IEntityRepository entityRepository,
+            IObjectResolverProvider objectResolverProvider)
         {
             _ballFactory = ballFactory;
             _identifierService = identifierService;
             _playerProvider = playerProvider;
+            _entityRepository = entityRepository;
             _cardsData = resourceLoader.Load<CardsData>();
             _baseBallConfig = _cardsData.Balls[BallType.Base];
             _soundSpawner = soundSpawner;
+            _objectResolverProvider = objectResolverProvider;
         }
 
         public IEnumerable<BallModel> Balls => _balls;
@@ -63,6 +70,9 @@ namespace BigBalls.GameplayObjects
         {
             ball = null;
             BallModel model;
+
+            if(_playerProvider.Player == null)
+                return false;
 
             if (_createdBallsCount < BallCount.CurrentValue)
             {
@@ -136,14 +146,14 @@ namespace BigBalls.GameplayObjects
             var ball = _ballFactory.Create(
                 ballModel,
                 EntityType.Player,
-                _playerProvider.Player.Transform,
+                _playerProvider.Player.transform,
                 CreateCollisionStrategies());
 
             if (_artefacts.Count > 0)
                 ball.AddEffects(_artefacts);
 
             ball.Subscribe();
-            ball.EventHandler.Spawn();
+            ball.EventHandler.Spawn(ball);
 
             _activeBalls[ballModel] = ball;
             return ball;
@@ -151,14 +161,19 @@ namespace BigBalls.GameplayObjects
 
         private List<ICollisionStrategy> CreateCollisionStrategies ()
         {
-            return new List<ICollisionStrategy>
+            List<ICollisionStrategy> strategies = new List<ICollisionStrategy>()
             {
                 new BallCollisionStrategy(),
                 new PlayerCollisionStrategy(),
-                new BackWallCollisionStrategy(_playerProvider.Player),
+                new BackWallCollisionStrategy(),
                 new EnemyCollisionStrategy(),
-                new ReflectCollisionStrategy(_soundSpawner)
+                new ReflectCollisionStrategy()
             };
+
+            foreach (var strategy in strategies)
+                _objectResolverProvider.CurrentResolver.Inject(strategy);
+
+            return strategies;
         }
     }
 }

@@ -29,7 +29,6 @@ public class WeaponViewer : MonoBehaviour
     {
         _playerCardHolder = playerCardHolder;
         _shooter = shooter;
-        //_ballContainer = ballContainer;
     }
 
     private void Start ()
@@ -38,16 +37,6 @@ public class WeaponViewer : MonoBehaviour
         _itemConainerProvider.WeaponRemoved += ViewBaseCannon;
         ViewCannon(_itemConainerProvider.Gun);
     }
-
-    //private void OnEnable ()
-    //{
-    //    if (_itemConainerProvider != null)
-    //    {
-    //        Debug.Log("OnE");
-    //        _itemConainerProvider.WeaponSeted += ViewCannon;
-    //        _itemConainerProvider.WeaponRemoved += ViewBaseCannon;
-    //    }
-    //}
 
     private void OnDisable ()
     {
@@ -58,7 +47,7 @@ public class WeaponViewer : MonoBehaviour
         }
     }
 
-    private void ViewBaseCannon ()
+    private void ViewBaseCannon (WeaponModel useles = null)
     {
         if (CurrentCannon != null)
             CurrentCannon.gameObject.SetActive(false);

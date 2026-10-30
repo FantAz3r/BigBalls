@@ -6,9 +6,11 @@ public interface IPlayerExperience
     Stat Stat { get; }
     float EXPForNextLevel { get; }
     float CurrentEXP { get; }
+    int Level { get; }
 
     event Action ValueChanged;
     event Action LevelUpped;
+
     void Init (Stat stat);
     void AddExperience(float value);
 }

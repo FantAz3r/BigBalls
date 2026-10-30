@@ -26,13 +26,6 @@ public class ChestCardView : MonoBehaviour
     public void RenderCard (ICardModel cardModel, int count)
     {
         gameObject.SetActive(true);
-
-        if (cardModel == null)
-        {
-            Debug.LogError("CardModel is null");
-            return;
-        }
-
         _iconImage.sprite = cardModel.Config.Icon;
         _amountText.text = $"x{count}";
         _rarityText.text = cardModel.Config.Rarity.ToString();

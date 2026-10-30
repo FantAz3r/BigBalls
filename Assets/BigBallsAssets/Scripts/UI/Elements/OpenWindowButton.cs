@@ -11,12 +11,12 @@ namespace BigBalls.UI
         private IWindowService _windowService;
 
         [Inject]
-        public void Construct(IWindowService windowService)
+        public void Construct (IWindowService windowService)
         {
             _windowService = windowService;
         }
 
-        protected override void OnClick()
+        protected override void OnClick ()
         {
             _closeWindow.Close();
             _windowService.Open<T>();

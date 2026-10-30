@@ -13,14 +13,19 @@ MonoBehaviour:
   m_Name: LazerX
   m_EditorClassIdentifier: 
   <NameEN>k__BackingField: Lazer X
-  <NameRU>k__BackingField: 
-  <NameTR>k__BackingField: 
-  <DescriptionEN>k__BackingField: 
-  <DescriptionRU>k__BackingField: 
-  <DescriptionTR>k__BackingField: 
+  <NameRU>k__BackingField: "\u041B\u0430\u0437\u0435\u0440 X"
+  <NameTR>k__BackingField: Lazer X
+  <DescriptionEN>k__BackingField: Shoots an X-shaped laser, burning through all enemies
+    on the way
+  <DescriptionRU>k__BackingField: "\u0421\u0442\u0440\u0435\u043B\u044F\u0435\u0442
+    \u043B\u0430\u0437\u0435\u0440\u043E\u043C \u0432 \u0444\u043E\u0440\u043C\u0435
+    X, \u043F\u0440\u043E\u0436\u0438\u0433\u0430\u044F \u0432\u0441\u0435\u0445
+    \u0432\u0440\u0430\u0433\u043E\u0432 \u043D\u0430 \u043F\u0443\u0442\u0438"
+  <DescriptionTR>k__BackingField: "X \u015Feklinde bir lazer ate\u015Fleyerek yoldaki
+    t\xFCm d\xFC\u015Fmanlar\u0131 yakar"
   <Type>k__BackingField: 0
   <Rarity>k__BackingField: 3
-  <Icon>k__BackingField: {fileID: 21300000, guid: f09a580652446474687c4dfb1fbab475,
+  <Icon>k__BackingField: {fileID: 21300000, guid: cc05fd196dd47954c8a2b0fbffd23ca0,
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
@@ -45,6 +50,10 @@ MonoBehaviour:
   - StatType: 3
     StartMaxValue: 10
     StartCurrentValue: 5
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 8
     MinValue: 0
   <Effects>k__BackingField:
   - {fileID: 11400000, guid: 2f16d097d61ea51428ea19f81f9d7a30, type: 2}

@@ -53,10 +53,16 @@ public class Ice : EffectBehaviour
         Stat movespeed = statHolder[StatType.MoveSpeed];
 
         float slowAttackSpeedValue = 0;
-        float slowAttsckSpeedValue = 0;
+        float slowRotationSpeedValue = 0;
+        float armorReductionValue = 0;
 
         float slowValue = movespeed.CurrentValue * _config.GetSlowPercent(Level);
         movespeed.ReduceCurrentValue(slowValue);
+
+        if (statHolder.TryGetStat(out Stat armor, StatType.Armor))
+        {
+            armorReductionValue = armor.ReduceCurrentValue(_config.GetArmorReduction(Level));
+        }
 
         if (statHolder.TryGetStat(out Stat attackSpeed, StatType.AttackSpeed))
         {
@@ -66,7 +72,7 @@ public class Ice : EffectBehaviour
 
         if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed))
         {
-            slowAttsckSpeedValue = movespeed.CurrentValue * _config.GetSlowPercent(Level);
+            slowRotationSpeedValue = movespeed.CurrentValue * _config.GetSlowPercent(Level);
             rotationSpeed.ReduceCurrentValue(slowValue);
         }
 
@@ -83,10 +89,13 @@ public class Ice : EffectBehaviour
         movespeed.AddCurrentValue(slowValue);
 
         if (rotationSpeed != null)
-            rotationSpeed.AddCurrentValue(slowAttsckSpeedValue);
+            rotationSpeed.AddCurrentValue(slowRotationSpeedValue);
 
         if (attackSpeed != null)
             attackSpeed.AddCurrentValue(slowAttackSpeedValue);
+
+        if (armor != null)
+            armor.AddCurrentValue(armorReductionValue);
     }
 
 

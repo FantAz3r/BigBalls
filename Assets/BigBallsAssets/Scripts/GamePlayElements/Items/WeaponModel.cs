@@ -1,12 +1,13 @@
-using BigBalls.Configs;
-using BigBalls.StaticData;
 using System.Collections.Generic;
+using BigBalls.Configs;
+using BigBalls.Saves;
+using BigBalls.StaticData;
 
 public class WeaponModel : ItemModel
 {
     private readonly BallRepository _ballRepository;
 
-    public WeaponModel(
+    public WeaponModel (
         BallRepository ballRepository,
         int id,
         WeaponConfig config,
@@ -21,7 +22,12 @@ public class WeaponModel : ItemModel
     public WeaponConfig WeaponConfig { get; private set; }
     public List<BallConfig> UniqueBallConfigs => WeaponConfig.UniqueBallConfigs;
 
-    public List<BallModel> UniqueBallModels()
+    public override CardSaveData CreateSaveData ()
+    {
+        return new WeaponSaveData((int) WeaponConfig.ItemType, IsOpen, ItemEXP, NoneGameLevel, HasPlayer);
+    }
+
+    public List<BallModel> UniqueBallModels ()
     {
         List<BallModel> balls = new List<BallModel>();
 
@@ -31,10 +37,27 @@ public class WeaponModel : ItemModel
         foreach (var config in WeaponConfig.UniqueBallConfigs)
         {
             BallModel ballModel = _ballRepository.AllModels[config.BallType];
-            ballModel.AddEquipmentLevel(Level);
             balls.Add(ballModel);
         }
 
         return balls;
+    }
+
+    public void AddEquipmentLevel()
+    {
+        foreach (var config in WeaponConfig.UniqueBallConfigs)
+        {
+            BallModel ballModel = _ballRepository.AllModels[config.BallType];
+            ballModel.SetEquipmentLevel(Level);
+        }
+    }
+
+    public void RemoveEquipmentLevel ()
+    {
+        foreach (var config in WeaponConfig.UniqueBallConfigs)
+        {
+            BallModel ballModel = _ballRepository.AllModels[config.BallType];
+            ballModel.SetEquipmentLevel(0);
+        }
     }
 }

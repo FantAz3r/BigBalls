@@ -55,6 +55,28 @@ namespace BigBalls.Services
             return actualDamage;
         }
 
+        public float ApplySelfDamage (IEntity entity, float damage, Color color = default)
+        {
+            StatHolder statHolder = _entityRepository.GetStatHolder(entity);
+
+            if (statHolder == null)
+                return 0;
+
+            float actualDamage = 0;
+
+            if (statHolder.TryGetStat(out Stat health, StatType.Health))
+            {
+                actualDamage = health.SelfReduceCurrentValue(damage);
+            }
+
+            if (actualDamage > 0)
+            {
+                _damageTextFactory.Create(entity.Transform.position, actualDamage, color);
+            }
+
+            return actualDamage;
+        }
+
         public float ApplyHeal (IEntity entity, float healValue, Color color)
         {
             StatHolder statHolder = _entityRepository.GetStatHolder(entity);
@@ -89,12 +111,14 @@ namespace BigBalls.Services
 
         private float ApplyArmor (Stat armor, float damage)
         {
-            if (armor.CurrentValue <= 0)
+            float a = armor.CurrentValue;
+
+            if (Mathf.Approximately(a, 0f))
                 return damage;
 
-            float armorValue = armor.CurrentValue;
-            float damageReduction = (ArmorMultiplyer * armorValue) / (1 + ArmorMultiplyer * armorValue);
-            float finalDamage = damage * (1f - damageReduction);
+            float finalDamage = a > 0f
+                ? damage / (1f + ArmorMultiplyer * a)
+                : damage * (1f + ArmorMultiplyer * Mathf.Abs(a));
 
             return MathF.Max(0f, finalDamage);
         }

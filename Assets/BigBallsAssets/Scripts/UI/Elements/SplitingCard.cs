@@ -11,7 +11,7 @@ public class SplitingCard : MonoBehaviour
     {
         _image.sprite = icon;
 
-        if (amount >0)
+        if (amount > 0)
         {
             _count.gameObject.SetActive(true);
             _count.text = amount.ToString();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BigBalls.Localization;
 using BigBalls.Services;
 using BigBalls.UI;
 using TMPro;
@@ -21,13 +22,13 @@ public class SplitingPanel : PauseWindow
     [field: SerializeField] public RectTransform ButtonPanel { get; private set; }
 
     [Inject]
-    public void Construct(IUIFactory windowService, IMergeService mergeService)
+    public void Construct (IUIFactory windowService, IMergeService mergeService)
     {
         _windowService = windowService;
         _mergeService = mergeService;
     }
 
-    public override void Open()
+    public override void Open ()
     {
         ButtonPanel.gameObject.SetActive(true);
         SplitingWindow.gameObject.SetActive(false);
@@ -40,20 +41,25 @@ public class SplitingPanel : PauseWindow
         if (mergeCount > 0)
         {
             _mergeButton.gameObject.SetActive(true);
-            _mergeButtonText.text = $"Merge: {mergeCount}";
+            _mergeButtonText.text = $"{TextLocalizator.Merge}: {mergeCount}";
         }
         else
         {
             _mergeButton.gameObject.SetActive(false);
         }
 
-        if(SplitingWindow.CalculateCardsCount(out int minCount, out int maxCount, out List<ICardModel> cards) == false)
+        if (SplitingWindow.CalculateCardsCount(out int minCount, out int maxCount, out List<ICardModel> cards) == false)
         {
-            _splitButtonText.text = $"Coins: {SplitingWindow.MinGoldReward} - {SplitingWindow.MaxGoldReward}";
+            _splitButtonText.text = $"{TextLocalizator.Gold}: {SplitingWindow.MinGoldReward} - {SplitingWindow.MaxGoldReward}";
         }
         else
         {
-            _splitButtonText.text = $"Cards: {minCount} - {maxCount}";
+            if (minCount == maxCount)
+            {
+                _splitButtonText.text = $"{TextLocalizator.Cards}: {minCount}";
+            }
+
+            _splitButtonText.text = $"{TextLocalizator.Cards}: {minCount} - {maxCount}";
         }
     }
 }

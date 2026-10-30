@@ -12,9 +12,9 @@ namespace BigBalls.Providers
         event Action<ArmorModel> ArmorSeted;
         event Action<HelmetModel> HelmetSeted;
 
-        event Action WeaponRemoved;
-        event Action ArmorRemoved;
-        event Action HelmetRemoved;
+        event Action <WeaponModel> WeaponRemoved;
+        event Action <ArmorModel> ArmorRemoved;
+        event Action <HelmetModel> HelmetRemoved;
 
         void Add (ICardModel item);
 

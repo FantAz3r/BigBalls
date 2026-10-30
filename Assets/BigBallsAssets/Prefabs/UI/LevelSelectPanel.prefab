@@ -3843,6 +3843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7aa2310424174bb4adff304fc25eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeWindow: {fileID: 7710503469655057817}
   <LevelID>k__BackingField: 4
 --- !u!114 &7459530092037442255
 MonoBehaviour:
@@ -3964,27 +3965,27 @@ PrefabInstance:
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: en
-      value: 
+      value: Level 3
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: ru
-      value: 
+      value: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 3"
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: tr
-      value: 
+      value: Seviye 3
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: countLang
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -3993,13 +3994,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
+      propertyPath: textMPComponent
+      value: 
+      objectReference: {fileID: 4512316237665657394}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
       propertyPath: componentTextField
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: processTranslateLabel
-      value: processing... 0/3 error
+      value: 3/3 completed
       objectReference: {fileID: 0}
     - target: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -4215,6 +4221,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 583180655360036177}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4512316237665657394 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+    type: 3}
+  m_PrefabInstance: {fileID: 583180655360036177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8616507362158736644 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9188509256693790805, guid: 4b71b2c818c4ad44bbca94b02b366af8,
@@ -4233,6 +4251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7aa2310424174bb4adff304fc25eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeWindow: {fileID: 7710503469655057817}
   <LevelID>k__BackingField: 6
 --- !u!114 &4932673071929946846
 MonoBehaviour:
@@ -4354,22 +4373,32 @@ PrefabInstance:
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: en
-      value: 
+      value: Level 4
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: ru
-      value: 
+      value: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 4"
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: tr
+      value: Seviye 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: textMPComponent
       value: 
+      objectReference: {fileID: 7458994146223520864}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
+      propertyPath: componentTextField
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: processTranslateLabel
-      value: 
+      value: 3/3 completed
       objectReference: {fileID: 0}
     - target: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -4597,6 +4626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7aa2310424174bb4adff304fc25eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeWindow: {fileID: 7710503469655057817}
   <LevelID>k__BackingField: 7
 --- !u!114 &3226942631572149074
 MonoBehaviour:
@@ -4648,6 +4678,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5839624636052689667}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7458994146223520864 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+    type: 3}
+  m_PrefabInstance: {fileID: 5839624636052689667}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6740715481112912562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4724,22 +4766,22 @@ PrefabInstance:
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: en
-      value: Level 1
+      value: Level 5
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: ru
-      value: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 1"
+      value: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 5"
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: tr
-      value: Seviye 1
+      value: Seviye 5
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -4967,6 +5009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7aa2310424174bb4adff304fc25eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeWindow: {fileID: 7710503469655057817}
   <LevelID>k__BackingField: 8
 --- !u!114 &5220558866042807295
 MonoBehaviour:
@@ -5094,27 +5137,32 @@ PrefabInstance:
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: en
-      value: 
+      value: Level 2
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: ru
-      value: 
+      value: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 2"
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: tr
-      value: 
+      value: Seviye 2
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
       propertyPath: countLang
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
+      propertyPath: textMPComponent
+      value: 
+      objectReference: {fileID: 6758701495277259361}
+    - target: {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+        type: 3}
       propertyPath: processTranslateLabel
-      value: processing... 0/3 error
+      value: 3/3 completed
       objectReference: {fileID: 0}
     - target: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
         type: 3}
@@ -5300,7 +5348,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4678046383734652445, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
-    - {fileID: 873993980313264300, guid: 4b71b2c818c4ad44bbca94b02b366af8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3565068835683216800, guid: 4b71b2c818c4ad44bbca94b02b366af8,
@@ -5343,6 +5390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df7aa2310424174bb4adff304fc25eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _closeWindow: {fileID: 7710503469655057817}
   <LevelID>k__BackingField: 5
 --- !u!114 &189709852618930643
 MonoBehaviour:
@@ -5394,6 +5442,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7728901752643364098}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6758701495277259361 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3929716141711470435, guid: 4b71b2c818c4ad44bbca94b02b366af8,
+    type: 3}
+  m_PrefabInstance: {fileID: 7728901752643364098}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8105816163911308629
 PrefabInstance:
   m_ObjectHideFlags: 0

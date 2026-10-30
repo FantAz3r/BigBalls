@@ -21,4 +21,5 @@ public class EffectViewer : MonoBehaviour
     }
 
     public void EnableEffect(EffectType type, float duration = 0) => _effects[type].Play(duration);
+    public void DisableEffect (EffectType type) => _effects[type].Stop();
 }

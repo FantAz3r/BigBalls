@@ -10,6 +10,6 @@ namespace BigBalls.Services
 
         WindowBase OpenPreviousWindow ();
         void CreateUIRoot();
-        void CreateJoystick();
+        void CreateJoystick (IInputService inputService);
     }
 }

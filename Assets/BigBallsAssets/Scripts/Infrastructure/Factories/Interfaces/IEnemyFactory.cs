@@ -11,6 +11,7 @@ namespace BigBalls.Factories
         int SuisidedCount { get; }
 
         event Action<IEntity> Died;
+        event Action<IEntity> Killed;
 
         Enemy Create(EnemyConfig enemyConfig, Vector3 position);
     }

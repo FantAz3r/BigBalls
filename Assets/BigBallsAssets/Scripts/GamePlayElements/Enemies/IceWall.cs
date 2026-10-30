@@ -42,7 +42,6 @@ public class IceWall : MonoBehaviour
             Vector3 direction = transform.rotation * rotation * Vector3.forward;
 
             ball.transform.position = new Vector3(transform.position.x, OffsetY, transform.position.z);
-            Debug.Log(ball.transform.position);
             ball.transform.rotation = rotation * transform.rotation;
             ball.Subscribe();
 

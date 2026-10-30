@@ -1,5 +1,5 @@
-using BigBalls.Infrastructure.DI;
 using System.Collections.Generic;
+using BigBalls.Infrastructure.DI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -13,22 +13,34 @@ public class EquipPanel : MonoBehaviour
     [SerializeField] private InventoryStatsView _statsView;
 
     private Canvas _mainCanvas;
-    private CardsData _cardData;
     private ArmorRepository _armorRepository;
+    private WeaponRepository _weaponRepository;
+    private HelmetRepository _helmetRepository;
     private IObjectResolverProvider _objectResolverProvider;
     private List<ICardModel> _models = new();
 
     [Inject]
-    public void Construct(ArmorRepository armorRepository, IObjectResolverProvider objectResolverProvider)
+    public void Construct (
+        ArmorRepository armorRepository,
+        WeaponRepository weaponRepository,
+        HelmetRepository helmetRepository,
+        IObjectResolverProvider objectResolverProvider)
     {
         _mainCanvas = GetComponentInParent<Canvas>();
         _armorRepository = armorRepository;
+        _weaponRepository = weaponRepository;
+        _helmetRepository = helmetRepository;
         _objectResolverProvider = objectResolverProvider;
-        _models.AddRange(armorRepository.AllModels.Values);
+
+        _models.Clear();
+        _models.AddRange(_armorRepository.AllModels.Values);
+        _models.AddRange(_weaponRepository.AllModels.Values);
+        _models.AddRange(_helmetRepository.AllModels.Values);
+
         CreateSlotsWithItems();
     }
 
-    private void CreateSlotsWithItems()
+    private void CreateSlotsWithItems ()
     {
         InitSlot(_armorSlot, CardType.Armor);
         InitSlot(_weaponSlot, CardType.Weapon);
@@ -36,37 +48,31 @@ public class EquipPanel : MonoBehaviour
 
         foreach (var model in _models)
         {
-            if (model.IsOpen && model.HasPlayer)
-            {
-                if(model is ArmorModel)
-                {
-                    CreateItem(model, _armorSlot);
-                }
-                else if (model is WeaponModel)
-                {
-                    CreateItem(model, _weaponSlot);
+            if (!model.HasPlayer) continue;
 
-                }
-                else if (model is HelmetModel)
-                {
-                    CreateItem(model, _helmetSlot);
-                }
-            }
+            if (model is ArmorModel)
+                CreateItem(model, _armorSlot);
+            else if (model is WeaponModel)
+                CreateItem(model, _weaponSlot);
+            else if (model is HelmetModel)
+                CreateItem(model, _helmetSlot);
         }
     }
 
-    private void InitSlot(Slot slot, CardType cardType)
+    private void InitSlot (Slot slot, CardType cardType)
     {
         _objectResolverProvider.CurrentResolver.Inject(slot);
         slot.Init(cardType, true);
     }
 
-    private void CreateItem(ICardModel model, Slot slot)
+    private void CreateItem (ICardModel model, Slot slot)
     {
         UIItem item = _objectResolverProvider.CurrentResolver.Instantiate(_itemPrefab, slot.transform);
         item.Init(transform, _mainCanvas);
         item.Render(model);
         item.StatsButton.Init(_statsView);
-        slot.SetItem(item);
+
+        slot.PlaceItem(item);
+        item.SetSourceSlot(slot);
     }
 }

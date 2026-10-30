@@ -1,5 +1,5 @@
-using BigBalls.GameplayObjects;
 using System;
+using BigBalls.GameplayObjects;
 using UnityEngine;
 using VContainer;
 
@@ -11,18 +11,19 @@ public class ElasticBand : EffectBehaviour
     private Stat _moveStat;
     private float _startMoveSpeed;
     private float _maxMoveSpeed;
-    public ElasticBand(ElasticBandConfig config, int level) : base(config, level)
+
+    public ElasticBand (ElasticBandConfig config, int level) : base(config, level)
     {
         _config = config;
     }
 
     [Inject]
-    public void Construct(IEntityRepository entityRepository)
+    public void Construct (IEntityRepository entityRepository)
     {
         _entityRepository = entityRepository;
     }
 
-    public void OnHit()
+    public void OnHit ()
     {
         if (_moveStat.CurrentValue >= _maxMoveSpeed)
         {
@@ -35,25 +36,25 @@ public class ElasticBand : EffectBehaviour
         }
     }
 
-    public void OnSpawn(IEntity host)
+    public void OnSpawn (IEntity host)
     {
         _statHolder = _entityRepository.GetStatHolder(host);
         _moveStat = _statHolder[StatType.MoveSpeed];
         _startMoveSpeed = _moveStat.CurrentValue;
-        _maxMoveSpeed = _startMoveSpeed * _config.MaxMoveSpeedMultiplyer;
+        _maxMoveSpeed = _startMoveSpeed * _config.GetSpeedMyltiplyer(Level);
 
         _moveStat.ReduceCurrentValue(_startMoveSpeed);
         _moveStat.AddCurrentValue(_startMoveSpeed * _config.StartBallMoveSpeed);
     }
 
-    protected override IDisposable SubscribeInternal(IEntity host)
+    protected override IDisposable SubscribeInternal (IEntity host)
     {
         OnSpawn(host);
         host.EventHandler.Hited += OnHit;
         return new DisposableObject(() => host.EventHandler.Hited -= OnHit);
     }
 
-    protected override void OnUnsubscribe()
+    protected override void OnUnsubscribe (IEntity host)
     {
         _moveStat.ReduceCurrentValue(_moveStat.CurrentValue);
         _moveStat.AddCurrentValue(_startMoveSpeed);
