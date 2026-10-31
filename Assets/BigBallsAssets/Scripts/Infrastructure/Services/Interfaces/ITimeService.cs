@@ -7,6 +7,6 @@
         void ResumeGame();
         void SmoothRecoverTimescale(float duration);
         void SetTimescale (float value);
-        void SmoothReduceTimescale (float targetTimescale, float duration);
+        void SmoothEditTimescale (float targetTimescale, float duration);
     }
 }

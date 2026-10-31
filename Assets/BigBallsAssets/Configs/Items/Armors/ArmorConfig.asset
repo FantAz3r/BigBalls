@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ArmorConfig
   m_EditorClassIdentifier: 
   <NameEN>k__BackingField: RotationAttackSpeed
-  <NameRU>k__BackingField: 
+  <NameRU>k__BackingField: "\u041B\u0451\u0433\u043A\u0430\u044F \u0431\u0440\u043E\u043D\u044F"
   <NameTR>k__BackingField: 
   <DescriptionEN>k__BackingField: 
   <DescriptionRU>k__BackingField: 
@@ -24,20 +24,20 @@ MonoBehaviour:
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
-  <IsOpen>k__BackingField: 0
+  <IsOpen>k__BackingField: 1
   _baseStats:
     _serializedList:
     - Key: 8
       Value:
         StatType: 8
         StartMaxValue: 0
-        StartCurrentValue: 1
+        StartCurrentValue: 0.8
         MinValue: 0
     - Key: 4
       Value:
         StatType: 4
         StartMaxValue: 0
-        StartCurrentValue: 30
+        StartCurrentValue: 25
         MinValue: 0
   _statsUpgradePerLevel:
     _serializedList:

@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public ArmorViewer ArmorViewer { get; private set; }
         [field: SerializeField] public EffectViewer EffectViewer { get; private set; }
 
-        public DeathHandler<Player> DeathHandler { get; private set; }
+        public HealthHandler<Player> DeathHandler { get; private set; }
         public int Id { get; private set; }
         public PlayerAnimator PlayerAnimator { get; private set; }
         public Transform Transform => transform;
@@ -36,16 +36,10 @@ namespace BigBalls.GameplayObjects
             DeathHandler?.Unsubscribe();
         }
 
-        public void Construct(int id, DeathHandler<Player> playerDeathHandler)
+        public void Construct(int id, HealthHandler<Player> playerDeathHandler)
         {
             Id = id;
             DeathHandler = playerDeathHandler;
-        }
-
-        public void SetFirePoint (Cannon cannon)
-        {
-            Cannon = cannon;
-            FirePoint = cannon.FirePoint;
         }
     }
 }

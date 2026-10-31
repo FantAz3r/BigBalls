@@ -22,6 +22,9 @@ namespace BigBalls.Services
 
             Time.timeScale = 0;
             IsPaused = true;
+
+            Debug.Log($"{_currentTimescale}  {IsPaused}");
+
         }
 
         public void ResumeGame ()
@@ -32,8 +35,9 @@ namespace BigBalls.Services
 
         public void SetTimescale (float value)
         {
-            _currentTimescale = value;
+            _currentTimescale = Mathf.Max(value, 0.1f);
             Time.timeScale = _currentTimescale;
+            IsPaused = false;
         }
 
         public void SmoothRecoverTimescale (float duration)
@@ -44,7 +48,7 @@ namespace BigBalls.Services
             _slowMotionCoroutine = _coroutineRunner.StartCoroutine(EditRoutine(_currentTimescale, duration));
         }
 
-        public void SmoothReduceTimescale (float targetTimescale, float duration)
+        public void SmoothEditTimescale (float targetTimescale, float duration)
         {
             if (_slowMotionCoroutine != null)
                 _coroutineRunner.StopCoroutine(_slowMotionCoroutine);
@@ -63,6 +67,12 @@ namespace BigBalls.Services
                 elapsed += Time.unscaledDeltaTime;
                 Time.timeScale = Mathf.MoveTowards(startTimeScale, targetTimeScale, elapsed / duration);
                 yield return null;
+            }
+
+            if (targetTimeScale > 0)
+            {
+                _currentTimescale = targetTimeScale;
+                IsPaused = false;
             }
 
             Time.timeScale = targetTimeScale;

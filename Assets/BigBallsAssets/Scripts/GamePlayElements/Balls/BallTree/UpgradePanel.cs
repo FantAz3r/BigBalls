@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using BigBalls.GameplayObjects;
 using BigBalls.Localization;
+using BigBalls.Services;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,6 +11,8 @@ using VContainer;
 
 public class UpgradePanel : MonoBehaviour
 {
+    private const string None = "???";
+
     [SerializeField] private Image _image;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private TMP_Text _descriptionText;
@@ -22,6 +26,7 @@ public class UpgradePanel : MonoBehaviour
     [SerializeField] private TMP_Text _expProgresText;
     [SerializeField] private TMP_Text _maxLevelText;
 
+    private Button _button;
     private BallTreeNodeUI _node;
     private BallModel _cardModel;
     private StatTextHolder _statTextHolder;
@@ -29,12 +34,18 @@ public class UpgradePanel : MonoBehaviour
     private List<StatTextHolder> _statTextHolders = new();
     private SoundSpawner _soundSpawner;
     private Tween _notEnoughXpTween;
-    private int _currentCost;
+    private IBallUnlockService _ballUnlockService;
+    private IPoolService _poolService;
+    private ItemStat _noneStat = new ItemStat(None, 0);
 
     public event Action Upgraded;
     public event Action PurchaseRejected;
 
-    private void Start () => gameObject.SetActive(false);
+    private void Start ()
+    {
+        gameObject.SetActive(false);
+        _button = _upgradeButton.GetComponent<Button>();
+    }
 
     private void OnDestroy ()
     {
@@ -45,10 +56,12 @@ public class UpgradePanel : MonoBehaviour
     }
 
     [Inject]
-    public void Construct (GlobalWallet globalWallet, SoundSpawner soundSpawner)
+    public void Construct (GlobalWallet globalWallet, SoundSpawner soundSpawner, IBallUnlockService ballUnlockService, IPoolService poolService)
     {
         _globalWallet = globalWallet;
         _soundSpawner = soundSpawner;
+        _ballUnlockService = ballUnlockService;
+        _poolService = poolService;
     }
 
     public void Init (StatTextHolder statTextHolder)
@@ -87,32 +100,54 @@ public class UpgradePanel : MonoBehaviour
 
     public void View (ICardModel useles)
     {
+        if (useles is not BallModel ballModel)
+            return;
+
         ClearStats();
 
-        _image.sprite = _cardModel.Config.Icon;
-        _nameText.text = _cardModel.Name;
-        _descriptionText.text = _cardModel.Description;
-        _level.text = _cardModel.Level.ToString();
+        bool isOpen = _cardModel.IsOpen;
+        bool canUnlock = _ballUnlockService.CanUnlock(ballModel);
+
         _expSlider.maxValue = _cardModel.EXPForNextLevel;
         _expSlider.minValue = 0;
+        _button.interactable = canUnlock;
+        _expSlider.gameObject.SetActive(isOpen);
+        _costPanel.gameObject.SetActive(isOpen == false);
+        _image.sprite = _cardModel.Config.Icon;
+        _image.color = Color.white;
+        _descriptionText.text = _cardModel.Description;
+        _level.text = _cardModel.Level.ToString();
+        _nameText.text = _cardModel.Name;
         _expSlider.value = _cardModel.ItemEXP;
-        _expProgresText.text = $"{(int) _cardModel.ItemEXP} / {(int) _cardModel.EXPForNextLevel:0}";
+        _expProgresText.text = $"{TextLocalizator.Damage}: {(int) _cardModel.ItemEXP} / {(int) _cardModel.EXPForNextLevel:0}";
 
-        if (_cardModel.IsOpen)
+        if (isOpen)
         {
             _updateText.text = TextLocalizator.Upgrade;
-            _expSlider.gameObject.SetActive(true);
-            RenderStats(_cardModel, true);
-            _costPanel.gameObject.SetActive(false);
+            RenderStats(_cardModel, isOpen);
+
         }
         else
         {
             _updateText.text = TextLocalizator.Unlock;
-            _expSlider.gameObject.SetActive(false);
-            _costPanel.gameObject.SetActive(true);
-
             _costText.text = _cardModel.BallConfig.UnlockPrice.ToString();
-            RenderStats(_cardModel, false);
+
+            if (canUnlock == false)
+            {
+                _image.color = Color.black;
+                _nameText.text = None;
+                _descriptionText.text = None;
+                _level.text = None;
+                _expSlider.value = 0;
+                _expProgresText.text = $"{None}/{None}";
+                _updateText.text = TextLocalizator.Locked;
+
+                InitStatTextHolder(_noneStat, false);
+            }
+            else
+            {
+                RenderStats(_cardModel, isOpen);
+            }
         }
 
         Upgraded?.Invoke();
@@ -131,21 +166,22 @@ public class UpgradePanel : MonoBehaviour
             .OnComplete(() => sliderRect.anchoredPosition = originPos);
     }
 
-    private void RenderStats (ICardModel card, bool showNextLevel)
+    private void RenderStats (BallModel ball, bool showNextLevel)
     {
-        if (card is not BallModel ball)
-            return;
-
         _statsParent.gameObject.SetActive(true);
 
         foreach (var item in ball.BallConfig.GetStats(ball.Level))
         {
-            StatTextHolder statTextHolder = Instantiate(_statTextHolder, _statsParent);
-            statTextHolder.RenderText(item, showNextLevel);
-            _statTextHolders.Add(statTextHolder);
+            InitStatTextHolder(item, showNextLevel);
         }
     }
 
+    private void InitStatTextHolder (ItemStat stat, bool showNextLevel)
+    {
+        StatTextHolder statTextHolder = _poolService.Get(_statTextHolder, _statsParent);
+        statTextHolder.RenderText(stat, showNextLevel);
+        _statTextHolders.Add(statTextHolder);
+    }
 
     private void ClearStats () => ClearCollection(_statTextHolders);
 

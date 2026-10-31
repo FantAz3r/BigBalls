@@ -11,10 +11,12 @@ namespace BigBalls.Services
         private const float CooldownSeconds = 60f;
         private Dictionary<string, float> _lastRunTimes = new Dictionary<string, float>();
         private ISoundService _soundService;
+        private readonly ITimeService _timeService;
 
-        public YGADVService (ISoundService soundService)
+        public YGADVService (ISoundService soundService, ITimeService timeService)
         {
             _soundService = soundService;
+            _timeService = timeService;
         }
 
         public void TryShowRewardADV (string rewardID, Action callback)

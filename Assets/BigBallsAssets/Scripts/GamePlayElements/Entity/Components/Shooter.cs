@@ -68,7 +68,7 @@ namespace BigBalls.GameplayObjects
 
         public void Unsubscribe ()
         {
-            if (_coroutineRunner != null && _coroutineRunner is UnityEngine.Object obj && obj != null)
+            if (_coroutineRunner != null && _coroutineRunner is UnityEngine.Object obj && obj != null && _shootRoutine != null )
             {
                 try { _coroutineRunner.StopCoroutine(_shootRoutine); }
                 catch (MissingReferenceException) {}

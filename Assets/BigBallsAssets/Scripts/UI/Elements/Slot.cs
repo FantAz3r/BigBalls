@@ -48,7 +48,7 @@ public class Slot : MonoBehaviour, IDropHandler
     public void Clear ()
     {
         Card = null;
-        gameObject.SetActive(false);
+        gameObject?.SetActive(false);
     }
 
     public void OnDrop (PointerEventData eventData)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
-    public class DeathHandler<T> : ISubscribable, ILouser
+    public class HealthHandler<T> : ISubscribable, ILouser
         where T : MonoBehaviour, IEntity
     {
         private readonly Stat _health;
@@ -13,7 +13,7 @@ namespace BigBalls.GameplayObjects
 
         public bool IsBallAttacked { get; private set; }
 
-        public DeathHandler(Stat health, List<ISubscribable> subscribables, T diebleObject)
+        public HealthHandler(Stat health, List<ISubscribable> subscribables, T diebleObject)
         {
             _health = health;
             _subscribables = subscribables;

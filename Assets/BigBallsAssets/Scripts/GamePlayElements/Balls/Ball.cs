@@ -22,7 +22,7 @@ namespace BigBalls.GameplayObjects
         private DamageCalculator _damageCalculator;
 
         public List<EffectBehaviour> EffectBehaviours { get; private set; }
-        public DeathHandler<Ball> DeathHandler { get; private set; }
+        public HealthHandler<Ball> DeathHandler { get; private set; }
         public BallModel Model { get; private set; }
         public bool IsMaterial { get; private set; }
         public bool CanReturnToBag { get; private set; } = false;
@@ -108,7 +108,7 @@ namespace BigBalls.GameplayObjects
             BallModel model,
             IMover mover,
             List<ICollisionStrategy> collisionStrategies,
-            DeathHandler<Ball> deathHandler)
+            HealthHandler<Ball> deathHandler)
         {
             AppliedDamage = 0;
             DeathHandler = deathHandler;

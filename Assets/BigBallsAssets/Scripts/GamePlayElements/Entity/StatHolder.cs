@@ -13,7 +13,7 @@ public class StatHolder : IArtefactUser
     private List<EffectBehaviour> _effectBehaviours = new();
     private Dictionary<StatType, Stat> _stats = new();
     private IEntityConfig _config;
-    private IArmor _armor;
+    private ArmorModel _armor;
 
     public StatHolder (IEntity entity, EntityType entityType, IEntityConfig config, IEffectFactory effectFactory = null)
     {
@@ -35,12 +35,20 @@ public class StatHolder : IArtefactUser
 
         foreach (var stat in _stats)
         {
-            if (_armor.Stats.ContainsKey(stat.Key))
+            if (_armor != null && _armor.Stats.ContainsKey(stat.Key))
             {
                 float currentValue = stat.Value.CurrentValue;
-                stat.Value.ReduceCurrentValue(currentValue);
-                stat.Value.AddCurrentValue(currentValue + _armor.Stats[stat.Key].StartCurrentValue);
+                float maxValue = stat.Value.MaxValue;
+
+                stat.Value.SetMaxValue(maxValue + _armor.Stats[stat.Key].StartMaxValue);
+                stat.Value.SetCurrentValue(currentValue + _armor.Stats[stat.Key].StartCurrentValue);
             }
+            else
+            {
+                stat.Value.ResetStat();
+            }
+
+            Debug.Log($"{stat.Key} {stat.Value.MinValue} {stat.Value.CurrentValue} {stat.Value.MaxValue}");
         }
     }
 

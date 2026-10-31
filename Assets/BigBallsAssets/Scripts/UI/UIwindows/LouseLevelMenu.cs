@@ -6,7 +6,7 @@ using VContainer;
 
 namespace BigBalls.UI
 {
-    public class LouseLevelMenu : LevelResultMenu
+    public class LouseLevelMenu : ResultLevelMenu
     {
         [SerializeField] private TMP_Text _time;
         [SerializeField] private TMP_Text _compliteLines;
@@ -17,6 +17,7 @@ namespace BigBalls.UI
         private EnemySpawner _enemySpawner;
 
         [Inject]
+
         public void Construct (LevelTimeline levelTimeline, EnemySpawner enemySpawner)
         {
             _levelTimeline = levelTimeline;

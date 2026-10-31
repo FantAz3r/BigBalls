@@ -21,8 +21,8 @@ namespace BigBalls.UI
 
         public override void Close()
         {
-            base.Close();
             _timeService.ResumeGame();
+            base.Close();
         }
     }
 }

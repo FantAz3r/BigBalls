@@ -30,7 +30,7 @@ namespace BigBalls.Infrastructure.DI
         private void BindStates (IContainerBuilder builder)
         {
             builder.Register<LoadingLevelState>(Lifetime.Singleton);
-            builder.Register<GameExitState>(Lifetime.Singleton);
+            builder.Register<GameSaveState>(Lifetime.Singleton);
         }
 
         private void BindServices (IContainerBuilder builder)
@@ -76,7 +76,7 @@ namespace BigBalls.Infrastructure.DI
         protected override void OnDestroy ()
         {
             _gameStateMashine = Container.Resolve<IGameStateMachine>();
-            _gameStateMashine.EnterIn<GameExitState>();
+            _gameStateMashine.EnterIn<GameSaveState>();
             base.OnDestroy();
         }
     }

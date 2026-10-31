@@ -12,32 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e73c1ee7c03967a4ba2a0d6013dfa068, type: 3}
   m_Name: MoveHealthArmor
   m_EditorClassIdentifier: 
-  <NameEN>k__BackingField: 
-  <NameRU>k__BackingField: 
-  <NameTR>k__BackingField: 
-  <DescriptionEN>k__BackingField: Base armor - gives $health.max$ max Health
-  <DescriptionRU>k__BackingField: a
-  <DescriptionTR>k__BackingField: a
+  <NameEN>k__BackingField: Armor of Power
+  <NameRU>k__BackingField: "\u0411\u0440\u043E\u043D\u044F \u0441\u0438\u043B\u044B"
+  <NameTR>k__BackingField: "G\xFC\xE7 Z\u0131rh\u0131"
+  <DescriptionEN>k__BackingField: 
+  <DescriptionRU>k__BackingField: 
+  <DescriptionTR>k__BackingField: 
   <Type>k__BackingField: 2
   <Rarity>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 21300000, guid: 5105fe1d825990746b9a92407ea447ca,
     type: 3}
   <BaseEXPForUpgrade>k__BackingField: 50
   <LevelEXPMultipy>k__BackingField: 1.5
-  <IsOpen>k__BackingField: 0
+  <IsOpen>k__BackingField: 1
   _baseStats:
     _serializedList:
     - Key: 1
       Value:
         StatType: 1
-        StartMaxValue: 50
-        StartCurrentValue: 50
+        StartMaxValue: 45
+        StartCurrentValue: 45
         MinValue: 0
     - Key: 3
       Value:
         StatType: 3
         StartMaxValue: 0
-        StartCurrentValue: 2
+        StartCurrentValue: 1.5
         MinValue: 0
   _statsUpgradePerLevel:
     _serializedList:

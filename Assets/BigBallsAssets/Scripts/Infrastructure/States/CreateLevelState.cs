@@ -45,9 +45,8 @@ namespace BigBalls.Infrastructure
 
         private LevelConfig _levelConfig;
         private List<EnemyConfig> _currentEnemyConfigs;
-        private LevelID _currentLevel;
 
-        public CreateLevelState(
+        public CreateLevelState (
             IObjectResolverProvider objectResolverProvider,
             IPlayerFactory playerFactory,
             IWindowService windowService,
@@ -111,11 +110,12 @@ namespace BigBalls.Infrastructure
         }
 
         public bool IsGameStarted { get; private set; }
+        public LevelID CurrentLevel { get; private set; }
 
-        public void Enter(LevelID level)
+        public void Enter (LevelID level)
         {
-            _currentLevel = level;
-            _saveService.GameProgress.Level = (int) _currentLevel;
+            CurrentLevel = level;
+            _saveService.GameProgress.Level = (int) level;
             _windowService.CreateUIRoot();
             _windowService.Open<MainMenu>();
 
@@ -141,7 +141,7 @@ namespace BigBalls.Infrastructure
             _soundSpawner.Enable();
         }
 
-        public void StartLevel()
+        public void StartLevel ()
         {
             CameraOrbit cameraOrbit = _cameraProvider.Camera.GetComponent<CameraOrbit>();
             cameraOrbit.StopOrbit();
@@ -153,13 +153,13 @@ namespace BigBalls.Infrastructure
             _uIFactory.Get<MainMenu>(WindowType.MainMenu).Close();
             _uIFactory.UIRoot.GlobalWalletView.Disable();
             _levelTimeline.Start(_levelConfig);
-            _winService.SetLevel(_currentLevel);
-            _louseService.SetLevel(_currentLevel);
+            _winService.SetLevel(CurrentLevel);
+            _louseService.SetLevel(CurrentLevel);
             CreateGameUI();
             IsGameStarted = true;
         }
 
-        private void OnCameraReplaced()
+        private void OnCameraReplaced ()
         {
             RoadColliderPlacer colliderPlacer = _cameraProvider.Camera.GetComponent<RoadColliderPlacer>();
             colliderPlacer.PlaceWalls();
@@ -178,7 +178,7 @@ namespace BigBalls.Infrastructure
             _playerFactory.OnPlayerSpawned();
         }
 
-        private Camera CreateCamera()
+        private Camera CreateCamera ()
         {
             Camera prefab = _resourceLoader.Load<Camera>();
             Camera camera = _objectResolverProvider.CurrentResolver.Instantiate(prefab);
@@ -186,14 +186,14 @@ namespace BigBalls.Infrastructure
             return camera;
         }
 
-        private void CreateGameUI()
+        private void CreateGameUI ()
         {
             _windowService.Open<HUD>();
             _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
             _uIFactory.UIRoot.GlobalWalletView.Disable();
         }
 
-        public void Exit()
+        public void Exit ()
         {
             IsGameStarted = false;
 
@@ -202,7 +202,6 @@ namespace BigBalls.Infrastructure
             _tileMover.Stop();
             _levelTimeline.Stop();
             _updateService.Clear();
-            _timeService.ResumeGame();
             _soundService.StopAll();
             _soundSpawner.Disable();
             _poolService.ClearAllPools();

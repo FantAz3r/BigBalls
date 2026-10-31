@@ -54,7 +54,7 @@ namespace BigBalls.Factories
                 mover
             };
 
-            DeathHandler<Ball> ballDeathHandler = new DeathHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
+            HealthHandler<Ball> ballDeathHandler = new HealthHandler<Ball>(statHolder[StatType.Health], subscribables, ball);
             ballDeathHandler.Subscribe();
 
             var collisions = new List<ICollisionStrategy>(strategies);

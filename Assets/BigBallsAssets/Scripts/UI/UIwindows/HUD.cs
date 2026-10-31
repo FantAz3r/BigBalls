@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BigBalls.UI
 {
@@ -11,10 +10,5 @@ namespace BigBalls.UI
         [field: SerializeField] public PlayerLevelViewer PlayerLevelViewer { get; private set; }
         [field: SerializeField] public WaveViewer WaveViewer { get; private set; }
         [field: SerializeField] public PlayerSlots PlayerSlots { get; private set; }
-
-        public override void Open()
-        {
-            base.Open();
-        }
     }
 }

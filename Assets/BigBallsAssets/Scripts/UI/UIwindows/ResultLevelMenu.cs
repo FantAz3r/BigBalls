@@ -9,10 +9,11 @@ using VContainer;
 
 namespace BigBalls.UI
 {
-    public abstract class LevelResultMenu : PauseWindow
+    public abstract class ResultLevelMenu : PauseWindow
     {
         [Header("Chest")]
         [SerializeField] private Image _chestImage;
+        [SerializeField] private OpenChestButton _chestButton;
 
         [Header("Stars")]
         [SerializeField] private List<Image> _stars;
@@ -52,13 +53,16 @@ namespace BigBalls.UI
             RenderStars(compliteWaves);
             PlayResultSound();
             OnResultApplied(level, compliteWaves, levelButton);
-            levelButton.gameObject.SetActive(false);
+
+            _chestButton.gameObject.SetActive(compliteWaves > 0);
+            levelButton.gameObject.SetActive(compliteWaves > 0 == false);
         }
 
         private void SetupChest (LevelID level, int compliteWaves, LevelButton levelButton)
         {
             if (compliteWaves > 0)
             {
+                levelButton.gameObject.SetActive(true);
                 ChestConfig chestConfig = _chestData.GetChest((Rarity) compliteWaves);
 
                 if (_chestImage)
@@ -89,6 +93,7 @@ namespace BigBalls.UI
             if (_kills)
                 _kills.text = (EnemyFactory.DiedCount - EnemyFactory.SuisidedCount).ToString();
         }
+
         private void RenderStars (int compliteWaves)
         {
             for (int i = 0; i < _stars.Count; i++)

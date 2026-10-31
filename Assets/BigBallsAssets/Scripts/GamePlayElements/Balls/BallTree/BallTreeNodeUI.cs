@@ -18,9 +18,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text _priceText;
     [SerializeField] private GameObject _lockIcon;
     [SerializeField] private Button _unlockButton;
-    [SerializeField] private Color _lockedColor = Color.gray;
-    [SerializeField] private Color _unlockedColor = Color.white;
-    [SerializeField] private Color _availableColor = Color.green;
     [SerializeField] private Slider _slider;
 
     [SerializeField] private SerializedDictionary<Rarity, Color> _colors = new();
@@ -46,12 +43,6 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         {
             UpdateState();
         }
-        //_unlockButton?.onClick.AddListener(Unlock);
-    }
-
-    private void OnDisable ()
-    {
-        //_unlockButton?.onClick.RemoveListener(Unlock);
     }
 
     [Inject]
@@ -78,20 +69,33 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         _slider.value = BallModel.ItemEXP;
 
         _isOpen = BallModel.IsOpen;
-        bool canUnlock = _unlockService.CanUnlock(BallType);
+        bool canUnlock = _unlockService.CanUnlock(BallModel);
         int level = BallModel.Level;
 
-        _lockIcon.SetActive(_isOpen == false);
-        _levelText.text = level.ToString();
         _background.color = _colors[BallModel.Config.Rarity];
+        _lockIcon.SetActive(_isOpen == false);
+        _levelText.text = $"{TextLocalizator.LVL} {level}";
 
         if (_isOpen == false)
         {
-            _priceText.text = canUnlock ? $"{BallModel.BallConfig.UnlockPrice} {TextLocalizator.EXP}" : $"{TextLocalizator.Locked}";
+            _levelText.gameObject.SetActive(canUnlock);
+
+            if (canUnlock)
+            {
+                _priceText.text = $"{TextLocalizator.Cost}: {BallModel.BallConfig.UnlockPrice}";
+                _background.color = _colors[BallModel.Config.Rarity];
+                _icon.color = Color.white;
+            }
+            else
+            {
+                _priceText.text = string.Empty;
+                _background.color = Color.black;
+                _icon.color = Color.black;
+            }
+
             _priceText.gameObject.SetActive(true);
             DisableConnections();
             TryUpgradeConnaction();
-
             UpdateConnections();
         }
         else
@@ -118,7 +122,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         return BallModel.TryUpgradeNoneGameLevel();
     }
 
-    public bool Unlock () => _unlockService.TryUnlockBall(BallModel.BallConfig.BallType);
+    public bool Unlock () => _unlockService.TryUnlockBall(BallModel);
     public void AddChildConnection (BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
     public void AddParentConnection (BallTreeConnectionUI connectionUI) => _parentConnections.Add(connectionUI);
 

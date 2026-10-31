@@ -51,6 +51,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<InputService>(Lifetime.Scoped);
             builder.Register<MobileInputService>(Lifetime.Scoped);
             builder.Register<InputServiceAdapter>(Lifetime.Scoped);
+            builder.Register<Resurecter>(Lifetime.Scoped);
 
             builder.Register<IDamageService, DamageService>(Lifetime.Scoped);
             builder.Register<IRaycastService, RaycastService>(Lifetime.Transient);

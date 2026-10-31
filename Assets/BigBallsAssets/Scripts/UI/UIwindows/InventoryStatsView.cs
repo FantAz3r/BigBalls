@@ -15,6 +15,8 @@ public class InventoryStatsView : MonoBehaviour
     [SerializeField] private TMP_Text _descriptionText;
     [SerializeField] private TMP_Text _level;
     [SerializeField] private TMP_Text _maxLevelText;
+    [SerializeField] private TMP_Text _artefctsTip;
+    [SerializeField] private TMP_Text _ballTip;
     [SerializeField] private ItemUpgradeButton _upgradeButton;
     [SerializeField] private RectTransform _statsParent;
     [SerializeField] private RectTransform _slotsParent;
@@ -78,10 +80,13 @@ public class InventoryStatsView : MonoBehaviour
     {
         _slotsParent.gameObject.SetActive(false);
         _statsParent.gameObject.SetActive(false);
+        _artefctsTip.gameObject.SetActive(false);
+        _ballTip.gameObject.SetActive(false);
 
         if (card is WeaponModel weaponModel)
         {
             _slotsParent.gameObject.SetActive(true);
+            _ballTip.gameObject.SetActive(true);
 
             foreach (var item in weaponModel.UniqueBallModels())
             {
@@ -93,6 +98,7 @@ public class InventoryStatsView : MonoBehaviour
         else if (card is HelmetModel helmetModel)
         {
             _slotsParent.gameObject.SetActive(true);
+            _artefctsTip.gameObject.SetActive(true);
 
             foreach (var item in helmetModel.GetArtefacts())
             {

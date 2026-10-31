@@ -31,12 +31,12 @@ public class PopupWindow : WindowBase
     public override void Close ()
     {
         _scaleTween?.Kill();
-
         _soundSpawner.Spawn(SoundType.ClosePanel);
 
         _scaleTween = transform.DOScale(Vector3.zero, CloseDuration)
             .SetEase(Ease.InBack)
             .SetUpdate(true)
-            .OnComplete(() => base.Close());
+            .OnComplete(() => base.Close())
+            .OnKill(() => base.Close());
     }
 }

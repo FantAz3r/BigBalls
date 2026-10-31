@@ -15,11 +15,18 @@ public class BallUnlockService : IBallUnlockService
     public event Action<BallType> OnBallUnlocked;
     public event Action<BallType> OnBallUpgraded;
 
-    public bool TryUnlockBall (BallType type)
+    public bool TryUnlockBall (BallModel ballModel)
     {
-        if (CanUnlock(type) == false)
+        BallType type = ballModel.BallConfig.BallType;
+        var node = _ballsRepository.AllModels[type];
+
+        if (CanUnlock(ballModel) == false)
             return false;
 
+        if (_globalWallet.CanSpendCoins(ballModel.BallConfig.UnlockPrice) == false)
+            return false;
+
+        _globalWallet.TrySpendCoins(ballModel.BallConfig.UnlockPrice);
 
         if (_ballsRepository.AllModels.TryGetValue(type, out var ball))
         {
@@ -31,8 +38,9 @@ public class BallUnlockService : IBallUnlockService
         return false;
     }
 
-    public bool CanUnlock (BallType type)
+    public bool CanUnlock (BallModel ballModel)
     {
+        BallType type = ballModel.BallConfig.BallType;
         var node = _ballsRepository.AllModels[type];
 
         if (node == null)
@@ -40,10 +48,6 @@ public class BallUnlockService : IBallUnlockService
 
         if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
             return false;
-
-        if (_globalWallet.CanSpendCoins(ball.BallConfig.UnlockPrice) == false)
-            return false;
-
 
         foreach (var parentType in node.BallConfig.ParentTypes)
         {
@@ -57,8 +61,6 @@ public class BallUnlockService : IBallUnlockService
                 return false;
         }
 
-
-        _globalWallet.TrySpendCoins(ball.BallConfig.UnlockPrice);
         return true;
     }
 }

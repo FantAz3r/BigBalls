@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using BigBalls.Services;
 using BigBalls.UI;
-using UnityEngine;
 using VContainer;
 
 public class AddButton : ButtonClickHandler
@@ -19,11 +16,16 @@ public class AddButton : ButtonClickHandler
     {
         _action = action;
         _cardReward = rewaedID;
+
+        if (_aDVServise.CanShowRewardADV(rewaedID) == false)
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
     }
 
     protected override void OnClick ()
     {
-        Debug.Log("reclama");
-        _aDVServise.TryShowRewardADV(_cardReward, _action);
+        if(_action != null)
+            _aDVServise.TryShowRewardADV(_cardReward, _action);
     }
 }

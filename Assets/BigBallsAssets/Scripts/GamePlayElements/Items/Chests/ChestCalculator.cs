@@ -2,56 +2,52 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BigBalls.StaticData;
-using UnityEngine;
 
 public class ChestCalculator
 {
     private readonly System.Random _random;
     private readonly ArmorRepository _armorRepository;
     private readonly WeaponRepository _weaponRepository;
+    private readonly HelmetRepository _helmetRepository;
     private readonly List<ICardModel> _cards = new();
 
     public ChestModel ChestModel { get; private set; }
     private const int BaseGold = 100;
     private const int TotalCardsCost = 10;
 
-    public ChestCalculator(ArmorRepository armorRepository, WeaponRepository weaponRepository)
+    public ChestCalculator (ArmorRepository armorRepository, WeaponRepository weaponRepository, HelmetRepository helmetRepository)
     {
         _armorRepository = armorRepository;
         _weaponRepository = weaponRepository;
+        _helmetRepository = helmetRepository;
         _random = new System.Random();
 
         _cards.AddRange(_weaponRepository.AllModels.Values);
         _cards.AddRange(_armorRepository.AllModels.Values);
+        _cards.AddRange(_helmetRepository.AllModels.Values);
     }
 
-    public ChestOpenResult OpenChest(ChestModel model)
+    public ChestOpenResult OpenChest (ChestModel model)
     {
         ChestModel = model;
         var result = new ChestOpenResult();
-        var totalCards = model.GetCardCount(); // Добавлена переменная totalCards
+        var totalCards = model.GetCardCount();
 
-
-        // Проверяем, есть ли вообще доступные карты
         var allAvailableCards = _cards
-            .Where(card => card.Config.IsOpen || card.IsOpen) // Карты, которые можно получить
+            .Where(card => card.Config.IsOpen || card.IsOpen)
             .ToList();
 
         if (allAvailableCards.Count == 0)
         {
-            // Все карты закрыты - выдаем только золото
             result.GoldAmount = CalculateGoldCompensation(totalCards);
-            return result; // Исправлено: return result, а не return result.GoldAmount
+            return result;
         }
 
-        // Проверяем количество полностью прокачанных карт
         var notMaxedCards = allAvailableCards
             .Where(card => card.Level < card.MaxLevel)
             .ToList();
 
         var rarityDistribution = GetRarityDistribution(totalCards);
-
-        // Группируем все доступные карты по редкости
         var modelsByRarity = allAvailableCards
             .GroupBy(model => model.Config.Rarity)
             .ToDictionary(g => g.Key, g => g.ToList());
@@ -63,29 +59,25 @@ public class ChestCalculator
 
             if (modelsByRarity.TryGetValue(rarity, out var candidates) == false || candidates.Count == 0)
             {
-                // Нет карт этой редкости - компенсируем золотом
                 result.GoldAmount += CalculateRarityGoldCompensation(rarity, count);
                 continue;
             }
 
-            // Проверяем, сколько карт этой редкости можно еще прокачать
             var notMaxedCandidates = candidates
                 .Where(card => card.Level < card.MaxLevel)
                 .ToList();
 
             if (notMaxedCandidates.Count == 0)
             {
-                // Все карты этой редкости прокачаны - компенсируем золотом
                 result.GoldAmount += CalculateRarityGoldCompensation(rarity, count);
                 continue;
             }
 
             for (int i = 0; i < count; i++)
             {
-                // Если закончились непрокачанные карты, но еще нужно выдать
                 if (notMaxedCandidates.Count == 0)
                 {
-                    result.GoldAmount += CalculateSingleCardGoldCompensation(rarity); // Исправлено: передаем rarity
+                    result.GoldAmount += CalculateSingleCardGoldCompensation(rarity);
                     continue;
                 }
 
@@ -94,7 +86,6 @@ public class ChestCalculator
 
                 if (chosenModel != null)
                 {
-                    // Открываем карту, если она еще не открыта
                     if (chosenModel.IsOpen == false)
                     {
                         chosenModel.OpenItem();
@@ -102,7 +93,6 @@ public class ChestCalculator
 
                     result.Cards.Add(chosenModel);
 
-                    // Если карта достигла максимума после добавления, убираем из доступных
                     if (chosenModel.Level >= chosenModel.MaxLevel)
                     {
                         notMaxedCandidates.RemoveAt(idx);
@@ -111,25 +101,21 @@ public class ChestCalculator
             }
         }
 
-        // Если вообще не удалось выдать карты (все прокачаны)
         if (result.Cards.Count == 0 && totalCards > 0)
         {
             result.GoldAmount += CalculateGoldCompensation(totalCards);
         }
 
-        return result; // Исправлено: return result, а не return result.GoldAmount
+        return result;
     }
 
-    // Исправлен метод: добавлен параметр rarity
-    public int CalculateSingleCardGoldCompensation(Rarity rarity)
+    public int CalculateSingleCardGoldCompensation (Rarity rarity)
     {
-        // Базовое золото за сундук + дополнительное за каждую невыданную карту
         return BaseGold + TotalCardsCost * 50;
     }
 
-    public int CalculateRarityGoldCompensation(Rarity rarity, int count)
+    public int CalculateRarityGoldCompensation (Rarity rarity, int count)
     {
-        // Разное количество золота в зависимости от редкости
         int goldPerCard = rarity switch
         {
             Rarity.Common => 5,
@@ -142,23 +128,19 @@ public class ChestCalculator
         return goldPerCard * count;
     }
 
-    private int CalculateGoldCompensation(int totalCards)
+    private int CalculateGoldCompensation (int totalCards)
     {
-        // Здесь нужна логика расчета золота в зависимости от редкости
-        // Так как параметр totalCards - это количество карт, а не редкость
-        // Исправляем на правильную логику
-        return totalCards * 10; // Например, 10 золота за карту
+        return totalCards * 10;
     }
 
-    private Dictionary<Rarity, int> GetRarityDistribution(int totalCards)
+    private Dictionary<Rarity, int> GetRarityDistribution (int totalCards)
     {
-
         var raritiesWithChance = Enum.GetValues(typeof(Rarity))
             .Cast<Rarity>()
             .Select(rarity => new
             {
                 Rarity = rarity,
-                Chance = GetChanceForRarity(rarity) 
+                Chance = GetChanceForRarity(rarity)
 
             })
             .Where(x => x.Chance > 0f)
@@ -184,7 +166,7 @@ public class ChestCalculator
 
         foreach (var ec in expectedCounts)
         {
-            int floorCount = (int)Math.Floor(ec.CountFloat);
+            int floorCount = (int) Math.Floor(ec.CountFloat);
 
             result[ec.Rarity] = floorCount;
             cardsAssigned += floorCount;
@@ -202,7 +184,7 @@ public class ChestCalculator
 
         return result;
     }
-    private float GetChanceForRarity(Rarity rarity)
+    private float GetChanceForRarity (Rarity rarity)
     {
         return rarity switch
         {

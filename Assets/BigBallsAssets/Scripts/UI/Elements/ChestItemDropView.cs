@@ -231,7 +231,6 @@ public class ChestItemDropView : WindowBase
 
         _currentAnimation = DOTween.Sequence();
 
-        // Смена спрайта на ShowIcon
         if (_closeChestImage != null)
         {
             _currentAnimation.AppendCallback(() =>
@@ -241,31 +240,10 @@ public class ChestItemDropView : WindowBase
             });
         }
 
-        for (int i = _activeCards.Count - 1; i >= 0; i--)
-        {
-            ChestCardView card = _activeCards[i];
-
-            // Находим целевой трансформ для этой карты (например, слот в инвентаре)
-            Transform target = FindTargetForCard(i);
-
-            if (target != null)
-            {
-                float delay = (_activeCards.Count - 1 - i) * 0.2f;
-                Sequence collectSequence = card.CreateCollectAnimation(target, 0.5f);
-                collectSequence.SetDelay(delay);
-                collectSequence.OnComplete(() => Destroy(card));
-                _currentAnimation.Join(collectSequence);
-            }
-        }
-
         _currentAnimation.Play();
     }
 
-    private Transform FindTargetForCard (int index)
-    {
-
-        return null;
-    }
+   
 
     private void KillCurrentAnimation ()
     {

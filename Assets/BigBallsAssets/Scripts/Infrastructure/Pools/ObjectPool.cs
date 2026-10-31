@@ -57,8 +57,8 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : Component
 
     public void Release (T obj)
     {
-        obj.gameObject.SetActive(false);
         obj.transform.SetParent(_positionInHierarchy.transform);
+        obj.gameObject.SetActive(false);
         _objectPool.Enqueue(obj);
     }
 

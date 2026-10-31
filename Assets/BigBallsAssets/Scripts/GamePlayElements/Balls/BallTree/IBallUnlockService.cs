@@ -6,6 +6,6 @@ public interface IBallUnlockService
     event Action<BallType> OnBallUpgraded;
     event Action<BallType> OnBallUnlocked;
 
-    bool CanUnlock (BallType type);
-    bool TryUnlockBall (BallType type);
+    bool CanUnlock (BallModel ballModel);
+    bool TryUnlockBall (BallModel ballModel);
 }

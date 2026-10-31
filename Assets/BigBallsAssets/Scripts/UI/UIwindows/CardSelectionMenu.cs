@@ -24,10 +24,8 @@ public class CardSelectionMenu : PauseWindow
     private List<ICardModel> _currentCards;
 
     private IUIFactory _uIFactory;
-    private IWindowService _windowService;
     private ITimeService _timeService;
     private IObjectResolverProvider _objectResolverProvider;
-
     private IPlayerExperience _playerExperience;
     private PlayerCardHolder _playerCardHolder;
 
@@ -69,7 +67,6 @@ public class CardSelectionMenu : PauseWindow
     {
         _uIFactory = uIFactory;
         _objectResolverProvider = objectResolverProvider;
-        _windowService = windowService;
         _selector = cardSelector;
         _playerExperience = playerExperienceModel;
         _cardPrefab = resourceLoader.Load<CardView>();
@@ -229,7 +226,7 @@ public class CardSelectionMenu : PauseWindow
     private void CloseCardMenu ()
     {
         Close();
-        _timeService.SmoothReduceTimescale(0, 0);
+        _timeService.SmoothEditTimescale(0, 0);
         _uIFactory.Get<HUD>(WindowType.HUD).Open();
         _timeService.SmoothRecoverTimescale(1);
     }

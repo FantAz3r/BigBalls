@@ -1,3 +1,4 @@
+using BigBalls.Localization;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class ChestCardView : MonoBehaviour
         gameObject.SetActive(true);
         _iconImage.sprite = cardModel.Config.Icon;
         _amountText.text = $"x{count}";
-        _rarityText.text = cardModel.Config.Rarity.ToString();
+        _rarityText.text = TextLocalizator.GetRarityText(cardModel.Config.Rarity);
 
         SetRarityColor(cardModel.Config.Rarity);
 
@@ -42,7 +43,7 @@ public class ChestCardView : MonoBehaviour
 
         _iconImage.sprite = sprite;
         _amountText.text = $"+{amount}";
-        _rarityText.text = "Gold";
+        _rarityText.text = $"{TextLocalizator.Gold}";
 
         SetRarityColor(Rarity.Common, true);
 

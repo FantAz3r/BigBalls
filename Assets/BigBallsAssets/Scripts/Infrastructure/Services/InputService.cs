@@ -100,6 +100,7 @@ namespace BigBalls.Services
         {
             _inputActions.Player.Enable();
         }
+
         public void DisablePlayer ()
         {
             _inputActions.Player.Disable();

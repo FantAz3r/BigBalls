@@ -10,7 +10,7 @@ public class ArmorViewer : MonoBehaviour
 
     private IItemConainerProvider _itemConainerProvider;
     private StatHolder _statHolder;
-    private ArmorSet _currentArmor;
+    private ArmorSet _currentArmorSet;
     private ArmorModel _currentArmorModel;
 
     [Inject]
@@ -22,55 +22,81 @@ public class ArmorViewer : MonoBehaviour
     public void Init (StatHolder statHolder)
     {
         _statHolder = statHolder;
-        View(_itemConainerProvider.Armor);
-        _itemConainerProvider.ArmorSeted += View;
-        _itemConainerProvider.ArmorRemoved += OnRemoveArmor;
+        UpdateArmorVisual(_itemConainerProvider.Armor);
 
+        _itemConainerProvider.ArmorSeted += OnArmorSeted;
+        _itemConainerProvider.ArmorRemoved += OnArmorRemoved;
     }
 
     private void OnDisable ()
     {
         if (_itemConainerProvider != null)
         {
-            _itemConainerProvider.ArmorSeted -= View;
-            _itemConainerProvider.ArmorRemoved -= OnRemoveArmor;
+            _itemConainerProvider.ArmorSeted -= OnArmorSeted;
+            _itemConainerProvider.ArmorRemoved -= OnArmorRemoved;
         }
     }
 
-    private void OnRemoveArmor(ArmorModel armorModel = null)
+    private void OnArmorSeted (ArmorModel armorModel)
     {
-        if (_currentArmor != null)
-        {
-            foreach (GameObject item in _currentArmor.ArmorElements)
-            {
-                item.SetActive(false);
-            }
-
-            _currentArmor = null;
-        }
-    }
-
-    private void View (ArmorModel armor)
-    {
-        OnRemoveArmor();
-
-        if (armor == null)
+        if (_currentArmorModel == armorModel)
             return;
 
-        _currentArmorModel = armor;
+        UpdateArmorVisual(armorModel);
+        _statHolder.Set(armorModel);
+    }
+
+    private void OnArmorRemoved (ArmorModel armorModel = null)
+    {
+        UpdateArmorVisual(null);
+        _statHolder.Set(null);
+    }
+
+    private void UpdateArmorVisual (ArmorModel armorModel)
+    {
+        _currentArmorModel = armorModel;
+
+        if (_currentArmorSet != null)
+        {
+            SetArmorActive(_currentArmorSet, false);
+            _currentArmorSet = null;
+        }
+
+        if (armorModel == null)
+        {
+            if (_baseSet != null)
+            {
+                SetArmorActive(_baseSet, true);
+                _currentArmorSet = _baseSet;
+            }
+            return;
+        }
 
         foreach (var armorSet in _armors)
         {
-            if (armorSet.ItemType == _currentArmorModel.ArmorConfig.ItemType)
+            if (armorSet.ItemType == armorModel.ArmorConfig.ItemType)
             {
-                _currentArmor = armorSet;
-                foreach (GameObject item in armorSet.ArmorElements)
-                {
-                    item.SetActive(true);
-                }
-
-                _statHolder.Set(armor);
+                SetArmorActive(armorSet, true);
+                _currentArmorSet = armorSet;
+                return;
             }
+        }
+
+        if (_baseSet != null)
+        {
+            SetArmorActive(_baseSet, true);
+            _currentArmorSet = _baseSet;
+        }
+    }
+
+    private void SetArmorActive (ArmorSet armorSet, bool isActive)
+    {
+        if (armorSet == null || armorSet.ArmorElements == null) return;
+
+        foreach (GameObject item in armorSet.ArmorElements)
+        {
+            if (item != null)
+                item.SetActive(isActive);
         }
     }
 }

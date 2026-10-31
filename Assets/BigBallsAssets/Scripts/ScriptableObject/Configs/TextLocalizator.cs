@@ -290,12 +290,64 @@ namespace BigBalls.Localization
                 },
             };
 
+        private static readonly Dictionary<Rarity, Dictionary<string, string>> RarityDict =
+              new Dictionary<Rarity, Dictionary<string, string>>
+              {
+                {
+                    Rarity.None, new Dictionary<string, string>
+                    {
+                        { Russian, "нет" },
+                        { English, "none" },
+                        { Turkish, "yok" },
+                    }
+                },
+                {
+                    Rarity.Common, new Dictionary<string, string>
+                    {
+                        { Russian, "обычный" },
+                        { English, "common" },
+                        { Turkish, "yaygın" },
+                    }
+                },
+                {
+                    Rarity.Rare, new Dictionary<string, string>
+                    {
+                        { Russian, "редкий" },
+                        { English, "rare" },
+                        { Turkish, "nadir" },
+                    }
+                },
+                {
+                    Rarity.Epic, new Dictionary<string, string>
+                    {
+                        { Russian, "эпический" },
+                        { English, "epic" },
+                        { Turkish, "epik" },
+                    }
+                },
+                {
+                    Rarity.Legendary, new Dictionary<string, string>
+                    {
+                        { Russian, "легендарный" },
+                        { English, "legendary" },
+                        { Turkish, "efsanevi" },
+                    }
+                },
+              };
+
 
         private static readonly Dictionary<string, string> MergeDict = new Dictionary<string, string>
         {
             { Russian, "Слияние" },
             { English, "Merge" },
             { Turkish, "Birleşme" },
+        };
+
+        private static readonly Dictionary<string, string> CostDict = new Dictionary<string, string>
+        {
+            { Russian, "Цена" },
+            { English, "Cost" },
+            { Turkish, "Fiyat" },
         };
 
         private static readonly Dictionary<string, string> GoldDict = new Dictionary<string, string>
@@ -568,7 +620,7 @@ namespace BigBalls.Localization
         {
             { Russian, "Ур" },
             { English, "LVL" },
-            { Turkish, "LVL" },
+            { Turkish, "Sev" },
         };
 
         private static readonly Dictionary<string, string> YourBestScoreDict = new Dictionary<string, string>
@@ -594,6 +646,7 @@ namespace BigBalls.Localization
 
         public static string ExplosionDamage => GetText(ExplosionDamageDict);
         public static string Cards => GetText(CardsDict);
+        public static string Cost => GetText(CostDict);
         public static string Gold => GetText(GoldDict);
         public static string Merge => GetText(MergeDict);
         public static string ArmorReduction => GetText(ArmorReductionDict);
@@ -659,6 +712,8 @@ namespace BigBalls.Localization
         public static string GetWindowTypeText (WindowType type) => GetLocalizedText(type, WindowTypeDict);
 
         public static string GetStatTypeText (StatType type) => GetLocalizedText(type, StatTypeDict);
+
+        public static string GetRarityText (Rarity type) => GetLocalizedText(type, RarityDict);
 
         private static string GetLocalizedText<T> (T key, Dictionary<T, Dictionary<string, string>> dict)
         {

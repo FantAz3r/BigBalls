@@ -11,7 +11,7 @@ using VContainer.Unity;
 
 namespace BigBalls.Factories
 {
-    public class PlayerFactory : IPlayerFactory//, IArtefactUser
+    public class PlayerFactory : IPlayerFactory
     {
         private readonly IObjectResolverProvider _objectResolver;
         private readonly ISceneContainerProvider _sceneContainerProvider;
@@ -33,6 +33,7 @@ namespace BigBalls.Factories
         private PlayerConfig _playerConfig;
         private PlayerCardHolder _cardHolder;
         private Shooter _shooter;
+        private Player _player;
 
         public PlayerFactory (
             IObjectResolverProvider objectResolver,
@@ -76,25 +77,25 @@ namespace BigBalls.Factories
             int playerID = _identifierService.ID;
             Vector3 spawnPoint = _sceneContainerProvider.PlayerSpawnPoints.First().transform.position;
             Player prefab = _resourceLoader.Load<Player>();
-            Player player = _objectResolver.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
+            _player = _objectResolver.CurrentResolver.Instantiate(prefab, spawnPoint, Quaternion.identity);
 
-            StatHolder statHolder = new StatHolder(player, EntityType.Player, _playerConfig, _effectFactory);
+            StatHolder statHolder = new StatHolder(_player, EntityType.Player, _playerConfig, _effectFactory);
             statHolder.InitStats();
-            player.ArmorViewer.Init(statHolder);
+            statHolder.Set(_itemConainerProvider.Armor);
+            _player.ArmorViewer.Init(statHolder);
 
             _playerExperience.Init(statHolder[StatType.Experience]);
 
             ComponentContainer container = new ComponentContainer();
 
-            List<ISubscribable> components = CreateComponents(statHolder, player);
+            List<ISubscribable> components = CreateComponents(statHolder, _player);
 
-            DeathHandler<Player> deathHandler = new DeathHandler<Player>(statHolder[StatType.Health], components, player);
+            HealthHandler<Player> deathHandler = new HealthHandler<Player>(statHolder[StatType.Health], components, _player);
             deathHandler.Subscribe();
+            DeathSubscribe();
 
             _louseService.SetLouseReason(deathHandler);
-            player.Construct(playerID, deathHandler);
-
-            player.EventHandler.Died += OnDied;
+            _player.Construct(playerID, deathHandler);
 
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerHealthViewer.Init(statHolder[StatType.Health]);
             _uIFactory.Get<HUD>(WindowType.HUD).PlayerExperienceViewer.Init(_playerExperience);
@@ -106,17 +107,18 @@ namespace BigBalls.Factories
                 container.Add(component);
             }
 
-            _entityRepository.Add(player, statHolder, container);
-            _playerProvider.Set(player);
+            _entityRepository.Add(_player, statHolder, container);
+            _playerProvider.Set(_player);
 
-            return player;
+            return _player;
         }
+
+        public void DeathSubscribe() => _player.EventHandler.Died += OnDied;
 
         private void OnDied (IEntity entity)
         {
             if (entity is not Player player)
                 return;
-
 
             player.DeathHandler.Unsubscribe();
             player.EventHandler.Died -= OnDied;

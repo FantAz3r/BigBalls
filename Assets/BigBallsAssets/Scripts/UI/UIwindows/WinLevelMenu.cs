@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BigBalls.UI
 {
-    public class WinLevelMenu : LevelResultMenu
+    public class WinLevelMenu : ResultLevelMenu
     {
         [SerializeField] private TMP_Text _compliteText;
         [SerializeField] private TMP_Text _levelStats;

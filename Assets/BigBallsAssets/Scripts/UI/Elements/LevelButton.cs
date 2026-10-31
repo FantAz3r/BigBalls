@@ -19,6 +19,7 @@ namespace BigBalls.UI
         {
             _loadingService = levelLoadingService;
             _windowService = windowService;
+            _createLevelState = createLevelState;
         }
 
         public void Set (LevelID level) => LevelID = level;
@@ -29,8 +30,9 @@ namespace BigBalls.UI
             {
                 _loadingService.Load(_loadingService.CurrentLevel);
             }
-            else if (_loadingService.CurrentLevel == LevelID)
+            else if (_createLevelState.CurrentLevel == LevelID)
             {
+
                 if (_createLevelState.IsGameStarted)
                 {
                     _loadingService.Load(LevelID);

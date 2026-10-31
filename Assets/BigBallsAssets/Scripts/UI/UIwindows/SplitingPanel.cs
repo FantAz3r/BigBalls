@@ -10,6 +10,7 @@ using VContainer;
 public class SplitingPanel : PauseWindow
 {
     [SerializeField] private TMP_Text _mergeButtonText;
+    [SerializeField] private TMP_Text _disableMergeText;
     [SerializeField] private TMP_Text _splitButtonText;
     [SerializeField] private Button _mergeButton;
     [SerializeField] private Button _splitButton;
@@ -40,12 +41,16 @@ public class SplitingPanel : PauseWindow
 
         if (mergeCount > 0)
         {
-            _mergeButton.gameObject.SetActive(true);
+            _mergeButtonText.gameObject.SetActive(true);
             _mergeButtonText.text = $"{TextLocalizator.Merge}: {mergeCount}";
+            _mergeButton.interactable = true;
+            _disableMergeText.gameObject.SetActive(false);
         }
         else
         {
-            _mergeButton.gameObject.SetActive(false);
+            _mergeButtonText.gameObject.SetActive(false);
+            _disableMergeText.gameObject.SetActive(true);
+            _mergeButton.interactable = false;
         }
 
         if (SplitingWindow.CalculateCardsCount(out int minCount, out int maxCount, out List<ICardModel> cards) == false)

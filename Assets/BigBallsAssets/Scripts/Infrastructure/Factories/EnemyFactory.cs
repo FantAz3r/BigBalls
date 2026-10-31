@@ -60,7 +60,7 @@ namespace BigBalls.Factories
 
             List<ISubscribable> subscribables = CreateComponents(statHolder, enemy, enemyConfig);
 
-            DeathHandler<Enemy> deathHandler = new DeathHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
+            HealthHandler<Enemy> deathHandler = new HealthHandler<Enemy>(statHolder[StatType.Health], subscribables, enemy);
             deathHandler.Subscribe();
             enemy.EventHandler.Died += OnDied;
 

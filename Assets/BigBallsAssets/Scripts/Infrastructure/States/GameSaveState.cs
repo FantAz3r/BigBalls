@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class GameExitState : IState
+public class GameSaveState : IState
 {
     private readonly BallRepository _ballsRepository;
     private readonly ArtefactsRepository _artefactsRepository;
     private readonly ISaveService _saveService;
 
-    public GameExitState(
+    public GameSaveState(
         BallRepository ballsRepository,
         ArtefactsRepository artefactsRepository,
         ISaveService saveService)

@@ -21,7 +21,7 @@ namespace BigBalls.GameplayObjects
 
         public int Id { get; private set; }
         public IMover Mover { get; private set; }
-        public DeathHandler<Enemy> DeathHandler { get; private set; }
+        public HealthHandler<Enemy> DeathHandler { get; private set; }
         public EnemyConfig Config { get; private set; }
         public StatHolder StatHolder { get; private set; }
         public EntityEventHandler EventHandler { get; private set; }
@@ -40,7 +40,7 @@ namespace BigBalls.GameplayObjects
 
         public void Init (
             int id,
-            DeathHandler<Enemy> deathHandler,
+            HealthHandler<Enemy> deathHandler,
             EnemyConfig enemyConfig,
             StatHolder statHolder,
             Rotator rotator,
