@@ -21,7 +21,7 @@ namespace BigBalls.Saves
 
         public List<LevelSaveData> Levels = new();
 
-        public string Language = "en";
+        public string Language = "auto";
         public bool ShowDamageNumbers = true;
         public bool ShowFPS = false;
         public bool AutoAttack = true;
@@ -40,7 +40,7 @@ namespace BigBalls.Saves
 
         public void ResetSettings()
         {
-            Language = "en";
+            Language = "auto";
             ShowDamageNumbers = true;
             ShowFPS = false;
             AutoAttack = true;

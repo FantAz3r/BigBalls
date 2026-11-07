@@ -40,25 +40,34 @@ public class BallUnlockService : IBallUnlockService
 
     public bool CanUnlock (BallModel ballModel)
     {
-        BallType type = ballModel.BallConfig.BallType;
-        var node = _ballsRepository.AllModels[type];
-
-        if (node == null)
+        if (ballModel == null || ballModel.BallConfig == null)
             return false;
 
-        if (_ballsRepository.AllModels.TryGetValue(type, out var ball) && ball.IsOpen)
+        if (ballModel.IsOpen)
             return false;
 
-        foreach (var parentType in node.BallConfig.ParentTypes)
+        var config = ballModel.BallConfig;
+        BallType type = config.BallType;
+
+        if (_ballsRepository.AllModels.TryGetValue(type, out var existing)
+            && existing != null
+            && existing.IsOpen)
+            return false;
+
+        if (config.ParentTypes != null && config.ParentTypes.Count > 0)
         {
-            if (_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall) == false)
-                return false;
+            foreach (var parentType in config.ParentTypes)
+            {
+                if (!_ballsRepository.AllModels.TryGetValue(parentType, out var parentBall)
+                    || parentBall == null)
+                    return false;
 
-            if (parentBall.IsOpen == false)
-                return false;
+                if (!parentBall.IsOpen)
+                    return false;
 
-            if (parentBall.ItemEXP < node.BallConfig.RequiredEXP)
-                return false;
+                if (parentBall.ItemEXP < config.RequiredEXP)
+                    return false;
+            }
         }
 
         return true;

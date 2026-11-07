@@ -40,6 +40,7 @@ namespace BigBalls.Services
             { typeof(StatTextHolder), "UI/StatTextHolder"},
             { typeof(StatsSlot), "UI/StatSlot"},
             { typeof(SplitingCard), "UI/MergeSlot"},
+            { typeof(GameConfig),  "Configs/GameConfig" }
         };
 
         public T Load<T> () where T : Object

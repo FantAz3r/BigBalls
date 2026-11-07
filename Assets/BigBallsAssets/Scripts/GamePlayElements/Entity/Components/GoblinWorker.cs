@@ -68,7 +68,7 @@ public class GoblinWorker : MonoBehaviour
     private void AttackCallback ()
     {
         _soundSpawner.Spawn(_hitSound);
-        _damageService.ApplyDamage(_ship, _enemy.StatHolder[StatType.Damage].CurrentValue, Color.green);
+        _damageService.ApplyHeal(_ship, _enemy.StatHolder[StatType.Damage].CurrentValue, Color.green);
         _ship.EffectViewer.EnableEffect(EffectType.Heal);
     }
 }

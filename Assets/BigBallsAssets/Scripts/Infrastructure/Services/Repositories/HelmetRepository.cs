@@ -17,7 +17,9 @@ public class HelmetRepository : ItemRepository<ItemType, HelmetModel, HelmetConf
         IObjectResolverProvider objectResolverProvider) 
         : base(resourceLoader, saveService, objectResolverProvider)
     {
-        _helmetData = resourceLoader.Load<CardsData>().Helmets;
+        foreach (var helmet in resourceLoader.Load<CardsData>().Helmets)
+            _helmetData[helmet.Value.ItemType] = helmet.Value;
+
         _artefactsRepository = artefactsRepository;
         Initialize();
     }

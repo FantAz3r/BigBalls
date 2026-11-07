@@ -89,13 +89,11 @@ namespace BigBalls.Infrastructure
             _tileMover = tileMover;
             _levelTimeline = levelTimeline;
             _dropService = dropService;
-
             _ballsRepository = ballsRepository;
             _artefactsRepository = artefactsRepository;
             _weaponRepository = weaponRepository;
             _armorRepository = armorRepository;
             _helmetRepository = helmetRepository;
-
             _winService = winService;
             _louseService = louseService;
             _cameraProvider = cameraProvider;
@@ -128,16 +126,14 @@ namespace BigBalls.Infrastructure
             _poolService.SetCurrentLevelConfig(_currentEnemyConfigs, _levelConfig);
             _poolService.InitializePools();
 
+            _uIFactory.Get<CardInventory>(WindowType.Inventory);
+
             Camera camera = CreateCamera();
             CameraOrbit cameraOrbit = camera.GetComponent<CameraOrbit>();
             cameraOrbit = camera.GetComponent<CameraOrbit>();
             Player player = _playerFactory.Create();
             cameraOrbit.StartOrbit(player.transform);
             _dropService.SetCurrentLevelConfig(_currentEnemyConfigs);
-
-            _uIFactory.Get<CardInventory>(WindowType.Inventory);
-            _uIFactory.Get<SettingsView>(WindowType.Settings);
-
             _soundSpawner.Enable();
         }
 

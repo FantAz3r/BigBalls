@@ -15,5 +15,9 @@ namespace BigBalls.Factories
 
             return true;
         }
+
+        public void HandleTrigger (Ball ball, Collider other)
+        {
+        }
     }
 }

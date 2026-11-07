@@ -130,7 +130,7 @@ namespace BigBalls.Factories
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, player.Rigidbody, _playerConfig);
             _objectResolver.CurrentResolver.Inject(mover);
 
-            Rotator rotator = new Rotator(statHolder[StatType.RotationSpeed], player.transform);
+            GameplayObjects.Rotator rotator = new GameplayObjects.Rotator(statHolder[StatType.RotationSpeed], player.transform);
             _objectResolver.CurrentResolver.Inject(rotator);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);

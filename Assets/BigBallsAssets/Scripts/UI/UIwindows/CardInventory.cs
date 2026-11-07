@@ -54,6 +54,11 @@ public class CardInventory : PopupWindow
         _models.AddRange(weapons);
         _models.AddRange(_armorRepository.AllModels.Values);
         _models.AddRange(_helmetRepository.AllModels.Values);
+
+        foreach(var armor in _armorRepository.AllModels.Values)
+        {
+            //Debug.Log($"{armor.Name} {armor.ID}  {armor.HasPlayer}  {armor.IsOpen}");
+        }
     }
 
     public void OnFilterChanged (int filterType)

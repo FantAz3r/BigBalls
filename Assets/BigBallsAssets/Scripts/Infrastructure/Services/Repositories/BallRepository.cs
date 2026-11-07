@@ -7,12 +7,14 @@ using BigBalls.StaticData;
 
 public class BallRepository : ItemRepository<BallType, BallModel, BallConfig, BallSaveData>
 {
-    private readonly Dictionary<BallType, BallConfig> _ballsData;
+    private readonly Dictionary<BallType, BallConfig> _ballsData = new();
 
     public BallRepository (IResourceLoader resourceLoader, ISaveService saveService, IObjectResolverProvider objectResolverProvider)
         : base(resourceLoader, saveService, objectResolverProvider)
     {
-        _ballsData = resourceLoader.Load<CardsData>().Balls;
+        foreach (var ball in resourceLoader.Load<CardsData>().Balls)
+            _ballsData[ball.Value.BallType] = ball.Value;
+
         Initialize();
     }
 

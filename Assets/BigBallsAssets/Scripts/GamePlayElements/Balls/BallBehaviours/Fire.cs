@@ -1,9 +1,5 @@
-using BigBalls.Configs;
-using BigBalls.Factories;
-using BigBalls.Services;
 using System;
-using System.Collections;
-using UnityEngine;
+using BigBalls.Configs;
 using VContainer;
 
 namespace BigBalls.GameplayObjects
@@ -20,12 +16,19 @@ namespace BigBalls.GameplayObjects
 
         private void OnHit (IEntity entity)
         {
+            if (Host is not Ball ball)
+                return;
+
             _debuffService.ApplyDamageOverTime(
-                EffectType.Burn,
-                entity,
-                _config.GetBurnDPS(Level),
-                _config.BurnDuration,
-                _config.Color);
+            EffectType.Burn,
+            entity,
+            _config.GetBurnDPS(Level),
+            _config.BurnDuration,
+            _config.Color,
+            result =>
+            {
+                Ball.CalculateDamage(result.Damage);
+            });
         }
 
         protected override IDisposable SubscribeInternal (IEntity host)

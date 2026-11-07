@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using DG.Tweening;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class Hand : MonoBehaviour
     private SkeletonKingConfig _config;
     private IBallFactory _ballFactory;
     private IIdentifierService _identifierService;
+    private IObjectResolverProvider _objectResolverProvider;
     private IDamageService _damageService;
     private Collider _collider;
     private Transform _parent;
@@ -47,11 +49,12 @@ public class Hand : MonoBehaviour
     }
 
     [Inject]
-    public void Construct (IBallFactory ballFactory, IIdentifierService identifierService, IDamageService damageService)
+    public void Construct (IBallFactory ballFactory, IIdentifierService identifierService, IDamageService damageService, IObjectResolverProvider objectResolverProvider)
     {
         _ballFactory = ballFactory;
         _identifierService = identifierService;
         _damageService = damageService;
+        _objectResolverProvider = objectResolverProvider;
     }
 
     public void Punch (SkeletonKingConfig config, Vector3 worldDirection, float distance, float travelTime, float returnTime, Action onFinished = null)
@@ -145,6 +148,9 @@ public class Hand : MonoBehaviour
             new HitPlayerStrategy(),
             new WallColllisionStrategy()
         };
+
+        foreach (ICollisionStrategy strategy in collisionStrategies)
+            _objectResolverProvider.CurrentResolver.Inject(strategy);
 
         return collisionStrategies;
     }

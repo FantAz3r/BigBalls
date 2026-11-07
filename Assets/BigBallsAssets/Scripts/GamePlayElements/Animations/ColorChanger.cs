@@ -85,7 +85,7 @@ public class ColorChanger : MonoBehaviour
         SwapColor(_healColor, _healDuration / (_flashCount * 2), _flashCount * 2);
     }
 
-    public void SwapColor (Color color, float duration, int loops)
+    public void SwapColor (Color color, float duration, int loops = 1)
     {
         if (_enabled == false)
             return;

@@ -57,6 +57,12 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<PlayerAttackService>(Lifetime.Singleton);
             builder.Register<ChestCalculator>(Lifetime.Singleton);
             builder.Register<DamageCalculator>(Lifetime.Singleton);
+
+
+            builder.Register<SoundSettingsController>(Lifetime.Singleton);
+            builder.Register<SoundSettingsSaver>(Lifetime.Singleton);
+            builder.Register<VolumeService>(Lifetime.Singleton);
+            builder.Register<LanguageSettingsController>(Lifetime.Singleton);
         }
 
         private void BindProviders (IContainerBuilder builder)

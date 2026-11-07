@@ -42,8 +42,8 @@ public class Thunder : EffectBehaviour
                 break;
 
             float damage = _config.GetDamage(Level);
-            _damageService.ApplyDamage(currentTarget, damage, _config.Color);
-            ball.AddDamage(damage);
+            _damageService.ApplyDamage(Host, currentTarget, damage, _config.Color);
+            ball.CalculateDamage(damage);
 
             hitEntities.Add(currentTarget);
 

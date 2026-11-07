@@ -8,7 +8,9 @@ namespace BigBalls.GameplayObjects
         protected int Level;
         protected EffectConfig Config;
         private IDisposable _disposable;
+
         public IEntity Host { get; protected set; }
+        public Ball Ball => Host as Ball;
 
         protected EffectBehaviour(EffectConfig config, int level)
         {

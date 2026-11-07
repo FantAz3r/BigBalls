@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using DG.Tweening;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class Crossbow : Enemy
     private IIdentifierService _identifierService;
     private ICoroutineRunner _coroutineRunner;
     private IBallFactory _ballFactory;
+    private IObjectResolverProvider _objectResolverProvider;
     private Stat _attackSpeedStat;
     private Coroutine _coroutine;
     private SoundSpawner _soundSpawner;
@@ -40,13 +42,15 @@ public class Crossbow : Enemy
         IBallFactory ballFactory,
         ICoroutineRunner coroutineRunner,
         IIdentifierService identifierService,
-        SoundSpawner soundSpawner)
+        SoundSpawner soundSpawner,
+        IObjectResolverProvider objectResolverProvider)
     {
         _soundSpawner = soundSpawner;
         _coroutineRunner = coroutineRunner;
         _ballFactory = ballFactory;
         _playerProvider = playerProvider;
         _identifierService = identifierService;
+        _objectResolverProvider = objectResolverProvider;
     }
 
     protected override void ChildInit ()
@@ -130,6 +134,9 @@ public class Crossbow : Enemy
             new HitPlayerStrategy(),
             new WallColllisionStrategy()
         };
+
+        foreach (ICollisionStrategy strategy in collisionStrategies)
+            _objectResolverProvider.CurrentResolver.Inject(strategy);
 
         return collisionStrategies;
     }

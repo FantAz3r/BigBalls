@@ -10,7 +10,7 @@ public class EffectViewer : MonoBehaviour
     private IObjectResolver _resolver;
 
     [Inject]
-    public void Construct(IObjectResolverProvider objectResolverProvider)
+    public void Construct (IObjectResolverProvider objectResolverProvider)
     {
         _resolver = objectResolverProvider.CurrentResolver;
 
@@ -20,6 +20,30 @@ public class EffectViewer : MonoBehaviour
         }
     }
 
-    public void EnableEffect(EffectType type, float duration = 0) => _effects[type].Play(duration);
-    public void DisableEffect (EffectType type) => _effects[type].Stop();
+    public void EnableEffect (EffectType type, float duration = 0)
+    {
+        if (TryGetEffect(type, out var effect))
+        {
+            effect.Play(duration);
+        }
+    }
+
+    public void DisableEffect (EffectType type)
+    {
+        if (TryGetEffect(type, out var effect))
+        {
+            effect.Stop();
+        }
+    }
+
+    private bool TryGetEffect (EffectType type, out ParticleObject effect)
+    {
+        if (_effects.TryGetValue(type, out effect) && effect != null)
+        {
+            return true;
+        }
+
+        effect = null;
+        return false;
+    }
 }

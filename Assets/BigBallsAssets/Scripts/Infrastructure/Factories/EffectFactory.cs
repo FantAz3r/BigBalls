@@ -4,7 +4,6 @@ using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Infrastructure.DI;
 using BigBalls.StaticData;
-using UnityEngine;
 
 namespace BigBalls.GameplayObjects
 {
@@ -14,7 +13,7 @@ namespace BigBalls.GameplayObjects
 
         private Dictionary<BehaviourType, Func<EffectConfig, int, EffectBehaviour>> _effectToFactory = new();
 
-        public EffectFactory(IObjectResolverProvider objectResolverProvider)
+        public EffectFactory (IObjectResolverProvider objectResolverProvider)
         {
             _objectResolverProvider = objectResolverProvider;
 
@@ -32,20 +31,24 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.Horn] = CreateHorn,
                 [BehaviourType.VimpireKnife] = CreateVimpireKnife,
                 [BehaviourType.Lava] = CreateLava,
+                [BehaviourType.Blizzard] = CreateBlizzard,
+                [BehaviourType.Split] = CreateSplite,
+                [BehaviourType.Golden] = CreateGolden,
+                [BehaviourType.Phantom] = CreatePhantom,
             };
         }
 
-        public List<EffectBehaviour> Create(List<EffectConfig> effectConfigs, int level)
+        public List<EffectBehaviour> Create (List<EffectConfig> effectConfigs, int level)
         {
             return CreateEffects(effectConfigs, level);
         }
 
-        public List<EffectBehaviour> Create(ArtefactModel artefact)
+        public List<EffectBehaviour> Create (ArtefactModel artefact)
         {
             return CreateEffects(artefact.ArtefactConfig.Effects, artefact.Level);
         }
 
-        private List<EffectBehaviour> CreateEffects(IEnumerable<EffectConfig> effectConfigs, int level)
+        private List<EffectBehaviour> CreateEffects (IEnumerable<EffectConfig> effectConfigs, int level)
         {
             var effectBehaviours = new List<EffectBehaviour>();
 
@@ -59,17 +62,21 @@ namespace BigBalls.GameplayObjects
             return effectBehaviours;
         }
 
-        private EffectBehaviour CreateDamageEffect(EffectConfig config, int level) => new Damage(config as DamageConfig, level);
-        private EffectBehaviour CreateFireEffect(EffectConfig config, int level) => new Fire(config as FireConfig, level);
-        private EffectBehaviour CreateIceEffect(EffectConfig config, int level) => new Ice(config as IceConfig, level);
-        private EffectBehaviour CreateBomb(EffectConfig config, int level) => new Bomb (config as BombConfig, level);
-        private EffectBehaviour CreateTunder(EffectConfig config, int level) => new Thunder(config as ThunderConfig, level);
-        private EffectBehaviour CreateElasticBand(EffectConfig config, int level) => new ElasticBand(config as ElasticBandConfig, level);
-        private EffectBehaviour CreateEarthShake(EffectConfig config, int level) => new EarthShake(config as GroundBallConfig, level);
-        private EffectBehaviour CreateLaser(EffectConfig config, int level) => new LineLaser(config as LaserConfig, level);
-        private EffectBehaviour CreateMagnet(EffectConfig config, int level) => new Magnet(config as MagnetConfig, level);
-        private EffectBehaviour CreateHorn(EffectConfig config, int level) => new Horn(config as HornConfig, level);
+        private EffectBehaviour CreateDamageEffect (EffectConfig config, int level) => new Damage(config as DamageConfig, level);
+        private EffectBehaviour CreateFireEffect (EffectConfig config, int level) => new Fire(config as FireConfig, level);
+        private EffectBehaviour CreateIceEffect (EffectConfig config, int level) => new Ice(config as IceConfig, level);
+        private EffectBehaviour CreateBomb (EffectConfig config, int level) => new Bomb(config as BombConfig, level);
+        private EffectBehaviour CreateTunder (EffectConfig config, int level) => new Thunder(config as ThunderConfig, level);
+        private EffectBehaviour CreateElasticBand (EffectConfig config, int level) => new ElasticBand(config as ElasticBandConfig, level);
+        private EffectBehaviour CreateEarthShake (EffectConfig config, int level) => new EarthShake(config as GroundBallConfig, level);
+        private EffectBehaviour CreateLaser (EffectConfig config, int level) => new LineLaser(config as LaserConfig, level);
+        private EffectBehaviour CreateMagnet (EffectConfig config, int level) => new Magnet(config as MagnetConfig, level);
+        private EffectBehaviour CreateHorn (EffectConfig config, int level) => new Horn(config as HornConfig, level);
         private EffectBehaviour CreateVimpireKnife (EffectConfig config, int level) => new VimpireKnife(config as VimpireKnifeConfig, level);
         private EffectBehaviour CreateLava (EffectConfig config, int level) => new Lava(config as LavaConfig, level);
+        private EffectBehaviour CreateBlizzard (EffectConfig config, int level) => new Blizzard(config as BlizzardConfig, level);
+        private EffectBehaviour CreateSplite (EffectConfig config, int level) => new Split(config as SplitConfig, level);
+        private EffectBehaviour CreateGolden (EffectConfig config, int level) => new Golden(config as GoldenConfig, level);
+        private EffectBehaviour CreatePhantom (EffectConfig config, int level) => new Phantom(config as PhantomConfig, level);
     }
 }

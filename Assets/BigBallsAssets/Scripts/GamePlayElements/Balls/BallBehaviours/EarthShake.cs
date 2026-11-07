@@ -68,7 +68,7 @@ public class EarthShake : EffectBehaviour
             elapsed ++;
         }
 
-        ball.AddDamage(totalDamage);
+        ball.CalculateDamage(totalDamage);
     }
 
     private float ApplyAreaDamage(Vector3 position, float radius, float damage)
@@ -80,7 +80,7 @@ public class EarthShake : EffectBehaviour
 
         foreach (var target in targets)
         {
-            totalDamage += _damageService.ApplyDamage(target, damage, _config.Color);
+            totalDamage += _damageService.ApplyDamage(Host, target, damage, _config.Color);
         }
 
         return totalDamage;

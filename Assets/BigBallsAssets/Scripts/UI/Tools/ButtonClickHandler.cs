@@ -8,17 +8,17 @@ namespace BigBalls.UI
 
     public class ButtonClickHandler : MonoBehaviour
     {
-        private Button _button;
+        public Button Button { get; private set; }
 
         private void Awake ()
         {
-            _button = GetComponent<Button>();
-            _button?.onClick.AddListener(OnClick);
+            Button = GetComponent<Button>();
+            Button?.onClick.AddListener(OnClick);
         }
 
         private void OnDestroy ()
         {
-            _button?.onClick.RemoveListener(OnClick);
+            Button?.onClick.RemoveListener(OnClick);
         }
 
         protected virtual void OnClick () { }

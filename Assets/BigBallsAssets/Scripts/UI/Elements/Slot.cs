@@ -120,10 +120,7 @@ public class Slot : MonoBehaviour, IDropHandler
     public void RemoveItem (UIItem item)
     {
         if (IsActiveSlot)
-        {
             _itemContainer.Remove(item.Model);
-
-        }
 
         item.SetSourceSlot(null);
         SetItem(null);

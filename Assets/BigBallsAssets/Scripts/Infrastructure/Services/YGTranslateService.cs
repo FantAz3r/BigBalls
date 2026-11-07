@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using YG;
 
 public class YGTranslateService : ITranslateService
@@ -15,6 +16,7 @@ public class YGTranslateService : ITranslateService
 
     public void SetDefaulteLanguage()
     {
+        Debug.Log(YG2.envir.language);
         YG2.SwitchLanguage(YG2.envir.language);
         LanguageChanged?.Invoke(YG2.envir.language);
     }

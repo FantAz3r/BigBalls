@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
+  m_Name: BlizzardBall
+  m_EditorClassIdentifier: 
+  <NameEN>k__BackingField: Blizzard
+  <NameRU>k__BackingField: "\u041C\u0435\u0442\u0435\u043B\u044C"
+  <NameTR>k__BackingField: Blizzard
+  <DescriptionEN>k__BackingField: It flies through enemies and freezes all enemies
+    around
+  <DescriptionRU>k__BackingField: "\u041F\u0440\u043E\u043B\u0435\u0442\u0430\u0435\u0442
+    \u0441\u043A\u0432\u043E\u0437\u044C \u0432\u0440\u0430\u0433\u043E\u0432 \u0438
+    \u0437\u0430\u043C\u043E\u0440\u0430\u0436\u0438\u0432\u0430\u0435\u0442 \u0432\u0441\u0435\u0445
+    \u0432\u0440\u0430\u0433\u043E\u0432 \u0432\u043E\u043A\u0440\u0443\u0433 \u0441\u0435\u0431\u044F"
+  <DescriptionTR>k__BackingField: "D\xFC\u015Fmanlar\u0131n aras\u0131ndan u\xE7ar
+    ve etraf\u0131ndaki t\xFCm d\xFC\u015Fmanlar\u0131 dondurur"
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 2
+  <Icon>k__BackingField: {fileID: 21300000, guid: 029f1563c8bfb744280aae479a607599,
+    type: 3}
+  <BaseEXPForUpgrade>k__BackingField: 50
+  <LevelEXPMultipy>k__BackingField: 1.5
+  <IsOpen>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 1058083665175991319, guid: 8be3d0ee1f0cc9940acc40bb3711f626,
+    type: 3}
+  <DamageColor>k__BackingField: {r: 0.6, g: 0.85098046, b: 1, a: 1}
+  <HitSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <EntityType>k__BackingField: 6
+  <BallType>k__BackingField: 17
+  <IsMaterial>k__BackingField: 0
+  <IsUnique>k__BackingField: 1
+  <IsPlayerBall>k__BackingField: 1
+  <Stats>k__BackingField:
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 8
+    MinValue: 0
+  - StatType: 1
+    StartMaxValue: 1
+    StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 3
+    StartMaxValue: 20
+    StartCurrentValue: 5
+    MinValue: 0
+  <Effects>k__BackingField:
+  - {fileID: 11400000, guid: 2f16d097d61ea51428ea19f81f9d7a30, type: 2}
+  - {fileID: 11400000, guid: a8d8dc447b8f9944282eb06b0761fce0, type: 2}
+  <ParentTypes>k__BackingField: 030000000d000000
+  <UnlockPrice>k__BackingField: 0
+  <RequiredEXP>k__BackingField: 0
+  <Position>k__BackingField: {x: -800, y: -600}

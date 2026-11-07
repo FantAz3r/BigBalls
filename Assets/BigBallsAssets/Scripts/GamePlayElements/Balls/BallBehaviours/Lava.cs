@@ -7,23 +7,24 @@ public class Lava : EffectBehaviour
 {
     private readonly LavaConfig _config;
     private DebuffService _debuffService;
-
+    private SoundSpawner _soundSpawner;
     public Lava (LavaConfig config, int level) : base(config, level)
     {
         _config = config;
     }
 
     [Inject]
-    public void Construct (DebuffService debuffService)
+    public void Construct (DebuffService debuffService, SoundSpawner soundSpawner)
     {
         _debuffService = debuffService;
+        _soundSpawner = soundSpawner;
     }
 
     protected override IDisposable SubscribeInternal (IEntity host)
     {
         host.EventHandler.HitedEntity += OnHited;
 
-        if (host.TriggerCollider.TryGetComponent(out LavaTrigger lavaTrigger))
+        if (host.TriggerCollider.TryGetComponent(out AuraTrigger lavaTrigger))
         {
             lavaTrigger.Initialize(OnEnemyEntered, _config.GetRadius(Level));
         }
@@ -34,7 +35,7 @@ public class Lava : EffectBehaviour
         });
     }
 
-    private void OnHited(IEntity entity)
+    private void OnHited (IEntity entity)
     {
 
     }
@@ -48,8 +49,14 @@ public class Lava : EffectBehaviour
                 enemy,
                 _config.GetBurnDPS(Level),
                 _config.GetBurnDuration(Level),
-                _config.Color
+                _config.Color,
+                result =>
+                {
+                    Ball?.CalculateDamage(result.Damage);
+                }
             );
+
+            _soundSpawner.Spawn(_config.BurnSound);
         }
     }
 }

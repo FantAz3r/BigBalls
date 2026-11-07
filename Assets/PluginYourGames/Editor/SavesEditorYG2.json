@@ -1,9 +1,9 @@
 {
-  "IdSave": 138,
+  "IdSave": 100,
   "GameProgress": {
-    "Coins": 0,
+    "Coins": 615,
     "Score": 0,
-    "Level": 4,
+    "Level": 6,
     "Weapons": [
       {
         "Id": 1,
@@ -17,37 +17,37 @@
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 1.0
       },
       {
         "Id": 3,
         "NoneGameLevel": 1,
         "IsOpen": true,
-        "HasPlayer": false,
-        "ItemExp": 0.0
+        "HasPlayer": true,
+        "ItemExp": 2.0
       }
     ],
     "Armors": [
       {
-        "Id": 2,
+        "Id": 4,
         "NoneGameLevel": 1,
-        "IsOpen": false,
+        "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 1.0
       },
       {
         "Id": 3,
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 6.0
       },
       {
-        "Id": 4,
+        "Id": 2,
         "NoneGameLevel": 1,
-        "IsOpen": false,
+        "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 5.0
       }
     ],
     "Helmets": [
@@ -65,17 +65,45 @@
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 13303.0332
       },
       {
-        "Id": 12,
+        "Id": 7,
         "NoneGameLevel": 1,
-        "IsOpen": false,
+        "IsOpen": true,
         "HasPlayer": false,
         "ItemExp": 0.0
       },
       {
-        "Id": 10,
+        "Id": 2,
+        "NoneGameLevel": 1,
+        "IsOpen": true,
+        "HasPlayer": false,
+        "ItemExp": 96.25
+      },
+      {
+        "Id": 13,
+        "NoneGameLevel": 1,
+        "IsOpen": false,
+        "HasPlayer": false,
+        "ItemExp": 102.625
+      },
+      {
+        "Id": 8,
+        "NoneGameLevel": 1,
+        "IsOpen": true,
+        "HasPlayer": false,
+        "ItemExp": 301.25
+      },
+      {
+        "Id": 3,
+        "NoneGameLevel": 1,
+        "IsOpen": false,
+        "HasPlayer": false,
+        "ItemExp": 493.8315
+      },
+      {
+        "Id": 4,
         "NoneGameLevel": 1,
         "IsOpen": false,
         "HasPlayer": false,
@@ -89,21 +117,14 @@
         "ItemExp": 0.0
       },
       {
-        "Id": 8,
+        "Id": 10,
         "NoneGameLevel": 1,
-        "IsOpen": true,
+        "IsOpen": false,
         "HasPlayer": false,
         "ItemExp": 0.0
       },
       {
-        "Id": 5,
-        "NoneGameLevel": 1,
-        "IsOpen": true,
-        "HasPlayer": false,
-        "ItemExp": 0.0
-      },
-      {
-        "Id": 7,
+        "Id": 12,
         "NoneGameLevel": 1,
         "IsOpen": false,
         "HasPlayer": false,
@@ -114,28 +135,42 @@
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 333.8587
       },
       {
-        "Id": 4,
+        "Id": 5,
+        "NoneGameLevel": 1,
+        "IsOpen": false,
+        "HasPlayer": false,
+        "ItemExp": 543.95
+      },
+      {
+        "Id": 17,
         "NoneGameLevel": 1,
         "IsOpen": false,
         "HasPlayer": false,
         "ItemExp": 0.0
       },
       {
-        "Id": 2,
-        "NoneGameLevel": 1,
-        "IsOpen": false,
-        "HasPlayer": false,
-        "ItemExp": 0.0
-      },
-      {
-        "Id": 3,
+        "Id": 0,
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 0.0
+        "ItemExp": 215.4
+      },
+      {
+        "Id": 18,
+        "NoneGameLevel": 1,
+        "IsOpen": true,
+        "HasPlayer": false,
+        "ItemExp": 4547.231
+      },
+      {
+        "Id": 19,
+        "NoneGameLevel": 1,
+        "IsOpen": false,
+        "HasPlayer": false,
+        "ItemExp": 4098.743
       }
     ],
     "Artefacts": [
@@ -147,13 +182,6 @@
         "ItemExp": 0.0
       },
       {
-        "Id": 4,
-        "NoneGameLevel": 1,
-        "IsOpen": true,
-        "HasPlayer": false,
-        "ItemExp": 0.0
-      },
-      {
         "Id": 3,
         "NoneGameLevel": 1,
         "IsOpen": true,
@@ -162,6 +190,13 @@
       },
       {
         "Id": 2,
+        "NoneGameLevel": 1,
+        "IsOpen": true,
+        "HasPlayer": false,
+        "ItemExp": 0.0
+      },
+      {
+        "Id": 4,
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
@@ -181,14 +216,22 @@
     "Levels": [
       {
         "LevelID": 4,
-        "CompliteWaves": 0,
-        "Kills": 0,
+        "CompliteWaves": 1,
+        "Kills": 32,
         "BestDamage": 0.0,
-        "Time": 0.5,
+        "Time": 85.5,
+        "IsComplite": false
+      },
+      {
+        "LevelID": 6,
+        "CompliteWaves": 1,
+        "Kills": 11,
+        "BestDamage": 0.0,
+        "Time": 69.5,
         "IsComplite": false
       }
     ],
-    "Language": "en",
+    "Language": "auto",
     "ShowDamageNumbers": true,
     "ShowFPS": false,
     "AutoAttack": true

@@ -128,14 +128,12 @@ namespace BigBalls.Services
             CreatePoolContainer(MiscPool, out _miscContainer);
 
             foreach (EnemyConfig config in _enemyConfigs)
-            {
                 CreatePool(config.Prefab, enemyPoolContainer, config.Prefab?.name, _poolConfig.InitialEnemyPoolSize);
-            }
 
             foreach (BallConfig config in _cardsData.Balls.Values)
                 CreatePool(config.Prefab, ballPoolContainer, config.Prefab.name, _poolConfig.InitialBallPoolSize);
 
-            foreach (BallConfig config in _cardsData.EnmyProjectiles.Values)
+            foreach (BallConfig config in _cardsData.EnemyProjectiles.Values)
                 CreatePool(config.Prefab, enemyBulletsContainer, config.Prefab.name, _poolConfig.InitialBallPoolSize);
 
             foreach (Tile tile in _levelConfig.TilePrefabs)

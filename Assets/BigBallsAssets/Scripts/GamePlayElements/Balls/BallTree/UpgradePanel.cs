@@ -26,11 +26,9 @@ public class UpgradePanel : MonoBehaviour
     [SerializeField] private TMP_Text _expProgresText;
     [SerializeField] private TMP_Text _maxLevelText;
 
-    private Button _button;
     private BallTreeNodeUI _node;
     private BallModel _cardModel;
     private StatTextHolder _statTextHolder;
-    private GlobalWallet _globalWallet;
     private List<StatTextHolder> _statTextHolders = new();
     private SoundSpawner _soundSpawner;
     private Tween _notEnoughXpTween;
@@ -44,7 +42,6 @@ public class UpgradePanel : MonoBehaviour
     private void Start ()
     {
         gameObject.SetActive(false);
-        _button = _upgradeButton.GetComponent<Button>();
     }
 
     private void OnDestroy ()
@@ -56,9 +53,8 @@ public class UpgradePanel : MonoBehaviour
     }
 
     [Inject]
-    public void Construct (GlobalWallet globalWallet, SoundSpawner soundSpawner, IBallUnlockService ballUnlockService, IPoolService poolService)
+    public void Construct (SoundSpawner soundSpawner, IBallUnlockService ballUnlockService, IPoolService poolService)
     {
-        _globalWallet = globalWallet;
         _soundSpawner = soundSpawner;
         _ballUnlockService = ballUnlockService;
         _poolService = poolService;
@@ -79,22 +75,14 @@ public class UpgradePanel : MonoBehaviour
 
         _cardModel.Upgraded += View;
 
-        gameObject.SetActive(true);
+        this.Enable();
         _upgradeButton.Clicked -= Upgrade;
-        _upgradeButton.Init(_cardModel);
         _upgradeButton.Clicked += Upgrade;
+        _upgradeButton.Init(_cardModel);
 
-        if (_cardModel.NoneGameLevel == _cardModel.MaxNoneGameLevel)
-        {
-            _upgradeButton.gameObject.SetActive(false);
-            _maxLevelText.gameObject.SetActive(true);
-        }
-        else
-        {
-            _upgradeButton.gameObject.SetActive(true);
-            _maxLevelText.gameObject.SetActive(false);
-        }
-
+        bool isMaxLevel = _cardModel.NoneGameLevel == _cardModel.MaxNoneGameLevel;
+        _upgradeButton.SetActive(isMaxLevel == false);
+        _maxLevelText.SetActive(isMaxLevel);
         View(_cardModel);
     }
 
@@ -107,12 +95,12 @@ public class UpgradePanel : MonoBehaviour
 
         bool isOpen = _cardModel.IsOpen;
         bool canUnlock = _ballUnlockService.CanUnlock(ballModel);
+        Debug.Log(canUnlock);
 
         _expSlider.maxValue = _cardModel.EXPForNextLevel;
         _expSlider.minValue = 0;
-        _button.interactable = canUnlock;
-        _expSlider.gameObject.SetActive(isOpen);
-        _costPanel.gameObject.SetActive(isOpen == false);
+        _expSlider.SetActive(isOpen);
+        _costPanel.SetActive(isOpen == false);
         _image.sprite = _cardModel.Config.Icon;
         _image.color = Color.white;
         _descriptionText.text = _cardModel.Description;
@@ -168,7 +156,7 @@ public class UpgradePanel : MonoBehaviour
 
     private void RenderStats (BallModel ball, bool showNextLevel)
     {
-        _statsParent.gameObject.SetActive(true);
+        _statsParent.Enable();
 
         foreach (var item in ball.BallConfig.GetStats(ball.Level))
         {
@@ -207,8 +195,9 @@ public class UpgradePanel : MonoBehaviour
 
             if (_node.BallModel.NoneGameLevel == _node.BallModel.MaxNoneGameLevel)
             {
-                _upgradeButton.gameObject.SetActive(false);
-                _maxLevelText.gameObject.SetActive(true);
+                _upgradeButton.Disable();
+                _maxLevelText.Enable();
+                return;
             }
 
             if (isUpgradeComplite == false)
@@ -217,20 +206,24 @@ public class UpgradePanel : MonoBehaviour
                 _soundSpawner.Spawn(SoundType.Error);
                 return;
             }
+
+            _soundSpawner.Spawn(SoundType.Upgrade, _node.BallModel.NoneGameLevel - 1, _node.BallModel.MaxNoneGameLevel);
         }
         else
         {
-            if (_globalWallet.TrySpendCoins(_node.BallModel.BallConfig.UnlockPrice) == false)
+            if (_node.Unlock())
+            {
+                _soundSpawner.Spawn(SoundType.Upgrade, _node.BallModel.NoneGameLevel - 1, _node.BallModel.MaxNoneGameLevel);
+
+            }
+            else
             {
                 _soundSpawner.Spawn(SoundType.Error);
                 return;
             }
-
-            _node.Unlock();
         }
 
         _node.UpdateState();
-        _soundSpawner.Spawn(SoundType.Upgrade, _node.BallModel.NoneGameLevel - 1, _node.BallModel.MaxNoneGameLevel);
         View(_cardModel);
     }
 }

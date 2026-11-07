@@ -21,18 +21,18 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: atlasCombiMat_AllMPBase 1
-  m_Shader: {fileID: 4800000, guid: 67c9c4a21a9659f40b5627a48e65c215, type: 3}
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _DETAILMODE_MULTIPLY
-  m_InvalidKeywords:
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -144,7 +144,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.76, g: 0.65284, b: 0.7171849, a: 1}
-    - _Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+    - _Color: {r: 0.76, g: 0.65284, b: 0.7171849, a: 1}
     - _DetailColor: {r: 1, g: 1, b: 1, a: 1}
     - _DetailTiling: {r: 1, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

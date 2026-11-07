@@ -26,10 +26,16 @@ MonoBehaviour:
   <IsOpen>k__BackingField: 0
   <Prefab>k__BackingField: {fileID: 0}
   <DamageColor>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
+  <HitSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
   <EntityType>k__BackingField: 3
   <BallType>k__BackingField: 11
   <IsMaterial>k__BackingField: 1
   <IsUnique>k__BackingField: 1
+  <IsPlayerBall>k__BackingField: 0
   <Stats>k__BackingField:
   - StatType: 1
     StartMaxValue: 99999
@@ -39,8 +45,12 @@ MonoBehaviour:
     StartMaxValue: 99999
     StartCurrentValue: 4.5
     MinValue: 0
+  - StatType: 2
+    StartMaxValue: 99999
+    StartCurrentValue: 16
+    MinValue: 0
   <Effects>k__BackingField:
-  - {fileID: 11400000, guid: 2f16d097d61ea51428ea19f81f9d7a30, type: 2}
+  - {fileID: 11400000, guid: faf8c666fa860c844a36c0916f757533, type: 2}
   <ParentTypes>k__BackingField: 
   <UnlockPrice>k__BackingField: 0
   <RequiredEXP>k__BackingField: 0

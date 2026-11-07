@@ -17,4 +17,8 @@ public class PlayerCollisionStrategy : ICollisionStrategy
 
         return false;
     }
+
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+    }
 }

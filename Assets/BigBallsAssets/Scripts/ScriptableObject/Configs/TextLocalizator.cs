@@ -343,6 +343,41 @@ namespace BigBalls.Localization
             { Turkish, "Birleşme" },
         };
 
+        private static readonly Dictionary<string, string> HitsToProcDict = new Dictionary<string, string>
+        {
+            { Russian, "Ударов до срабатывания" },
+            { English, "Hits to proc" },
+            { Turkish, "Proc için isabetler" },
+        };
+
+        private static readonly Dictionary<string, string> SpeedPerKillDict = new Dictionary<string, string>
+        {
+            { Russian, "Скорость за убийство" },
+            { English, "Speed per kill" },
+            { Turkish, "Öldürme başına hız" },
+        };
+
+        private static readonly Dictionary<string, string> SplitBallsDict = new Dictionary<string, string>
+        {
+            { Russian, "Количество шаров" },
+            { English, "Balls count" },
+            { Turkish, "Top sayısı" },
+        };
+
+        private static readonly Dictionary<string, string> SplitHitsDict = new Dictionary<string, string>
+        {
+            { Russian, "Количество ударов" },
+            { English, "Hit count" },
+            { Turkish, "İsabet sayısı" },
+        };
+
+        private static readonly Dictionary<string, string> MissDict = new Dictionary<string, string>
+        {
+            { Russian, "Мимо" },
+            { English, "Miss" },
+            { Turkish, "Gaf" },
+        };
+
         private static readonly Dictionary<string, string> CostDict = new Dictionary<string, string>
         {
             { Russian, "Цена" },
@@ -645,6 +680,11 @@ namespace BigBalls.Localization
         };
 
         public static string ExplosionDamage => GetText(ExplosionDamageDict);
+        public static string HitsToProc => GetText(HitsToProcDict);
+        public static string SpeedPerKill => GetText(SpeedPerKillDict);
+        public static string SplitBalls => GetText(SplitBallsDict);
+        public static string SplitHits => GetText(SplitHitsDict);
+        public static string Miss => GetText(MissDict);
         public static string Cards => GetText(CardsDict);
         public static string Cost => GetText(CostDict);
         public static string Gold => GetText(GoldDict);

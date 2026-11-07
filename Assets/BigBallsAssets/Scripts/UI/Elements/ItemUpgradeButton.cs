@@ -1,5 +1,6 @@
 using BigBalls.UI;
 using System;
+using UnityEngine;
 
 public class ItemUpgradeButton : ButtonClickHandler
 {
@@ -9,6 +10,7 @@ public class ItemUpgradeButton : ButtonClickHandler
     public event Action Clicked;
     protected override void OnClick()
     {
+        Debug.Log("click");
         Clicked?.Invoke();
     }
 }

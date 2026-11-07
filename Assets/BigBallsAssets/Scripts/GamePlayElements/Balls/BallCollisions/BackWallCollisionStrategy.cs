@@ -29,4 +29,8 @@ public class BackWallCollisionStrategy : ICollisionStrategy
 
         return false;
     }
+
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+    }
 }

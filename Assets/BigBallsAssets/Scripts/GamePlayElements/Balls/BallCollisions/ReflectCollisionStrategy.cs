@@ -37,6 +37,10 @@ public class ReflectCollisionStrategy : ICollisionStrategy
         return false;
     }
 
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+    }
+
     public void ReflectBall (Collision collision, Ball ball)
     {
         Vector3 currentDirection = new Vector3(ball.Mover.Direction.normalized.x, 0, ball.Mover.Direction.normalized.y);

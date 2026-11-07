@@ -44,7 +44,8 @@ namespace BigBalls.GameplayObjects
             if (Host is not Ball ball)
                 return;
 
-            _soundSpawner.Spawn(ball.Config.HitSound);
+            if (ball.Config.IsPlayerBall)
+                _soundSpawner.Spawn(ball.Config.HitSound);
         }
     }
 }

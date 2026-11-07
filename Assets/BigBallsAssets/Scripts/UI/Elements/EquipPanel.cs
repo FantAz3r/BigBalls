@@ -48,7 +48,8 @@ public class EquipPanel : MonoBehaviour
 
         foreach (var model in _models)
         {
-            if (!model.HasPlayer) continue;
+            if (model.HasPlayer == false)
+                continue;
 
             if (model is ArmorModel)
                 CreateItem(model, _armorSlot);

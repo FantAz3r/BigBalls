@@ -20,6 +20,7 @@ namespace BigBalls.Configs
         [field: SerializeField] public BallType BallType { get; private set; }
         [field: SerializeField] public bool IsMaterial { get; private set; }
         [field: SerializeField] public bool IsUnique { get; private set; } = true;
+        [field: SerializeField] public bool IsPlayerBall { get; private set; } = true;
         [field: SerializeField] public List<StatStruct> Stats { get; private set; }
         [field: SerializeField] public List<EffectConfig> Effects { get; private set; }
 

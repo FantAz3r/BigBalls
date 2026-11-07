@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
@@ -18,6 +19,7 @@ public class EnemyShooter : ISubscribable
     private ICoroutineRunner _coroutineRunner;
     private IIdentifierService _identifierService;
     private IBallFactory _ballFactory;
+    private IObjectResolverProvider _objectResolverProvider;
     private SoundSpawner _soundSpawner;
     private WaitForSeconds _attackDelay;
     private Coroutine _shootRoutine;
@@ -41,12 +43,13 @@ public class EnemyShooter : ISubscribable
     public event Action Shooted;
 
     [Inject]
-    public void Construct (ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory, SoundSpawner soundSpawner)
+    public void Construct (ICoroutineRunner coroutineRunner, IIdentifierService identifierService, IBallFactory ballFactory, SoundSpawner soundSpawner, IObjectResolverProvider objectResolverProvider)
     {
         _coroutineRunner = coroutineRunner;
         _identifierService = identifierService;
         _ballFactory = ballFactory;
         _soundSpawner = soundSpawner;
+        _objectResolverProvider = objectResolverProvider;
         CreateCollisionStrategiesToEnemy();
 
         _firePoint = _enemy.transform;
@@ -140,5 +143,8 @@ public class EnemyShooter : ISubscribable
             new HitPlayerStrategy(),
             new WallColllisionStrategy()
         };
+
+        foreach (ICollisionStrategy strategy in _collisionStrategies)
+            _objectResolverProvider.CurrentResolver.Inject(strategy);
     }
 }

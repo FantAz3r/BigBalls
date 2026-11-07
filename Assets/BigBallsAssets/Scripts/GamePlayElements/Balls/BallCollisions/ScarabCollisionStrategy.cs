@@ -8,4 +8,8 @@ public class ScarabCollisionStrategy : ICollisionStrategy
         ball.EventHandler.Reflect(ball);
         return false;
     }
+
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+    }
 }

@@ -18,12 +18,27 @@ MonoBehaviour:
   <CanSuiside>k__BackingField: 0
   <HasRangeAttack>k__BackingField: 0
   <HasMeeleAttack>k__BackingField: 1
+  <DieSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
   <Stats>k__BackingField:
   - StatType: 1
-    StartMaxValue: 50
-    StartCurrentValue: 50
+    StartMaxValue: 400
+    StartCurrentValue: 400
     MinValue: 0
   - StatType: 2
     StartMaxValue: 99999
@@ -37,10 +52,15 @@ MonoBehaviour:
     StartMaxValue: 500
     StartCurrentValue: 0
     MinValue: 0
+  - StatType: 3
+    StartMaxValue: 20
+    StartCurrentValue: 0.2
+    MinValue: 0
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 0}
+  <ShootSound>k__BackingField: {fileID: 0}
   PossibleLoot: []
   BaseExperience: 10
   BaseCoins: 5

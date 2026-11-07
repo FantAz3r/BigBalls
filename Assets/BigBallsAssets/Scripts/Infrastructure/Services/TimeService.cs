@@ -22,9 +22,6 @@ namespace BigBalls.Services
 
             Time.timeScale = 0;
             IsPaused = true;
-
-            Debug.Log($"{_currentTimescale}  {IsPaused}");
-
         }
 
         public void ResumeGame ()

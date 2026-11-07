@@ -21,4 +21,13 @@ public class BallCollisionStrategy : ICollisionStrategy
 
         return false;
     }
+
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+        if(other.TryGetComponent(out Ball otherBall))
+        {
+            ball.EventHandler.HitEntity(otherBall);
+            ball.EventHandler.Return(ball);
+        }
+    }
 }

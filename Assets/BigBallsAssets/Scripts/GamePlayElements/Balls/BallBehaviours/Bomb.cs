@@ -41,7 +41,7 @@ public class Bomb : EffectBehaviour
             float totalDamage = ExecuteExplosion (ball.Transform.position, _config.GetRadius(Level), _config.GetDamage(Level));
             _soundSpawner.Spawn(ball.Config.HitSound);
             _particleFactory.Create(_config.ParticleObject, ball.Transform.position);
-            ball.AddDamage(totalDamage);
+            ball.CalculateDamage(totalDamage);
             ball.gameObject.SetActive(false);
             _coroutineRunner.StartCoroutine(RespawnDelay(ball));
         }
@@ -62,7 +62,7 @@ public class Bomb : EffectBehaviour
 
         foreach (var target in targets)
         {
-            totalDamage += _damageService.ApplyDamage(target, damage, _config.Color);
+            totalDamage += _damageService.ApplyDamage(Host, target, damage, _config.Color);
         }
 
         return totalDamage;

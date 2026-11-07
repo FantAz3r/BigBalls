@@ -1,6 +1,5 @@
-using BigBalls.GameplayObjects;
-using BigBalls.Infrastructure;
 using System.Collections.Generic;
+using BigBalls.Infrastructure;
 using UnityEngine;
 
 namespace BigBalls.Configs
@@ -19,9 +18,9 @@ namespace BigBalls.Configs
 
         public List<EnemyConfig> ConfigsForPool = new();
 
-        public List<EnemyConfig> GetAllLevelEnemies()
+        public List<EnemyConfig> GetAllLevelEnemies ()
         {
-            List<EnemyConfig> enemyConfigs = new ();
+            List<EnemyConfig> enemyConfigs = new();
 
             foreach (var wave in Waves)
             {
@@ -34,24 +33,26 @@ namespace BigBalls.Configs
                     enemyConfigs.Add(wave.BossConfig);
             }
 
-            enemyConfigs.Add(LevelBoss);
+            if (LevelBoss != null)
+                enemyConfigs.Add(LevelBoss);
+
             enemyConfigs.AddRange(ConfigsForPool);
 
             return enemyConfigs;
         }
 
-        public List<EnemyConfig> GetWaveEnemies(int waveIndex)
+        public List<EnemyConfig> GetWaveEnemies (int waveIndex)
         {
             return Waves[waveIndex].Enemies;
         }
 
-        public float GetWaveTime(int waveId)
+        public float GetWaveTime (int waveId)
         {
             float waveTime = 0;
 
             waveTime += Waves[waveId].LineCount * LineSpawnDelay + Waves[waveId].WaveCooldown;
 
-            if (waveId == Waves.Count -1)
+            if (waveId == Waves.Count - 1)
             {
                 waveTime += BossTimeDelay;
             }
@@ -59,7 +60,7 @@ namespace BigBalls.Configs
             return waveTime;
         }
 
-        public float GetLevelTime()
+        public float GetLevelTime ()
         {
             float fullTime = 0;
 

@@ -11,6 +11,7 @@ using Math = Utils.Math;
 
 public class LavaConfig : EffectConfig
 {
+    public SoundStruct BurnSound;
     public Color Color;
     public float StartBurnDuration;
     public float StartBurnDPS;

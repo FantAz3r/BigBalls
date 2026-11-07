@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765322c91ab1a4749a9fc4bc4b40d709, type: 3}
+  m_Name: PhantomBall
+  m_EditorClassIdentifier: 
+  <NameEN>k__BackingField: 
+  <NameRU>k__BackingField: "\u0424\u0430\u043D\u0442\u043E\u043C"
+  <NameTR>k__BackingField: 
+  <DescriptionEN>k__BackingField: 
+  <DescriptionRU>k__BackingField: 
+  <DescriptionTR>k__BackingField: 
+  <Type>k__BackingField: 0
+  <Rarity>k__BackingField: 2
+  <Icon>k__BackingField: {fileID: 21300000, guid: a0dd1a56e66754fc4887580637e1e1f2,
+    type: 3}
+  <BaseEXPForUpgrade>k__BackingField: 50
+  <LevelEXPMultipy>k__BackingField: 1.5
+  <IsOpen>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 1058083665175991319, guid: 858b2f3f5a49ae343a86f317ece1f7a0,
+    type: 3}
+  <DamageColor>k__BackingField: {r: 0.835279, g: 0, b: 1, a: 1}
+  <HitSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <EntityType>k__BackingField: 6
+  <BallType>k__BackingField: 19
+  <IsMaterial>k__BackingField: 0
+  <IsUnique>k__BackingField: 1
+  <IsPlayerBall>k__BackingField: 1
+  <Stats>k__BackingField:
+  - StatType: 1
+    StartMaxValue: 1
+    StartCurrentValue: 1
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 8
+    MinValue: 0
+  - StatType: 3
+    StartMaxValue: 20
+    StartCurrentValue: 6
+    MinValue: 0
+  <Effects>k__BackingField:
+  - {fileID: 11400000, guid: 315e79cfb094a27428be7615ded689cd, type: 2}
+  - {fileID: 11400000, guid: 2f16d097d61ea51428ea19f81f9d7a30, type: 2}
+  <ParentTypes>k__BackingField: 0d00000005000000
+  <UnlockPrice>k__BackingField: 0
+  <RequiredEXP>k__BackingField: 0
+  <Position>k__BackingField: {x: -800, y: -400}

@@ -54,6 +54,9 @@ public class ArmorViewer : MonoBehaviour
 
     private void UpdateArmorVisual (ArmorModel armorModel)
     {
+        if(_currentArmorModel != null)
+            _currentArmorModel.Upgraded -= OnUpgrade;
+
         _currentArmorModel = armorModel;
 
         if (_currentArmorSet != null)
@@ -64,6 +67,7 @@ public class ArmorViewer : MonoBehaviour
 
         if (armorModel == null)
         {
+
             if (_baseSet != null)
             {
                 SetArmorActive(_baseSet, true);
@@ -71,6 +75,9 @@ public class ArmorViewer : MonoBehaviour
             }
             return;
         }
+
+        _currentArmorModel.Upgraded += OnUpgrade;
+
 
         foreach (var armorSet in _armors)
         {
@@ -98,5 +105,10 @@ public class ArmorViewer : MonoBehaviour
             if (item != null)
                 item.SetActive(isActive);
         }
+    }
+
+    private void OnUpgrade (ICardModel card)
+    {
+        _statHolder.Set(card as ArmorModel);
     }
 }

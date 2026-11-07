@@ -10,4 +10,5 @@ public enum EffectType
     Stun,
     Disarm,
     Poison,
+    ArmorReduction,
 }

@@ -1,36 +1,36 @@
 using System.Collections.Generic;
+using BigBalls.GameplayObjects;
 using UnityEngine;
 
-public class BossIdleState : BossStateBase
+public abstract class BossIdleState<TBoss> : BossStateBase
+    where TBoss : LevelBoss
 {
-    private readonly System.Random _rng;
-    private readonly SkeletonKing _skeletonKing;
+    private readonly System.Random _rng = new();
     private readonly List<IEnemyState> _candidates = new();
 
-    public BossIdleState (SkeletonKing skeleton, EnemyStateMachine stateMachine, float duration)
-        : base(stateMachine, skeleton, duration)
+    protected TBoss Boss { get; }
+
+    protected BossIdleState (TBoss boss, EnemyStateMachine stateMachine, float duration)
+        : base(stateMachine, boss, duration)
     {
-        _skeletonKing = skeleton;
-        _rng = new System.Random();
+        Boss = boss;
     }
 
-    protected override void OnEnter () { }
-    protected override void OnTick (float dt) { }
+    protected abstract IReadOnlyList<IEnemyState> GetAttacks ();
+
+    protected abstract IEnemyState GetLastAttack ();
+
+    protected abstract void SetLastAttack (IEnemyState state);
 
     protected override void OnComplete ()
     {
         StateMachine.ChangeState(PickNextAttackState());
     }
 
-    protected override void OnExit ()
-    {
-        base.OnExit();
-    }
-
     private IEnemyState PickNextAttackState ()
     {
-        var attacks = _skeletonKing.AttackStates;
-        var last = _skeletonKing.LastAttackState;
+        var attacks = GetAttacks();
+        var last = GetLastAttack();
 
         _candidates.Clear();
         for (int i = 0; i < attacks.Count; i++)
@@ -39,8 +39,11 @@ public class BossIdleState : BossStateBase
                 _candidates.Add(attacks[i]);
         }
 
-        IEnemyState nextState = _candidates[_rng.Next(_candidates.Count)];
-        _skeletonKing.SetLastAttackState(nextState);
-        return nextState;
+        if (_candidates.Count == 0 && attacks.Count > 0)
+            _candidates.Add(attacks[0]);
+
+        var next = _candidates[_rng.Next(_candidates.Count)];
+        SetLastAttack(next);
+        return next;
     }
 }

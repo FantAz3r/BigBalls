@@ -15,5 +15,12 @@
         VerticalLaser,
         Scarab,
         LaserX,
+        Ghost,
+        EnemyBone,
+        EnemyArrow,
+        EnemyBossBone,
+        Blizzard,
+        Gold,
+        Phantom,
     }
 }

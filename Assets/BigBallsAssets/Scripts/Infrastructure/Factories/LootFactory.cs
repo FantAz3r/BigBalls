@@ -37,7 +37,6 @@ public class LootFactory : ILootFactory
         loot.OnCollected -= OnCollectedHandler;
         _lootMover.RemoveObject(loot);
         _lootMediator.RegisterLoot(loot);
-        //OnLootMissedHandler(loot);
         _poolService.Release(loot);
     }
 

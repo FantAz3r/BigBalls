@@ -2681,7 +2681,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2309806865248067029, guid: ff9ecb707cf5c9f4cb5573eac4d855f4,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9213626876867834657}
+      addedObject: {fileID: 4246543202555015900}
   m_SourcePrefab: {fileID: 100100000, guid: ff9ecb707cf5c9f4cb5573eac4d855f4, type: 3}
 --- !u!224 &818758386250153642 stripped
 RectTransform:
@@ -2745,7 +2745,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &9213626876867834657
+--- !u!114 &4246543202555015900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2763,7 +2763,7 @@ MonoBehaviour:
     _color: {r: 1, g: 1, b: 1, a: 1}
     _animationSettings:
       _useScale: 1
-      _targetScale: {x: 1, y: 1, z: 1}
+      _targetScale: {x: 1, y: 1, z: 0}
       _usePosition: 0
       _enabledPositionChange: 0
       _anchoredOffset: {x: 0, y: 0}
@@ -2776,34 +2776,14 @@ MonoBehaviour:
       _blockRaycastWhenPlay: 0
       _ignoreParentGroupWhenPlay: 0
       _duration: 0.15
-      _ease: 8
+      _ease: 10
       _delay: 0
   _highlighted:
     _sprite: {fileID: 21300000, guid: ae9f8677ca3c24a7c80d7217a941f886, type: 3}
-    _color: {r: 1, g: 0.7877358, b: 0.7877358, a: 1}
+    _color: {r: 1, g: 1, b: 1, a: 1}
     _animationSettings:
       _useScale: 1
-      _targetScale: {x: 1.1, y: 1.1, z: 0}
-      _usePosition: 0
-      _enabledPositionChange: 0
-      _anchoredOffset: {x: 0, y: 0}
-      _useRotation: 0
-      _targetRotation: {x: 0, y: 0, z: 0}
-      _enableCanvasGroupChange: 0
-      _useFade: 0
-      _targetAlpha: 0
-      _interactableWhenPlay: 0
-      _blockRaycastWhenPlay: 0
-      _ignoreParentGroupWhenPlay: 0
-      _duration: 0
-      _ease: 9
-      _delay: 0.15
-  _pressed:
-    _sprite: {fileID: 21300000, guid: ae9f8677ca3c24a7c80d7217a941f886, type: 3}
-    _color: {r: 0.695, g: 0.54782355, b: 0.54782355, a: 1}
-    _animationSettings:
-      _useScale: 1
-      _targetScale: {x: 0.8, y: 0.8, z: 1}
+      _targetScale: {x: 1.05, y: 1.05, z: 0}
       _usePosition: 0
       _enabledPositionChange: 0
       _anchoredOffset: {x: 0, y: 0}
@@ -2816,7 +2796,27 @@ MonoBehaviour:
       _blockRaycastWhenPlay: 0
       _ignoreParentGroupWhenPlay: 0
       _duration: 0.15
-      _ease: 9
+      _ease: 10
+      _delay: 0
+  _pressed:
+    _sprite: {fileID: 21300000, guid: ae9f8677ca3c24a7c80d7217a941f886, type: 3}
+    _color: {r: 1, g: 1, b: 1, a: 1}
+    _animationSettings:
+      _useScale: 1
+      _targetScale: {x: 0.9, y: 0.9, z: 0}
+      _usePosition: 0
+      _enabledPositionChange: 0
+      _anchoredOffset: {x: 0, y: 0}
+      _useRotation: 0
+      _targetRotation: {x: 0, y: 0, z: 0}
+      _enableCanvasGroupChange: 0
+      _useFade: 0
+      _targetAlpha: 0
+      _interactableWhenPlay: 0
+      _blockRaycastWhenPlay: 0
+      _ignoreParentGroupWhenPlay: 0
+      _duration: 0.15
+      _ease: 10
       _delay: 0
 --- !u!114 &2556494935559808552 stripped
 MonoBehaviour:

@@ -1,83 +1,69 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using VContainer;
 
-public class LanguageSetting : MonoBehaviour
+public class LanguageSettingView : MonoBehaviour
 {
-    private const string AutoLang = "auto";
-
-    [SerializeField] private ToggleGroup _toggleGroup;
     [SerializeField] private List<LanguageToggleData> _languageToggles;
 
-    private ITranslateService _translateService;
-    private bool _isInitializing = false;
-    private ISaveService _saveService;
+    private LanguageSettingsController _controller;
+    private readonly Dictionary<Toggle, UnityAction<bool>> _handlers = new();
+
+    [Inject]
+    public void Construct (LanguageSettingsController controller) => _controller = controller;
+
+    private void OnEnable ()
+    {
+        _controller.ApplySavedLanguage();
+        SyncFromModel();
+
+        foreach (var data in _languageToggles)
+        {
+            if (data.Toggle == null)
+                continue;
+
+            UnityAction<bool> handler = isOn => OnToggleChanged(isOn, data.Language);
+            _handlers[data.Toggle] = handler;
+            data.Toggle.onValueChanged.AddListener(handler);
+        }
+    }
+
+    private void OnDisable ()
+    {
+        foreach (var kv in _handlers)
+            kv.Key.onValueChanged.RemoveListener(kv.Value);
+        _handlers.Clear();
+    }
+
+    private void SyncFromModel ()
+    {
+        var available = _languageToggles
+            .Where(data => data.Toggle != null)
+            .Select(data => data.Language)
+            .ToList();
+
+        var target = _controller.ResolveToggleLanguage(available);
+
+        foreach (var data in _languageToggles)
+            if (data.Toggle != null)
+                data.Toggle.SetIsOnWithoutNotify(data.Language == target);
+    }
+
+    private void OnToggleChanged (bool isOn, string language)
+    {
+        if (isOn == false)
+            return;
+
+        _controller.Select(language);
+    }
 
     [System.Serializable]
     public class LanguageToggleData
     {
         public Toggle Toggle;
         public string Language;
-    }
-
-    [Inject]
-    public void Construct (ITranslateService translateService, ISaveService saveService)
-    {
-        _translateService = translateService;
-        _saveService = saveService;
-        LoadAndApplyLanguage();
-    }
-
-    private void Start ()
-    {
-        foreach (var data in _languageToggles)
-        {
-            if (data.Toggle != null)
-            {
-                data.Toggle.onValueChanged.AddListener(isOn => OnToggleChanged(isOn, data.Language));
-            }
-        }
-    }
-
-    private void OnDestroy ()
-    {
-        foreach (var data in _languageToggles)
-        {
-            if (data.Toggle != null)
-            {
-                data.Toggle.onValueChanged.RemoveAllListeners();
-            }
-        }
-    }
-
-    private void OnToggleChanged (bool isOn, string language)
-    {
-        if (isOn == false || _isInitializing)
-            return;
-
-        if (language == AutoLang)
-        {
-            _translateService.SetDefaulteLanguage();
-            return;
-        }
-
-        _translateService.SwitchLanguage(language);
-    }
-
-    private void LoadAndApplyLanguage ()
-    {
-        _isInitializing = true;
-        string currentLanguage = _saveService.GameProgress.Language;
-
-        foreach (var data in _languageToggles)
-        {
-            if (data.Toggle != null)
-            {
-                data.Toggle.isOn = (data.Language == currentLanguage);
-            }
-        }
-
-        _isInitializing = false;
     }
 }

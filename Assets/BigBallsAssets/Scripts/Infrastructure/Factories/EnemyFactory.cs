@@ -64,7 +64,7 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             enemy.EventHandler.Died += OnDied;
 
-            Rotator enemyRotator = null;
+            GameplayObjects.Rotator enemyRotator = null;
             Mover enemyMover = null;
             EnemyShooter enemyShooter = null;
 
@@ -73,7 +73,7 @@ namespace BigBalls.Factories
                 if (subscriber is Mover mover)
                     enemyMover = mover;
 
-                if (subscriber is Rotator rotator)
+                if (subscriber is GameplayObjects.Rotator rotator)
                     enemyRotator = rotator;
 
                 if (subscriber is EnemyShooter shooter)
@@ -136,7 +136,7 @@ namespace BigBalls.Factories
         {
             Mover mover = null;
             EnemyShooter shooter = null;
-            Rotator rotator = null;
+            GameplayObjects.Rotator rotator = null;
             EnemyAttacker enemyAttacker = null;
 
             if (statHolder.TryGetStat(out Stat moveSpeed, StatType.MoveSpeed))
@@ -154,7 +154,7 @@ namespace BigBalls.Factories
 
             if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed) && enemy.RotationPart != null)
             {
-                rotator = new Rotator(rotationSpeed, enemy.RotationPart);
+                rotator = new GameplayObjects.Rotator(rotationSpeed, enemy.RotationPart);
                 _resolverProvider.CurrentResolver.Inject(rotator);
                 rotator.SetTarget(_playerProvider.Player.transform);
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BigBalls.Configs;
@@ -10,15 +11,17 @@ namespace BigBalls.GameplayObjects
 {
     public class Ball : MonoBehaviour, IEntity
     {
-        [SerializeField] private LayerMask _playerLayer;
+        [SerializeField] private Collider _body;
+
         [field: SerializeField] public BallConfig Config { get; private set; }
         [field: SerializeField] public ParticleObject Particle { get; private set; }
         [field: SerializeField] public Collider TriggerCollider { get; private set; }
 
+        private LayerMask _playerLayer;
+        private LayerMask _enemyLayers;
         private List<ICollisionStrategy> _collisionStrategies;
         private IEffectFactory _effectFactory;
         private float _stackCount;
-        private Collider _body;
         private DamageCalculator _damageCalculator;
 
         public List<EffectBehaviour> EffectBehaviours { get; private set; }
@@ -36,8 +39,9 @@ namespace BigBalls.GameplayObjects
 
         private void Awake ()
         {
+            _enemyLayers = LayerMask.GetMask("Enemy", "Shield");
+            _playerLayer = LayerMask.GetMask("Player");
             EventHandler = new EntityEventHandler();
-            IsMaterial = Config.IsMaterial;
             TotalDamage = 0;
         }
 
@@ -68,8 +72,22 @@ namespace BigBalls.GameplayObjects
             }
         }
 
+        private void OnTriggerEnter (Collider other)
+        {
+            if (IsMaterial)
+                return;
+
+            foreach (var strategy in _collisionStrategies.ToList())
+            {
+                strategy.HandleTrigger(this, other);
+            }
+        }
+
         private void OnEnable ()
         {
+            IsMaterial = Config.IsMaterial;
+            MakeGhost(IsMaterial);
+
             if (EffectBehaviours != null && EffectBehaviours.Count > 0)
             {
                 foreach (var effect in EffectBehaviours)
@@ -121,12 +139,23 @@ namespace BigBalls.GameplayObjects
             EffectBehaviours = _effectFactory.Create(Config.Effects, Model.Level);
         }
 
-
         public void AddEffects (List<ArtefactModel> artefacts)
         {
             foreach (var artefact in artefacts)
             {
                 EffectBehaviours.AddRange(_effectFactory.Create(artefact.ArtefactConfig.Effects, artefact.Level));
+            }
+        }
+
+        public void MakeGhost (bool isMaterial)
+        {
+            IsMaterial = isMaterial;
+
+            if (_body != null)
+            {
+                _body.excludeLayers = IsMaterial == false
+                    ? _body.excludeLayers | _enemyLayers
+                    : _body.excludeLayers & ~_enemyLayers;
             }
         }
 
@@ -153,7 +182,9 @@ namespace BigBalls.GameplayObjects
         public void SetCanReturnToBag (bool canReturnToBag)
         {
             CanReturnToBag = canReturnToBag;
-            _body.excludeLayers = canReturnToBag ? _body.excludeLayers & ~_playerLayer : _body.excludeLayers | _playerLayer;
+
+            if(Config.IsPlayerBall)
+                _body.excludeLayers = canReturnToBag ? _body.excludeLayers & ~_playerLayer : _body.excludeLayers | _playerLayer;
         }
 
         public void SetIsMaterial (bool isMaterial) => IsMaterial = isMaterial;
@@ -163,7 +194,7 @@ namespace BigBalls.GameplayObjects
             _collisionStrategies.Clear();
         }
 
-        public void AddDamage (float damage)
+        public void CalculateDamage (float damage)
         {
             AppliedDamage += damage;
             TotalDamage += damage;

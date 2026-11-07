@@ -42,8 +42,7 @@ namespace BigBalls.Configs
                 TextLocalizator.BurnDPS,
                 GetBurnDPS(level),
                 GetBurnDPS(nextLevel)
-            )
-        };
+            )};
         }
     }
 }

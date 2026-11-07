@@ -32,7 +32,6 @@ public class DropService : IDropService
             foreach (var loot in _lootData.GetLoot(lootInfo.LootType, count))
             {
                 _lootSpawner.SpawnLootItem(enemy.transform.position, loot.Prefab);
-
             }
         }
     }

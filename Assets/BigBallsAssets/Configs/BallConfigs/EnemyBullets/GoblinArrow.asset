@@ -33,9 +33,10 @@ MonoBehaviour:
     Pitch: 0
     NeedRandomPitch: 1
   <EntityType>k__BackingField: 5
-  <BallType>k__BackingField: 1
+  <BallType>k__BackingField: 15
   <IsMaterial>k__BackingField: 1
   <IsUnique>k__BackingField: 0
+  <IsPlayerBall>k__BackingField: 0
   <Stats>k__BackingField:
   - StatType: 1
     StartMaxValue: 1
@@ -44,6 +45,10 @@ MonoBehaviour:
   - StatType: 3
     StartMaxValue: 10
     StartCurrentValue: 3.3
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 5
+    StartCurrentValue: 5
     MinValue: 0
   <Effects>k__BackingField:
   - {fileID: 11400000, guid: b1a03c0e43fbbe14290524af63c40aa4, type: 2}

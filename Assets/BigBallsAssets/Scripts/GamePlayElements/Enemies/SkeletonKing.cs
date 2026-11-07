@@ -39,7 +39,7 @@ public class SkeletonKing : LevelBoss
     {
         StateMachine = new EnemyStateMachine(_resolverProvider);
 
-        StateMachine.Register(new BossIdleState(this, StateMachine, BossConfig.IdleMinDuration));
+        StateMachine.Register(new SkeletonIdleState(this, StateMachine, BossConfig.IdleMinDuration));
         BossBoneCloudState bossBoneCloudState = new BossBoneCloudState(this, StateMachine, BossConfig.BoneCloudDuration);
         StateMachine.Register(bossBoneCloudState);
         AttackStates.Add(bossBoneCloudState);
@@ -70,6 +70,6 @@ public class SkeletonKing : LevelBoss
     {
         Mover.Stop();
         Spawned?.Invoke();
-        StateMachine.Start<BossIdleState>();
+        StateMachine.Start<SkeletonIdleState>();
     }
 }

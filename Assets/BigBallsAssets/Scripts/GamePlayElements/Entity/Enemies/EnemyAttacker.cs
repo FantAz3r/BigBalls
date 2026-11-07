@@ -67,7 +67,7 @@ namespace BigBalls.GameplayObjects
 
         private void CollisionAttack ()
         {
-            _damageService.ApplyDamage(_playerProvider.Player, _damage.CurrentValue);
+            _damageService.ApplyDamage(_owner, _playerProvider.Player, _damage.CurrentValue);
             _soundSpawner.Spawn(SoundType.PlayerTouchEnemy);
             PlayerKnockBack();
         }
@@ -119,7 +119,7 @@ namespace BigBalls.GameplayObjects
         private void ApplyMeeleDamage (bool needSuiside)
         {
             var player = _playerProvider.Player;
-            _damageService.ApplyDamage(player, _damage.CurrentValue);
+            _damageService.ApplyDamage(_owner, player, _damage.CurrentValue);
 
             if (_config.AttackSound.Clip != null)
                 _soundSpawner.Spawn(_config.AttackSound);

@@ -69,7 +69,7 @@ public class LineLaser : EffectBehaviour
         {
             if (hit.collider.TryGetComponent(out Enemy enemy))
             {
-                _damageService.ApplyDamage(enemy, damage, _config.Color);
+                _damageService.ApplyDamage(Host, enemy, damage, _config.Color);
             }
         }
     }

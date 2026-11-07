@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BigBalls.Factories;
 using BigBalls.GameplayObjects;
+using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
@@ -16,16 +17,19 @@ public class IceWall : MonoBehaviour
     private IPoolService _poolService;
     private IBallFactory _ballFactory;
     private IIdentifierService _identifierService;
+    private IObjectResolverProvider _objectResolverProvider;
 
     [Inject]
     public void Construct (
         IPoolService poolService,
         IBallFactory ballFactory,
-        IIdentifierService identifierService)
+        IIdentifierService identifierService,
+        IObjectResolverProvider objectResolverProvider)
     {
         _poolService = poolService;
         _ballFactory = ballFactory;
         _identifierService = identifierService;
+        _objectResolverProvider = objectResolverProvider;
     }
 
     public void BreakWall ()
@@ -56,11 +60,16 @@ public class IceWall : MonoBehaviour
 
     private List<ICollisionStrategy> CreateStrategies ()
     {
-        return new List<ICollisionStrategy>()
+        List<ICollisionStrategy> strategyList = new List<ICollisionStrategy>()
         {
              new HitPlayerStrategy(),
              new ReflectCollisionStrategy(),
              new BallCollisionStrategy()
         };
+
+        foreach (ICollisionStrategy strategy in strategyList)
+            _objectResolverProvider.CurrentResolver.Inject(strategy);
+
+        return strategyList;
     }
 }

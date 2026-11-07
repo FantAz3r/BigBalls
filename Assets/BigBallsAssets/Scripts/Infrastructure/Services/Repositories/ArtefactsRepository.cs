@@ -6,12 +6,14 @@ using System.Collections.Generic;
 
 public class ArtefactsRepository : ItemRepository<ArtefactType, ArtefactModel, ArtefactConfig, ArtefactSaveData>, IArtefactsRepository
 {
-    private readonly Dictionary<ArtefactType, ArtefactConfig> _artefactsData;
+    private readonly Dictionary<ArtefactType, ArtefactConfig> _artefactsData = new();
 
     public ArtefactsRepository(IResourceLoader resourceLoader, ISaveService saveService, IObjectResolverProvider objectResolverProvider)
         : base(resourceLoader, saveService, objectResolverProvider)
     {
-        _artefactsData = resourceLoader.Load<CardsData>().Artefacts;
+        foreach (var artefact in resourceLoader.Load<CardsData>().Artefacts)
+            _artefactsData[artefact.Value.ArtefactType] = artefact.Value;
+
         Initialize();
     }
 

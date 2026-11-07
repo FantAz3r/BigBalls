@@ -16,7 +16,9 @@ public class WeaponRepository : ItemRepository<ItemType, WeaponModel, WeaponConf
         IObjectResolverProvider objectResolverProvider)
         : base(resourceLoader, saveService, objectResolverProvider)
     {
-        _weaponsData = resourceLoader.Load<CardsData>().Weapons;
+        foreach (var weapon in resourceLoader.Load<CardsData>().Weapons)
+            _weaponsData[weapon.Value.ItemType] = weapon.Value;
+
         _ballRepository = ballRepository;
         Initialize();
     }

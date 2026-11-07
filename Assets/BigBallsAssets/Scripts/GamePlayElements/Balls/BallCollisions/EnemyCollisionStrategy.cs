@@ -38,6 +38,7 @@ public class EnemyCollisionStrategy : ICollisionStrategy
             OnHit(component.Enemy, ball);
         }
 
+
         ball.EventHandler.Hit();
         return false;
     }
@@ -48,8 +49,8 @@ public class EnemyCollisionStrategy : ICollisionStrategy
 
         if (statHolder.TryGetStat(out Stat stat, StatType.Damage))
         {
-            float damage =_damageService.ApplyDamage(enemy, stat.CurrentValue, ball.Config.DamageColor);
-            ball.AddDamage(damage);
+            float damage =_damageService.ApplyDamage( ball, enemy, stat.CurrentValue, ball.Config.DamageColor);
+            ball.CalculateDamage(damage);
         }
 
         ball.SetCanReturnToBag(true);
@@ -58,6 +59,14 @@ public class EnemyCollisionStrategy : ICollisionStrategy
         if (enemy.EnemyHitedAnimation != null)
         {
             enemy.EnemyHitedAnimation.OnHit(ball);
+        }
+    }
+
+    public void HandleTrigger (Ball ball, Collider other)
+    {
+        if (other.TryGetComponent(out Enemy enemy))
+        {
+            OnHit(enemy, ball);
         }
     }
 }

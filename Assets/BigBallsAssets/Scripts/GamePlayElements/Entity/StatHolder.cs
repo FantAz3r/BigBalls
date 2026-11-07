@@ -37,18 +37,16 @@ public class StatHolder : IArtefactUser
         {
             if (_armor != null && _armor.Stats.ContainsKey(stat.Key))
             {
-                float currentValue = stat.Value.CurrentValue;
-                float maxValue = stat.Value.MaxValue;
+                float currentValue = stat.Value.StartCurrentValue;
+                float maxValue = stat.Value.StartMaxValue;
 
-                stat.Value.SetMaxValue(maxValue + _armor.Stats[stat.Key].StartMaxValue);
-                stat.Value.SetCurrentValue(currentValue + _armor.Stats[stat.Key].StartCurrentValue);
+                stat.Value.SetMaxValue(maxValue + _armor.ArmorConfig.GetMaxStatValue(_armor.Level, stat.Key));
+                stat.Value.SetCurrentValue(currentValue + _armor.ArmorConfig.GetCurrentStatValue(_armor.Level, stat.Key));
             }
             else
             {
                 stat.Value.ResetStat();
             }
-
-            Debug.Log($"{stat.Key} {stat.Value.MinValue} {stat.Value.CurrentValue} {stat.Value.MaxValue}");
         }
     }
 

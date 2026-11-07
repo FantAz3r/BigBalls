@@ -41,6 +41,18 @@ public class DamageTextFactory
 
     public DamageText Create (Vector3 position, float damage, string prefix, string postfix, Color color)
     {
+        string text = BuildText(prefix, (int) damage, postfix);
+        return CreateInternal(position, text, damage, color);
+    }
+
+    public DamageText CreateText (Vector3 position, string text)
+        => CreateText(position, text, default);
+
+    public DamageText CreateText (Vector3 position, string text, Color color)
+        => CreateInternal(position, text, 0f, color);
+
+    private DamageText CreateInternal (Vector3 position, string text, float damage, Color color)
+    {
         if (!_saveService.GameProgress.ShowDamageNumbers)
             return null;
 
@@ -49,9 +61,7 @@ public class DamageTextFactory
 
         Color finalColor = color == default ? _color : color;
 
-        string text = BuildText(prefix, (int) damage, postfix);
-
-        damageText.SetDamageText(text, finalColor);
+        damageText.SetDamageText(text, finalColor, damage);
 
         damageText.Removed += OnRemoved;
         return damageText;

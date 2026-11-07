@@ -41,9 +41,7 @@ public abstract class ItemRepository<TKey, TModel, TConfig, TSaveData> : IResetb
         var configs = LoadConfigs();
 
         foreach (KeyValuePair<TKey, TConfig> config in configs)
-        {
             _saveDatas[config.Key] = new CardSaveData((int) (object) config.Key, config.Value.IsOpen, 0);
-        }
 
         LoadDataFromSave();
         CreateModels(configs);

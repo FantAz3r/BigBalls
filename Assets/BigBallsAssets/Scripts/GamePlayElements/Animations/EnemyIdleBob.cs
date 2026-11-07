@@ -9,9 +9,20 @@ public class EnemyIdleBob : MonoBehaviour
     [SerializeField] private float _scaleMultiplier = 1.1f;
     [SerializeField] private float _duration = 0.4f;
     [SerializeField] private Ease _ease = Ease.InOutSine;
+    [SerializeField] private float _speedPercent = 1f;
 
     private Vector3 _initialScale;
     private Tween _tween;
+
+    public float SpeedPercent
+    {
+        get => _speedPercent;
+        set
+        {
+            _speedPercent = Mathf.Max(0.0001f, value);
+            ApplySpeed();
+        }
+    }
 
     private void Awake()
     {
@@ -32,6 +43,12 @@ public class EnemyIdleBob : MonoBehaviour
     public void Stop()
     {
         _tween?.Kill();
+    }
+
+    public void SetSpeed (float speedPercent)
+    {
+        _speedPercent = Mathf.Max(0.0001f, speedPercent);
+        ApplySpeed();
     }
 
     public void Play()
@@ -59,5 +76,13 @@ public class EnemyIdleBob : MonoBehaviour
                .SetLoops(-1, LoopType.Yoyo)
                .SetUpdate(true)
                .Play();
+    }
+
+    private void ApplySpeed ()
+    {
+        if (_tween != null && _tween.IsActive())
+        {
+            _tween.timeScale = _speedPercent;
+        }
     }
 }

@@ -90,6 +90,9 @@ public class Scarabey : Enemy
            new ScarabCollisionStrategy()
         };
 
+        foreach (ICollisionStrategy strategy in collisions)
+            _objectResolver.Inject(strategy);
+
         ball.Init(_identifierService.ID, ballModel, mover, collisions, ballDeathHandler);
         _entityRepository.Add(ball, statHolder, null);
         return ball;

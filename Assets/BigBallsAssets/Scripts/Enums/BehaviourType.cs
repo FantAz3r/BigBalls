@@ -18,5 +18,9 @@
         Horn,
         VimpireKnife,
         Lava,
+        Blizzard,
+        Split,
+        Golden,
+        Phantom,
     }
 }

@@ -54,8 +54,8 @@ namespace BigBalls.UI
             PlayResultSound();
             OnResultApplied(level, compliteWaves, levelButton);
 
-            _chestButton.gameObject.SetActive(compliteWaves > 0);
-            levelButton.gameObject.SetActive(compliteWaves > 0 == false);
+            _chestButton.SetActive(compliteWaves > 0);
+            levelButton.SetActive(compliteWaves > 0 == false);
         }
 
         private void SetupChest (LevelID level, int compliteWaves, LevelButton levelButton)

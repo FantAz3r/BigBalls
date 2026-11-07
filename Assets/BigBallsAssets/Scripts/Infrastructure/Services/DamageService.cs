@@ -1,5 +1,6 @@
 using System;
 using BigBalls.GameplayObjects;
+using BigBalls.Localization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,16 +18,22 @@ namespace BigBalls.Services
             _damageTextFactory = damageTextFactory;
         }
 
-        public float ApplyDamage (IEntity entity, float damage, Color color = default)
+        public float ApplyDamage (IEntity target, float damage, Color color = default)
+            => ApplyDamage(null, target, damage, color);
+
+        public float ApplyDamage (IEntity self, IEntity target, float damage, Color color = default)
         {
-            StatHolder statHolder = _entityRepository.GetStatHolder(entity);
+            StatHolder statHolder = _entityRepository.GetStatHolder(target);
 
             if (statHolder == null)
                 return 0;
 
             if (statHolder.Stats.ContainsKey(StatType.Evasion))
                 if (ApplyEvasion(statHolder[StatType.Evasion]))
+                {
+                    _damageTextFactory.CreateText(target.Transform.position, TextLocalizator.Miss, Color.white);
                     return 0;
+                }
 
             float finalDamage = damage;
             float actualDamage = 0;
@@ -44,12 +51,12 @@ namespace BigBalls.Services
 
             if (statHolder.Stats.ContainsKey(StatType.Health))
             {
-                actualDamage = ApplyHealthDamage(statHolder[StatType.Health], finalDamage);
+                actualDamage = ApplyHealthDamage(statHolder[StatType.Health], finalDamage, target, self);
             }
 
             if (actualDamage > 0)
             {
-                _damageTextFactory.Create(entity.Transform.position, actualDamage, color);
+                _damageTextFactory.Create(target.Transform.position, actualDamage, color);
             }
 
             return actualDamage;
@@ -132,12 +139,17 @@ namespace BigBalls.Services
             return value;
         }
 
-        private float ApplyHealthDamage (Stat health, float damage)
+        private float ApplyHealthDamage (Stat health, float damage, IEntity target = null, IEntity self = null)
         {
             if (damage <= 0)
                 return 0;
 
-            return health.ReduceCurrentValue(damage);
+            float redusedDamage = health.ReduceCurrentValue(damage);
+
+            if (health.CurrentValue <= health.MinValue && target != null)
+                self?.EventHandler.Kill(self, target);
+
+            return redusedDamage;
         }
 
         private float ApplyHealHealth (Stat health, float healValue)
