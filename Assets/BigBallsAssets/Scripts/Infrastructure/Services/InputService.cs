@@ -6,9 +6,8 @@ using VContainer.Unity;
 
 namespace BigBalls.Services
 {
-    public class InputService : IInputService, IStartable
+    public class InputService : IInputService, IStartable, ITickable
     {
-        private bool _isActive;
         private readonly IWindowService _windowService;
         private readonly ITimeService _timeService;
         private PlayerInputActions _inputActions;
@@ -16,6 +15,9 @@ namespace BigBalls.Services
         public event Action<Vector2> MoveDirectionSeted;
         public event Action<Vector2> RotateDirectionSeted;
         public event Action Attack;
+
+        public event Action<Vector2> CameraOrbitSeted;
+        public event Action<float> CameraZoomSeted;
 
         public InputService (IWindowService windowService, ITimeService timeService)
         {
@@ -28,16 +30,32 @@ namespace BigBalls.Services
 
         public void Start ()
         {
-            _inputActions.UI.Pause.performed += PauseGame;
-            _inputActions.UI.Timescale1.performed += SetTimescale1;
-            _inputActions.UI.Timescale2.performed += SetTimescale2;
-            _inputActions.UI.Timescale3.performed += SetTimescale3;
+            DisableCamera();
+            DisablePlayer();
+            DisableUI();
+            _timeService.IsPausedChanged += OnPauseChanged;
+        }
 
-            _inputActions.Player.Move.performed += OnMovePerformed;
-            _inputActions.Player.Move.canceled += OnMoveCanceled;
-            _inputActions.Player.Rotate.performed += OnRotatePerformed;
-            _inputActions.Player.Rotate.canceled += OnRotateCanceled;
-            _inputActions.Player.Attack.performed += OnAttack;
+        public IInputService GetSelf () => this;
+
+        public void Tick ()
+        {
+            bool isHeld = Pointer.current != null && Pointer.current.press.isPressed;
+
+            if (!isHeld)
+            {
+                CameraOrbitSeted?.Invoke(Vector2.zero);
+                return;
+            }
+
+            Vector2 delta = _inputActions.Camera.Orbit.ReadValue<Vector2>();
+            CameraOrbitSeted?.Invoke(delta);
+        }
+
+        private void OnZoomPerformed (InputAction.CallbackContext context)
+        {
+            float scrollValue = context.ReadValue<float>();
+            CameraZoomSeted?.Invoke(scrollValue);
         }
 
         private void OnMovePerformed (InputAction.CallbackContext context)
@@ -88,22 +106,48 @@ namespace BigBalls.Services
 
         public void EnableUI ()
         {
+            if (_inputActions == null)
+                return;
             _inputActions.UI.Enable();
+            _inputActions.UI.Pause.performed += PauseGame;
+            _inputActions.UI.Timescale1.performed += SetTimescale1;
+            _inputActions.UI.Timescale2.performed += SetTimescale2;
+            _inputActions.UI.Timescale3.performed += SetTimescale3;
+
         }
 
         public void DisableUI ()
         {
+            if (_inputActions == null)
+                return;
             _inputActions.UI.Disable();
+            _inputActions.UI.Pause.performed -= PauseGame;
+            _inputActions.UI.Timescale1.performed -= SetTimescale1;
+            _inputActions.UI.Timescale2.performed -= SetTimescale2;
+            _inputActions.UI.Timescale3.performed -= SetTimescale3;
         }
 
         public void EnablePlayer ()
         {
+            if (_inputActions == null)
+                return;
             _inputActions.Player.Enable();
+            _inputActions.Player.Move.performed += OnMovePerformed;
+            _inputActions.Player.Move.canceled += OnMoveCanceled;
+            _inputActions.Player.Rotate.performed += OnRotatePerformed;
+            _inputActions.Player.Rotate.canceled += OnRotateCanceled;
+            _inputActions.Player.Attack.performed += OnAttack;
         }
 
         public void DisablePlayer ()
         {
+            if (_inputActions == null)
+                return;
             _inputActions.Player.Disable();
+            _inputActions.Player.Move.performed -= OnMovePerformed;
+            _inputActions.Player.Move.canceled -= OnMoveCanceled;
+            _inputActions.Player.Rotate.performed -= OnRotatePerformed;
+            _inputActions.Player.Rotate.canceled -= OnRotateCanceled;
         }
 
         public void Dispose ()
@@ -111,23 +155,40 @@ namespace BigBalls.Services
             if (_inputActions == null)
                 return;
 
-            _inputActions.UI.Pause.performed -= PauseGame;
-            _inputActions.UI.Timescale1.performed -= SetTimescale1;
-            _inputActions.UI.Timescale2.performed -= SetTimescale2;
-            _inputActions.UI.Timescale3.performed -= SetTimescale3;
-
-            _inputActions.Player.Move.performed -= OnMovePerformed;
-            _inputActions.Player.Move.canceled -= OnMoveCanceled;
-            _inputActions.Player.Rotate.performed -= OnRotatePerformed;
-            _inputActions.Player.Rotate.canceled -= OnRotateCanceled;
-
+            _timeService.IsPausedChanged -= OnPauseChanged;
             _inputActions.Dispose();
             _inputActions = null;
         }
 
-        public IInputService GetSelf ()
+        public void EnableCamera ()
         {
-            return this;
+            if (_inputActions == null)
+                return;
+            _inputActions.Camera.Enable();
+            _inputActions.Camera.Zoom.performed += OnZoomPerformed;
+        }
+
+        public void DisableCamera ()
+        {
+            if (_inputActions == null)
+                return;
+            _inputActions.Camera.Disable();
+            _inputActions.Camera.Zoom.performed -= OnZoomPerformed;
+        }
+
+        private void OnPauseChanged(bool pause)
+        {
+            if (pause)
+            {
+                DisablePlayer();
+                DisableUI();
+            }
+            else
+            {
+                EnablePlayer();
+                EnableUI();
+            }
+
         }
     }
 }

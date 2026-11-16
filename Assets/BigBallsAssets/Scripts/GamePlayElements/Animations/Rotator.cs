@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class Rotator : MonoBehaviour
@@ -16,60 +15,19 @@ public class Rotator : MonoBehaviour
     [SerializeField] private int _direction = 1;
     [SerializeField] private RotationAxis _axis = RotationAxis.Y;
 
-    private Tween _rotationTween;
-
-    private void OnEnable ()
+    private void Update ()
     {
-        StartRotation();
-    }
+        float dt = _useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
-    private void OnDisable ()
-    {
-        StopRotation();
-    }
+        int dir = _direction == 0 ? 1 : _direction;
+        float step = _degreesPerSecond * Mathf.Sign(dir) * dt;
 
-    private void StartRotation ()
-    {
-        if (_direction == 0)
-            _direction = 1;
-
-        if (_rotationTween != null && _rotationTween.IsActive())
-        {
-            _rotationTween.Kill();
-            _rotationTween = null;
-        }
-
-        float step = _degreesPerSecond * Mathf.Sign(_direction);
-        Vector3 rotationDelta = GetAxisVector(_axis) * step;
+        Vector3 axis = GetAxisVector(_axis);
 
         if (_rotateLocal)
-        {
-            _rotationTween = transform.DOLocalRotate(rotationDelta, 1f, RotateMode.LocalAxisAdd)
-                .SetEase(Ease.Linear)
-                .SetLoops(-1, LoopType.Incremental);
-        }
+            transform.Rotate(axis, step, Space.Self);
         else
-        {
-            _rotationTween = transform.DORotate(rotationDelta, 1f, RotateMode.WorldAxisAdd)
-                .SetEase(Ease.Linear)
-                .SetLoops(-1, LoopType.Incremental);
-        }
-
-        if (_useUnscaledTime)
-            _rotationTween.SetUpdate(true);
-    }
-
-    private void StopRotation ()
-    {
-        if (_rotationTween != null)
-        {
-            if (_rotationTween.IsActive())
-            {
-                _rotationTween.Kill();
-            }
-
-            _rotationTween = null;
-        }
+            transform.Rotate(axis, step, Space.World);
     }
 
     private static Vector3 GetAxisVector (RotationAxis axis)

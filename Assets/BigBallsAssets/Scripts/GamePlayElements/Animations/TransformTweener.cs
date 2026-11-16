@@ -9,6 +9,7 @@ public class TransformTweener : MonoBehaviour
     [Header("Target")]
     [Tooltip("Целевой Transform. Если пусто — используется свой Transform.")]
     [SerializeField] private Transform _target;
+    [SerializeField] private float _delay = 0f;
 
     [Header("Position")]
     [SerializeField] private bool _animatePosition = true;
@@ -42,7 +43,7 @@ public class TransformTweener : MonoBehaviour
     [Header("Tween Settings")]
     [SerializeField] private float _duration = 1f;
     [SerializeField] private Ease _ease = Ease.OutQuad;
-    [SerializeField] private bool _playOnStart = true;
+    [SerializeField] private bool _playOnEnable = true;
     [SerializeField] private bool _autoKill = true;
     [SerializeField] private bool _useUnscaledTime = false;
 
@@ -57,13 +58,20 @@ public class TransformTweener : MonoBehaviour
         set => _duration = value;
     }
 
+    public float Delay
+    {
+        get => _delay;
+        set => _delay = value;
+    }
+
     public event Action Completed;
 
     private Transform Target => _target != null ? _target : transform;
 
-    private void Start ()
+    private void OnEnable ()
     {
-        if (_playOnStart) Play();
+        if (_playOnEnable)
+            Play();
     }
 
     private void OnDisable ()
@@ -71,15 +79,15 @@ public class TransformTweener : MonoBehaviour
         Kill();
     }
 
-    /// <summary>
-    /// Запустить анимацию.
-    /// </summary>
     public void Play ()
     {
         Kill();
 
         Transform tr = Target;
         _sequence = DOTween.Sequence();
+
+        if (_delay > 0f)
+            _sequence.AppendInterval(_delay);
 
         if (_animatePosition)
         {

@@ -1,15 +1,19 @@
-using System.Collections.Generic;
-using BigBalls.Infrastructure.DI;
+using System.Collections;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 
 public class SunPharaohSolarStreamsState : BossStateBase
 {
+    private const int BeamHeight = 20;
+
     private readonly SunPharaoh _boss;
-    private readonly List<SolarBeam> _beams = new();
-    private IObjectResolverProvider _resolverProvider;
+    private IPoolService _poolService;
     private IPlayerProvider _playerProvider;
+    private ICoroutineRunner _coroutineRunner;
+    private Coroutine _spawnRoutine;
+    private WaitForSeconds _wait;
+    private bool _canCast;
 
     public SunPharaohSolarStreamsState (SunPharaoh boss, EnemyStateMachine stateMachine, float duration)
         : base(stateMachine, boss, duration)
@@ -18,60 +22,48 @@ public class SunPharaohSolarStreamsState : BossStateBase
     }
 
     [Inject]
-    public void Construct (IObjectResolverProvider resolverProvider, IPlayerProvider playerProvider)
+    public void Construct (IPoolService poolService, IPlayerProvider playerProvider, ICoroutineRunner coroutineRunner)
     {
-        _resolverProvider = resolverProvider;
+        _poolService = poolService;
         _playerProvider = playerProvider;
+        _coroutineRunner = coroutineRunner;
     }
 
     protected override void OnEnter ()
     {
-        var cfg = _boss.BossConfig;
+        _boss.EnemyAnimator.Attack(OnCast);
+    }
 
-        // ÷елимс€ вокруг игрока: 1/3 пол€ = 75 клеток, луч = 4 клетки (2x2) -> 19 лучей.
-        // –азбрасываем лучи по полю 15x15, центриру€ на игроке (не выход€ за границы).
-        Vector3 fieldOrigin = _boss.FieldOrigin.position;
-        Vector3 fieldCenter = BattleGrid.GridCenter(fieldOrigin, cfg.GridWidth, cfg.GridHeight, cfg.CellSize);
+    private void OnCast ()
+    {
+        _canCast = true;
+        _wait = new WaitForSeconds (_boss.BossConfig.SpawnInterval);
+        _spawnRoutine = _coroutineRunner.StartCoroutine(SpawnLoop());
+    }
+
+    private IEnumerator SpawnLoop ()
+    {
+        while (_canCast)
+        {
+            SpawnBeamAtPlayer();
+            yield return _wait;
+        }
+    }
+
+    private void SpawnBeamAtPlayer ()
+    {
+        if (_playerProvider.Player?.Transform == null)
+            return;
 
         Vector3 playerPos = _playerProvider.Player.Transform.position;
-        int px = Mathf.RoundToInt((playerPos.x - fieldOrigin.x) / cfg.CellSize);
-        int py = Mathf.RoundToInt((playerPos.z - fieldOrigin.z) / cfg.CellSize);
+        Vector3 world = new Vector3(playerPos.x, BeamHeight, playerPos.z);
 
-        // —обираем все 2x2-квадраты, отбрасываем выход€щие за поле.
-        var candidates = new List<Vector2Int>();
-        for (int y = 0; y <= cfg.GridHeight - 2; y++)
-            for (int x = 0; x <= cfg.GridWidth - 2; x++)
-                candidates.Add(new Vector2Int(x, y));
-
-        // —ортируем по близости к игроку и берЄм первые BeamCount Ч "удар по игроку" ощущаетс€.
-        candidates.Sort((a, b) =>
-        {
-            float da = (a.x - px) * (a.x - px) + (a.y - py) * (a.y - py);
-            float db = (b.x - px) * (b.x - px) + (b.y - py) * (b.y - py);
-            return da.CompareTo(db);
-        });
-
-        int count = Mathf.Min(cfg.BeamCount, candidates.Count);
-        for (int i = 0; i < count; i++)
-        {
-            var c = candidates[i];
-            Vector3 world = fieldOrigin + new Vector3((c.x + 1f) * cfg.CellSize, 0f, (c.y + 1f) * cfg.CellSize); // центр 2x2
-
-            var go = Object.Instantiate(cfg.SolarBeamPrefab, world, Quaternion.identity);
-            go.transform.localScale = new Vector3(2f * cfg.CellSize, 20f, 2f * cfg.CellSize); // 2x2 клетки, высота 20
-
-            var beam = go.GetComponent<SolarBeam>();
-            if (beam != null)
-            {
-                _resolverProvider.CurrentResolver.Inject(beam);
-                beam.Init(
-                    windup: cfg.SolarStreamsWindup,
-                    active: cfg.BeamCastDuration,
-                    damage: cfg.SunOrbBeamDamage, // или отдельное поле SolarBeamDamage
-                    mask: cfg.SunOrbBeamMask);
-                _beams.Add(beam);
-            }
-        }
+        SolarBeam beam = _poolService.Get(_boss.BossConfig.SolarBeamPrefab, world);
+        beam.Init(
+            windup: _boss.BossConfig.SolarStreamsWindup,
+            active: _boss.BossConfig.BeamCastDuration,
+            damage: _boss.BossConfig.SunOrbBeamDamage,
+            mask: _boss.BossConfig.SunOrbBeamMask);
     }
 
     protected override void OnTick (float dt) { }
@@ -83,9 +75,12 @@ public class SunPharaohSolarStreamsState : BossStateBase
 
     protected override void OnExit ()
     {
-        for (int i = 0; i < _beams.Count; i++)
-            if (_beams[i] != null)
-                Object.Destroy(_beams[i].gameObject);
-        _beams.Clear();
+        _canCast = false;
+
+        if (_spawnRoutine != null)
+        {
+            _coroutineRunner.StopCoroutine(_spawnRoutine);
+            _spawnRoutine = null;
+        }
     }
 }

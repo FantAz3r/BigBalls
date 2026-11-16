@@ -76,7 +76,7 @@ public class CardSelector
 
             foreach (var ball in ballByType.Values)
             {
-                if (ball.BallConfig.BallType == BallType.Base)
+                if (ball.BallConfig.BallType == BallType.Base || ball.BallConfig.IsPlayerBall == false)
                     continue;
 
                 if (IsAvailable(ball, ballByType))

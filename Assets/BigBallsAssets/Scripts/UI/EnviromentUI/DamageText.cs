@@ -19,6 +19,7 @@ public class DamageText : MonoBehaviour
     [Header("References")]
     [SerializeField] private TMP_Text _text;
     [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] private Canvas _canvas;
     [SerializeField] private Vector3 _offset = new Vector3(0, 0, -1);
 
     public event Action<DamageText> Removed;

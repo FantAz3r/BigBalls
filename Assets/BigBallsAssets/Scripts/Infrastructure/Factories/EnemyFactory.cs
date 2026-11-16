@@ -12,10 +12,7 @@ namespace BigBalls.Factories
     {
         private readonly IObjectResolverProvider _resolverProvider;
         private readonly IIdentifierService _identifierService;
-        private readonly IUpdateService _updateService;
-        private readonly IRaycastService _raycastService;
         private readonly IPlayerProvider _playerProvider;
-        private readonly IDamageService _damageService;
         private readonly IEntityRepository _entityRepository;
         private readonly IPoolService _poolService;
         private readonly IDropService _dropService;
@@ -23,10 +20,7 @@ namespace BigBalls.Factories
         public EnemyFactory (
             IObjectResolverProvider resolverProvider,
             IIdentifierService identifierService,
-            IUpdateService updateService,
-            IRaycastService raycastService,
             IPlayerProvider playerProvider,
-            IDamageService damageService,
             IEntityRepository entityRepository,
             IPoolService poolService,
             IDropService dropService
@@ -34,10 +28,7 @@ namespace BigBalls.Factories
         {
             _resolverProvider = resolverProvider;
             _identifierService = identifierService;
-            _updateService = updateService;
-            _raycastService = raycastService;
             _playerProvider = playerProvider;
-            _damageService = damageService;
             _entityRepository = entityRepository;
             _poolService = poolService;
             _dropService = dropService;
@@ -45,7 +36,7 @@ namespace BigBalls.Factories
 
         public event Action<IEntity> Died;
         public event Action<IEntity> Killed;
-
+        public event Action BossKilled;
         public int KillCount { get; private set; }
         public int DiedCount { get; private set; }
         public int SuisidedCount { get; private set; }
@@ -64,7 +55,7 @@ namespace BigBalls.Factories
             deathHandler.Subscribe();
             enemy.EventHandler.Died += OnDied;
 
-            GameplayObjects.Rotator enemyRotator = null;
+            EntityRotator enemyRotator = null;
             Mover enemyMover = null;
             EnemyShooter enemyShooter = null;
 
@@ -73,7 +64,7 @@ namespace BigBalls.Factories
                 if (subscriber is Mover mover)
                     enemyMover = mover;
 
-                if (subscriber is GameplayObjects.Rotator rotator)
+                if (subscriber is EntityRotator rotator)
                     enemyRotator = rotator;
 
                 if (subscriber is EnemyShooter shooter)
@@ -130,13 +121,16 @@ namespace BigBalls.Factories
 
             _poolService.Release(enemy);
             Died?.Invoke(enemy);
+
+            if (enemy.Config.Type == EntityType.Boss && enemy.Config.Type == EntityType.LevelBoss)
+                BossKilled?.Invoke();
         }
 
         private List<ISubscribable> CreateComponents (StatHolder statHolder, Enemy enemy, EnemyConfig enemyConfig)
         {
             Mover mover = null;
             EnemyShooter shooter = null;
-            GameplayObjects.Rotator rotator = null;
+            EntityRotator rotator = null;
             EnemyAttacker enemyAttacker = null;
 
             if (statHolder.TryGetStat(out Stat moveSpeed, StatType.MoveSpeed))
@@ -154,7 +148,7 @@ namespace BigBalls.Factories
 
             if (statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed) && enemy.RotationPart != null)
             {
-                rotator = new GameplayObjects.Rotator(rotationSpeed, enemy.RotationPart);
+                rotator = new EntityRotator(rotationSpeed, enemy.RotationPart);
                 _resolverProvider.CurrentResolver.Inject(rotator);
                 rotator.SetTarget(_playerProvider.Player.transform);
             }
@@ -181,7 +175,6 @@ namespace BigBalls.Factories
         private void Init (Mover mover, EnemyConfig enemyConfig)
         {
             mover.SetDirection(new Vector2(0, -1));
-
             List<Vector2Int> frontRowBlocks = enemyConfig.GetBlocksWithoutFrontNeighbor();
 
             Vector3[] raycastPoints = new Vector3[frontRowBlocks.Count];

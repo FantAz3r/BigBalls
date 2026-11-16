@@ -24,7 +24,7 @@ public class GoblinRoarState : BossStateBase
 
     protected override void OnEnter ()
     {
-        _goblinKing.EnemyAnimator.PlayRoar(TryStunPlayer);
+        _goblinKing.EnemyAnimator.PlayCast(TryStunPlayer);
     }
 
     private void TryStunPlayer ()

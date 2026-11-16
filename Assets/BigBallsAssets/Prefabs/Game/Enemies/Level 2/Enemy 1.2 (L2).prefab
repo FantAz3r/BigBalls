@@ -171,6 +171,7 @@ MonoBehaviour:
   _scaleMultiplier: 1.1
   _duration: 0.4
   _ease: 4
+  _speedPercent: 1
 --- !u!114 &5317830786752620071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,6 +253,7 @@ MonoBehaviour:
   <RotationPart>k__BackingField: {fileID: 0}
   <DieAnimation>k__BackingField: {fileID: 5317830786752620071}
   <ShieldView>k__BackingField: {fileID: 8902155101619952201}
+  <FirePoint>k__BackingField: {fileID: 0}
 --- !u!65 &8097772473797950563
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -647,6 +649,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PFB_Goblin_Warrior
       objectReference: {fileID: 0}
+    - target: {fileID: 2782500873864546981, guid: 82e92d24e92763d46892c18d9721ad78,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34ee6cd20bb6d164583fa216b5ad017f, type: 2}
     m_RemovedComponents:
     - {fileID: 3299203695112502569, guid: 82e92d24e92763d46892c18d9721ad78, type: 3}
     m_RemovedGameObjects: []
@@ -982,6 +989,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PFB_Basic_Goblin
       objectReference: {fileID: 0}
+    - target: {fileID: 3935830726552926588, guid: 044a6c749f52fff4fa7f6eee255d74f6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34ee6cd20bb6d164583fa216b5ad017f, type: 2}
     m_RemovedComponents:
     - {fileID: 4213232506160068849, guid: 044a6c749f52fff4fa7f6eee255d74f6, type: 3}
     m_RemovedGameObjects: []

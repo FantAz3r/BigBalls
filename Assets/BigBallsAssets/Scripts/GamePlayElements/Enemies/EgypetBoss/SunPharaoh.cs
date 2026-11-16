@@ -8,7 +8,6 @@ using VContainer;
 public class SunPharaoh : LevelBoss
 {
     [field: SerializeField] public SunPharaohConfig BossConfig { get; private set; }
-    [field: SerializeField] public Animator Animator { get; private set; }
     [field: SerializeField] public Transform EyeOriginLeft { get; private set; }
     [field: SerializeField] public Transform EyeOriginRight { get; private set; }
     [field: SerializeField] public Transform SunOrbSpawnPoint { get; private set; }
@@ -37,7 +36,7 @@ public class SunPharaoh : LevelBoss
     {
         StateMachine = new EnemyStateMachine(_resolverProvider);
 
-        StateMachine.Register(new BossIdleState(this, StateMachine, BossConfig.IdleMinDuration));
+        StateMachine.Register(new SunPharaohIdleState(this, StateMachine, BossConfig.IdleMinDuration));
 
         var laser = new SunPharaohEyeLaserState(this, StateMachine, BossConfig.EyeLaserDuration);
         StateMachine.Register(laser);

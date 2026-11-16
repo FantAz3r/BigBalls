@@ -9,6 +9,9 @@ namespace BigBalls.GameplayObjects
 {
     public class EnemyAttacker : ISubscribable
     {
+        private const float PushForce = 35;
+        private const float PushStunDuration = 0.5f;
+
         private readonly EnemyConfig _config;
         private readonly Stat _damage;
         private readonly Enemy _owner;
@@ -16,6 +19,7 @@ namespace BigBalls.GameplayObjects
         private readonly EntityCollision _entityCollision;
 
         private SoundSpawner _soundSpawner;
+        private DebuffService _debuffService;
         private IEntityRepository _entityRepository;
         private IPlayerProvider _playerProvider;
         private IDamageService _damageService;
@@ -37,13 +41,15 @@ namespace BigBalls.GameplayObjects
             IDamageService damageService,
             ICoroutineRunner coroutineRunner,
             IEntityRepository entityRepository,
-            SoundSpawner soundSpawner)
+            SoundSpawner soundSpawner,
+            DebuffService debuffService)
         {
             _coroutineRunner = coroutineRunner;
             _playerProvider = playerProvider;
             _damageService = damageService;
             _entityRepository = entityRepository;
             _soundSpawner = soundSpawner;
+            _debuffService = debuffService;
         }
 
         public void Subscribe ()
@@ -131,14 +137,23 @@ namespace BigBalls.GameplayObjects
 
         private void PlayerKnockBack ()
         {
-            MoverPhythics mover = _entityRepository.GetContainer(_playerProvider.Player).Get<MoverPhythics>();
+            Player player = _playerProvider.Player;
+
+            if (player == null)
+                return;
+
+            MoverPhythics mover = _entityRepository.GetContainer(player).Get<MoverPhythics>();
 
             Vector3 rawDir = (_playerProvider.Player.transform.position - _owner.transform.position).normalized;
             Vector3 pushDirection = Mathf.Abs(rawDir.x) > Mathf.Abs(rawDir.z)
                 ? new Vector3(Mathf.Sign(rawDir.x), 0, 0)
                 : new Vector3(0, 0, Mathf.Sign(rawDir.z));
 
-            mover.AddPush(pushDirection, 25);
+            mover.AddPush(pushDirection, PushForce);
+            _debuffService.Apply(
+                EffectType.Stun,
+                player,
+                PushStunDuration);
         }
     }
 }

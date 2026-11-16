@@ -30,7 +30,7 @@ public class LevelButtonView : MonoBehaviour
         if (myId == (int) LevelID.Level1)
         {
             SetUnlocked(true);
-            RenderStars(currentLevel?.CompliteWaves ?? 0);
+            RenderStars(currentLevel?.Stars ?? 0);
             return;
         }
 
@@ -38,20 +38,20 @@ public class LevelButtonView : MonoBehaviour
         bool unlocked = previousLevel != null && previousLevel.IsComplite;
         SetUnlocked(unlocked);
 
-        RenderStars(currentLevel?.CompliteWaves ?? 0);
+        RenderStars(currentLevel?.Stars ?? 0);
     }
 
     private void SetUnlocked (bool unlocked)
     {
         _button.interactable = unlocked;
-        _lockImage.gameObject.SetActive(!unlocked);
+        _lockImage.SetActive(!unlocked);
     }
 
     private void RenderStars (int count)
     {
         for (int i = 0; i < count; i++)
         {
-            _stars[i].gameObject.SetActive(true);
+            _stars[i].Enable();
         }
     }
 }

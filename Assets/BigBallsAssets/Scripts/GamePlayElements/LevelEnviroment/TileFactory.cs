@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BigBalls.Configs;
-using BigBalls.Infrastructure.DI;
+using BigBalls.Providers;
 using BigBalls.Services;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -13,18 +13,16 @@ namespace BigBalls.Factories
         private const int ScaleStep = 2;
         public readonly int StartWidth = 7;
 
-        private readonly IObjectResolverProvider _resolverProvider;
-        private readonly ICoroutineRunner _coroutineRunner;
         private readonly IPoolService _poolService;
+        private readonly ISceneContainerProvider _sceneContainerProvider;
         private readonly Dictionary<Tile, Action> _spawnHandlers = new();
 
         private List<Tile> _tilePrefabs;
         private List<Tile> _activeTiles = new List<Tile>();
-        public TileFactory (IObjectResolverProvider resolverProvider, ICoroutineRunner coroutineRunner, IPoolService poolService)
+        public TileFactory (IPoolService poolService, ISceneContainerProvider sceneContainerProvider)
         {
-            _resolverProvider = resolverProvider;
-            _coroutineRunner = coroutineRunner;
             _poolService = poolService;
+            _sceneContainerProvider = sceneContainerProvider;
         }
 
         public float TileLength => 15;
@@ -79,7 +77,7 @@ namespace BigBalls.Factories
             {
                 tile.ScaleTile(RoadWidth);
             }
-
+            _sceneContainerProvider.BattleField.SetWidth(RoadWidth);
             return RoadWidth;
         }
 

@@ -5,19 +5,21 @@ using VContainer;
 public class InputServiceAdapter
 {
     private readonly IDeviceService _deviceService;
-    private readonly IObjectResolverProvider _resolver;
+    private readonly InputService _inputService;
+    private readonly MobileInputService _mobileInputService;
 
-    public InputServiceAdapter (IDeviceService deviceService, IObjectResolverProvider resolver)
+    public InputServiceAdapter (IDeviceService deviceService, InputService inputService, MobileInputService mobileInputService)
     {
         _deviceService = deviceService;
-        _resolver = resolver;
+        _inputService = inputService;
+        _mobileInputService = mobileInputService;
     }
 
     public IInputService Get()
     {
         if (_deviceService.IsDecktop)
-            return _resolver.CurrentResolver.Resolve<InputService>();
+            return _inputService;
         else
-            return _resolver.CurrentResolver.Resolve<MobileInputService>();
+            return _mobileInputService;
     }
 }

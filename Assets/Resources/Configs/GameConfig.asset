@@ -13,3 +13,26 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: 
   AudioMixer: {fileID: 24100000, guid: d01d73ba21b8ba14db57e23112d57673, type: 2}
+  BaseKillScore: 10
+  MaxCombo: 25
+  ComboKillBonus: 1.15
+  ComboWindowSeconds: 3
+  BaseLevelScore: 10
+  LevelGrowth: 1.2
+  StarMyltyplyers:
+  - 1.2
+  - 1.5
+  - 2
+  MainLiderboard: MainLiderboard
+  Liderboards:
+    _serializedList:
+    - Key: 4
+      Value: FirstLevelScore
+    - Key: 5
+      Value: SecondLevelScore
+    - Key: 6
+      Value: ThirdLevelScore
+    - Key: 7
+      Value: FourthLevelScore
+    - Key: 8
+      Value: FifthLevelScore

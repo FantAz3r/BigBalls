@@ -33,6 +33,7 @@ namespace BigBalls.GameplayObjects
 
         private void OnDestroy()
         {
+            EventHandler.Destroy(this);
             DeathHandler?.Unsubscribe();
         }
 

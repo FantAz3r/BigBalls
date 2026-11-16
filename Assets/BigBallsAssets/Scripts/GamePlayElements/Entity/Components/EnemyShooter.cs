@@ -52,7 +52,7 @@ public class EnemyShooter : ISubscribable
         _objectResolverProvider = objectResolverProvider;
         CreateCollisionStrategiesToEnemy();
 
-        _firePoint = _enemy.transform;
+        _firePoint = _enemy.FirePoint == null ? _enemy.transform : _enemy.FirePoint;
     }
 
     public void Subscribe ()

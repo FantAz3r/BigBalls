@@ -38,7 +38,7 @@ public class Ice : EffectBehaviour
             enemy,
             _config.GetFreezeDuration(Level),
             _config.GetSlowPercent(Level),
-            () => enemy.EnemyIdleBob?.Play());
+            cancelled => enemy.EnemyIdleBob?.Play());
 
         _debuffService.Apply(
             EffectType.ArmorReduction,

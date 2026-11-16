@@ -45,7 +45,6 @@ public class ColorChanger : MonoBehaviour
             _health.ValueRedused += OnHit;
             _health.ValueIncreased += OnHeal;
         }
-
     }
 
     private void OnDisable ()
@@ -100,6 +99,7 @@ public class ColorChanger : MonoBehaviour
             material.DOColor(color, _emissionColorID, duration)
                  .From(targetColor)
                  .SetLoops(loops, LoopType.Yoyo)
+                 .OnComplete(() => material.SetColor(_emissionColorID, targetColor))
                  .OnKill(() =>
                  {
                      material.SetColor(_emissionColorID, targetColor);

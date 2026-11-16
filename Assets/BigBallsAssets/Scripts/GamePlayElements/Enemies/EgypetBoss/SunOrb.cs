@@ -1,89 +1,222 @@
 using System.Collections;
+using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 
-public class SunOrb : MonoBehaviour
+public class SunOrb : MonoBehaviour, IEntity
 {
     [SerializeField] private Transform _visual;
+    [SerializeField] private AttackMark _beamPreviewPrefab;
+    [SerializeField] private List<ParticleObject> _sunBeams;
 
     private SunPharaohConfig _cfg;
-    private SunPharaoh _owner;
-    private IPlayerProvider _playerProvider;
     private ICoroutineRunner _coroutineRunner;
     private IDamageService _damageService;
-    private IEntityRepository _entityRepository;
-    private Coroutine _routine;
-    private Vector3 _center;
+    private IPoolService _poolService;
+    private DebuffService _debuffService;
+    private StatHolder _statHolder;
+    private Stat _rotationSpeed;
+    private Coroutine _coroutine;
+    private bool _canShoot;
 
-    [Inject]
-    public void Construct (ICoroutineRunner coroutineRunner, IPlayerProvider playerProvider, IDamageService damageService, IEntityRepository entityRepository)
+    private readonly List<AttackMark> _previews = new List<AttackMark>();
+    private float _currentAngle;
+
+    public int Id => 0;
+    public Transform Transform => transform;
+    public EntityEventHandler EventHandler { get; private set; }
+    public HealthHandler<SunOrb> HealthHandler { get; private set; }
+    public Collider TriggerCollider => throw new System.NotImplementedException();
+
+    private void OnDisable ()
     {
-        _coroutineRunner = coroutineRunner;
-        _playerProvider = playerProvider;
-        _damageService = damageService;
-        _entityRepository = entityRepository;
+        _canShoot = false;
+
+        if (_coroutineRunner != null && _coroutine != null)
+        {
+            _coroutineRunner.StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+
+        HidePreviews();
     }
 
-    public void Init (SunPharaoh owner, SunPharaohConfig cfg, Vector3 center)
+    [Inject]
+    public void Construct (ICoroutineRunner coroutineRunner, IDamageService damageService, DebuffService debuffService, IPoolService poolService)
     {
-        _owner = owner;
+        _coroutineRunner = coroutineRunner;
+        _damageService = damageService;
+        _debuffService = debuffService;
+        _poolService = poolService;
+    }
+
+    public void Init (StatHolder statHolder, SunPharaohConfig cfg, Vector3 center, HealthHandler<SunOrb> healthHandler)
+    {
+        HealthHandler = healthHandler;
+        EventHandler = new();
         _cfg = cfg;
-        _center = center;
         transform.position = center;
-        _routine = _coroutineRunner.StartCoroutine(Run());
+        _statHolder = statHolder;
+        _statHolder.TryGetStat(out Stat rotationSpeed, StatType.RotationSpeed);
+        _rotationSpeed = rotationSpeed;
+
+        TryStart();
+    }
+
+    private void TryStart ()
+    {
+        if (_canShoot || _cfg == null || _coroutineRunner == null) return;
+
+        _canShoot = true;
+        _coroutine = _coroutineRunner.StartCoroutine(Run());
     }
 
     private IEnumerator Run ()
     {
-        float elapsed = 0f;
-        float shootTimer = 0f;
-
-        while (elapsed < _cfg.SunOrbDuration)
+        while (_canShoot)
         {
-            // Вращение
-            if (_visual != null)
-                _visual.Rotate(Vector3.up, _cfg.SunOrbRotationSpeed * Time.deltaTime, Space.Self);
+            float rotateTime = _cfg.SunOrbRotateDuration;
+            float t = 0f;
 
-
-            shootTimer -= Time.deltaTime;
-            if (shootTimer <= 0f)
+            while (t < rotateTime && _canShoot)
             {
-                shootTimer += _cfg.SunOrbBeamInterval;
-                FireVolley();
+                float dt = Time.deltaTime;
+                _currentAngle = Mathf.Repeat(_currentAngle + _rotationSpeed.CurrentValue * dt, 360f);
+
+                ApplyRotationToVisual();
+
+                t += dt;
+                yield return null;
             }
 
-            elapsed += Time.deltaTime;
-            yield return null;
+            ShowPreviews();
+
+            float prepTime = _cfg.SunOrbPrepareDuration;
+            t = 0f;
+
+            while (t < prepTime && _canShoot)
+            {
+                float dt = Time.deltaTime;
+                float slowdown = 1f - Mathf.Clamp01(t / prepTime);
+                _currentAngle = Mathf.Repeat(_currentAngle + _rotationSpeed.CurrentValue * dt * slowdown, 360f);
+
+                ApplyRotationToVisual();
+                UpdatePreviews();
+
+                t += dt;
+                yield return null;
+            }
+
+            FireVolley();
+            HidePreviews();
+
+            float cooldownTime = _cfg.SunOrbBeamInterval;
+            t = 0f;
+
+            while (t < cooldownTime && _canShoot)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
         }
 
-        Destroy(gameObject);
+        HidePreviews();
+    }
+
+    private void ApplyRotationToVisual ()
+    {
+        if (_visual != null)
+            _visual.rotation = Quaternion.AngleAxis(_currentAngle, Vector3.up);
+    }
+
+    private void ShowPreviews ()
+    {
+        int n = Mathf.Max(1, _cfg.SunOrbBeamsPerVolley);
+
+        while (_previews.Count < n)
+        {
+            AttackMark mark = _poolService.Get(
+                _beamPreviewPrefab,
+                new Vector3(transform.position.x, 0, transform.position.z));
+            _previews.Add(mark);
+        }
+
+        for (int i = 0; i < _previews.Count; i++)
+        {
+            if (_previews[i] != null)
+            {
+                _previews[i].enabled = i < n;
+            }
+        }
+
+        UpdatePreviews();
+    }
+
+    private void UpdatePreviews ()
+    {
+        int n = Mathf.Max(1, _cfg.SunOrbBeamsPerVolley);
+
+        for (int i = 0; i < n && i < _previews.Count; i++)
+        {
+            AttackMark mark = _previews[i];
+            if (mark == null) continue;
+
+            Vector3 dir = GetBeamDirection(i);
+            mark.transform.position = transform.position + dir * _cfg.SunOrbPreviewOffset;
+            mark.transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+        }
+    }
+
+    private void HidePreviews ()
+    {
+        for (int i = 0; i < _previews.Count; i++)
+        {
+            if (_previews[i] == null) continue;
+            _poolService.Release(_previews[i]);
+            _previews[i] = null;
+        }
+
+        _previews.Clear();
+    }
+
+    private Vector3 GetBeamDirection (int index)
+    {
+        int beamsCount = Mathf.Max(1, _cfg.SunOrbBeamsPerVolley);
+        float angle = (360f / beamsCount) * index + _currentAngle;
+        return Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
     }
 
     private void FireVolley ()
     {
-        int n = Mathf.Max(1, _cfg.SunOrbBeamsPerVolley);
-        for (int i = 0; i < n; i++)
-        {
-            float angle = (360f / n) * i + Time.time * _cfg.SunOrbRotationSpeed; // «равномерно, но с фазой»
-            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward;
+        int beamsCount = Mathf.Max(1, _cfg.SunOrbBeamsPerVolley);
+        int available = Mathf.Min(beamsCount, _sunBeams.Count);
+        Vector3 origin = transform.position;
 
-            if (Physics.Raycast(_center, dir, out var hit, _cfg.SunOrbBeamLength, _cfg.SunOrbBeamMask))
+        for (int i = 0; i < beamsCount; i++)
+        {
+            Vector3 dir = GetBeamDirection(i);
+
+            if (i < available)
+                _sunBeams[i].Play();
+
+            if (Physics.Raycast(origin, dir, out var hit, _cfg.SunOrbBeamLength, _cfg.SunOrbBeamMask))
             {
                 if (hit.collider.TryGetComponent(out Player player))
                 {
-                    StatHolder statHolder = _entityRepository.GetStatHolder(player);
-
-
+                    _damageService.ApplyDamage(player, _cfg.SunOrbBeamDamage);
+                    _debuffService.Apply(
+                        EffectType.Blind,
+                        player,
+                        _cfg.SunOrbAccuracyDebuffDuration,
+                        _cfg.SunOrbAccuracyDebuff);
                 }
-                    dmg.TakeDamage(_cfg.SunOrbBeamDamage);
-
-                if (hit.collider.TryGetComponent(out IAccuracyDebuffable target))
-                    target.ApplyAccuracyDebuff(_cfg.SunOrbAccuracyDebuff, _cfg.SunOrbAccuracyDebuffDuration);
+                else if (hit.collider.TryGetComponent(out SunPharaoh owner))
+                {
+                    _damageService.ApplyHeal(owner, _cfg.SunOrbBeamDamage, Color.green);
+                }
             }
-
-            // Визуал луча — на ваше усмотрение (LineRenderer/VFX)
         }
     }
 }

@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9182cf48cec3ca24499021fe06b8dfcf, type: 3}
+  m_Name: IceWizardConfig
+  m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 5877640471051446567, guid: 11e1dd68ce7a1954a92155d73312dfdd,
+    type: 3}
+  <Type>k__BackingField: 4
+  <CanSuiside>k__BackingField: 0
+  <HasRangeAttack>k__BackingField: 0
+  <HasMeeleAttack>k__BackingField: 0
+  <DieSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <BlocksPositions>k__BackingField:
+  - {x: 0, y: 0}
+  <Stats>k__BackingField:
+  - StatType: 1
+    StartMaxValue: 1250
+    StartCurrentValue: 1250
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 9999
+    StartCurrentValue: 15
+    MinValue: 0
+  - StatType: 4
+    StartMaxValue: 9999
+    StartCurrentValue: 90
+    MinValue: 0
+  - StatType: 5
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: -500
+  - StatType: 11
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: 0
+  - StatType: 3
+    StartMaxValue: 20
+    StartCurrentValue: 0.2
+    MinValue: 0
+  <ObstacleLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 72
+  <BallConfig>k__BackingField: {fileID: 0}
+  <ShootSound>k__BackingField: {fileID: 0}
+  <DebuffResists>k__BackingField: 0200000007000000
+  PossibleLoot: []
+  BaseExperience: 10
+  BaseCoins: 5
+  IdleMinDuration: 1.2
+  IdleMaxDuration: 2
+  FreezeBeamDuration: 3.5
+  FreezeBeamLength: 20
+  FreezeBeamMask:
+    serializedVersion: 2
+    m_Bits: 4160
+  FreezeStacksToStun: 1
+  FreezeStunDuration: 1.5
+  FreezeBeamMaxYawOffset: 120
+  FreezeBeamLinearSpeed: 5
+  FreezeBeamMinDistance: 1
+  FreezeBeamDeadZoneDeg: 0.25
+  FreezeBeamSlowDownAngleDeg: 10
+  FreezeBeamDPS: 10
+  FreezeProgressPerSec: 1
+  FreezeProgressDecayPerSec: 0.6
+  ColdNovaDuration: 2
+  ColdNovaWindup: 0.5
+  ColdNovaRadius: 6
+  ColdNovaShieldAmount: 10
+  ColdNovaShieldDuration: 6
+  ColdNovaStunDuration: 2.5
+  ColdNovaMask:
+    serializedVersion: 2
+    m_Bits: 4104
+  IceBallDuration: 2
+  IceBallShieldAmount: 8
+  IceBallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  IcicleRainDuration: 5
+  IcicleMin: 12
+  IcicleMax: 20
+  IciclePrefab: {fileID: 5200255644362216752, guid: a0a2ab41e79c0c142998f0e0d2b90ad1,
+    type: 3}
+  IcicleDamage: 20
+  IcicleFallTime: 0.75
+  IcicleTelegraphTime: 1.25
+  IcicleDamageMask:
+    serializedVersion: 2
+    m_Bits: 4096

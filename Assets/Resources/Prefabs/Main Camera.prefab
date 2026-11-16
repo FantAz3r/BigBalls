@@ -203,9 +203,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
+  _offsetY: 0.7
   _distance: 4.5
   _rotationSpeed: 10
   _verticalAngle: 40
+  _manualRotationSensitivity: 0.1
+  _minSpeedForAutoRotate: 0.5
+  _zoomSensitivity: 0.5
+  _minZoom: 3
+  _maxZoom: 10
+  _inertiaDamping: 2
 --- !u!114 &-1910244257940976583
 MonoBehaviour:
   m_ObjectHideFlags: 0

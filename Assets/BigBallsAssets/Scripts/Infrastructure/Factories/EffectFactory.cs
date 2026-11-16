@@ -35,6 +35,7 @@ namespace BigBalls.GameplayObjects
                 [BehaviourType.Split] = CreateSplite,
                 [BehaviourType.Golden] = CreateGolden,
                 [BehaviourType.Phantom] = CreatePhantom,
+                [BehaviourType.Snow] = CreateSnow,
             };
         }
 
@@ -78,5 +79,6 @@ namespace BigBalls.GameplayObjects
         private EffectBehaviour CreateSplite (EffectConfig config, int level) => new Split(config as SplitConfig, level);
         private EffectBehaviour CreateGolden (EffectConfig config, int level) => new Golden(config as GoldenConfig, level);
         private EffectBehaviour CreatePhantom (EffectConfig config, int level) => new Phantom(config as PhantomConfig, level);
+        private EffectBehaviour CreateSnow (EffectConfig config, int level) => new Snow(config as SnowConfig, level);
     }
 }

@@ -1,7 +1,8 @@
+using BigBalls.Configs;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Bosses/SunPharaohConfig", fileName = "SunPharaohConfig")]
-public class SunPharaohConfig : ScriptableObject
+[CreateAssetMenu(menuName = "Configs/Bosses/SunPharaohConfig", fileName = "SunPharaohConfig")]
+public class SunPharaohConfig : EnemyConfig
 {
     [Header("Idle / timing")]
     public float IdleMinDuration = 1.2f;
@@ -12,33 +13,33 @@ public class SunPharaohConfig : ScriptableObject
     public float EyeLaserWidthDegrees = 18f;   // 15-20 градусов
     public float EyeLaserLength = 20f;
     public float EyeLaserDamagePerSecond = 25f;
+    public float EyeLaserSweepSpeed = 0.5f;
     public LayerMask DamageMask;               // слой игрока + препятствий
-    public Transform EyeLaserOriginRight;      // точки глаз
-    public Transform EyeLaserOriginLeft;
     public LineRenderer EyeLaserLinePrefab;    // опционально; иначе — VFX
+    public float EyeLaserFollowSpeed = 3f;
 
     [Header("2. Sun Orb")]
+
+    public SunOrbConfig SunOrbConfig;
     public float SunOrbDuration = 8f;          // общее время жизни способности
-    public GameObject SunOrbPrefab;            // префаб с SunOrb
-    public float SunOrbRotationSpeed = 90f;    // град/сек
+    public float SunOrbPreviewOffset = 1f;          // общее время жизни способности
+    public float SunOrbRotateDuration = 2f;          // общее время жизни способности
+    public float SunOrbPrepareDuration = 0.5f;          // общее время жизни способности
     public float SunOrbBeamInterval = 0.35f;   // как часто стреляет лучами
     public int SunOrbBeamsPerVolley = 6;       // лучей за залп
     public float SunOrbBeamLength = 12f;
-    public float SunOrbBeamDamage = 12f;
-    public float SunOrbHealPerSecond = 3f;     // хил боссу
-    public float SunOrbAccuracyDebuff = 0.15f; // -15% точности игроку
+    public float SunOrbRotationSpeed = 90f;
+    public float SunOrbBeamDamage = 10f;
+    public float SunOrbAccuracyDebuff = 15f; // -15% точности игроку
     public float SunOrbAccuracyDebuffDuration = 4f;
     public LayerMask SunOrbBeamMask;
 
     [Header("3. Solar Streams")]
     public float SolarStreamsDuration = 5f;
     public float SolarStreamsWindup = 0.5f;    // 0.5с показываем зону
-    public int GridWidth = 15;                 // 15x15
-    public int GridHeight = 15;
-    public int CellsPerBeam = 4;               // 1 луч на 4 клетки
     public int BeamCount = 3;                  // 3 луча -> покрывают ~ 1/3 (15*15/4)
     public float BeamCastDuration = 1.2f;      // длительность самого удара
-    public GameObject SolarBeamPrefab;         // префаб с SolarBeam
+    public SolarBeam SolarBeamPrefab;         // префаб с SolarBeam
     public GameObject SolarBeamTelegraphPrefab;// индикатор зоны (0.5с)
-    public float CellSize = 1f;
+    public float SpawnInterval = 0.5f;
 }

@@ -1,11 +1,11 @@
-using BigBalls.GameplayObjects;
 using System.Collections.Generic;
+using BigBalls.GameplayObjects;
 
 public class EntityRepository : IEntityRepository
 {
     private Dictionary<IEntity, (StatHolder StatHolder, ComponentContainer Container)> _entities = new();
 
-    public void Add(IEntity entity, StatHolder statHolder, ComponentContainer componentContainer)
+    public void Add (IEntity entity, StatHolder statHolder, ComponentContainer componentContainer)
     {
         if (_entities.ContainsKey(entity))
             return;
@@ -13,7 +13,7 @@ public class EntityRepository : IEntityRepository
         _entities.Add(entity, (statHolder, componentContainer));
     }
 
-    public void Remove(IEntity entity)
+    public void Remove (IEntity entity)
     {
         if (_entities.ContainsKey(entity))
         {
@@ -21,13 +21,13 @@ public class EntityRepository : IEntityRepository
         }
     }
 
-    public StatHolder GetStatHolder(IEntity entity)
+    public StatHolder GetStatHolder (IEntity entity)
     {
         _entities.TryGetValue(entity, out (StatHolder StatHolder, ComponentContainer Container) statHolder);
         return statHolder.StatHolder;
     }
 
-    public ComponentContainer GetContainer(IEntity entity)
+    public ComponentContainer GetContainer (IEntity entity)
     {
         _entities.TryGetValue(entity, out (StatHolder StatHolder, ComponentContainer Container) statHolder);
         return statHolder.Container;

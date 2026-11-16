@@ -7,5 +7,6 @@ namespace BigBalls.Providers
     {
         BackgroundLooper BackgroundLooper { get; }
         List<PlayerSpawnPoint> PlayerSpawnPoints { get; }
+        BattleField BattleField { get; }
     }
 }

@@ -13,21 +13,21 @@ public class PlayerSlots : MonoBehaviour
 
     private void Awake ()
     {
-        _ballPanel.gameObject.SetActive(false);
-        _artefactPanel.gameObject.SetActive(false);
+        _ballPanel.Disable();
+        _artefactPanel.Disable();
 
         foreach (Slot slot in _ballSlots)
-            slot.gameObject.SetActive(false);
+            slot.Enable();
 
         foreach (Slot slot in _artefactSlots)
-            slot.gameObject.SetActive(false);
+            slot.Disable();
     }
 
     private void OnEnable ()
     {
-        if (_cardHolder == null) return;
+        if (_cardHolder == null)
+            return;
 
-        // Перерисовываем актуальное состояние
         Refresh();
     }
 
@@ -51,14 +51,14 @@ public class PlayerSlots : MonoBehaviour
 
     private void OnDestroy ()
     {
-        if (_cardHolder == null) return;
+        if (_cardHolder == null)
+            return;
 
         _cardHolder.CardAdded -= OnCardAdded;
         _cardHolder.CardRemoved -= OnCardRemoved;
         _cardHolder.CardChanged -= OnCardChanged;
     }
 
-    // ---------- EVENTS ----------
 
     private void OnCardAdded (ICardModel card) => AddCard(card);
 
@@ -66,25 +66,23 @@ public class PlayerSlots : MonoBehaviour
 
     private void OnCardChanged (ICardModel card)
     {
-        // Обновляем отображение уже показанной карты (например, апгрейд)
         var slot = FindSlot(card);
+
         if (slot != null)
             slot.View(card);
     }
 
-    // ---------- REFRESH ----------
 
     private void Refresh ()
     {
-        // Скрываем всё
         foreach (var slot in _ballSlots)
             slot.Clear();
 
         foreach (var slot in _artefactSlots)
             slot.Clear();
 
-        _ballPanel.gameObject.SetActive(false);
-        _artefactPanel.gameObject.SetActive(false);
+        _ballPanel.Disable();
+        _artefactPanel.Disable();
 
         if (_cardHolder == null) return;
 
@@ -96,42 +94,45 @@ public class PlayerSlots : MonoBehaviour
 
     private void AddCard (ICardModel card)
     {
-        if (card == null) return;
+        if (card == null)
+            return;
 
         if (card is BallModel)
         {
             var slot = _ballSlots.Find(s => s.Card == null);
-            if (slot == null) return; // нет свободных слотов
+            if (slot == null)
+                return;
 
-            _ballPanel.gameObject.SetActive(true);
-            slot.gameObject.SetActive(true);
+            _ballPanel.Enable();
+            slot.Enable();
             slot.View(card);
         }
         else if (card is ArtefactModel)
         {
             var slot = _artefactSlots.Find(s => s.Card == null);
-            if (slot == null) return;
+            if (slot == null)
+                return;
 
-            _artefactPanel.gameObject.SetActive(true);
-            slot.gameObject.SetActive(true);
+            _artefactPanel.Enable();
+            slot.Enable();
             slot.View(card);
         }
     }
 
     private void RemoveCard (ICardModel card)
     {
-        if (card == null) return;
+        if (card == null)
+            return;
 
         var slot = FindSlot(card);
-        if (slot == null) return;
+
+        if (slot == null)
+            return;
 
         slot.Clear();
 
-        // Скрываем панель, если слотов с картами не осталось
         UpdatePanelVisibility();
     }
-
-    // ---------- HELPERS ----------
 
     private Slot FindSlot (ICardModel card)
     {

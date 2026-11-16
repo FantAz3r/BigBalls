@@ -21,6 +21,10 @@ namespace BigBalls.UI
         [Header("Stats")]
         [SerializeField] private TMP_Text _kills;
         [SerializeField] private TMP_Text _damage;
+        [SerializeField] private TMP_Text _time;
+        [SerializeField] private TMP_Text _coins;
+        [SerializeField] private TMP_Text _score;
+
 
         [Header("Sound")]
         [SerializeField] private SoundStruct _resultSound;
@@ -29,6 +33,9 @@ namespace BigBalls.UI
         protected DamageCalculator DamageCalculator { get; private set; }
         protected IEnemyFactory EnemyFactory { get; private set; }
         protected SoundSpawner SoundSpawner { get; private set; }
+        protected ScoreCounter ScoreCounter  { get; private set; }
+        protected IWalletModel WalletModel { get; private set; }
+        protected LevelTimeCounter LevelTimeCounter { get; private set; }
 
         private ChestData _chestData;
 
@@ -38,12 +45,18 @@ namespace BigBalls.UI
             IUIFactory uiFactory,
             DamageCalculator damageCalculator,
             IEnemyFactory enemyFactory,
-            SoundSpawner soundSpawner)
+            SoundSpawner soundSpawner,
+            ScoreCounter scoreCounter,
+            IWalletModel walletModel,
+            LevelTimeCounter levelTimeCounter)
         {
             UIFactory = uiFactory;
             DamageCalculator = damageCalculator;
             EnemyFactory = enemyFactory;
             SoundSpawner = soundSpawner;
+            ScoreCounter = scoreCounter;
+            WalletModel = walletModel;
+            LevelTimeCounter = levelTimeCounter;
             _chestData = resourceLoader.Load<ChestData>();
         }
 
@@ -82,6 +95,7 @@ namespace BigBalls.UI
         public override void Open ()
         {
             base.Open();
+            LevelTimeCounter.Stop();
             RefreshStats();
         }
 
@@ -92,6 +106,15 @@ namespace BigBalls.UI
 
             if (_kills)
                 _kills.text = (EnemyFactory.DiedCount - EnemyFactory.SuisidedCount).ToString();
+
+            if (_coins)
+                _coins.text = WalletModel.CurrentValue.ToString();
+
+            if (_time)
+                _time.text = LevelTimeCounter.ElapsedFormatted;
+
+            if (_score)
+                _score.text = ((int)ScoreCounter.CurrentScore).ToString();
         }
 
         private void RenderStars (int compliteWaves)

@@ -50,7 +50,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -4193,22 +4193,22 @@ ParticleSystem:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
-          time: 0.2
+          time: 0
           value: 1
-          inSlope: -0.27442682
-          outSlope: -0.27442682
-          tangentMode: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0.16195372
+          outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0
-          inSlope: -3.4217565
-          outSlope: -3.4217565
-          tangentMode: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0.08226228
+          inWeight: 0
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -4818,4 +4818,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50f5b5f5cf43f24db639ca6cc0aca43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ParticleSystem>k__BackingField: {fileID: 0}
+  <ParticleSystem>k__BackingField: {fileID: 5985634496115995770}

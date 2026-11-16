@@ -48,8 +48,8 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IMergeService, MergeService>(Lifetime.Scoped);
             builder.Register<IPoolService, PoolService>(Lifetime.Scoped);
             builder.Register<DebuffService>(Lifetime.Scoped);
-            builder.Register<InputService>(Lifetime.Scoped);
-            builder.Register<MobileInputService>(Lifetime.Scoped);
+            builder.RegisterEntryPoint<InputService>(Lifetime.Scoped).AsSelf();
+            builder.RegisterEntryPoint<MobileInputService>(Lifetime.Scoped).AsSelf();
             builder.Register<InputServiceAdapter>(Lifetime.Scoped);
             builder.Register<Resurecter>(Lifetime.Scoped);
 
@@ -60,6 +60,11 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<IDropService, DropService>(Lifetime.Scoped);
             builder.Register<ISpatialService, SpatialService>(Lifetime.Scoped);
             builder.Register<CardSelector>(Lifetime.Scoped);
+            builder.Register<DotTicker>(Lifetime.Scoped);
+            builder.Register<DurationTimer>(Lifetime.Scoped);
+            builder.Register<DebuffRegistry>(Lifetime.Scoped);
+            builder.Register<CurseRegistry>(Lifetime.Scoped);
+            builder.Register<ScoreCounter>(Lifetime.Scoped);
         }
 
         private void RegisterProviders (IContainerBuilder builder)

@@ -26,6 +26,15 @@ public class PlayerCardHolder
         _itemConainer.WeaponSeted += AddItem;
         _itemConainer.HelmetRemoved += RemoveItem;
         _itemConainer.WeaponRemoved += RemoveItem;
+
+        if (_itemConainer.Helmet != null)
+            AddItem(_itemConainer.Helmet);
+
+        if (_itemConainer.Gun != null)
+            AddItem(_itemConainer.Gun);
+
+        if (_itemConainer.Armor != null)
+            AddItem(_itemConainer.Armor);
     }
 
     public event Action<ICardModel> CardAdded;
@@ -39,8 +48,7 @@ public class PlayerCardHolder
     public IEnumerable<ArtefactModel> Artefacts => _artefacts;
     public IReadOnlyList<ICardModel> Cards => _cards;
 
-
-    public void Init()
+    public void Init ()
     {
         _canEnable = true;
 
@@ -136,16 +144,21 @@ public class PlayerCardHolder
         {
             if (_ballContainer.Balls.Contains(ball))
                 return;
+
             _balls.Add(ball);
 
-            if(_canEnable)
+            if (_canEnable)
                 _ballContainer.AddUniqueBall(ball);
         }
         else if (card is ArtefactModel artefact)
         {
-             if(_canEnable)
+            _artefacts.Add(artefact);
+
+            if (_canEnable)
+            {
+                ArtefactCount++;
                 _artefactContainer.Enable(artefact);
-            ArtefactCount++;
+            }
         }
 
         CardAdded?.Invoke(card);
@@ -185,6 +198,8 @@ public class PlayerCardHolder
 
     public void Clear ()
     {
+
+        _canEnable = false;
         _itemConainer.HelmetSeted -= AddItem;
         _itemConainer.WeaponSeted -= AddItem;
         _itemConainer.HelmetRemoved -= RemoveItem;

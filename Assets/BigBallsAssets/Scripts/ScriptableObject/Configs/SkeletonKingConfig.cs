@@ -1,7 +1,7 @@
 using BigBalls.Configs;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SkeletonKingConfig", menuName = "Configs/SkeletonKingConfig")]
+[CreateAssetMenu(fileName = "SkeletonKingConfig", menuName = "Configs/Bosses/SkeletonKingConfig")]
 public class SkeletonKingConfig : EnemyConfig
 {
     [Header("Idle")]
@@ -23,7 +23,7 @@ public class SkeletonKingConfig : EnemyConfig
     public float HandDamage = 15f;
     public float HandAttackDuration = 2.5f;
     public float HandFlyDistance = 2.5f;
-    public float HandTravelTime = 0.6f;       
+    public float HandTravelTime = 0.6f;
     public float HandReturnTime = 0.6f;
 
     [Header("Bone Fan")]

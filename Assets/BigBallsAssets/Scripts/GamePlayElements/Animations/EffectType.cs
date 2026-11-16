@@ -11,4 +11,6 @@ public enum EffectType
     Disarm,
     Poison,
     ArmorReduction,
+    Blind,
+    Curce,
 }

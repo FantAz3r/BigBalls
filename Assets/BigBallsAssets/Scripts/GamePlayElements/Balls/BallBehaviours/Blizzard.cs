@@ -43,6 +43,6 @@ public class Blizzard : EffectBehaviour
             enemy,
             _config.GetFreezeDuration(Level),
             0,
-            () => enemy.EnemyIdleBob?.Play());
+            cancelled => enemy.EnemyIdleBob?.Play());
     }
 }

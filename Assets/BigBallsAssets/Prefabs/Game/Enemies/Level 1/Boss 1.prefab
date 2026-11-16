@@ -24581,9 +24581,9 @@ GameObject:
   - component: {fileID: 4937863075284339225}
   - component: {fileID: 5997702929279439959}
   - component: {fileID: 753226735542729580}
-  - component: {fileID: 1490265801483822583}
   - component: {fileID: 2115190890787747852}
   - component: {fileID: 3570842842157525480}
+  - component: {fileID: 6876407491364565834}
   m_Layer: 3
   m_Name: Boss 1
   m_TagString: Untagged
@@ -24663,37 +24663,6 @@ MonoBehaviour:
   _totalDuration: 0.2
   <Renderers>k__BackingField:
   - {fileID: 1173733965486509245}
---- !u!114 &1490265801483822583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5975095392042731081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3832d1cda44c53143a59ef742c1321b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <EntityTrigger>k__BackingField: {fileID: 915276191263115767}
-  <EntityCollision>k__BackingField: {fileID: 4937863075284339225}
-  <ColorChanger>k__BackingField: {fileID: 753226735542729580}
-  <EnemySpawnAnimation>k__BackingField:
-    _underlyingValue: {fileID: 3570842842157525480}
-  <EnemyHitedAnimation>k__BackingField: {fileID: 6785503848112344181}
-  <EffectViewer>k__BackingField: {fileID: 5997702929279439959}
-  <EnemyIdleBob>k__BackingField: {fileID: 0}
-  <EnemyAnimator>k__BackingField: {fileID: 7589358017915373482}
-  <RotationPart>k__BackingField: {fileID: 0}
-  <DieAnimation>k__BackingField: {fileID: 1508578524519103409}
-  <ShieldView>k__BackingField: {fileID: 0}
-  <BoneProjectilePrefab>k__BackingField: {fileID: 0}
-  <BossConfig>k__BackingField: {fileID: 11400000, guid: 80b61bc0c0d6a794ba00c0e7edd058df,
-    type: 2}
-  <BoneSpawnPoint>k__BackingField: {fileID: 7098817005938501951}
-  <RightHand>k__BackingField: {fileID: 6142578133497265007}
-  <LeftHand>k__BackingField: {fileID: 7134987022807745121}
-  <Animator>k__BackingField: {fileID: 7938906340211068645}
 --- !u!114 &2115190890787747852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24720,10 +24689,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e16ad3f76bb4bc2409a6957cc0825345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonKing: {fileID: 1490265801483822583}
+  _skeletonKing: {fileID: 6876407491364565834}
   _moveSpeed: 1
   _spawnOffsetZ: 7
   _ease: 1
+--- !u!114 &6876407491364565834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5975095392042731081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e0ecd1dfbc568f4988a61a7ce2a64b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <EntityTrigger>k__BackingField: {fileID: 0}
+  <EntityCollision>k__BackingField: {fileID: 0}
+  <ColorChanger>k__BackingField: {fileID: 0}
+  <EnemySpawnAnimation>k__BackingField:
+    _underlyingValue: {fileID: 0}
+  <EnemyHitedAnimation>k__BackingField: {fileID: 6785503848112344181}
+  <EffectViewer>k__BackingField: {fileID: 5997702929279439959}
+  <EnemyIdleBob>k__BackingField: {fileID: 0}
+  <EnemyAnimator>k__BackingField: {fileID: 7589358017915373482}
+  <RotationPart>k__BackingField: {fileID: 0}
+  <DieAnimation>k__BackingField: {fileID: 0}
+  <ShieldView>k__BackingField: {fileID: 0}
+  <FirePoint>k__BackingField: {fileID: 0}
+  <BoneProjectilePrefab>k__BackingField: {fileID: 2307123110954420614, guid: 5c258ee0809ab364fad81cb07cc9b881,
+    type: 3}
+  <BossConfig>k__BackingField: {fileID: 11400000, guid: 80b61bc0c0d6a794ba00c0e7edd058df,
+    type: 2}
+  <BoneSpawnPoint>k__BackingField: {fileID: 7098817005938501951}
+  <RightHand>k__BackingField: {fileID: 7134987022807745121}
+  <LeftHand>k__BackingField: {fileID: 6142578133497265007}
+  <Animator>k__BackingField: {fileID: 7938906340211068645}
 --- !u!1 &5998940604697581357
 GameObject:
   m_ObjectHideFlags: 0
@@ -40224,11 +40226,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _handProjectile: {fileID: 0}
   _shootDelay: 0.2
-  _drawDebug: 1
-  _debugStartColor: {r: 0, g: 1, b: 0, a: 1}
-  _debugTargetColor: {r: 1, g: 0, b: 0, a: 1}
-  _debugHomeColor: {r: 0, g: 1, b: 1, a: 1}
-  _debugCurrentColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &5048287242962523661 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1109667384789141308, guid: 4c67ed6c086451b4db54ac4d24b626bb,
@@ -40268,7 +40265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f588391da6fb0b49a44c08f5c34cec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Enemy>k__BackingField: {fileID: 1490265801483822583}
+  <Enemy>k__BackingField: {fileID: 6876407491364565834}
 --- !u!54 &8296358960630760140
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -40446,11 +40443,6 @@ MonoBehaviour:
   _handProjectile: {fileID: 2307123110954420614, guid: 5c258ee0809ab364fad81cb07cc9b881,
     type: 3}
   _shootDelay: 0.2
-  _drawDebug: 1
-  _debugStartColor: {r: 0, g: 1, b: 0, a: 1}
-  _debugTargetColor: {r: 1, g: 0, b: 0, a: 1}
-  _debugHomeColor: {r: 0, g: 1, b: 1, a: 1}
-  _debugCurrentColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &8982256962532235314 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3877081432221812995, guid: 4c67ed6c086451b4db54ac4d24b626bb,

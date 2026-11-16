@@ -67,10 +67,14 @@ namespace BigBalls.GameplayObjects
 
         public void Unsubscribe ()
         {
-            if (_coroutineRunner != null && _coroutineRunner is UnityEngine.Object obj && obj != null && _shootRoutine != null )
+            if (_coroutineRunner != null && _coroutineRunner is UnityEngine.Object obj && obj != null && _shootRoutine != null)
             {
-                try { _coroutineRunner.StopCoroutine(_shootRoutine); }
-                catch (MissingReferenceException) {}
+                try
+                {
+                    _coroutineRunner.StopCoroutine(_shootRoutine);
+                }
+                catch (MissingReferenceException)
+                { }
             }
 
             _shootRoutine = null;
@@ -83,9 +87,9 @@ namespace BigBalls.GameplayObjects
             Vector3 forward = _cannon.FirePoint.forward;
 
             float maxDeviation = Mathf.Lerp(MaxDeviationDegrees, 0f, _accuracy.CurrentValue / _accuracy.MaxValue);
-            float yaw = Random.Range(-maxDeviation, maxDeviation);
+            float spread = Random.Range(-maxDeviation, maxDeviation);
 
-            Quaternion deviation = Quaternion.Euler(0f, yaw, 0f);
+            Quaternion deviation = Quaternion.Euler(0f, spread, 0f);
             Vector3 direction = deviation * forward;
 
             ball.Mover.SetDirection(new Vector2(direction.x, direction.z));

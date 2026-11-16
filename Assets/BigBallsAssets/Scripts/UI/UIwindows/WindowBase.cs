@@ -17,14 +17,14 @@ namespace BigBalls.UI
         public virtual void Open()
         {
             gameObject.SetActive(true);
-            _inputService.DisablePlayer();
-            _inputService.DisableUI();
+            //_inputService.DisablePlayer();
+            //_inputService.DisableUI();
         }
 
         public virtual void Close()
         {
-            _inputService.EnablePlayer();
-            _inputService.EnableUI();
+            //_inputService.EnablePlayer();
+            //_inputService.EnableUI();
             gameObject.SetActive(false);
         }
     }

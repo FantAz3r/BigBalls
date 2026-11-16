@@ -18,4 +18,9 @@ public static class ExtentionComponent
     {
         component.gameObject.SetActive(isActive);
     }
+
+    public static bool ActiveInHierarchy<T> (this T component) where T : Component
+    {
+        return component.gameObject.activeInHierarchy;
+    }
 }

@@ -90,6 +90,10 @@ public class BallTreeUI : PopupWindow, IResetble
         foreach (var type in allTypes)
         {
             var node = _treeModel.GetNode(type);
+
+            if (node.BallConfig.IsPlayerBall == false)
+                continue;
+
             var uiElement = _objectResolverProvider.CurrentResolver.Instantiate(_nodePrefab, _treeContainer);
 
             uiElement.Init(type, node);

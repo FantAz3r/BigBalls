@@ -132,7 +132,7 @@ namespace YG
                     players[0] = playerObj.GetComponent<LBPlayerDataYG>();
                     players[0].data.name = noData;
                     players[0].data.photoUrl = null;
-                    players[0].data.rank = null;
+                    players[0].data.rank = default;
                     players[0].data.score = null;
                     players[0].data.inTop = false;
                     players[0].data.currentPlayer = false;
@@ -209,7 +209,7 @@ namespace YG
                 int rank = lb.players[i].rank;
 
                 players[i].data.name = LBMethods.AnonymousName(lb.players[i].name);
-                players[i].data.rank = rank.ToString();
+                players[i].data.rank = rank;
 
                 if (rank <= quantityTop)
                 {

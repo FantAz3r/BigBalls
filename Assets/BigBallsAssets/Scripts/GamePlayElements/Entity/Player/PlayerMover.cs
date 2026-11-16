@@ -8,7 +8,7 @@ namespace BigBalls.GameplayObjects
     public class PlayerMover : ISubscribable, IUpdateble
     {
         private readonly Vector3 _offset = new Vector3(0, 0.25f, 0);
-        private readonly Rotator _rotator;
+        private readonly EntityRotator _rotator;
         private readonly IMover _mover;
         private readonly int _reycastAngle = 30;
 
@@ -18,7 +18,7 @@ namespace BigBalls.GameplayObjects
 
         private IInputService _inputService;
         private IUpdateService _updateService;
-        public PlayerMover (Rotator rotator, IMover mover)
+        public PlayerMover (EntityRotator rotator, IMover mover)
         {
             _rotator = rotator;
             _mover = mover;

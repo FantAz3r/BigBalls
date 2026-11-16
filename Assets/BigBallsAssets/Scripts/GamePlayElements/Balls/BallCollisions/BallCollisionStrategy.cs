@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using UnityEngine;
 
@@ -24,7 +22,7 @@ public class BallCollisionStrategy : ICollisionStrategy
 
     public void HandleTrigger (Ball ball, Collider other)
     {
-        if(other.TryGetComponent(out Ball otherBall))
+        if (other.TryGetComponent(out Ball otherBall))
         {
             ball.EventHandler.HitEntity(otherBall);
             ball.EventHandler.Return(ball);

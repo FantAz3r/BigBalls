@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739eb649ec78bbd4381c21bf4e4dcd88, type: 3}
   m_Name: SkeletonKingConfig
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 1490265801483822583, guid: 8c35b77871de26349839dd592a5d676a,
+  <Prefab>k__BackingField: {fileID: 6876407491364565834, guid: 8c35b77871de26349839dd592a5d676a,
     type: 3}
   <Type>k__BackingField: 4
   <CanSuiside>k__BackingField: 0
@@ -41,8 +41,8 @@ MonoBehaviour:
     StartCurrentValue: 0.2
     MinValue: 0
   - StatType: 1
-    StartMaxValue: 250
-    StartCurrentValue: 250
+    StartMaxValue: 500
+    StartCurrentValue: 500
     MinValue: 0
   - StatType: 8
     StartMaxValue: 0
@@ -54,6 +54,7 @@ MonoBehaviour:
   <BallConfig>k__BackingField: {fileID: 11400000, guid: e10fc69066a19a24799905a635e07338,
     type: 2}
   <ShootSound>k__BackingField: {fileID: 0}
+  <DebuffResists>k__BackingField: 
   PossibleLoot: []
   BaseExperience: 10
   BaseCoins: 5

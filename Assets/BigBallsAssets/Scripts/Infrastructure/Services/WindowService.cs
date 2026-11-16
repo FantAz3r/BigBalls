@@ -31,6 +31,7 @@ namespace BigBalls.Services
                 [typeof(Background)] = uiFactory.CreateBackgroung,
                 [typeof(ChestItemDropView)] = uiFactory.CreateChestWindow,
                 [typeof(SplitingPanel)] = uiFactory.CreateSplitingPanel,
+                [typeof(LeaderBoard)] = uiFactory.CreateLeaderboard,
             };
         }
 

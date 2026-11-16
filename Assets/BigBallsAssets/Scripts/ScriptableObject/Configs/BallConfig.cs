@@ -8,7 +8,7 @@ using UnityEngine;
 namespace BigBalls.Configs
 {
     [CustomScriptableObjectListEditor]
-    [CreateAssetMenu(fileName = "BallConfig", menuName = "Configs/BallConfig")]
+    [CreateAssetMenu(fileName = "BallConfig", menuName = "Configs/Item/BallConfig")]
 
     public class BallConfig : ItemConfig, IEntityConfig
     {

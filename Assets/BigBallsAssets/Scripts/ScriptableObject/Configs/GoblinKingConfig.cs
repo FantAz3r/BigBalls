@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BigBalls.Configs;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GoblinKingConfig", menuName = "Configs/GoblinKingConfig")]
+[CreateAssetMenu(fileName = "GoblinKingConfig", menuName = "Configs/Bosses/GoblinKingConfig")]
 public class GoblinKingConfig : EnemyConfig
 {
     [Header("Idle / Defensive Stance")]

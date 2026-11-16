@@ -25,6 +25,7 @@ namespace BigBalls.Configs
 
         [field: SerializeField] public BallConfig BallConfig { get; private set; }
         [field: SerializeField] public AudioClip ShootSound { get; private set; }
+        [field: SerializeField] public List<EffectType> DebuffResists { get; private set; } = new();
 
         [Header("Loot Settings")]
         [field: SerializeField] public List<LootInfo> PossibleLoot = new List<LootInfo>();

@@ -20,7 +20,6 @@ public class GoblinKing : LevelBoss
 
     private IPoolService _poolService;
     private IObjectResolverProvider _resolverProvider;
-    private ICoroutineRunner _coroutineRunner;
     private bool _isSpawned;
 
     public event Action Spawned;
@@ -35,11 +34,10 @@ public class GoblinKing : LevelBoss
     }
 
     [Inject]
-    public void Construct (IPoolService poolService, IObjectResolverProvider objectResolverProvider, ICoroutineRunner coroutineRunner)
+    public void Construct (IPoolService poolService, IObjectResolverProvider objectResolverProvider)
     {
         _poolService = poolService;
         _resolverProvider = objectResolverProvider;
-        _coroutineRunner = coroutineRunner;
     }
 
     protected override void ChildInit ()

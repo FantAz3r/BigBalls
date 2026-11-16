@@ -22,6 +22,7 @@ namespace BigBalls.Services
         Background CreateBackgroung ();
         ChestItemDropView CreateChestWindow();
         SplitingPanel CreateSplitingPanel ();
+        LeaderBoard CreateLeaderboard ();
         void CreateJoystick (IInputService inputService);
     }
 }

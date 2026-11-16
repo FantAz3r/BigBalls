@@ -17,6 +17,9 @@ public class LevelTimeline
     private readonly ISaveService _saveService;
     private readonly IEnemyFactory _enemyFactory;
     private readonly SoundSpawner _soundSpawner;
+    private readonly ScoreCounter _scoreCounter;
+    private readonly ILiderboardService _liderboardService;
+    private GameConfig _gameConfig;
     private WaitForSeconds _updateInterval = new WaitForSeconds(UpdateIntervalSeconds);
     private WaitForSeconds _lineSpawnDelay;
     private Coroutine _mainCoroutine;
@@ -32,7 +35,10 @@ public class LevelTimeline
         TileFactory tileFactory,
         ISaveService saveService,
         IEnemyFactory enemyFactory,
-        SoundSpawner soundSpawner)
+        SoundSpawner soundSpawner,
+        ScoreCounter scoreCounter,
+        ILiderboardService liderboardService,
+        IResourceLoader resourceLoader)
     {
         _coroutineRunner = coroutineRunner;
         _enemySpawner = enemySpawner;
@@ -40,6 +46,9 @@ public class LevelTimeline
         _saveService = saveService;
         _enemyFactory = enemyFactory;
         _soundSpawner = soundSpawner;
+        _scoreCounter = scoreCounter;
+        _liderboardService = liderboardService;
+        _gameConfig = resourceLoader.Load<GameConfig>();
     }
 
     public event Action<int> NewWaveStarted;
@@ -47,6 +56,7 @@ public class LevelTimeline
 
     public int CompliteWaves { get; private set; }
     public int Kills { get; private set; }
+    public int Stars { get; private set; }
 
     public void Start (LevelConfig levelConfig)
     {
@@ -54,22 +64,25 @@ public class LevelTimeline
         _isLevelStarted = true;
         _levelConfig = levelConfig;
         _enemyFactory.Died += CountKills;
+        _enemyFactory.BossKilled += BossKillCount;
 
         if (_mainCoroutine == null)
             _mainCoroutine = _coroutineRunner.StartCoroutine(WaveRoutine());
 
         if (_timeCoroutine == null)
             _timeCoroutine = _coroutineRunner.StartCoroutine(TimeRoutine());
+
+        CalculateGlobalScores();
     }
 
     public void Stop ()
     {
-
         if (_isLevelStarted == false)
             return;
 
         _isLevelEnded = true;
         _enemyFactory.Died -= CountKills;
+        _enemyFactory.BossKilled -= BossKillCount;
 
         if (_mainCoroutine != null)
         {
@@ -83,29 +96,55 @@ public class LevelTimeline
             _timeCoroutine = null;
         }
 
-        var currentLevelId = (int) _levelConfig.Level;
-        var newStars = CompliteWaves;
-        var newData = new LevelSaveData(currentLevelId, CompliteWaves, _levelTimer, Kills);
+        SaveLevel();
 
-        var existingLevelSave = _saveService.GameProgress.Levels
-            .Find(l => l.LevelID == currentLevelId);
+        Kills = 0;
+        _levelTimer = 0;
+        CompliteWaves = 0;
+        Stars = 0;
+    }
+
+    private void SaveLevel ()
+    {
+        var currentLevelId = (int) _levelConfig.Level;
+        int currentScore = (int) _scoreCounter.CurrentScore;
+        var newData = new LevelSaveData(currentLevelId, Stars, currentScore, _levelTimer, Kills);
+        var existingLevelSave = _saveService.GameProgress.Levels.Find(l => l.LevelID == currentLevelId);
+
+        bool isNewRecord = false;
 
         if (existingLevelSave != null)
         {
-            if (newStars > existingLevelSave.CompliteWaves)
+            if (currentScore > existingLevelSave.Score)
             {
                 int index = _saveService.GameProgress.Levels.IndexOf(existingLevelSave);
                 _saveService.GameProgress.Levels[index] = newData;
+                isNewRecord = true;
             }
         }
         else
         {
             _saveService.GameProgress.Levels.Add(newData);
+            isNewRecord = true;
         }
 
-        Kills = 0;
-        _levelTimer = 0;
-        CompliteWaves = 0;
+        if (isNewRecord)
+        {
+            _liderboardService.SubmitScore(_gameConfig.GetLiderbord(_levelConfig.Level), currentScore);
+            CalculateGlobalScores();
+        }
+    }
+
+    private void CalculateGlobalScores()
+    {
+        int totalScore = 0;
+
+        foreach (var levelData in _saveService.GameProgress.Levels)
+        {
+            totalScore += levelData.Score;
+        }
+
+        _liderboardService.SubmitScore(_gameConfig.MainLiderboard, totalScore);
     }
 
     private IEnumerator WaveRoutine ()
@@ -166,5 +205,10 @@ public class LevelTimeline
     private void CountKills (IEntity entity)
     {
         Kills++;
+    }
+
+    private void BossKillCount()
+    {
+        Stars++;
     }
 }

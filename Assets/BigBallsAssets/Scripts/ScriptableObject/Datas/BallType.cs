@@ -22,5 +22,6 @@
         Blizzard,
         Gold,
         Phantom,
+        Snow,
     }
 }

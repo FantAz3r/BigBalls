@@ -1,17 +1,22 @@
 using System.Collections;
+using BigBalls.GameplayObjects;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
 
 public class SunPharaohEyeLaserState : BossStateBase
 {
+    private const float AimHeight = 1f;
+
     private readonly SunPharaoh _boss;
     private IPlayerProvider _playerProvider;
-    private IUpdateService _updateService;
     private ICoroutineRunner _coroutineRunner;
+    private IDamageService _damageService;
+    private IPoolService _poolService;
     private LineRenderer _lineL;
     private LineRenderer _lineR;
     private Coroutine _routine;
+    private float _smoothedX;
 
     public SunPharaohEyeLaserState (SunPharaoh boss, EnemyStateMachine stateMachine, float duration)
         : base(stateMachine, boss, duration)
@@ -20,16 +25,17 @@ public class SunPharaohEyeLaserState : BossStateBase
     }
 
     [Inject]
-    public void Construct (IUpdateService updateService, ICoroutineRunner coroutineRunner, IPlayerProvider playerProvider)
+    public void Construct (ICoroutineRunner coroutineRunner, IPlayerProvider playerProvider, IDamageService damageService, IPoolService poolService)
     {
-        _updateService = updateService;
         _coroutineRunner = coroutineRunner;
         _playerProvider = playerProvider;
+        _damageService = damageService;
+        _poolService = poolService;
     }
 
     protected override void OnEnter ()
     {
-        _routine = _coroutineRunner.StartCoroutine(RunLaser());
+        _boss.EnemyAnimator.PlayCast(() => _coroutineRunner.StartCoroutine(RunLaser()));
     }
 
     protected override void OnTick (float dt) { }
@@ -58,23 +64,31 @@ public class SunPharaohEyeLaserState : BossStateBase
         _lineL = EnsureLine(cfg.EyeLaserLinePrefab, "EyeLaser_L");
         _lineR = EnsureLine(cfg.EyeLaserLinePrefab, "EyeLaser_R");
 
-        yield return new WaitForSeconds(cfg.EyeLaserWindup);
-
+        _smoothedX = 0;
         float elapsed = 0f;
+        float sweepT = 1f;
+
         while (elapsed < Duration)
         {
-            Vector3 targetPoint = _playerProvider.Player.Transform.position;
-            targetPoint.y = 0f;
+            Vector3 playerPos = _playerProvider.Player.Transform.position;
+            _smoothedX = Mathf.Lerp(_smoothedX, playerPos.x, cfg.EyeLaserFollowSpeed * Time.deltaTime);
 
-            // Ограничение угла: каждое «око» стреляет в своей половине сектора
-            Vector3 dirL = ClampToSector(cfg.EyeOriginLeftOrigin(), cfg.EyeLaserWidthDegrees, 0f, targetPoint);
-            Vector3 dirR = ClampToSector(cfg.EyeOriginRightOrigin(), cfg.EyeLaserWidthDegrees, 0f, targetPoint);
+            sweepT += Time.deltaTime * cfg.EyeLaserSweepSpeed;
+            float sweep01 = Mathf.PingPong(sweepT / Mathf.Max(0.01f, Duration), 1f);
+            float sweepAngle = Mathf.Lerp(-cfg.EyeLaserWidthDegrees * 0.5f,
+                                           cfg.EyeLaserWidthDegrees * 0.5f,
+                                           sweep01);
 
-            DrawLaser(_lineL, cfg.EyeOriginLeftOrigin(), dirL, cfg.EyeLaserLength);
-            DrawLaser(_lineR, cfg.EyeOriginRightOrigin(), dirR, cfg.EyeLaserLength);
+            Vector3 aimPoint = new Vector3(
+                _smoothedX,
+                AimHeight,
+                playerPos.z);
 
-            ApplyLaserDamage(cfg.EyeOriginLeftOrigin(), dirL, cfg.EyeLaserLength, cfg, Time.deltaTime);
-            ApplyLaserDamage(cfg.EyeOriginRightOrigin(), dirR, cfg.EyeLaserLength, cfg, Time.deltaTime);
+            Vector3 dirL = GetAimDirection(_boss.EyeOriginLeft.position, aimPoint, sweepAngle);
+            Vector3 dirR = GetAimDirection(_boss.EyeOriginRight.position, aimPoint, sweepAngle);
+
+            CastAndDraw(_lineL, _boss.EyeOriginLeft.position, dirL, cfg);
+            CastAndDraw(_lineR, _boss.EyeOriginRight.position, dirR, cfg);
 
             elapsed += Time.deltaTime;
             yield return null;
@@ -86,54 +100,59 @@ public class SunPharaohEyeLaserState : BossStateBase
         OnComplete();
     }
 
-    private static Vector3 ClampToSector (Transform origin, float widthDeg, float biasDeg, Vector3 targetWorld)
+    private static Vector3 GetAimDirection (Vector3 origin, Vector3 aimPoint, float sweepAngle)
     {
-        Vector3 fwd = origin.forward; fwd.y = 0f; fwd.Normalize();
-        Vector3 toTarget = targetWorld - origin.position; toTarget.y = 0f;
-        if (toTarget.sqrMagnitude < 1e-4f) return fwd;
+        Vector3 toAim = aimPoint - origin;
+        if (toAim.sqrMagnitude < 1e-4f)
+            return Vector3.forward;
 
-        float targetAngle = Vector3.SignedAngle(fwd, toTarget, Vector3.up);
-        float clamped = Mathf.Clamp(targetAngle + biasDeg, -widthDeg * 0.5f, widthDeg * 0.5f);
-        return Quaternion.AngleAxis(clamped, Vector3.up) * fwd;
+        Quaternion sweep = Quaternion.AngleAxis(sweepAngle, Vector3.up);
+        return (sweep * toAim).normalized;
     }
 
-    private static LineRenderer EnsureLine (LineRenderer prefab, string name)
+    private void CastAndDraw (LineRenderer line, Vector3 origin, Vector3 dir, SunPharaohConfig cfg)
+    {
+        Vector3 endPoint = origin + dir * cfg.EyeLaserLength;
+
+        if (Physics.Raycast(origin, dir, out var hit, cfg.EyeLaserLength, cfg.DamageMask))
+        {
+            endPoint = hit.point;
+
+            if (hit.collider.TryGetComponent(out Player target))
+                _damageService.ApplyDamage(target, cfg.EyeLaserDamagePerSecond * Time.deltaTime);
+        }
+
+        DrawLine(line, origin, endPoint);
+    }
+
+    private LineRenderer EnsureLine (LineRenderer prefab, string name)
     {
         if (prefab == null)
             return null;
 
-        var line = Object.Instantiate(prefab);
+        var line = _poolService.Get(prefab);
         line.name = name;
         line.positionCount = 2;
         line.useWorldSpace = true;
         return line;
     }
 
-    private static void DrawLaser (LineRenderer line, Transform origin, Vector3 dir, float length)
+    private static void DrawLine (LineRenderer line, Vector3 start, Vector3 end)
     {
         if (line == null)
             return;
 
         line.enabled = true;
-        line.SetPosition(0, origin.position);
-        line.SetPosition(1, origin.position + dir * length);
+        line.SetPosition(0, start);
+        line.SetPosition(1, end);
     }
 
-    private static void HideLine (ref LineRenderer line)
+    private void HideLine (ref LineRenderer line)
     {
         if (line == null)
             return;
 
-        Object.Destroy(line.gameObject);
+        _poolService.Release(line);
         line = null;
-    }
-
-    private static void ApplyLaserDamage (Vector3 origin, Vector3 dir, float length, SunPharaohConfig cfg, float dt)
-    {
-        if (Physics.Raycast(origin, dir, out var hit, length, cfg.DamageMask))
-        {
-            if (hit.collider.TryGetComponent(out IDamageable target))
-                target.TakeDamage(cfg.EyeLaserDamagePerSecond * dt);
-        }
     }
 }

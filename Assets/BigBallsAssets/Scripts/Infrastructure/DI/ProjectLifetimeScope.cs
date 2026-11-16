@@ -48,6 +48,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<ISaveService, YGSaveService>(Lifetime.Singleton);
             builder.Register<IDeviceService, YGDeviceService>(Lifetime.Singleton);
             builder.Register<IADVServise, YGADVService>(Lifetime.Singleton);
+            builder.Register<ILiderboardService, YGLiderboardService>(Lifetime.Singleton);
 
             builder.RegisterComponent(_updateService).As<IUpdateService>();
             builder.RegisterComponent(_coroutineRunner).As<ICoroutineRunner>();
@@ -63,6 +64,7 @@ namespace BigBalls.Infrastructure.DI
             builder.Register<SoundSettingsSaver>(Lifetime.Singleton);
             builder.Register<VolumeService>(Lifetime.Singleton);
             builder.Register<LanguageSettingsController>(Lifetime.Singleton);
+            builder.Register<LevelTimeCounter>(Lifetime.Singleton);
         }
 
         private void BindProviders (IContainerBuilder builder)

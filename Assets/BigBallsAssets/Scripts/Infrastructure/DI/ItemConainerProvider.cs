@@ -24,7 +24,6 @@ namespace BigBalls.Providers
             {
                 Gun = weapon;
                 WeaponSeted?.Invoke(Gun);
-
             }
             else if (item is HelmetModel helmet)
             {

@@ -42,8 +42,8 @@ namespace BigBalls.Infrastructure
         private readonly SoundSpawner _soundSpawner;
         private readonly ILootFactory _lootFactory;
         private readonly IDeviceService _deviceService;
-
-        private LevelConfig _levelConfig;
+        private readonly LevelTimeCounter _levelTimeCounter;
+        private readonly ScoreCounter _scoreCounter;
         private List<EnemyConfig> _currentEnemyConfigs;
 
         public CreateLevelState (
@@ -75,7 +75,9 @@ namespace BigBalls.Infrastructure
             ISoundService soundService,
             SoundSpawner soundSpawner,
             ILootFactory lootFactory,
-            IDeviceService deviceService)
+            IDeviceService deviceService,
+            LevelTimeCounter levelTimeCounter,
+            ScoreCounter scoreCounter)
         {
             _objectResolverProvider = objectResolverProvider;
             _playerFactory = playerFactory;
@@ -105,8 +107,11 @@ namespace BigBalls.Infrastructure
             _soundSpawner = soundSpawner;
             _lootFactory = lootFactory;
             _deviceService = deviceService;
+            _levelTimeCounter = levelTimeCounter;
+            _scoreCounter = scoreCounter;
         }
 
+        public LevelConfig LevelConfig { get; private set; }
         public bool IsGameStarted { get; private set; }
         public LevelID CurrentLevel { get; private set; }
 
@@ -119,11 +124,11 @@ namespace BigBalls.Infrastructure
 
             _uIFactory.UIRoot.GlobalWalletView.Enable();
 
-            _levelConfig = _resourceLoader.Load<LevelData>().Get(level);
-            _currentEnemyConfigs = _levelConfig.GetAllLevelEnemies();
-            _tileGenerator.StartSpawn(_levelConfig);
+            LevelConfig = _resourceLoader.Load<LevelData>().Get(level);
+            _currentEnemyConfigs = LevelConfig.GetAllLevelEnemies();
+            _tileGenerator.StartSpawn(LevelConfig);
 
-            _poolService.SetCurrentLevelConfig(_currentEnemyConfigs, _levelConfig);
+            _poolService.SetCurrentLevelConfig(_currentEnemyConfigs, LevelConfig);
             _poolService.InitializePools();
 
             _uIFactory.Get<CardInventory>(WindowType.Inventory);
@@ -133,6 +138,10 @@ namespace BigBalls.Infrastructure
             cameraOrbit = camera.GetComponent<CameraOrbit>();
             Player player = _playerFactory.Create();
             cameraOrbit.StartOrbit(player.transform);
+
+            _inputService.Start();
+            _inputService.EnableCamera();
+
             _dropService.SetCurrentLevelConfig(_currentEnemyConfigs);
             _soundSpawner.Enable();
         }
@@ -148,9 +157,11 @@ namespace BigBalls.Infrastructure
             _soundSpawner.Spawn(SoundType.StartGame);
             _uIFactory.Get<MainMenu>(WindowType.MainMenu).Close();
             _uIFactory.UIRoot.GlobalWalletView.Disable();
-            _levelTimeline.Start(_levelConfig);
+            _levelTimeline.Start(LevelConfig);
             _winService.SetLevel(CurrentLevel);
             _louseService.SetLevel(CurrentLevel);
+            _levelTimeCounter.Start();
+            _scoreCounter.Start(CurrentLevel);
             CreateGameUI();
             IsGameStarted = true;
         }
@@ -167,9 +178,9 @@ namespace BigBalls.Infrastructure
 
             _tileMover.Start();
 
-            _inputService.Start();
             _inputService.EnableUI();
             _inputService.EnablePlayer();
+            _inputService.DisableCamera();
 
             _playerFactory.OnPlayerSpawned();
         }
@@ -185,7 +196,7 @@ namespace BigBalls.Infrastructure
         private void CreateGameUI ()
         {
             _windowService.Open<HUD>();
-            _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(_levelConfig);
+            _uIFactory.Get<HUD>(WindowType.HUD).WaveViewer.StartView(LevelConfig);
             _uIFactory.UIRoot.GlobalWalletView.Disable();
         }
 
@@ -193,7 +204,10 @@ namespace BigBalls.Infrastructure
         {
             IsGameStarted = false;
 
-            _inputService.Dispose();
+            _scoreCounter.Stop();
+            _levelTimeCounter.Stop();
+            _levelTimeCounter.Reset();
+
             _lootFactory.Disable();
             _tileMover.Stop();
             _levelTimeline.Stop();
@@ -209,6 +223,7 @@ namespace BigBalls.Infrastructure
             _armorRepository.Save();
             _helmetRepository.Save();
             _saveService.Save();
+            _inputService.Dispose();
 
             _uIFactory.ClearCache();
             _timeService.SetTimescale(1);

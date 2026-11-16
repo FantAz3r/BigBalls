@@ -113,7 +113,11 @@ namespace BigBalls.Factories
             return _player;
         }
 
-        public void DeathSubscribe() => _player.EventHandler.Died += OnDied;
+        public void DeathSubscribe ()
+        {
+            _player.EventHandler.Destroyed += OnDestroy;
+            _player.EventHandler.Died += OnDied;
+        }
 
         private void OnDied (IEntity entity)
         {
@@ -125,12 +129,24 @@ namespace BigBalls.Factories
             player.gameObject.SetActive(false);
         }
 
+        private void OnDestroy (IEntity entity)
+        {
+            if (entity is not Player player)
+                return;
+
+            _cardHolder.Clear();
+            _cardHolder = null;
+            player.DeathHandler.Unsubscribe();
+            player.EventHandler.Died -= OnDied;
+            _player.EventHandler.Destroyed -= OnDestroy;
+        }
+
         private List<ISubscribable> CreateComponents (StatHolder statHolder, Player player)
         {
             MoverPhythics mover = new MoverPhythics(statHolder[StatType.MoveSpeed], player.transform, player.Rigidbody, _playerConfig);
             _objectResolver.CurrentResolver.Inject(mover);
 
-            GameplayObjects.Rotator rotator = new GameplayObjects.Rotator(statHolder[StatType.RotationSpeed], player.transform);
+            EntityRotator rotator = new EntityRotator(statHolder[StatType.RotationSpeed], player.transform);
             _objectResolver.CurrentResolver.Inject(rotator);
 
             PlayerBallContainer playerBallContainer = new PlayerBallContainer(statHolder[StatType.BallBag]);

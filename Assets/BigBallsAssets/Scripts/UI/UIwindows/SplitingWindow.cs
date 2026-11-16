@@ -86,8 +86,6 @@ public class SplitingWindow : MonoBehaviour
         }
 
         int availableLevels = cards.Sum(card => card.MaxInGameLevel - card.InGameLevel);
-        Debug.Log(availableLevels);
-
         maxCount = Mathf.Min(_maxUpgrades, availableLevels);
         minCount = Mathf.Max(_minUpgrades, maxCount - _spawnCountOffset);
         return true;

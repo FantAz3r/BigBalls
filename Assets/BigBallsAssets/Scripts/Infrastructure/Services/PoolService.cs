@@ -10,6 +10,7 @@ namespace BigBalls.Services
 {
     public class PoolService : IPoolService
     {
+        private const int DefoultPoolSize = 1;
         private const string EnemyPool = "EnemyPool";
         private const string BallPool = "BallPool";
         private const string TilePool = "TilePool";
@@ -23,13 +24,10 @@ namespace BigBalls.Services
         private readonly IObjectResolverProvider _resolverProvider;
 
         private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
-        private List<LootInfo> _lootInfos = new List<LootInfo>();
         private CardsData _cardsData;
         private ParticleData _particleInfos;
         private LootData _lootData;
         private LevelConfig _levelConfig;
-        private LightningBolt _lightningBolt;
-        private DamageText _damageText;
 
         private Dictionary<string, object> _objectPools = new Dictionary<string, object>();
         private Transform _miscContainer;
@@ -40,8 +38,6 @@ namespace BigBalls.Services
             _objectContainer = objectContainer;
             _poolConfig = resourceLoader.Load<PoolServiceConfig>();
             _cardsData = resourceLoader.Load<CardsData>();
-            _damageText = resourceLoader.Load<DamageText>();
-            _lightningBolt = resourceLoader.Load<LightningBolt>();
             _particleInfos = resourceLoader.Load<ParticleData>();
             _lootData = resourceLoader.Load<LootData>();
             _resolverProvider = resolverProvider;
@@ -174,7 +170,7 @@ namespace BigBalls.Services
             if (_objectPools.TryGetValue(poolName, out object poolObj) && poolObj is ObjectPool<T> pool)
                 return pool;
 
-            int defaultSize = _poolConfig?.DefaultPoolSize ?? 5;
+            int defaultSize = _poolConfig?.DefaultPoolSize ?? DefoultPoolSize;
             CreatePool(prefab, _miscContainer, poolName, defaultSize);
 
             return GetPool<T>(poolName);

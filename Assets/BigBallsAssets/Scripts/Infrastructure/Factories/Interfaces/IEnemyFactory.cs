@@ -12,6 +12,7 @@ namespace BigBalls.Factories
 
         event Action<IEntity> Died;
         event Action<IEntity> Killed;
+        event Action BossKilled;
 
         Enemy Create(EnemyConfig enemyConfig, Vector3 position);
     }

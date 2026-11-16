@@ -31,10 +31,16 @@ public class Magnet : EffectBehaviour
 
     protected override IDisposable SubscribeInternal (IEntity host)
     {
-        _entityRepository.GetStatHolder(_playerProvider.Player).TryGetStat(out Stat stat, StatType.CollectRange);
-        _collectRange = stat;
-        _collectRange.ReduceCurrentValue(_collectRange.CurrentValue);
-        _collectRange.AddCurrentValue(_magnetConfig.GetRange(Level));
+        StatHolder statHolder = _entityRepository.GetStatHolder(_playerProvider.Player);
+
+        if (statHolder != null)
+        {
+            statHolder.TryGetStat(out Stat stat, StatType.CollectRange);
+            _collectRange = stat;
+            _collectRange.ReduceCurrentValue(_collectRange.CurrentValue);
+            _collectRange.AddCurrentValue(_magnetConfig.GetRange(Level));
+        }
+
         return new DisposableObject(() => { });
     }
 

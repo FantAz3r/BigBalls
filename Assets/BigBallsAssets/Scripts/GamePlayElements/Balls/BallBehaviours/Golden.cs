@@ -95,19 +95,19 @@ public class Golden : EffectBehaviour
         float elapsed = 0f;
 
         while (elapsed < duration)
+
         {
             if (enemy == null || enemy.gameObject.activeSelf)
+            {
+                TryRemoveMark(enemy);
                 yield break;
+            }
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        if (_activeMarks.TryGetValue(enemy, out var mark))
-        {
-            _activeMarks.Remove(enemy);
-            enemy.EventHandler.Died -= mark.OnDeath;
-        }
+        TryRemoveMark(enemy);
     }
 
     private void DropGold (Vector3 position)
@@ -120,11 +120,20 @@ public class Golden : EffectBehaviour
             _lootSpawner.SpawnLootItem(position, _config.GoldPrefab);
     }
 
+    private void TryRemoveMark (Enemy enemy)
+    {
+        if (_activeMarks.TryGetValue(enemy, out var mark))
+        {
+            _activeMarks.Remove(enemy);
+            enemy.EventHandler.Died -= mark.OnDeath;
+        }
+    }
 
     private void ClearMark (GoldenMark mark)
     {
         if (mark.Enemy != null)
             mark.Enemy.EventHandler.Died -= mark.OnDeath;
+
         mark.Cancel?.Invoke();
     }
 }

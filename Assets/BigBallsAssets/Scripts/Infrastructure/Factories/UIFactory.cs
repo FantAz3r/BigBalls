@@ -67,6 +67,7 @@ namespace BigBalls.Factories
         public Background CreateBackgroung () => GetOrCreateWindow(WindowType.Background, UIRoot.BackgroundUIHolder) as Background;
 
         public ChestItemDropView CreateChestWindow () => GetOrCreateWindow(WindowType.OpenChest, UIRoot.BackgroundUIHolder) as ChestItemDropView;
+        public LeaderBoard CreateLeaderboard () => GetOrCreateWindow(WindowType.LeaderBoard) as LeaderBoard;
 
         public void CreateJoystick (IInputService inputService)
         {

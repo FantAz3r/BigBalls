@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using BigBalls.GameplayObjects;
 using BigBalls.Services;
 using UnityEngine;
@@ -12,16 +11,7 @@ public class Phantom : EffectBehaviour
     private Ball _hostBall;
     private IEntityRepository _entityRepository;
     private IDamageService _damageService;
-
-    private readonly Dictionary<IEntity, CurseState> _curses = new();
-
-    private class CurseState
-    {
-        public int Hits;
-        public Action<IEntity> OnDeath;
-        public Action<IEntity> OnHitCheck;
-        public Action Cancel;
-    }
+    private CurseRegistry _curseRegistry;
 
     public Phantom (PhantomConfig config, int level) : base(config, level)
     {
@@ -29,10 +19,14 @@ public class Phantom : EffectBehaviour
     }
 
     [Inject]
-    public void Construct (IEntityRepository entityRepository, IDamageService damageService)
+    public void Construct (
+        IEntityRepository entityRepository,
+        IDamageService damageService,
+        CurseRegistry curseRegistry)
     {
         _entityRepository = entityRepository;
         _damageService = damageService;
+        _curseRegistry = curseRegistry;
     }
 
     protected override IDisposable SubscribeInternal (IEntity host)
@@ -67,36 +61,29 @@ public class Phantom : EffectBehaviour
         if (entity is not Enemy enemy)
             return;
 
-        if (_curses.TryGetValue(enemy, out var state) == false)
-        {
-            state = new CurseState();
-            state.OnDeath = _ => RemoveCurse(enemy);
-            enemy.EventHandler.Died += state.OnDeath;
-            _curses[enemy] = state;
-        }
+        bool firstApplication = _curseRegistry.EnsureCurse(
+            enemy,
+            died =>
+            {
+                _curseRegistry.RemoveCurse(died);
+                (died as Enemy)?.EffectViewer.DisableEffect(EffectType.Curce);
+            });
 
-        state.Hits++;
+        if (firstApplication)
+            enemy.EffectViewer.EnableEffect(EffectType.Curce);
 
+        int hits = _curseRegistry.AddHit(enemy);
         int needed = _config.GetHitsToProc(Level);
-        if (state.Hits < needed)
+
+        if (hits < needed)
             return;
 
         StatHolder statHolder = _entityRepository.GetStatHolder(_hostBall);
         statHolder.TryGetStat(out Stat damage, StatType.Damage);
-        float curceDamage = damage.CurrentValue * _config.CurseDamageMultiplier;
+        float curseDamage = damage.CurrentValue * _config.CurseDamageMultiplier;
 
-        _damageService.ApplyDamage(Host, entity, curceDamage, _config.CurseColor);
-        RemoveCurse(enemy);
-    }
-
-    private void RemoveCurse (IEntity enemy)
-    {
-        if (enemy == null)
-            return;
-
-        if (_curses.TryGetValue(enemy, out var state) == false)
-            return;
-
-        _curses.Remove(enemy);
+        _damageService.ApplyDamage(Host, entity, curseDamage, _config.CurseColor);
+        _curseRegistry.RemoveCurse(enemy);
+        enemy.EffectViewer.DisableEffect(EffectType.Curce);
     }
 }

@@ -1,11 +1,19 @@
 using BigBalls.GameplayObjects;
+using BigBalls.Services;
 using UnityEngine;
+using VContainer;
 
 public class SolarBeam : MonoBehaviour
 {
-    [SerializeField] private MeshRenderer _telegraphVisual; // показывается 0.5с
-    [SerializeField] private GameObject _impactVisual;      // сам луч
+    [SerializeField] private ParticleObject _laser;
+    [SerializeField] private float _windupSize = 0.5f;
+    [SerializeField] private float _activeSize = 3f;
+    [SerializeField] private AttackMark _markPrefab;
+    [SerializeField] private Collider _collider;
 
+    private AttackMark _mark;
+    private IDamageService _damageService;
+    private IPoolService _poolService;
     private float _windup;
     private float _active;
     private float _damage;
@@ -13,45 +21,75 @@ public class SolarBeam : MonoBehaviour
     private bool _baked;
     private bool _fired;
 
+    [Inject]
+    public void Cosctruct (IDamageService damageService, IPoolService poolService)
+    {
+        _damageService = damageService;
+        _poolService = poolService;
+    }
+
     public void Init (float windup, float active, float damage, LayerMask mask)
     {
-        _windup = windup; _active = active; _damage = damage; _mask = mask;
+        _windup = windup;
+        _active = active;
+        _damage = damage;
+        _mask = mask;
+        _baked = false;
+        _fired = false;
 
-        if (_telegraphVisual) _telegraphVisual.enabled = true;
-        if (_impactVisual) _impactVisual.SetActive(false);
+        Setup();
     }
 
     private void Update ()
     {
-        if (!_baked)
+        if (_mark == null)
+            return;
+
+        if (_baked == false)
         {
             _windup -= Time.deltaTime;
+
             if (_windup <= 0f)
             {
                 _baked = true;
-                if (_telegraphVisual) _telegraphVisual.enabled = false;
-                if (_impactVisual) _impactVisual.SetActive(true);
                 FireOnce();
             }
         }
-        else if (!_fired)
+        else if (_fired == false)
         {
             _active -= Time.deltaTime;
+
             if (_active <= 0f)
             {
                 _fired = true;
-                Destroy(gameObject);
+                _collider.enabled = false;
+
+                _poolService.Release(_mark);
+                _poolService.Release(this);
+                _mark = null;
             }
+        }
+    }
+
+    private void OnTriggerEnter (Collider other)
+    {
+        if (other.TryGetComponent(out Player player))
+        {
+            _damageService.ApplyDamage(player, _damage);
         }
     }
 
     private void FireOnce ()
     {
-        // Урон один раз за «удар», либо каждый кадр — по вкусу.
-        // Пример: OverlapBox по вертикальной колонне сверху вниз.
-        var hits = Physics.OverlapBox(transform.position, transform.localScale * 0.5f, Quaternion.identity, _mask);
-        for (int i = 0; i < hits.Length; i++)
-            if (hits[i].TryGetComponent(out IDamageable dmg))
-                dmg.TakeDamage(_damage);
+        _laser.ParticleSystem.startSize = _activeSize;
+        _collider.enabled = true;
+    }
+
+    private void Setup()
+    {
+        Vector3 markSpawnPoint = new Vector3(transform.position.x, 0, transform.position.z);
+        _mark = _poolService.Get(_markPrefab, markSpawnPoint);
+        _laser.Play();
+        _laser.ParticleSystem.startSize = _windupSize;
     }
 }

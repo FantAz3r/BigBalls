@@ -18,22 +18,34 @@ MonoBehaviour:
   <Waves>k__BackingField:
   - WaveCooldown: 0
     BossConfig: {fileID: 0}
-    LineCount: 10
+    LineCount: 17
     Enemies:
     - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
+    - {fileID: 11400000, guid: 22de8efadab9a904fb6d2ce4bc1c2216, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
     - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
-    - {fileID: 11400000, guid: 328d340c314145a4b82f9055bedea80d, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
   - WaveCooldown: 15
     BossConfig: {fileID: 11400000, guid: 03e058979ae893f45abae47f5858e065, type: 2}
-    LineCount: 5
+    LineCount: 22
     Enemies:
     - {fileID: 11400000, guid: 328d340c314145a4b82f9055bedea80d, type: 2}
     - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
-  - WaveCooldown: 10
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
+  - WaveCooldown: 15
     BossConfig: {fileID: 11400000, guid: d656fe8fe1d4bf848997e2e92863ae7f, type: 2}
-    LineCount: 5
+    LineCount: 27
     Enemies:
     - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
-  <BossTimeDelay>k__BackingField: 0
-  <LevelBoss>k__BackingField: {fileID: 0}
+    - {fileID: 11400000, guid: 22de8efadab9a904fb6d2ce4bc1c2216, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
+    - {fileID: 11400000, guid: 328d340c314145a4b82f9055bedea80d, type: 2}
+    - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
+  <BossTimeDelay>k__BackingField: 20
+  <LevelBoss>k__BackingField: {fileID: 11400000, guid: 2cc206fdec47e1b47a4ef923de4a5616,
+    type: 2}
   ConfigsForPool: []

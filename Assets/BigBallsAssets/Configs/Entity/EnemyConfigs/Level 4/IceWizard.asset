@@ -16,8 +16,23 @@ MonoBehaviour:
     type: 3}
   <Type>k__BackingField: 3
   <CanSuiside>k__BackingField: 0
-  <HasRangeAttack>k__BackingField: 1
-  <HasMeeleAttack>k__BackingField: 1
+  <HasRangeAttack>k__BackingField: 0
+  <HasMeeleAttack>k__BackingField: 0
+  <DieSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
   <BlocksPositions>k__BackingField:
   - {x: 0, y: 0}
   <Stats>k__BackingField:
@@ -50,6 +65,8 @@ MonoBehaviour:
     m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 11400000, guid: d2176929de9313643a84de81e8f78561,
     type: 2}
+  <ShootSound>k__BackingField: {fileID: 0}
+  <DebuffResists>k__BackingField: 02000000
   PossibleLoot: []
   BaseExperience: 10
   BaseCoins: 5

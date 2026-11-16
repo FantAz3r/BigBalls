@@ -24,7 +24,7 @@ namespace BigBalls.GameplayObjects
         private float _stackCount;
         private DamageCalculator _damageCalculator;
 
-        public List<EffectBehaviour> EffectBehaviours { get; private set; }
+        public List<EffectBehaviour> EffectBehaviours { get; private set; } = new List<EffectBehaviour>();
         public HealthHandler<Ball> DeathHandler { get; private set; }
         public BallModel Model { get; private set; }
         public bool IsMaterial { get; private set; }
@@ -87,6 +87,7 @@ namespace BigBalls.GameplayObjects
         {
             IsMaterial = Config.IsMaterial;
             MakeGhost(IsMaterial);
+            transform.position = new Vector3(transform.position.x, 0.5f, transform.position.y);
 
             if (EffectBehaviours != null && EffectBehaviours.Count > 0)
             {
@@ -98,17 +99,6 @@ namespace BigBalls.GameplayObjects
         }
 
         private void OnDisable ()
-        {
-            if (EffectBehaviours != null && EffectBehaviours.Count > 0)
-            {
-                foreach (var effect in EffectBehaviours)
-                {
-                    effect.Unsubscribe(this);
-                }
-            }
-        }
-
-        private void OnDestroy ()
         {
             UnsubscribeEffects();
         }
@@ -171,10 +161,9 @@ namespace BigBalls.GameplayObjects
         {
             CanReturnToBag = false;
 
-            foreach (var effect in EffectBehaviours)
-            {
-                effect.Unsubscribe(this);
-            }
+            if (EffectBehaviours != null && EffectBehaviours.Count > 0)
+                foreach (var effect in EffectBehaviours)
+                    effect.Unsubscribe(this);
 
             EffectBehaviours.Clear();
         }

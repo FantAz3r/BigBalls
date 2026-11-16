@@ -17,7 +17,9 @@ namespace BigBalls.GameplayObjects
         private void OnHit (IEntity entity)
         {
             if (Host is not Ball ball)
+            {
                 return;
+            }
 
             _debuffService.ApplyDamageOverTime(
             EffectType.Burn,

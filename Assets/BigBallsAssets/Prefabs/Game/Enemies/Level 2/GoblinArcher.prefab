@@ -87,6 +87,7 @@ MonoBehaviour:
   <RotationPart>k__BackingField: {fileID: 8191911361913169054}
   <DieAnimation>k__BackingField: {fileID: 7128209947542610512}
   <ShieldView>k__BackingField: {fileID: 0}
+  <FirePoint>k__BackingField: {fileID: 0}
 --- !u!54 &1459059524893097543
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1179,6 +1180,7 @@ MonoBehaviour:
   _scaleMultiplier: 1.1
   _duration: 0.6
   _ease: 6
+  _speedPercent: 1
 --- !u!114 &7128209947542610512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,6 +1510,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 1253e080f8aa7354bbfcff5a150f4c74, type: 2}
+    - target: {fileID: 8757728654925127889, guid: e25c207e48915d0418e8991b762ec3f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf8d10400e755844c90be0375aceae5a, type: 2}
     m_RemovedComponents:
     - {fileID: 7746128279667888437, guid: e25c207e48915d0418e8991b762ec3f0, type: 3}
     m_RemovedGameObjects: []

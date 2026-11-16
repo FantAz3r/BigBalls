@@ -42,7 +42,6 @@ namespace BigBalls.GameplayObjects
             }
 
             OnUnsubscribe(host);
-            Host = null;
         }
     }
 }

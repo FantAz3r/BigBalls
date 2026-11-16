@@ -47,8 +47,8 @@ MonoBehaviour:
     StartCurrentValue: 1
     MinValue: 0
   - StatType: 1
-    StartMaxValue: 60
-    StartCurrentValue: 60
+    StartMaxValue: 100
+    StartCurrentValue: 75
     MinValue: 0
   - StatType: 11
     StartMaxValue: 500
@@ -63,6 +63,7 @@ MonoBehaviour:
     m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 0}
   <ShootSound>k__BackingField: {fileID: 0}
+  <DebuffResists>k__BackingField: 
   PossibleLoot:
   - LootType: 0
     DropChance: 0.7

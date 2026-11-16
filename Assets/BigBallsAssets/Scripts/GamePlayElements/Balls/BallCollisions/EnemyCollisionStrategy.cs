@@ -9,7 +9,7 @@ public class EnemyCollisionStrategy : ICollisionStrategy
     private IDamageService _damageService;
 
     [Inject]
-    public void Construct(IEntityRepository entityRepository, IDamageService damageService)
+    public void Construct (IEntityRepository entityRepository, IDamageService damageService)
     {
         _entityRepository = entityRepository;
         _damageService = damageService;
@@ -37,26 +37,33 @@ public class EnemyCollisionStrategy : ICollisionStrategy
 
             OnHit(component.Enemy, ball);
         }
+        else if (collision.gameObject.TryGetComponent(out SunOrb sunOrb))
+        {
+            if (sunOrb == null)
+                return false;
+
+            OnHit(sunOrb, ball);
+        }
 
 
         ball.EventHandler.Hit();
         return false;
     }
 
-    private void OnHit (Enemy enemy, Ball ball)
+    private void OnHit (IEntity entity, Ball ball)
     {
         StatHolder statHolder = _entityRepository.GetStatHolder(ball);
 
         if (statHolder.TryGetStat(out Stat stat, StatType.Damage))
         {
-            float damage =_damageService.ApplyDamage( ball, enemy, stat.CurrentValue, ball.Config.DamageColor);
+            float damage = _damageService.ApplyDamage(ball, entity, stat.CurrentValue, ball.Config.DamageColor);
             ball.CalculateDamage(damage);
         }
 
         ball.SetCanReturnToBag(true);
-        ball.EventHandler.HitEntity(enemy);
+        ball.EventHandler.HitEntity(entity);
 
-        if (enemy.EnemyHitedAnimation != null)
+        if (entity is Enemy enemy && enemy.EnemyHitedAnimation != null)
         {
             enemy.EnemyHitedAnimation.OnHit(ball);
         }

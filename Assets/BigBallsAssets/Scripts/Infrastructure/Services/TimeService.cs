@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ namespace BigBalls.Services
         private readonly ICoroutineRunner _coroutineRunner;
         private Coroutine _slowMotionCoroutine;
         private float _currentTimescale = 1;
+
+        public event Action<bool> IsPausedChanged;
+
         public bool IsPaused { get; private set; }
 
         public TimeService (ICoroutineRunner coroutineRunner)
@@ -22,12 +26,14 @@ namespace BigBalls.Services
 
             Time.timeScale = 0;
             IsPaused = true;
+            IsPausedChanged?.Invoke(IsPaused);
         }
 
         public void ResumeGame ()
         {
             Time.timeScale = _currentTimescale;
             IsPaused = false;
+            IsPausedChanged?.Invoke(IsPaused);
         }
 
         public void SetTimescale (float value)
@@ -35,6 +41,7 @@ namespace BigBalls.Services
             _currentTimescale = Mathf.Max(value, 0.1f);
             Time.timeScale = _currentTimescale;
             IsPaused = false;
+            IsPausedChanged?.Invoke(IsPaused);
         }
 
         public void SmoothRecoverTimescale (float duration)
@@ -70,6 +77,7 @@ namespace BigBalls.Services
             {
                 _currentTimescale = targetTimeScale;
                 IsPaused = false;
+                IsPausedChanged?.Invoke(IsPaused);
             }
 
             Time.timeScale = targetTimeScale;

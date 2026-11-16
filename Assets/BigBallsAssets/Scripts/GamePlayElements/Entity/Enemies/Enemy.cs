@@ -18,6 +18,7 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public Transform RotationPart { get; private set; }
         [field: SerializeField] public DieAnimation DieAnimation { get; private set; }
         [field: SerializeField] public ShieldView ShieldView { get; private set; }
+        [field: SerializeField] public Transform FirePoint { get; private set; }
 
         public int Id { get; private set; }
         public IMover Mover { get; private set; }
@@ -26,7 +27,7 @@ namespace BigBalls.GameplayObjects
         public StatHolder StatHolder { get; private set; }
         public EntityEventHandler EventHandler { get; private set; }
         public Transform Transform => transform;
-        public Rotator Rotator { get; private set; }
+        public EntityRotator Rotator { get; private set; }
         public EnemyShooter Shooter { get; private set; }
         public Vector3 LocalScale { get; private set; }
 
@@ -43,7 +44,7 @@ namespace BigBalls.GameplayObjects
             HealthHandler<Enemy> deathHandler,
             EnemyConfig enemyConfig,
             StatHolder statHolder,
-            Rotator rotator,
+            EntityRotator rotator,
             IMover mover,
             EnemyShooter shooter)
         {

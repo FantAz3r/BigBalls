@@ -10,5 +10,7 @@ namespace BigBalls.Services
         [field: SerializeField] public List<PlayerSpawnPoint> PlayerSpawnPoints { get; private set; }
 
         [field: SerializeField] public BackgroundLooper BackgroundLooper { get; private set; }
+
+        [field: SerializeField] public BattleField BattleField { get; private set; }
     }
 }

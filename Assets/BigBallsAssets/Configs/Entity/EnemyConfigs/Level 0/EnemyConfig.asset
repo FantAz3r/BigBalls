@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f45d568f5eb625c4b951983a67c795d4, type: 3}
+  m_Name: EnemyConfig
+  m_EditorClassIdentifier: 
+  <Prefab>k__BackingField: {fileID: 0}
+  <Type>k__BackingField: 0
+  <CanSuiside>k__BackingField: 0
+  <HasRangeAttack>k__BackingField: 0
+  <HasMeeleAttack>k__BackingField: 0
+  <DieSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <AttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <RangeAttackSound>k__BackingField:
+    Clip: {fileID: 0}
+    Volume: 0
+    Pitch: 0
+    NeedRandomPitch: 0
+  <BlocksPositions>k__BackingField: []
+  <Stats>k__BackingField: []
+  <ObstacleLayers>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 0
+  <BallConfig>k__BackingField: {fileID: 0}
+  <ShootSound>k__BackingField: {fileID: 0}
+  <DebuffResists>k__BackingField: 
+  PossibleLoot: []
+  BaseExperience: 10
+  BaseCoins: 5

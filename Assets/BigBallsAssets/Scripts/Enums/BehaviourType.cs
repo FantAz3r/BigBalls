@@ -22,5 +22,6 @@
         Split,
         Golden,
         Phantom,
+        Snow
     }
 }
