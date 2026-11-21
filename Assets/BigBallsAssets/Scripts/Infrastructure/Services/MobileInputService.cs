@@ -163,4 +163,8 @@ public class MobileInputService : IInputService, IStartable, ITickable
     public void DisableCamera ()
     {
     }
+
+    public void EnableGameplayInput ()
+    {
+    }
 }

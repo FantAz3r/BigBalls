@@ -1,9 +1,9 @@
 {
-  "IdSave": 83,
+  "IdSave": 4,
   "GameProgress": {
-    "Coins": 108,
+    "Coins": 0,
     "Score": 0,
-    "Level": 5,
+    "Level": 4,
     "Weapons": [
       {
         "Id": 1,
@@ -16,14 +16,14 @@
         "Id": 2,
         "NoneGameLevel": 1,
         "IsOpen": true,
-        "HasPlayer": true,
+        "HasPlayer": false,
         "ItemExp": 0.0
       },
       {
         "Id": 3,
-        "NoneGameLevel": 1,
+        "NoneGameLevel": 2,
         "IsOpen": true,
-        "HasPlayer": false,
+        "HasPlayer": true,
         "ItemExp": 0.0
       }
     ],
@@ -32,7 +32,7 @@
         "Id": 4,
         "NoneGameLevel": 1,
         "IsOpen": true,
-        "HasPlayer": false,
+        "HasPlayer": true,
         "ItemExp": 0.0
       },
       {
@@ -46,7 +46,7 @@
         "Id": 2,
         "NoneGameLevel": 1,
         "IsOpen": true,
-        "HasPlayer": true,
+        "HasPlayer": false,
         "ItemExp": 0.0
       }
     ],
@@ -55,7 +55,7 @@
         "Id": 1,
         "NoneGameLevel": 1,
         "IsOpen": false,
-        "HasPlayer": true,
+        "HasPlayer": false,
         "ItemExp": 0.0
       }
     ],
@@ -65,7 +65,7 @@
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 2381.15381
+        "ItemExp": 0.0
       },
       {
         "Id": 7,
@@ -79,7 +79,7 @@
         "NoneGameLevel": 1,
         "IsOpen": false,
         "HasPlayer": false,
-        "ItemExp": 441.538452
+        "ItemExp": 0.0
       },
       {
         "Id": 13,
@@ -156,7 +156,7 @@
         "NoneGameLevel": 1,
         "IsOpen": true,
         "HasPlayer": false,
-        "ItemExp": 55.0
+        "ItemExp": 0.0
       },
       {
         "Id": 18,
@@ -177,7 +177,7 @@
         "NoneGameLevel": 1,
         "IsOpen": false,
         "HasPlayer": false,
-        "ItemExp": 124.0
+        "ItemExp": 0.0
       }
     ],
     "Artefacts": [
@@ -210,39 +210,12 @@
         "ItemExp": 0.0
       }
     ],
-    "Sounds": [
-      {
-        "Name": "Effects",
-        "Volume": 0.5
-      },
-      {
-        "Name": "Background",
-        "Volume": 0.5
-      }
-    ],
-    "Levels": [
-      {
-        "LevelID": 4,
-        "Score": 24,
-        "Stars": 0,
-        "Kills": 1,
-        "BestDamage": 0.0,
-        "Time": 9.5,
-        "IsComplite": true
-      },
-      {
-        "LevelID": 5,
-        "Score": 929,
-        "Stars": 0,
-        "Kills": 20,
-        "BestDamage": 0.0,
-        "Time": 52.0,
-        "IsComplite": true
-      }
-    ],
+    "Sounds": [],
+    "Levels": [],
     "Language": "auto",
     "ShowDamageNumbers": true,
     "ShowFPS": false,
-    "AutoAttack": true
+    "AutoAttack": true,
+    "InventoryTutotialComplite": true
   }
 }

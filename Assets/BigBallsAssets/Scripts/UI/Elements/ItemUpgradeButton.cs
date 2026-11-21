@@ -10,7 +10,6 @@ public class ItemUpgradeButton : ButtonClickHandler
     public event Action Clicked;
     protected override void OnClick()
     {
-        Debug.Log("click");
         Clicked?.Invoke();
     }
 }

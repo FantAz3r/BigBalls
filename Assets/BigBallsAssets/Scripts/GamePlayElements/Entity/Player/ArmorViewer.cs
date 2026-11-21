@@ -22,6 +22,10 @@ public class ArmorViewer : MonoBehaviour
     public void Init (StatHolder statHolder)
     {
         _statHolder = statHolder;
+
+        if(_itemConainerProvider.Armor != null)
+            SetArmorActive(_baseSet, false);
+
         UpdateArmorVisual(_itemConainerProvider.Armor);
 
         _itemConainerProvider.ArmorSeted += OnArmorSeted;

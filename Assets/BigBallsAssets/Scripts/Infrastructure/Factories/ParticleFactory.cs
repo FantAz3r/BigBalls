@@ -11,33 +11,33 @@ public class ParticleFactory : IParticleFactory
         _poolService = poolService;
     }
 
-    public ParticleObject Create(ParticleObject prefab, Vector3 position)
+    public ParticleObject Create(ParticleObject prefab, Vector3 position, float duration = 0)
     {
         var particle = _poolService.Get(prefab, position);
-        SetupParticle(particle);
+        SetupParticle(particle, duration);
         return particle;
     }
 
-    public ParticleObject Create(ParticleObject prefab, Vector3 position, Quaternion rotation)
+    public ParticleObject Create(ParticleObject prefab, Vector3 position, Quaternion rotation, float duration = 0)
     {
         var particle = _poolService.Get(prefab, position, rotation);
-        SetupParticle(particle);
+        SetupParticle(particle, duration);
         return particle;
     }
 
-    public ParticleObject Create(ParticleObject prefab, Transform parent)
+    public ParticleObject Create(ParticleObject prefab, Transform parent, float duration = 0)
     {
         var particle = _poolService.Get(prefab, parent);
         particle.transform.position = Vector3.zero;
-        SetupParticle(particle);
+        SetupParticle(particle, duration);
         return particle;
     }
 
-    private void SetupParticle(ParticleObject particle)
+    private void SetupParticle(ParticleObject particle, float duration = 0)
     {
         particle.Returned -= OnReturn;
         particle.Returned += OnReturn;
-        particle.Play();
+        particle.Play(duration);
     }
 
     public void OnReturn(ParticleObject particle)

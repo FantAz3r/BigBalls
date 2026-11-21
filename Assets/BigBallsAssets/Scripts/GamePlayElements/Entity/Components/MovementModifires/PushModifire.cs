@@ -19,7 +19,7 @@ public class PushModifier : MovementModifier
         if (!IsActive)
             return inputVelocity;
 
-        _elapsedTime += Time.fixedDeltaTime;
+        _elapsedTime += Time.deltaTime;
 
         if (_elapsedTime >= _duration)
         {

@@ -95,7 +95,6 @@ public class UpgradePanel : MonoBehaviour
 
         bool isOpen = _cardModel.IsOpen;
         bool canUnlock = _ballUnlockService.CanUnlock(ballModel);
-        Debug.Log(canUnlock);
 
         _expSlider.maxValue = _cardModel.EXPForNextLevel;
         _expSlider.minValue = 0;

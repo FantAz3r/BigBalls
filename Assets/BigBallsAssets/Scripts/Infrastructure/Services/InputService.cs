@@ -33,6 +33,10 @@ namespace BigBalls.Services
             DisableCamera();
             DisablePlayer();
             DisableUI();
+        }
+
+        public void EnableGameplayInput()
+        {
             _timeService.IsPausedChanged += OnPauseChanged;
         }
 

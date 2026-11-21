@@ -1,4 +1,5 @@
-﻿using BigBalls.UI;
+﻿using BigBalls.Services;
+using BigBalls.UI;
 using DG.Tweening;
 using UnityEngine;
 using VContainer;
@@ -9,11 +10,16 @@ public class PopupWindow : WindowBase
     private const float CloseDuration = 0.25f;
     private const float TargetScale = 1f;
 
+    private IInputService _inputService;
     private Tween _scaleTween;
     private SoundSpawner _soundSpawner;
 
     [Inject]
-    public void Construct (SoundSpawner soundSpawner) => _soundSpawner = soundSpawner;
+    public void Construct (SoundSpawner soundSpawner, InputServiceAdapter inputService)
+    {
+        _inputService = inputService.Get();
+        _soundSpawner = soundSpawner;
+    }
 
     public override void Open ()
     {
@@ -22,6 +28,7 @@ public class PopupWindow : WindowBase
         base.Open();
         transform.localScale = Vector3.zero;
         _soundSpawner.Spawn(SoundType.OpenPanel);
+        _inputService.DisableCamera();
 
         _scaleTween = transform.DOScale(TargetScale, ViewDuration)
             .SetEase(Ease.OutBounce)
@@ -32,6 +39,7 @@ public class PopupWindow : WindowBase
     {
         _scaleTween?.Kill();
         _soundSpawner.Spawn(SoundType.ClosePanel);
+        _inputService.EnableCamera();
 
         _scaleTween = transform.DOScale(Vector3.zero, CloseDuration)
             .SetEase(Ease.InBack)

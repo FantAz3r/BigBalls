@@ -25,6 +25,8 @@ namespace BigBalls.Saves
         public bool ShowDamageNumbers = true;
         public bool ShowFPS = false;
         public bool AutoAttack = true;
+
+        public bool InventoryTutotialComplite;
         public void ClearProgress()
         {
             Coins = 0;

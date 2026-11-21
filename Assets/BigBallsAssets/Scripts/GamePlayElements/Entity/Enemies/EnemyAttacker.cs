@@ -9,7 +9,7 @@ namespace BigBalls.GameplayObjects
 {
     public class EnemyAttacker : ISubscribable
     {
-        private const float PushForce = 35;
+        private const float PushForce = 7f;
         private const float PushStunDuration = 0.5f;
 
         private readonly EnemyConfig _config;

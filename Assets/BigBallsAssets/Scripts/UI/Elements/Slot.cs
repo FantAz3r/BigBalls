@@ -1,3 +1,4 @@
+using System;
 using BigBalls.Providers;
 using TMPro;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VContainer;
 
+[RequireComponent(typeof(HighliterUI))]
 public class Slot : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image _image;
@@ -15,10 +17,12 @@ public class Slot : MonoBehaviour, IDropHandler
     [SerializeField] private Image _helmetTip;
 
     [SerializeField] private CardType _slotType;
+    [field: SerializeField] public bool IsActiveSlot { get; private set; }
+    [field: SerializeField] public HighliterUI HighliterUI { get; private set; }
+
     private IItemConainerProvider _itemContainer;
 
-    [field: SerializeField] public bool IsActiveSlot { get; private set; }
-
+    public event Action Droped;
     public ICardModel Card { get; private set; }
     public Image CurrentImage { get; private set; }
     public UIItem CurrentItem { get; private set; }
@@ -34,7 +38,7 @@ public class Slot : MonoBehaviour, IDropHandler
     {
         _slotType = slotType;
         IsActiveSlot = isActiveSlot;
-
+        HighliterUI = GetComponent<HighliterUI>();
         ShowTip(true);
     }
 
@@ -94,6 +98,7 @@ public class Slot : MonoBehaviour, IDropHandler
         PlaceItem(draggedItem);
         draggedItem.MarkDropHandled();
         draggedItem.StatsButton.View();
+        Droped?.Invoke();
     }
 
     public void PlaceItem (UIItem item)

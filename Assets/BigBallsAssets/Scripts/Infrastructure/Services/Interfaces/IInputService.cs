@@ -23,5 +23,6 @@ namespace BigBalls.Services
         void EnablePlayer ();
         void DisablePlayer ();
         void Dispose ();
+        void EnableGameplayInput ();
     }
 }

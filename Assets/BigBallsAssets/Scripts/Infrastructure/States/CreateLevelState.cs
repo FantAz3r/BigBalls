@@ -181,7 +181,7 @@ namespace BigBalls.Infrastructure
             _inputService.EnableUI();
             _inputService.EnablePlayer();
             _inputService.DisableCamera();
-
+            _inputService.EnableGameplayInput();
             _playerFactory.OnPlayerSpawned();
         }
 

@@ -58,10 +58,7 @@ public class LineLaser : EffectBehaviour
 
     private void ExecuteRaycast (Vector3 origin, Vector3 direction, float damage)
     {
-        ParticleObject particle = _particleFactory.Create(_config.Particle, origin);
-        particle.transform.rotation = Quaternion.LookRotation(-direction);
-        particle.Play();
-
+        ParticleObject particle = _particleFactory.Create(_config.Particle, origin, Quaternion.LookRotation(-direction));
         RaycastHit[] hits = Physics.RaycastAll(origin, direction, _config.MaxRange);
         Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
 

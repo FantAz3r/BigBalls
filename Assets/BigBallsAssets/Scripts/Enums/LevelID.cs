@@ -7,10 +7,20 @@ namespace BigBalls.Infrastructure
         MainMenu,
         SkillTree,
         Level1,
+        LevelNight1,
+
         Level2,
+        LevelNight2,
+
         Level3,
+        LevelNight3,
+
         Level4,
+        LevelNight4,
+
         Level5,
-        Test
+        LevelNight5,
+
+        Test,
     }
 }

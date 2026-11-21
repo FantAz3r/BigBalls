@@ -41,7 +41,7 @@ namespace BigBalls.StaticData
         public int MaxInGameLevel { get; private set; } = 5;
 
         public bool HasPlayer { get; private set; }
-        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel);
+        public float EXPForNextLevel => Config.BaseEXPForUpgrade * Mathf.Pow(Config.LevelEXPMultipy, NoneGameLevel - 1);
 
         public CardType Type => Config.Type;
         public int Level => NoneGameLevel + InGameLevel + EuqipmentLevel;

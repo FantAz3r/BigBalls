@@ -14,6 +14,7 @@ public class CardInventory : PopupWindow
     [SerializeField] private UIItem _itemPrefab;
     [SerializeField] private GridLayoutGroup _parent;
     [SerializeField] private TMP_Text _tipText;
+    [SerializeField] private InventoryTutorial _inventoryTutorial;
 
     private Canvas _canvas;
     private List<Slot> _slots = new();
@@ -25,10 +26,13 @@ public class CardInventory : PopupWindow
 
     [field: SerializeField] public InventoryStatsView StatsView { get; private set; }
 
+    public IReadOnlyList<Slot> Slots => _slots;
+    public event Action Inited;
     public override void Open ()
     {
         base.Open();
         OnFilterChanged(0);
+        Inited?.Invoke();
     }
 
     [Inject]
@@ -54,11 +58,6 @@ public class CardInventory : PopupWindow
         _models.AddRange(weapons);
         _models.AddRange(_armorRepository.AllModels.Values);
         _models.AddRange(_helmetRepository.AllModels.Values);
-
-        foreach(var armor in _armorRepository.AllModels.Values)
-        {
-            //Debug.Log($"{armor.Name} {armor.ID}  {armor.HasPlayer}  {armor.IsOpen}");
-        }
     }
 
     public void OnFilterChanged (int filterType)

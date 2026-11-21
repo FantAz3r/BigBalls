@@ -24,7 +24,7 @@ public class ParticleObject : MonoBehaviour
         if (ParticleSystem == null)
             return;
 
-        ParticleSystem.Stop();
+        Stop();
 
         if (_watcherCoroutine == null)
         {
@@ -39,6 +39,7 @@ public class ParticleObject : MonoBehaviour
         if (ParticleSystem == null)
             return;
 
+
         if (_watcherCoroutine != null && _coroutineRunner != null)
         {
             _coroutineRunner.StopCoroutine(_watcherCoroutine);
@@ -52,12 +53,11 @@ public class ParticleObject : MonoBehaviour
 
     private IEnumerator WatchForEnd (float duration = 0)
     {
+
         if (duration == 0)
         {
             while (ParticleSystem != null && ParticleSystem.IsAlive(true))
-            {
                 yield return null;
-            }
         }
         else
         {
