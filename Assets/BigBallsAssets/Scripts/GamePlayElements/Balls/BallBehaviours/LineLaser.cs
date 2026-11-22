@@ -51,7 +51,6 @@ public class LineLaser : EffectBehaviour
 
             float rad = currentAngleDeg * Mathf.Deg2Rad;
             Vector3 direction = new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
-
             ExecuteRaycast(laserOrigin, direction, damage);
         }
     }

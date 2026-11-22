@@ -24,7 +24,7 @@ namespace BigBalls.Infrastructure
 
             if (level == 0)
             {
-                _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.Level1);
+                _gameStateMachine.EnterIn<LoadingLevelState, LevelID>(LevelID.Level0);
             }
             else
             {

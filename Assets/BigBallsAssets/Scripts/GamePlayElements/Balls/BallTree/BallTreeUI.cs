@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using BigBalls.Infrastructure.DI;
 using BigBalls.Services;
 using BigBalls.StaticData;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,13 +20,14 @@ public class BallTreeUI : PopupWindow, IResetble
     [SerializeField] private UpgradePanel _upgradePanel;
 
     private IObjectResolverProvider _objectResolverProvider;
-    private ISaveService _saveService;
-    private IBallUnlockService _unlockService;
     private ICoroutineRunner _coroutineRunner;
     private WaitForSeconds _wait = new WaitForSeconds(0.51f);
     private BallTreeModel _treeModel;
     private Dictionary<BallType, BallTreeNodeUI> _nodeUIs = new();
     private List<BallTreeConnectionUI> _connections = new();
+
+    public event Action Inited;
+    public List<BallTreeNodeUI> Nodes => _nodeUIs.Values.ToList();
 
     private void OnDestroy ()
     {
@@ -38,23 +40,24 @@ public class BallTreeUI : PopupWindow, IResetble
     [Inject]
     public void Construct (
         BallTreeModel treeModel,
-        ISaveService saveService,
-        IBallUnlockService unlockService,
         IResourceLoader resourceLoader,
         IObjectResolverProvider objectResolverProvider,
         ICoroutineRunner coroutineRunner)
     {
         _objectResolverProvider = objectResolverProvider;
-        _saveService = saveService;
         _coroutineRunner = coroutineRunner;
         _treeModel = treeModel;
-        _unlockService = unlockService;
         _upgradePanel.Init(resourceLoader.Load<StatTextHolder>());
-        saveService.RegisterResetable(this);
 
         _upgradePanel.Upgraded += UpdateUI;
         BuildTreeUI();
         _coroutineRunner.StartCoroutine(UpdateRoutine());
+    }
+
+    public override void Open()
+    {
+        base.Open();
+        Inited?.Invoke();
     }
 
     public void ViewNodes (BallTreeNodeUI ballTreeNodeUI = null)
@@ -73,6 +76,8 @@ public class BallTreeUI : PopupWindow, IResetble
         BuildTreeUI();
         UpdateUI();
     }
+
+    public BallTreeNodeUI Get(BallType type) => _nodeUIs[type];
 
     private void BuildTreeUI ()
     {

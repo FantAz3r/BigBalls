@@ -1,5 +1,5 @@
-using System;
 using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,14 +24,16 @@ public class ClickHand : MonoBehaviour
 
     private Sequence _currentSequence;
 
-    private void Awake ()
+    private void Awake()
     {
         _hand.transform.rotation = Quaternion.Euler(0, 0, _rotateAmount);
         _hand.transform.localScale = Vector3.one;
     }
 
-    public void PlayClick (Vector3 position)
+    public void PlayClick(Vector3 position, Transform parent = null)
     {
+        if (parent != null)
+            transform.SetParent(parent);
 
         Sequence moveSeq = CreateChainNoReset();
         AppendMoveTo(moveSeq, position);
@@ -51,7 +53,7 @@ public class ClickHand : MonoBehaviour
         moveSeq.Play();
     }
 
-    public void PlayDragItem (UIItem iItem, Vector3 position, Slot target)
+    public void PlayDragItem(UIItem iItem, Vector3 position, Slot target)
     {
         UIItem clone = null;
 
@@ -102,7 +104,7 @@ public class ClickHand : MonoBehaviour
         dragSeq.OnKill(() => Destroy(clone.gameObject));
     }
 
-    private void OnDisable ()
+    private void OnDisable()
     {
         KillAndReset();
     }
@@ -111,7 +113,7 @@ public class ClickHand : MonoBehaviour
     //  BUILDER API Ч собираем цепочку вручную
     // ============================================================
 
-    public Sequence CreateChain (bool autoPlay = true)
+    public Sequence CreateChain(bool autoPlay = true)
     {
         _currentSequence = DOTween.Sequence();
 
@@ -121,7 +123,7 @@ public class ClickHand : MonoBehaviour
         return _currentSequence;
     }
 
-    public void PlayChain (Sequence sequence)
+    public void PlayChain(Sequence sequence)
     {
         KillAndReset();
         _currentSequence = sequence;
@@ -133,7 +135,7 @@ public class ClickHand : MonoBehaviour
     //  и возвращают еЄ же дл€ fluent-чейнинга
     // ============================================================
 
-    public Sequence AppendBackward (Sequence seq)
+    public Sequence AppendBackward(Sequence seq)
     {
 
 
@@ -146,7 +148,7 @@ public class ClickHand : MonoBehaviour
         return seq;
     }
 
-    public Sequence AppendForward (Sequence seq)
+    public Sequence AppendForward(Sequence seq)
     {
 
         Tween forward = _hand.transform
@@ -162,7 +164,7 @@ public class ClickHand : MonoBehaviour
         return seq;
     }
 
-    public Sequence AppendMoveTo (Sequence seq, Vector3 targetPosition, bool isLocal = true)
+    public Sequence AppendMoveTo(Sequence seq, Vector3 targetPosition, bool isLocal = true)
     {
         Tween forward = isLocal
             ? transform.DOLocalMove(targetPosition, _moveDuration).SetEase(Ease.InOutSine)
@@ -172,25 +174,25 @@ public class ClickHand : MonoBehaviour
         return seq;
     }
 
-    public Sequence AppendDelay (Sequence seq, float seconds)
+    public Sequence AppendDelay(Sequence seq, float seconds)
     {
         seq.AppendInterval(seconds);
         return seq;
     }
 
-    public Sequence AppendAction (Sequence seq, Action action)
+    public Sequence AppendAction(Sequence seq, Action action)
     {
         seq.AppendCallback(() => action());
         return seq;
     }
 
-    private void KillAndReset ()
+    private void KillAndReset()
     {
         _currentSequence?.Kill();
         _currentSequence = null;
     }
 
-    public Sequence CreateChainNoReset (bool autoPlay = false)
+    public Sequence CreateChainNoReset(bool autoPlay = false)
     {
         _currentSequence?.Kill();
         _currentSequence = DOTween.Sequence();
@@ -200,5 +202,5 @@ public class ClickHand : MonoBehaviour
         return _currentSequence;
     }
 
-    public void StopAllAnimations () => KillAndReset();
+    public void StopAllAnimations() => KillAndReset();
 }

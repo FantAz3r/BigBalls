@@ -25,15 +25,22 @@ public class WarningViewer : MonoBehaviour
     {
         _camera = Camera.main;
 
-        _entityTrigger.PlayerDetected += Show;
-        _entityTrigger.PlayerLost += Hide;
+        if (_entityTrigger != null)
+        {
+            _entityTrigger.PlayerDetected += Show;
+            _entityTrigger.PlayerLost += Hide;
+        }
+
         _image.enabled = false;
     }
 
     private void OnDisable ()
     {
-        _entityTrigger.PlayerDetected -= Show;
-        _entityTrigger.PlayerLost -= Hide;
+        if (_entityTrigger != null)
+        {
+            _entityTrigger.PlayerDetected -= Show;
+            _entityTrigger.PlayerLost -= Hide;
+        }
 
         KillTween();
     }

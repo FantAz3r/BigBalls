@@ -51,14 +51,14 @@ public class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : Component
         if (parent != null)
             obj.transform.SetParent(parent);
 
-        obj.gameObject.SetActive(true);
+        obj.Enable();
         return obj;
     }
 
     public void Release (T obj)
     {
         obj.transform.SetParent(_positionInHierarchy.transform);
-        obj.gameObject.SetActive(false);
+        obj.Disable();
         _objectPool.Enqueue(obj);
     }
 

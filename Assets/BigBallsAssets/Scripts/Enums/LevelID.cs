@@ -6,6 +6,9 @@ namespace BigBalls.Infrastructure
         LoadScene,
         MainMenu,
         SkillTree,
+
+        Level0,
+
         Level1,
         LevelNight1,
 

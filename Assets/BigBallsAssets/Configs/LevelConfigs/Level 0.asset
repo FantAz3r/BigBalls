@@ -18,9 +18,13 @@ MonoBehaviour:
   <Waves>k__BackingField:
   - WaveCooldown: 0
     BossConfig: {fileID: 0}
-    LineCount: 5
+    LineCount: 20
     Enemies:
-    - {fileID: 0}
-  <BossTimeDelay>k__BackingField: 0
-  <LevelBoss>k__BackingField: {fileID: 0}
+    - {fileID: 11400000, guid: 27f61571990a9e04bac7f8f9c9a0f5ed, type: 2}
+    - {fileID: 11400000, guid: f04c15ce22adbd14b8cd45609f3e02d7, type: 2}
+    - {fileID: 11400000, guid: 0cb2ac9159affa54887a6d5c7a53aba6, type: 2}
+    - {fileID: 11400000, guid: a5a689d3fa313bb4ca3cb2148e13f7a5, type: 2}
+  <BossTimeDelay>k__BackingField: 15
+  <LevelBoss>k__BackingField: {fileID: 11400000, guid: 302fdb4f5655efa4eafeceee161bd04b,
+    type: 2}
   ConfigsForPool: []

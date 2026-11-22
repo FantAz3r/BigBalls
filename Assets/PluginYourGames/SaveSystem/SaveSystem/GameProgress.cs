@@ -27,6 +27,7 @@ namespace BigBalls.Saves
         public bool AutoAttack = true;
 
         public bool InventoryTutotialComplite;
+        public bool BallTreeTutotialComplite;
         public void ClearProgress()
         {
             Coins = 0;

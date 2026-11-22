@@ -19,19 +19,21 @@ public class ParticleObject : MonoBehaviour
         _coroutineRunner = coroutineRunner;
     }
 
-    public void Play (float duration = 0)
+    public void Play(float duration = 0)
     {
         if (ParticleSystem == null)
             return;
 
-        Stop();
-
-        if (_watcherCoroutine == null)
+        if (_watcherCoroutine != null && _coroutineRunner != null)
         {
-            this.Enable();
-            ParticleSystem.Play();
-            _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
+            _coroutineRunner.StopCoroutine(_watcherCoroutine);
+            _watcherCoroutine = null;
         }
+
+        this.Enable();
+        ParticleSystem.Clear(true);
+        ParticleSystem.Play();
+        _watcherCoroutine = _coroutineRunner.StartCoroutine(WatchForEnd(duration));
     }
 
     public void Stop ()

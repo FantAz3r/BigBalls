@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f45d568f5eb625c4b951983a67c795d4, type: 3}
-  m_Name: EnemyConfig
+  m_Name: BoxBoss
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 0}
-  <Type>k__BackingField: 0
+  <Prefab>k__BackingField: {fileID: 4774038366382954016, guid: 46451b0372c8def418c1e4bf2556cd72,
+    type: 3}
+  <Type>k__BackingField: 4
   <CanSuiside>k__BackingField: 0
   <HasRangeAttack>k__BackingField: 0
   <HasMeeleAttack>k__BackingField: 0
@@ -32,14 +33,47 @@ MonoBehaviour:
     Volume: 0
     Pitch: 0
     NeedRandomPitch: 0
-  <BlocksPositions>k__BackingField: []
-  <Stats>k__BackingField: []
+  <BlocksPositions>k__BackingField:
+  - {x: 0, y: 0}
+  - {x: -1, y: 1}
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
+  - {x: 0, y: 2}
+  <Stats>k__BackingField:
+  - StatType: 1
+    StartMaxValue: 200
+    StartCurrentValue: 200
+    MinValue: 0
+  - StatType: 3
+    StartMaxValue: 20
+    StartCurrentValue: 0.3
+    MinValue: 0
+  - StatType: 5
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: -500
+  - StatType: 11
+    StartMaxValue: 500
+    StartCurrentValue: 0
+    MinValue: 0
+  - StatType: 2
+    StartMaxValue: 500
+    StartCurrentValue: 5
+    MinValue: 0
   <ObstacleLayers>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 72
   <BallConfig>k__BackingField: {fileID: 0}
   <ShootSound>k__BackingField: {fileID: 0}
   <DebuffResists>k__BackingField: 
-  PossibleLoot: []
+  PossibleLoot:
+  - LootType: 1
+    DropChance: 0
+    MinAmount: 5
+    MaxAmount: 5
+  - LootType: 0
+    DropChance: 0
+    MinAmount: 1
+    MaxAmount: 4
   BaseExperience: 10
   BaseCoins: 5

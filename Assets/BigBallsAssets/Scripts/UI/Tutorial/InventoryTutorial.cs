@@ -50,7 +50,6 @@ public class InventoryTutorial : MonoBehaviour
 
     public void ClickCardPanel ()
     {
-
         if (_saveService.GameProgress.InventoryTutotialComplite)
         {
             CloseTutorial();
@@ -72,13 +71,6 @@ public class InventoryTutorial : MonoBehaviour
             if (slot.CurrentItem != null)
                 slot.CurrentItem.Clicked += ShowDrag;
         }
-
-        //foreach (var card in _inventory.Slots)
-        //{
-        //    UIItem item = card.CurrentItem;
-        //    RectTransform transform  = item.GetComponent<RectTransform>();
-        //    HighlightPanel(transform, 5);
-        //}
     }
 
     public void ClickUpgrade ()

@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using BigBalls.Localization;
 using BigBalls.StaticData;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VContainer;
+
 
 public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
 {
@@ -17,10 +18,10 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private TMP_Text _priceText;
     [SerializeField] private GameObject _lockIcon;
-    [SerializeField] private Button _unlockButton;
     [SerializeField] private Slider _slider;
 
     [SerializeField] private SerializedDictionary<Rarity, Color> _colors = new();
+    [field: SerializeField] public HighliterUI HighliterUI { get; private set; }
 
 
     private List<BallTreeConnectionUI> _childConnections = new List<BallTreeConnectionUI>();
@@ -37,7 +38,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     public BallModel BallModel { get; private set; }
     public RectTransform RectTransform => _rectTransform;
 
-    private void OnEnable ()
+    private void OnEnable()
     {
         if (BallModel != null)
         {
@@ -46,12 +47,12 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
     }
 
     [Inject]
-    public void Construct (IBallUnlockService unlockService)
+    public void Construct(IBallUnlockService unlockService)
     {
         _unlockService = unlockService;
     }
 
-    public void Init (BallType type, BallModel node)
+    public void Init(BallType type, BallModel node)
     {
         BallType = type;
         BallModel = node;
@@ -59,7 +60,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         UpdateState();
     }
 
-    public void UpdateState (BallModel node = null)
+    public void UpdateState(BallModel node = null)
     {
         if (node != null)
             BallModel = node;
@@ -111,28 +112,28 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void OnPointerClick (PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         OnClick?.Invoke(this);
     }
 
-    public bool Upgrade ()
+    public bool Upgrade()
     {
         UpdateState();
         return BallModel.TryUpgradeNoneGameLevel();
     }
 
-    public bool Unlock () => _unlockService.TryUnlockBall(BallModel);
-    public void AddChildConnection (BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
-    public void AddParentConnection (BallTreeConnectionUI connectionUI) => _parentConnections.Add(connectionUI);
+    public bool Unlock() => _unlockService.TryUnlockBall(BallModel);
+    public void AddChildConnection(BallTreeConnectionUI connectionUI) => _childConnections.Add(connectionUI);
+    public void AddParentConnection(BallTreeConnectionUI connectionUI) => _parentConnections.Add(connectionUI);
 
-    public void ClearConnections ()
+    public void ClearConnections()
     {
         _parentConnections.Clear();
         _childConnections.Clear();
     }
 
-    public void UpdateConnections ()
+    public void UpdateConnections()
     {
         foreach (var connection in _childConnections)
         {
@@ -140,7 +141,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private void DisableConnections ()
+    private void DisableConnections()
     {
         foreach (var connection in _childConnections)
         {
@@ -148,7 +149,7 @@ public class BallTreeNodeUI : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private void TryUpgradeConnaction ()
+    private void TryUpgradeConnaction()
     {
         int count = 0;
 
