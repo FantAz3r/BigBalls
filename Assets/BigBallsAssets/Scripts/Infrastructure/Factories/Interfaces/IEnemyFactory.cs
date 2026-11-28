@@ -7,6 +7,7 @@ namespace BigBalls.Factories
 {
     public interface IEnemyFactory
     {
+        bool HasAliveEnemies { get; }
         int DiedCount { get; }
         int SuisidedCount { get; }
 

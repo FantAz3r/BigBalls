@@ -1,8 +1,17 @@
 using BigBalls.GameplayObjects;
 using UnityEngine;
+using VContainer;
 
 public class ShieldEnemyStrategy : ICollisionStrategy
 {
+    private IEntityRepository _entityRepository;
+
+    [Inject]
+    public void Construct(IEntityRepository entityRepository)
+    {
+        _entityRepository = entityRepository;
+    }
+
     public bool HandleCollision (Ball ball, Collision collision)
     {
         if (collision.gameObject.TryGetComponent(out Enemy enemy))
@@ -10,7 +19,9 @@ public class ShieldEnemyStrategy : ICollisionStrategy
             if (enemy is not IceWizard)
             {
                 Stat shield = enemy.StatHolder[StatType.Shield];
-                shield.AddCurrentValue(10);
+                StatHolder statHolder = _entityRepository.GetStatHolder(ball);
+                statHolder.TryGetStat(out Stat damage, StatType.Damage);
+                shield.AddCurrentValue(damage.CurrentValue);
                 ball.EventHandler.Return(ball);
             }
         }

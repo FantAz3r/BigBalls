@@ -1,7 +1,7 @@
 using System.Collections;
+using BigBalls.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using BigBalls.Services;
 
 namespace BigBalls.Infrastructure
 {
@@ -11,22 +11,22 @@ namespace BigBalls.Infrastructure
         private float _minLoadTime = 1;
         private float _maxLoadTime = 3;
 
-        public SceneLoader(ICoroutineRunner coroutineRunner)
+        public SceneLoader (ICoroutineRunner coroutineRunner)
         {
             _coroutineRunner = coroutineRunner;
         }
 
-        public void LoadSceneImmediately(string name, System.Action onLoaded)
+        public void LoadSceneImmediately (string name, System.Action onLoaded)
         {
             _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded, false));
         }
 
-        public void LoadSceneWithLoadingScreen(string name, System.Action onLoaded)
+        public void LoadSceneWithLoadingScreen (string name, System.Action onLoaded)
         {
             _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded, true));
         }
 
-        private IEnumerator LoadScene(string nextScene, System.Action onLoaded, bool hasLoading)
+        private IEnumerator LoadScene (string nextScene, System.Action onLoaded, bool hasLoading)
         {
             AsyncOperation asyncLoad = null;
 

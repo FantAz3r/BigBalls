@@ -12,5 +12,6 @@ namespace BigBalls.UI
         [field: SerializeField] public PlayerSlots PlayerSlots { get; private set; }
         [field: SerializeField] public ComboViewer ComboViewer { get; private set; }
         [field: SerializeField] public ScoreViewer ScoreViewer { get; private set; }
+        [field: SerializeField] public GameTutorial GameTutorial { get; private set; }
     }
 }

@@ -7,8 +7,6 @@ using VContainer;
 
 public class IceWizard : Enemy
 {
-    [SerializeField] private Transform _firePoint;
-
     private IObjectResolverProvider _objectResolverProvider;
 
     [Inject]
@@ -31,6 +29,6 @@ public class IceWizard : Enemy
             _objectResolverProvider.CurrentResolver.Inject(strategy);
 
         Shooter.Set(strategies);
-        Shooter.Set(_firePoint);
+        Shooter.Set(FirePoint);
     }
 }

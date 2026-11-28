@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BigBalls.Configs;
 using BigBalls.Services;
 using UnityEngine;
 using VContainer;
@@ -9,8 +10,8 @@ namespace BigBalls.GameplayObjects
     public class EntityTrigger : MonoBehaviour
     {
         [SerializeField] private SphereCollider _sphereCollider;
-        [SerializeField] private float _playerDetectionDelay = 2.0f;
 
+        private float _playerDetectionDelay = 2.5f;
         private Coroutine _wallDetectionRoutine;
         private Coroutine _detectionCoroutine;
         private bool _isPlayerInZone = false;
@@ -18,17 +19,18 @@ namespace BigBalls.GameplayObjects
         private WaitForSeconds _waitDelay;
         private ICoroutineRunner _coroutineRunner;
         private SoundSpawner _soundSpawner;
-        private EntityType _entityType;
+        private Enemy _enemy;
 
         public event Action WallDetected;
         public event Action PlayerDetected;
         public event Action PlayerLost;
         public event Action PlayerStayedLongEnough;
-
+        public event Action<float> DetectionProgressChanged;
 
         private void Awake ()
         {
             _waitDelay = new WaitForSeconds(_playerDetectionDelay);
+            _enemy = GetComponentInParent<Enemy>();
         }
 
         private void OnTriggerEnter (Collider other)
@@ -39,13 +41,16 @@ namespace BigBalls.GameplayObjects
                     _wallDetectionRoutine = _coroutineRunner.StartCoroutine(WallDetectionDelay());
             }
 
-            if (other.TryGetComponent<Player>(out _))
+            if (_enemy.Config.HasMeeleAttack)
             {
-                _isPlayerInZone = true;
-                PlayerDetected?.Invoke();
-                _soundSpawner.Spawn(SoundType.EnemyDetectPlayer);
+                if (other.TryGetComponent<Player>(out _))
+                {
+                    _isPlayerInZone = true;
+                    PlayerDetected?.Invoke();
+                    _soundSpawner.Spawn(SoundType.EnemyDetectPlayer);
 
-                _detectionCoroutine = _coroutineRunner.StartCoroutine(PlayerDetectionTimer());
+                    _detectionCoroutine = _coroutineRunner.StartCoroutine(PlayerDetectionTimer());
+                }
             }
         }
 
@@ -61,6 +66,8 @@ namespace BigBalls.GameplayObjects
                     _coroutineRunner.StopCoroutine(_detectionCoroutine);
                     _detectionCoroutine = null;
                 }
+
+                DetectionProgressChanged?.Invoke(0f);
             }
 
             if (other.TryGetComponent<BackWall>(out _))
@@ -79,10 +86,22 @@ namespace BigBalls.GameplayObjects
 
         private IEnumerator PlayerDetectionTimer ()
         {
-            yield return _waitDelay;
+            float elapsed = 0f;
+            DetectionProgressChanged?.Invoke(0f);
+
+            while (elapsed < _playerDetectionDelay)
+            {
+                if (!_isPlayerInZone)
+                    yield break;
+
+                elapsed += Time.deltaTime;
+                DetectionProgressChanged?.Invoke(Mathf.Clamp01(elapsed / _playerDetectionDelay));
+                yield return null;
+            }
 
             if (_isPlayerInZone)
             {
+                DetectionProgressChanged?.Invoke(1f);
                 PlayerStayedLongEnough?.Invoke();
             }
         }

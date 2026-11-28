@@ -27,7 +27,7 @@ public class ClickHand : MonoBehaviour
     private void Awake()
     {
         _hand.transform.rotation = Quaternion.Euler(0, 0, _rotateAmount);
-        _hand.transform.localScale = Vector3.one;
+        transform.localScale = Vector3.one;
     }
 
     public void PlayClick(Vector3 position, Transform parent = null)
@@ -35,6 +35,7 @@ public class ClickHand : MonoBehaviour
         if (parent != null)
             transform.SetParent(parent);
 
+        _hand.transform.rotation = Quaternion.Euler(0, 0, _rotateAmount);
         Sequence moveSeq = CreateChainNoReset();
         AppendMoveTo(moveSeq, position);
         AppendDelay(moveSeq, _moveLoopDelay);
@@ -156,7 +157,7 @@ public class ClickHand : MonoBehaviour
             .SetEase(_easeForward)
             .OnComplete(() =>
             {
-                _particle.Play();
+                _particle.Play(1);
             });
 
         seq.Append(forward);
@@ -194,6 +195,7 @@ public class ClickHand : MonoBehaviour
 
     public Sequence CreateChainNoReset(bool autoPlay = false)
     {
+        _particle.Stop();
         _currentSequence?.Kill();
         _currentSequence = DOTween.Sequence();
 

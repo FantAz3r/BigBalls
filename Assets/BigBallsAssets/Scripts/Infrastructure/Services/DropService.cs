@@ -10,8 +10,6 @@ public class DropService : IDropService
     private readonly IResourceLoader _resourceLoader;
     private readonly LootData _lootData;
 
-    private Dictionary<string, EnemyConfig> _enemyConfigs = new Dictionary<string, EnemyConfig>();
-
     public DropService(LootSpawner lootSpawner, IResourceLoader resourceLoader)
     {
         _lootSpawner = lootSpawner;
@@ -20,7 +18,7 @@ public class DropService : IDropService
 
     public void DropLoot( Enemy enemy)
     {
-        EnemyConfig config = _enemyConfigs[enemy.name];
+        EnemyConfig config = enemy.Config;
 
         foreach (var lootInfo in config.PossibleLoot)
         {
@@ -38,9 +36,5 @@ public class DropService : IDropService
 
     public void SetCurrentLevelConfig(List<EnemyConfig> currentEnemyConfigs)
     {
-        foreach (EnemyConfig config in currentEnemyConfigs)
-        {
-            _enemyConfigs.TryAdd(config.Prefab.name, config);
-        }
     }
 }

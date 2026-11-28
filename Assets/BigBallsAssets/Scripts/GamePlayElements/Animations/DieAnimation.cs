@@ -57,9 +57,9 @@ public class DieAnimation : MonoBehaviour
 
         deathSequence.OnComplete(() =>
         {
-            callback?.Invoke(enemy);
-            _soundSpawner.Spawn(enemy.Config.DieSound);
             transform.rotation = _rotation;
+            _soundSpawner.Spawn(enemy.Config.DieSound);
+            callback?.Invoke(enemy);
         });
     }
 }

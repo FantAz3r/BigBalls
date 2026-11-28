@@ -49,11 +49,12 @@ public sealed class DebuffService
 
         if (entity is Enemy enemy)
         {
-            if (ApplyResist(enemy, type, callback) == false)
+            if (ApplyResist(enemy, type, callback))
                 return;
         }
 
         var holder = _entityRepository.GetStatHolder(entity);
+
         if (holder == null)
             return;
 

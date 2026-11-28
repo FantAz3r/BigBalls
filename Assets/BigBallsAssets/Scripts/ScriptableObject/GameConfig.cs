@@ -23,7 +23,4 @@ public class GameConfig : ScriptableObject
 
     [Header("Liderboards")]
     public string MainLiderboard;
-    public SerializedDictionary<LevelID, string> Liderboards = new();
-
-    public string GetLiderbord (LevelID level) => Liderboards[level];
 }

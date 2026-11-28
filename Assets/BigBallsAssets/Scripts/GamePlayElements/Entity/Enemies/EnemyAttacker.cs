@@ -1,7 +1,7 @@
+using System.Collections;
 using BigBalls.Configs;
 using BigBalls.Services;
 using DG.Tweening;
-using System.Collections;
 using UnityEngine;
 using VContainer;
 
@@ -26,7 +26,7 @@ namespace BigBalls.GameplayObjects
         private ICoroutineRunner _coroutineRunner;
         private bool _canAttack;
 
-        public EnemyAttacker(Stat damage, Enemy owner, EnemyConfig config)
+        public EnemyAttacker (Stat damage, Enemy owner, EnemyConfig config)
         {
             _damage = damage;
             _owner = owner;
@@ -36,7 +36,7 @@ namespace BigBalls.GameplayObjects
         }
 
         [Inject]
-        public void Construst(
+        public void Construst (
             IPlayerProvider playerProvider,
             IDamageService damageService,
             ICoroutineRunner coroutineRunner,
@@ -52,7 +52,7 @@ namespace BigBalls.GameplayObjects
             _debuffService = debuffService;
         }
 
-        public void Subscribe()
+        public void Subscribe ()
         {
             if (_entityTrigger != null)
             {
@@ -65,34 +65,31 @@ namespace BigBalls.GameplayObjects
                 _entityCollision.PlayerCollision += CollisionAttack;
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe ()
         {
             if (_entityTrigger != null)
             {
-                _entityTrigger.PlayerStayedLongEnough -= JumpAttack;
                 _entityTrigger.WallDetected -= JumpAttack;
+                _entityTrigger.PlayerStayedLongEnough -= JumpAttack;
             }
 
             if (_entityCollision != null)
                 _entityCollision.PlayerCollision -= CollisionAttack;
         }
 
-        private void CollisionAttack()
+        private void CollisionAttack ()
         {
             _damageService.ApplyDamage(_owner, _playerProvider.Player, _damage.CurrentValue);
             _soundSpawner.Spawn(SoundType.PlayerTouchEnemy);
             PlayerKnockBack();
         }
 
-        private void JumpAttack()
+        private void JumpAttack ()
         {
-            if (_config.HasMeeleAttack == false)
-                return;
-
             _coroutineRunner.StartCoroutine(JumpAttackRoutine(_config.CanSuiside));
         }
 
-        private IEnumerator JumpAttackRoutine(bool needSuiside)
+        private IEnumerator JumpAttackRoutine (bool needSuiside)
         {
             if (_owner == null)
                 yield break;
@@ -128,7 +125,7 @@ namespace BigBalls.GameplayObjects
             _canAttack = true;
         }
 
-        private void ApplyMeeleDamage(bool needSuiside)
+        private void ApplyMeeleDamage (bool needSuiside)
         {
             var player = _playerProvider.Player;
             _damageService.ApplyDamage(_owner, player, _damage.CurrentValue);
@@ -141,7 +138,7 @@ namespace BigBalls.GameplayObjects
 
         }
 
-        private void PlayerKnockBack()
+        private void PlayerKnockBack ()
         {
             Player player = _playerProvider.Player;
 

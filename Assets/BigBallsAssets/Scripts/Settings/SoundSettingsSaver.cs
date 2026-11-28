@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class SoundSettingsSaver
 {
     private readonly ISaveService _saveService;
@@ -9,6 +11,12 @@ public class SoundSettingsSaver
         var progress = _saveService.GameProgress;
         var sound = progress?.Sounds?.Find(v => v.Name == name);
         return sound != null && !string.IsNullOrEmpty(sound.Name) ? sound.Volume : fallback;
+    }
+
+    public IReadOnlyList<SoundSaveData> LoadAll ()
+    {
+        var progress = _saveService.GameProgress;
+        return progress?.Sounds ?? (IReadOnlyList<SoundSaveData>) System.Array.Empty<SoundSaveData>();
     }
 
     public void Save (string name, float value)

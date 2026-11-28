@@ -27,10 +27,15 @@ namespace BigBalls.GameplayObjects
             _winService = winService;
         }
 
+        public int FieldWidth => _fieldWidth;
+        public int RowIndex => _rowIndex;
+
         public IEnumerable<Vector2Int> OccupiedPositions => _occupiedPositions;
 
         public void SetEnemies (List<EnemyConfig> enemies)
         {
+            var debugView = new GameObject("EnemySpawnerDebugView").AddComponent<EnemySpawnerDebugView>();
+            debugView.Init(this);
             _enemies = enemies;
         }
 
@@ -51,10 +56,13 @@ namespace BigBalls.GameplayObjects
 
         public Boss SpawnBoss (EnemyConfig enemyConfig)
         {
+            if (enemyConfig == null)
+                return null;
             int centerX = (_fieldWidth - 1) / 2;
             Vector2Int spawnPosition = new Vector2Int(centerX, 0);
             MarkOccupied(spawnPosition, enemyConfig);
 
+            _rowIndex++;
             return SpawnEnemyAt(enemyConfig, spawnPosition) as Boss;
         }
 
@@ -74,6 +82,42 @@ namespace BigBalls.GameplayObjects
             }
 
             _rowIndex++;
+        }
+
+        public void SpawnReinforcement (List<EnemyConfig> enemies, int count)
+        {
+
+            if (enemies == null || enemies.Count == 0 || count <= 0)
+                return;
+
+            _occupiedPositions.Clear();
+            int minRow = _rowIndex;
+            int maxRow = _rowIndex - 4;
+
+            for (int i = 0; i < count; i++)
+            {
+                var config = enemies[Random.Range(0, enemies.Count)];
+
+                if (config == null || config.GetWidth() > _fieldWidth)
+                    continue;
+
+                bool placed = false;
+
+                for (int attempt = 0; attempt < 10 && placed == false; attempt++)
+                {
+                    int x = Random.Range(0, _fieldWidth - config.GetWidth() + 1);
+                    int y = Random.Range(maxRow, minRow);
+                    Vector2Int pos = new Vector2Int(x, y);
+
+                    var cells = config.BlocksPositions.Select(b => b + pos);
+                    if (cells.Any(c => _occupiedPositions.Contains(c)))
+                        continue;
+
+                    MarkOccupied(pos, config);
+                    SpawnEnemyAt(config, pos);
+                    placed = true;
+                }
+            }
         }
 
         private void MarkOccupied (Vector2Int position, EnemyConfig config)
@@ -208,7 +252,7 @@ namespace BigBalls.GameplayObjects
         {
             float spawnOffsetX = Mathf.CeilToInt((_fieldWidth - 1) / 2);
             float spawnOffsetY = 0.5f;
-            float spawnOffsetZ = 5;
+            float spawnOffsetZ = 5 + position.y - _rowIndex;
 
             Vector3 spawnPosition = new Vector3(position.x - spawnOffsetX, spawnOffsetY, spawnOffsetZ);
             Enemy enemy = _enemyFactory.Create(prefab, spawnPosition);

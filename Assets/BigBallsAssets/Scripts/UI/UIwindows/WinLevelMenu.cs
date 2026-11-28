@@ -1,3 +1,4 @@
+using BigBalls.Configs;
 using BigBalls.Infrastructure;
 using TMPro;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace BigBalls.UI
         [SerializeField] private TMP_Text _levelStats;
         [SerializeField] private LevelButton _levelButton;
 
-        public void LevelComplite (LevelID level, int compliteWaves)
+        public void LevelComplite (LevelConfig level, int compliteWaves)
         {
             ApplyResult(level, compliteWaves, _levelButton);
         }

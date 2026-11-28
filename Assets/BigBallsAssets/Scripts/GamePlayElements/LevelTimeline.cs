@@ -7,9 +7,10 @@ using BigBalls.Saves;
 using BigBalls.Services;
 using UnityEngine;
 
-public class LevelTimeline
+public class LevelTimeline : IWinReason
 {
     private const float UpdateIntervalSeconds = 0.5f;
+    private const float ReinforcementCooldown = 2f;
 
     private readonly ICoroutineRunner _coroutineRunner;
     private readonly EnemySpawner _enemySpawner;
@@ -19,15 +20,23 @@ public class LevelTimeline
     private readonly SoundSpawner _soundSpawner;
     private readonly ScoreCounter _scoreCounter;
     private readonly ILiderboardService _liderboardService;
+    private readonly IWinService _winService;
+
     private GameConfig _gameConfig;
     private WaitForSeconds _updateInterval = new WaitForSeconds(UpdateIntervalSeconds);
     private WaitForSeconds _lineSpawnDelay;
     private Coroutine _mainCoroutine;
     private Coroutine _timeCoroutine;
     private LevelConfig _levelConfig;
+
     private bool _isLevelEnded = false;
+    private bool _canReinforce;
+    private bool _hasLevelBoss = false;
     private bool _isLevelStarted = false;
     private float _levelTimer = 0f;
+    private Wave _currentWave;
+    private int _currentLine;
+    private float _lastReinforcementTime = -999f;
 
     public LevelTimeline (
         ICoroutineRunner coroutineRunner,
@@ -38,7 +47,8 @@ public class LevelTimeline
         SoundSpawner soundSpawner,
         ScoreCounter scoreCounter,
         ILiderboardService liderboardService,
-        IResourceLoader resourceLoader)
+        IResourceLoader resourceLoader,
+        IWinService winService)
     {
         _coroutineRunner = coroutineRunner;
         _enemySpawner = enemySpawner;
@@ -48,11 +58,13 @@ public class LevelTimeline
         _soundSpawner = soundSpawner;
         _scoreCounter = scoreCounter;
         _liderboardService = liderboardService;
+        _winService = winService;
         _gameConfig = resourceLoader.Load<GameConfig>();
     }
 
     public event Action<int> NewWaveStarted;
     public event Action<float> TimeElapsed;
+    public event Action Won;
 
     public int CompliteWaves { get; private set; }
     public int Kills { get; private set; }
@@ -72,7 +84,13 @@ public class LevelTimeline
         if (_timeCoroutine == null)
             _timeCoroutine = _coroutineRunner.StartCoroutine(TimeRoutine());
 
-        CalculateGlobalScores();
+        if (_levelConfig.LevelBoss != null && _levelConfig.LevelBoss.Prefab != null)
+            _hasLevelBoss = true;
+        else
+        {
+            _hasLevelBoss = false;
+            _winService.SetWinReason(this);
+        }
     }
 
     public void Stop ()
@@ -130,12 +148,11 @@ public class LevelTimeline
 
         if (isNewRecord)
         {
-            _liderboardService.SubmitScore(_gameConfig.GetLiderbord(_levelConfig.Level), currentScore);
             CalculateGlobalScores();
         }
     }
 
-    private void CalculateGlobalScores()
+    private void CalculateGlobalScores ()
     {
         int totalScore = 0;
 
@@ -154,31 +171,39 @@ public class LevelTimeline
         for (int i = 0; i < waves.Count; i++)
         {
             Wave wave = waves[i];
+            _currentWave = wave;
             _enemySpawner.SetEnemies(wave.Enemies);
 
             yield return new WaitForSeconds(wave.WaveCooldown);
-
             NewWaveStarted?.Invoke(i);
 
             if (wave.BossConfig != null)
                 _enemySpawner.SpawnBoss(wave.BossConfig);
 
-
             for (int line = 0; line < wave.LineCount; line++)
             {
+                _currentLine = line;
                 yield return _lineSpawnDelay;
+
                 _enemySpawner.SpawnLine();
                 _soundSpawner.Spawn(SoundType.SpawnEnemyLine);
+
+                if (line == 0)
+                    _canReinforce = true;
+
+                if (line == wave.LineCount - 2)
+                    _canReinforce = false;
             }
 
             _enemySpawner.Reset();
             ScaleField();
-
             CompliteWaves++;
         }
 
         yield return new WaitForSeconds(_levelConfig.BossTimeDelay);
-        _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
+
+        if (_hasLevelBoss)
+            _enemySpawner.SpawnLevelBoss(_levelConfig.LevelBoss);
 
         _mainCoroutine = null;
     }
@@ -199,6 +224,8 @@ public class LevelTimeline
             yield return _updateInterval;
             _levelTimer += UpdateIntervalSeconds;
             TimeElapsed?.Invoke(_levelTimer);
+
+            TryReinforce();
         }
     }
 
@@ -207,8 +234,40 @@ public class LevelTimeline
         Kills++;
     }
 
-    private void BossKillCount()
+    private void BossKillCount ()
     {
         Stars++;
+
+        if (Stars == _levelConfig.Waves.Count - 1)
+        {
+            Won?.Invoke();
+        }
+    }
+
+    private void TryReinforce ()
+    {
+        if (_isLevelEnded || _currentWave.Enemies == null)
+            return;
+
+        if (_currentLine >= _currentWave.LineCount - 1)
+            return;
+
+        if (_enemyFactory.HasAliveEnemies)
+            return;
+
+        if (Time.time - _lastReinforcementTime < ReinforcementCooldown)
+            return;
+
+        if (_canReinforce == false)
+            return;
+
+        int count = _levelConfig.ReinforcementCount;
+
+        if (count <= 0)
+            return;
+
+        Debug.Log("reinforce");
+        _enemySpawner.SpawnReinforcement(_currentWave.Enemies, count);
+        _lastReinforcementTime = Time.time;
     }
 }

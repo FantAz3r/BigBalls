@@ -11,7 +11,7 @@ namespace BigBalls.Configs
         [field: SerializeField] public LevelID Level { get; private set; } = LevelID.Level1;
         [field: SerializeField] public List<Tile> TilePrefabs { get; private set; }
         [field: SerializeField] public List<Wave> Waves { get; private set; }
-
+        [field: SerializeField] public int ReinforcementCount { get; private set; } = 7;
         [field: SerializeField] public float BossTimeDelay { get; private set; }
         [field: SerializeField] public EnemyConfig LevelBoss { get; private set; }
         public float LineSpawnDelay { get; private set; } = 5;
@@ -29,11 +29,11 @@ namespace BigBalls.Configs
 
             foreach (var wave in Waves)
             {
-                if (wave.BossConfig != null)
+                if (wave.BossConfig != null && wave.BossConfig.Prefab == null)
                     enemyConfigs.Add(wave.BossConfig);
             }
 
-            if (LevelBoss != null)
+            if (LevelBoss != null && LevelBoss.Prefab != null)
                 enemyConfigs.Add(LevelBoss);
 
             enemyConfigs.AddRange(ConfigsForPool);
@@ -72,6 +72,22 @@ namespace BigBalls.Configs
             fullTime += BossTimeDelay;
 
             return fullTime;
+        }
+
+        public int GetBossCount ()
+        {
+            int count = 0;
+
+            foreach (var vawe in Waves)
+            {
+                if (vawe.BossConfig != null)
+                    count++;
+            }
+
+            if (LevelBoss != null)
+                count++;
+
+            return Mathf.Clamp(count, 0, 3);
         }
     }
 }

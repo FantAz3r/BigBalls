@@ -24,15 +24,10 @@ public class IceYeti : Enemy
 
     private List<IceWall> _iceWalls = new List<IceWall>();
     private IPoolService _poolService;
-    private TileFactory _tileFactory;
     private ICoroutineRunner _coroutineRunner;
     private Coroutine _coroutine;
     private bool _canAttack;
     private IceWall _currentWall = null;
-
-    private void OnEnable ()
-    {
-    }
 
     private void OnDisable ()
     {
@@ -43,17 +38,16 @@ public class IceYeti : Enemy
 
         _canAttack = false;
 
-        if(_coroutineRunner != null && _coroutine != null)
+        if (_coroutineRunner != null && _coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
 
         _iceWalls.Clear();
     }
 
     [Inject]
-    public void Construct (IPoolService poolService, TileFactory tileFactory, ICoroutineRunner coroutineRunner)
+    public void Construct (IPoolService poolService, ICoroutineRunner coroutineRunner)
     {
         _poolService = poolService;
-        _tileFactory = tileFactory;
         _coroutineRunner = coroutineRunner;
     }
 
@@ -97,11 +91,15 @@ public class IceYeti : Enemy
             );
 
             iceWall.transform.position = position + _offset;
+            float rotationY = Random.value > 0.5f ? 180f : 90f;
 
-            float rotationY = Random.value > 0.5f ? 0f : 90f;
+            if (rotationY == 90)
+            {
+                rotationY = Random.value > 0.5f ? 90 : 270;
+            }
+
             iceWall.transform.rotation = Quaternion.Euler(0, rotationY, 0);
-
-            iceWall.transform.SetParent(_tileFactory.ActiveTiles[_tileFactory.ActiveTiles.Count - 1].transform);
+            iceWall.Play();
         }
     }
 
@@ -114,9 +112,13 @@ public class IceYeti : Enemy
         {
             Rotator.SetDirection(Vector2.down);
             float delay = Random.Range(_minAttackDelay, _maxAttackDelay);
-            yield return new WaitForSeconds(delay);
 
             IceWall targetWall = FindNearestWall();
+
+            if(targetWall)
+                Rotator.SetTarget(targetWall.transform);
+
+            yield return new WaitForSeconds(delay);
 
             if (targetWall == null)
             {
@@ -127,7 +129,7 @@ public class IceYeti : Enemy
 
             _currentWall = targetWall;
             Rotator.SetTarget(targetWall.transform);
-            EnemyAnimator.Attack(DestroyWall);
+            EnemyAnimator.Jump(DestroyWall);
         }
     }
 

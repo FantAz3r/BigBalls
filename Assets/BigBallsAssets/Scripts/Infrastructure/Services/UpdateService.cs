@@ -11,12 +11,12 @@ namespace BigBalls.Services
         private ITimeService _timeService;
 
         [Inject]
-        public void Construct(ITimeService timeService)
+        public void Construct (ITimeService timeService)
         {
             _timeService = timeService;
         }
 
-        private void Update()
+        private void Update ()
         {
             if (_timeService != null && _timeService.IsPaused)
                 return;
@@ -27,7 +27,7 @@ namespace BigBalls.Services
             }
         }
 
-        private void FixedUpdate()
+        private void FixedUpdate ()
         {
             if (_timeService != null && _timeService.IsPaused)
                 return;
@@ -41,27 +41,27 @@ namespace BigBalls.Services
             }
         }
 
-        public void Register(IUpdateble tickable)
+        public void Register (IUpdateble tickable)
         {
             _tickables.Add(tickable);
         }
 
-        public void Unregister(IUpdateble tickable)
+        public void Unregister (IUpdateble tickable)
         {
             _tickables.Remove(tickable);
         }
 
-        public void RegisterFixed(IUpdateble tickable)
+        public void RegisterFixed (IUpdateble tickable)
         {
             _fixedTickables.Add(tickable);
         }
 
-        public void UnregisterFixed(IUpdateble tickable)
+        public void UnregisterFixed (IUpdateble tickable)
         {
             _fixedTickables.Remove(tickable);
         }
 
-        public void Clear()
+        public void Clear ()
         {
             _tickables.Clear();
             _fixedTickables.Clear();

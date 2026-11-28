@@ -192,7 +192,6 @@ namespace BigBalls.Services
                 EnablePlayer();
                 EnableUI();
             }
-
         }
     }
 }

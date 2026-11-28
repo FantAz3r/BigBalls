@@ -37,15 +37,19 @@ namespace BigBalls.Configs
 
         public int GetWidth ()
         {
-            int width = 0;
+            if (BlocksPositions == null || BlocksPositions.Count == 0)
+                return 0;
+
+            int minX = int.MaxValue;
+            int maxX = int.MinValue;
 
             foreach (var block in BlocksPositions)
             {
-                if (block.x > width)
-                    width = block.x;
+                if (block.x < minX) minX = block.x;
+                if (block.x > maxX) maxX = block.x;
             }
 
-            return width;
+            return maxX - minX;
         }
 
         public List<Vector2Int> GetEnemyRow (int rowIndex)

@@ -134,6 +134,7 @@ namespace BigBalls.GameplayObjects
                 }
 
                 Move(moveDirection);
+                DrawDirection();
             }
         }
 
@@ -159,6 +160,25 @@ namespace BigBalls.GameplayObjects
             }
 
             _rigidbody.velocity = new Vector3(velocity.x, 0f, velocity.z);
+        }
+        private void DrawDirection ()
+        {
+            if (MovableObject == null) return;
+
+            Vector3 origin = MovableObject.position + Vector3.up * 0.5f;
+
+            // направление, по которому реально идёт движение
+            Vector3 dir = _target != null
+                ? new Vector3(_target.position.x - MovableObject.position.x, 0f, _target.position.z - MovableObject.position.z).normalized
+                : new Vector3(Direction.x, 0f, Direction.y).normalized;
+
+            if (dir.sqrMagnitude < 0.001f) return;
+
+            // жёлтый луч направления
+            Debug.DrawRay(origin, dir * 2f, Color.yellow);
+
+            // красный — фактическая скорость
+            Debug.DrawRay(origin, GetCurrentVelocity(), Color.red);
         }
     }
 }

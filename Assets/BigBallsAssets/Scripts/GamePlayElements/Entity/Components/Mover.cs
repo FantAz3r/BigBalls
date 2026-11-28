@@ -26,6 +26,7 @@ namespace BigBalls.GameplayObjects
         public Mover(Stat moveSpeed, Transform movableObject, bool needRaycast = false, IEntityConfig playerConfig = null)
         {
             MovableObject = movableObject;
+            _needRaycast = needRaycast;
             _moveSpeed = moveSpeed;
             _obstacleLayerMask = playerConfig?.ObstacleLayers ?? 0;
         }

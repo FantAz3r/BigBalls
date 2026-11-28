@@ -103,7 +103,20 @@ namespace BigBalls.StaticData
 
         public void AddItemEXP (float value)
         {
+            if (value <= 0)
+                return;
             ItemEXP += value;
+        }
+
+        public void RemoveItemEXP (float value)
+        {
+            if (value <= 0)
+                return;
+
+            ItemEXP -= value;
+
+            if (ItemEXP < 0)
+                ItemEXP = 0;
         }
 
         public void SetEquipmentLevel (int level) => EuqipmentLevel = level;

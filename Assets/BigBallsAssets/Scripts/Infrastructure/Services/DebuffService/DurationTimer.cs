@@ -21,6 +21,15 @@ public sealed class DurationTimer
         onComplete?.Invoke(handle.Cancelled);
     }
 
-    private static bool IsEntityAlive (IEntity e)
-        => e != null && e.Transform != null && e.Transform.gameObject.activeSelf;
+    private static bool IsEntityAlive (IEntity entity)
+    {
+        if (entity is not UnityEngine.Object unityObj)
+            return entity != null;
+
+        if (unityObj == null)
+            return false;
+
+        Transform t = entity.Transform;
+        return t != null && t.gameObject.activeSelf;
+    }
 }

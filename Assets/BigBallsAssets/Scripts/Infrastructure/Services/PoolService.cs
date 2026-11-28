@@ -23,7 +23,6 @@ namespace BigBalls.Services
         private readonly ObjectContainer _objectContainer;
         private readonly IObjectResolverProvider _resolverProvider;
 
-        private List<EnemyConfig> _enemyConfigs = new List<EnemyConfig>();
         private CardsData _cardsData;
         private ParticleData _particleInfos;
         private LootData _lootData;
@@ -43,9 +42,8 @@ namespace BigBalls.Services
             _resolverProvider = resolverProvider;
         }
 
-        public void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig)
+        public void SetCurrentLevelConfig (LevelConfig levelConfig)
         {
-            _enemyConfigs = currentEnemyConfig;
             _levelConfig = levelConfig;
         }
 
@@ -122,9 +120,6 @@ namespace BigBalls.Services
             CreatePoolContainer(ParticlePool, out Transform particlePoolContainer);
             CreatePoolContainer(EnemyBullets, out Transform enemyBulletsContainer);
             CreatePoolContainer(MiscPool, out _miscContainer);
-
-            foreach (EnemyConfig config in _enemyConfigs)
-                CreatePool(config.Prefab, enemyPoolContainer, config.Prefab?.name, _poolConfig.InitialEnemyPoolSize);
 
             foreach (BallConfig config in _cardsData.Balls.Values)
                 CreatePool(config.Prefab, ballPoolContainer, config.Prefab.name, _poolConfig.InitialBallPoolSize);

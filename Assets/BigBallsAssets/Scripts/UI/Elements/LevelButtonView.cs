@@ -43,7 +43,7 @@ public class LevelButtonView : MonoBehaviour
 
     private void SetUnlocked (bool unlocked)
     {
-        _button.interactable = unlocked;
+        //_button.interactable = unlocked;
         _lockImage.SetActive(!unlocked);
     }
 

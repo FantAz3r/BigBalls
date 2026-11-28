@@ -1,6 +1,7 @@
 using System;
 using BigBalls.GameplayObjects;
 using BigBalls.StaticData;
+using UnityEngine;
 using VContainer;
 
 public class Ice : EffectBehaviour

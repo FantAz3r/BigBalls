@@ -10,7 +10,6 @@ namespace BigBalls.GameplayObjects
         [field: SerializeField] public EntityCollision EntityCollision { get; private set; }
         [field: SerializeField] public ColorChanger ColorChanger { get; private set; }
         [field: SerializeField] public InterfaceReference<ISpawnAnimation> EnemySpawnAnimation { get; private set; }
-        //[SerializeField] private InterfaceReference<ISpawnAnimation> EnemySpawnAnimation1;
         [field: SerializeField] public EnemyHitedAnimation EnemyHitedAnimation { get; private set; }
         [field: SerializeField] public EffectViewer EffectViewer { get; private set; }
         [field: SerializeField] public EnemyIdleBob EnemyIdleBob { get; private set; }

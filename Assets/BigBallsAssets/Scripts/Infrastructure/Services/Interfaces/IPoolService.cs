@@ -6,7 +6,7 @@ namespace BigBalls.Services
 {
     public interface IPoolService
     {
-        void SetCurrentLevelConfig (List<EnemyConfig> currentEnemyConfig, LevelConfig levelConfig);
+        void SetCurrentLevelConfig (LevelConfig levelConfig);
         void InitializePools ();
         void Release<T> (T obj) where T : Component;
         void ClearAllPools ();

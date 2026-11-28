@@ -28,13 +28,31 @@ public class JumpAnimation : MonoBehaviour
 
     private void StartJumping ()
     {
-        _tween = transform.DOJump(
-            _startPosition,
-            _jumpPower,
-            _jumpsCountPerCicle,
-            _duration
+        float singleJumpDuration = _duration / Mathf.Max(1, _jumpsCountPerCicle);
+
+        if (_useLocalPosition)
+            transform.localPosition = _startPosition;
+        else
+            transform.position = _startPosition;
+
+        _tween = DOTween.To
+        (
+            () => 0f,
+            t =>
+            {
+                float offsetY = _jumpPower * Mathf.Sin(t * Mathf.PI);
+                Vector3 pos = _startPosition;
+                pos.y += offsetY;
+
+                if (_useLocalPosition)
+                    transform.localPosition = pos;
+                else
+                    transform.position = pos;
+            },
+            1f,
+            singleJumpDuration
         )
-        .SetLoops(_jumpsCount, LoopType.Restart)
-        .SetEase(Ease.OutQuad);
+        .SetEase(Ease.Linear)
+        .SetLoops(_jumpsCount * _jumpsCountPerCicle, LoopType.Restart);
     }
 }

@@ -14,7 +14,6 @@ public class PlayerSlots : MonoBehaviour
     private void Awake ()
     {
         _ballPanel.Disable();
-        _artefactPanel.Disable();
 
         foreach (Slot slot in _ballSlots)
             slot.Enable();
@@ -82,7 +81,6 @@ public class PlayerSlots : MonoBehaviour
             slot.Clear();
 
         _ballPanel.Disable();
-        _artefactPanel.Disable();
 
         if (_cardHolder == null) return;
 
@@ -113,7 +111,6 @@ public class PlayerSlots : MonoBehaviour
             if (slot == null)
                 return;
 
-            _artefactPanel.Enable();
             slot.Enable();
             slot.View(card);
         }

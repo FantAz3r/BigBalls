@@ -10,19 +10,19 @@ namespace BigBalls.Infrastructure
         Level0,
 
         Level1,
-        LevelNight1,
+        Level1Night,
 
         Level2,
-        LevelNight2,
+        Level2Night,
 
         Level3,
-        LevelNight3,
+        Level3Night,
 
         Level4,
-        LevelNight4,
+        Level4Night,
 
         Level5,
-        LevelNight5,
+        Level5Night,
 
         Test,
     }

@@ -14,7 +14,6 @@ Material:
   m_ValidKeywords:
   - _EMISSION
   - _NORMALMAP
-  - _SPECGLOSSMAP
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
   m_LightmapFlags: 1
@@ -45,6 +44,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -90,13 +93,16 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BlendOp: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
+    - _DetailMode: 0
     - _DetailNormalMapScale: 1
+    - _DetailStrength: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -104,13 +110,20 @@ Material:
     - _Glossiness: 0.51
     - _GlossyReflections: 1
     - _Metallic: 0.263
+    - _MetallicStrength: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0.004
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimIntensity: 0.25
+    - _RimPower: 10
+    - _SampleGI: 0
+    - _ShadeIntensity: 0
+    - _ShadeThreshold: 0
     - _Shininess: 0.078125
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -120,10 +133,16 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.498559, g: 0.5018867, b: 0, a: 1}
-    - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _BaseColor: {r: 1, g: 0.72156864, b: 0, a: 1}
+    - _Color: {r: 1, g: 0.72156864, b: 0, a: 1}
+    - _DetailColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DetailTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 0.4783347, b: 0, a: 1}
+    - _MetallicColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &8130949587425953999
 MonoBehaviour:

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using BigBalls.Configs;
 using BigBalls.Factories;
 using BigBalls.Infrastructure;
 using BigBalls.Services;
@@ -17,6 +19,8 @@ namespace BigBalls.UI
 
         [Header("Stars")]
         [SerializeField] private List<Image> _stars;
+        [SerializeField] private List<Image> _starsBlack;
+        [SerializeField] private float _starViewDelay = 0.33f;
 
         [Header("Stats")]
         [SerializeField] private TMP_Text _kills;
@@ -38,6 +42,7 @@ namespace BigBalls.UI
         protected LevelTimeCounter LevelTimeCounter { get; private set; }
 
         private ChestData _chestData;
+        private WaitForSecondsRealtime _delay;
 
         [Inject]
         public void ConstructBase (
@@ -58,14 +63,16 @@ namespace BigBalls.UI
             WalletModel = walletModel;
             LevelTimeCounter = levelTimeCounter;
             _chestData = resourceLoader.Load<ChestData>();
+            _delay = new WaitForSecondsRealtime(_starViewDelay);
         }
 
-        protected void ApplyResult (LevelID level, int compliteWaves, LevelButton levelButton)
+        protected void ApplyResult (LevelConfig config, int compliteWaves, LevelButton levelButton)
         {
-            SetupChest(level, compliteWaves, levelButton);
-            RenderStars(compliteWaves);
+            Debug.Log(compliteWaves);
+            SetupChest(config.Level, compliteWaves, levelButton);
+            StartCoroutine(RenderStars(compliteWaves, config));
             PlayResultSound();
-            OnResultApplied(level, compliteWaves, levelButton);
+            OnResultApplied(config.Level, compliteWaves, levelButton);
 
             _chestButton.SetActive(compliteWaves > 0);
             levelButton.SetActive(compliteWaves > 0 == false);
@@ -117,10 +124,20 @@ namespace BigBalls.UI
                 _score.text = ((int)ScoreCounter.CurrentScore).ToString();
         }
 
-        private void RenderStars (int compliteWaves)
+        private IEnumerator RenderStars (int compliteWaves, LevelConfig levelConfig)
         {
+            foreach (var star in _starsBlack)
+                star.Disable();
+
+            for (int j = 0; j < levelConfig.GetBossCount(); j++)
+                _starsBlack[j].Enable();
+
+
             for (int i = 0; i < _stars.Count; i++)
+            {
+                yield return _delay;
                 _stars[i].gameObject.SetActive(i < compliteWaves);
+            }
         }
 
         private void PlayResultSound ()

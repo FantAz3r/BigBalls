@@ -8,7 +8,7 @@ namespace BigBalls.GameplayObjects
         [SerializeField] private List<Transform> _walls;
         [SerializeField] private List<Transform> _column;
 
-        public void BuildWall(GameObject wall, GameObject column)
+        public void BuildWall (GameObject wall, GameObject column)
         {
             foreach (Transform t in _walls)
             {
@@ -22,6 +22,6 @@ namespace BigBalls.GameplayObjects
             {
                 Instantiate(column, t);
             }
-        }    
+        }
     }
 }

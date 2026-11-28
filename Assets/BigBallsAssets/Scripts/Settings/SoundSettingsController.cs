@@ -17,4 +17,17 @@ public sealed class SoundSettingsController
 
     public void Persist (string param, float sliderValue)
         => _storage.Save(param, sliderValue);
+
+    public float LoadAndApply (string param, float fallback)
+    {
+        float saved = _storage.Load(param, fallback);
+        _volumeService.Apply(saved, param);
+        return saved;
+    }
+
+    public void ApplyAll ()
+    {
+        foreach (var sound in _storage.LoadAll())
+            _volumeService.Apply(sound.Volume, sound.Name);
+    }
 }

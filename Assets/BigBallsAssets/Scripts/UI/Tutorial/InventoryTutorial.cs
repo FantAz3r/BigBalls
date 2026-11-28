@@ -7,16 +7,12 @@ public class InventoryTutorial : MonoBehaviour
 {
     [SerializeField] private List<Vector3> _points = new();
     [SerializeField] private List<HighliterUI> _highliterUIs = new();
+
+    [SerializeField] private TutorialPanel _tutorialPanel;
+    [SerializeField] private TextViewer _textViewer;
     [SerializeField] private HighliterUI _exitButton;
-    [SerializeField] private RectTransform _tutorialPanel;
-    [SerializeField] private RectTransform _dragHand;
-    [SerializeField] private RectTransform _dragArrow;
-    [SerializeField] private RectTransform _tooltipPanel;
     [SerializeField] private HighliterUI _ugradebutton;
-    [SerializeField] private TMP_Text _dragText;
-
     [SerializeField] private Slot _weaponSlot;
-
     [SerializeField] private RectTransform _inventoryPanel;
     [SerializeField] private RectTransform _equipPanel;
     [SerializeField] private RectTransform _upgradePanel;
@@ -39,23 +35,36 @@ public class InventoryTutorial : MonoBehaviour
         if (_saveService == null)
             return;
 
-        _inventory.Inited += ClickCardPanel;
-
+        _inventory.Inited += WriteStartText;
     }
 
     private void OnDisable ()
     {
-        _inventory.Inited -= ClickCardPanel;
+        _inventory.Inited -= WriteStartText;
+
+        _tutorialPanel.Clicked -= ClickCardPanel;
     }
 
-    public void ClickCardPanel ()
+    public void WriteStartText()
     {
+        _inventory.Inited -= WriteStartText;
+
         if (_saveService.GameProgress.InventoryTutotialComplite)
         {
             CloseTutorial();
             return;
         }
 
+        _tutorialPanel.Clicked += ClickCardPanel;
+        _textViewer.WriteNext();
+    }
+
+    public void ClickCardPanel ()
+    {
+        _tutorialPanel.Clicked -= ClickCardPanel;
+
+
+        _textViewer.WriteNext();
         _clickHand.PlayClick(_points[0]);
 
         if (_inventory.Slots.Count > 0)
@@ -75,6 +84,8 @@ public class InventoryTutorial : MonoBehaviour
 
     public void ClickUpgrade ()
     {
+        _textViewer.WriteNext();
+
         _highlitedSlot.HighliterUI.Hide();
         _highlitedSlot.CurrentItem?.HighliterUI.Hide();
 
@@ -95,6 +106,8 @@ public class InventoryTutorial : MonoBehaviour
 
     public void ShowDrag (UIItem iItem)
     {
+        _textViewer.WriteNext();
+
         foreach (var slot in _inventory.Slots)
         {
             if (slot.CurrentItem != null)
@@ -108,6 +121,8 @@ public class InventoryTutorial : MonoBehaviour
 
     public void Exit ()
     {
+        _textViewer.WriteNext();
+
         ItemUpgradeButton upgradeButton = _ugradebutton.GetComponent<ItemUpgradeButton>();
         upgradeButton.Clicked -= Exit;
         _ugradebutton.Hide();
@@ -120,7 +135,6 @@ public class InventoryTutorial : MonoBehaviour
 
     public void CloseTutorial ()
     {
-
         foreach (var item in _highliterUIs)
         {
             item.Show(1);
@@ -137,6 +151,6 @@ public class InventoryTutorial : MonoBehaviour
             item.CurrentItem?.HighliterUI.Show(2);
         }
 
-        _tutorialPanel.gameObject.SetActive(false);
+        _tutorialPanel.Disable();
     }
 }

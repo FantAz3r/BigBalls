@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,6 +8,7 @@ public class LetterWriter : MonoBehaviour
 {
     [SerializeField] private float _delayBetweenLetters = 0.05f;
     [SerializeField] private bool _playOnStart = true;
+
     private TMP_Text _textComponent;
     private Tween _typingTween;
 
@@ -25,26 +25,25 @@ public class LetterWriter : MonoBehaviour
         }
     }
 
-    public void StartTyping ()
+    public void StartTyping (Action action = null)
     {
-        _typingTween?.Kill();
+        if (_textComponent == null)
+            return;
 
+        _typingTween?.Kill();
+        _textComponent.ForceMeshUpdate();
         _textComponent.maxVisibleCharacters = 0;
 
-        DOVirtual.DelayedCall(0, () =>
-        {
-            int totalCharacters = _textComponent.textInfo.characterCount;
+        int totalCharacters = _textComponent.textInfo.characterCount;
+        float duration = totalCharacters * _delayBetweenLetters;
 
-            float duration = totalCharacters * _delayBetweenLetters;
-
-            _typingTween = DOTween.To(
-                    () => _textComponent.maxVisibleCharacters, // Геттер
-                    x => _textComponent.maxVisibleCharacters = x, // Сеттер
-                    totalCharacters, // Конечное значение
-                    duration) // Длительность
-                .SetEase(Ease.Linear) // Линейная скорость, чтобы буквы шли равномерно
-                .SetUpdate(true); // true = не зависит от Time.timeScale (работает во время паузы)
-        });
+        _typingTween = DOTween.To(
+                () => _textComponent.maxVisibleCharacters,
+                x => _textComponent.maxVisibleCharacters = x,
+                totalCharacters,
+                duration)
+            .SetEase(Ease.Linear)
+            .SetUpdate(true);
     }
 
     private void OnDisable ()

@@ -18,7 +18,7 @@ public class HighliterUI : MonoBehaviour
         Hide();
     }
 
-    public void Show (int sortingIndex)
+    public void Show (int sortingIndex = 3)
     {
         _highlightCanvas.overrideSorting = true;
         _highlightCanvas.sortingOrder = sortingIndex;

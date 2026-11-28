@@ -11,6 +11,7 @@ public class EnemyAnimator : MonoBehaviour
     private static readonly int IdleTrigger = Animator.StringToHash("Idle");
     private static readonly int SpawnTrigger = Animator.StringToHash("Spawn");
     private static readonly int SpellTrigger = Animator.StringToHash("Spell");
+    private static readonly int JumpTrigger = Animator.StringToHash("Jump");
 
     [SerializeField] private Animator _animator;
 
@@ -26,6 +27,7 @@ public class EnemyAnimator : MonoBehaviour
     }
 
     public void Shoot (Action callback = null) => PlayOnce(ShootTrigger, callback);
+    public void Jump (Action callback = null) => PlayOnce(JumpTrigger, callback);
     public void Attack (Action callback = null) => PlayOnce(AttackTrigger, callback);
     public void PlayCast (Action callback = null) => PlayOnce(CastTrigger, callback);
     public void Spell (Action callback = null) => PlayOnce(SpellTrigger, callback);
@@ -40,6 +42,7 @@ public class EnemyAnimator : MonoBehaviour
     public void AttackCallback () => InvokeCallback(AttackTrigger);
     public void CastCallback () => InvokeCallback(CastTrigger);
     public void SpellCallback () => InvokeCallback(SpellTrigger);
+    public void JumpCallback () => InvokeCallback(JumpTrigger);
 
 
     public void EnterCallback () => InvokeCallback(SpawnTrigger);

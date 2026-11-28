@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1979148941534268999}
   - component: {fileID: 727845759887647745}
   - component: {fileID: 6952873677133177915}
+  - component: {fileID: 3368535757205123870}
   m_Layer: 3
   m_Name: Enemy 0.1.0
   m_TagString: Untagged
@@ -77,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 6805088924733150716}
-  <EntityCollision>k__BackingField: {fileID: 0}
+  <EntityCollision>k__BackingField: {fileID: 1979148941534268999}
   <ColorChanger>k__BackingField: {fileID: 3439233546438317146}
   <EnemySpawnAnimation>k__BackingField:
     _underlyingValue: {fileID: 6952873677133177915}
@@ -186,6 +187,18 @@ MonoBehaviour:
   _fallEase: 30
   _landingBounce: 0.15
   _landingBounceDuration: 0.2
+--- !u!114 &3368535757205123870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630446070744667416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47d1685af5981a4fb80ec9d423044aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4173815826986083569
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 1854890193157298992, guid: f3d6a89df2a165f40b70528462019dea,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2833642328247596453, guid: f3d6a89df2a165f40b70528462019dea,
         type: 3}

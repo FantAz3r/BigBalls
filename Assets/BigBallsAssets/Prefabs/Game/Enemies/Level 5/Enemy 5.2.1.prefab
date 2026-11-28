@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sphereCollider: {fileID: 6921710035017888584}
-  _playerDetectionDelay: 2
 --- !u!135 &6921710035017888584
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -319,17 +318,9 @@ MonoBehaviour:
   _healDuration: 1
   _totalDuration: 0.1
   <Renderers>k__BackingField:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 7198730293038370809}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 326007669098566199}
+  - {fileID: 8115922746286898227}
 --- !u!114 &7940165674911777857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +454,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79c0b05445943e14e8714f6c91e51e0d, type: 3}
+--- !u!137 &326007669098566199 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2276109700222307738, guid: 79c0b05445943e14e8714f6c91e51e0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1950176878719279021}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5842360407310040298 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5333476231939318599, guid: 79c0b05445943e14e8714f6c91e51e0d,
@@ -1032,6 +1029,12 @@ PrefabInstance:
 --- !u!4 &2680628408070197998 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5333476231939318599, guid: 79c0b05445943e14e8714f6c91e51e0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8014103904342192553}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8115922746286898227 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2276109700222307738, guid: 79c0b05445943e14e8714f6c91e51e0d,
     type: 3}
   m_PrefabInstance: {fileID: 8014103904342192553}
   m_PrefabAsset: {fileID: 0}

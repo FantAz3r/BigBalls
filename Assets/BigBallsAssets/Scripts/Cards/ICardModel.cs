@@ -33,6 +33,7 @@ public interface ICardModel
     void InitFromData(CardSaveData data);
     void OpenItem();
     void RemoveFromPlayer ();
+    void RemoveItemEXP (float value);
     bool TryUpgradeNoneGameLevel ();
     void Upgrade();
 }

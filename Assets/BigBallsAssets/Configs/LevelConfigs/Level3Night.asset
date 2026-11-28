@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16547083b6814941a6bacde5949f24e, type: 3}
+  m_Name: Level3Night
+  m_EditorClassIdentifier: 
+  <Level>k__BackingField: 10
+  <TilePrefabs>k__BackingField:
+  - {fileID: 7788360856318601049, guid: f9ff3cb822c989a48afcd0d80c716b31, type: 3}
+  <Waves>k__BackingField:
+  - WaveCooldown: 0
+    BossConfig: {fileID: 0}
+    LineCount: 12
+    Enemies:
+    - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
+    - {fileID: 11400000, guid: 22de8efadab9a904fb6d2ce4bc1c2216, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
+  - WaveCooldown: 15
+    BossConfig: {fileID: 11400000, guid: 03e058979ae893f45abae47f5858e065, type: 2}
+    LineCount: 18
+    Enemies:
+    - {fileID: 11400000, guid: 328d340c314145a4b82f9055bedea80d, type: 2}
+    - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
+  - WaveCooldown: 15
+    BossConfig: {fileID: 11400000, guid: d656fe8fe1d4bf848997e2e92863ae7f, type: 2}
+    LineCount: 24
+    Enemies:
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 22de8efadab9a904fb6d2ce4bc1c2216, type: 2}
+    - {fileID: 11400000, guid: e4bfb312ae458ce40b5916dc5eecf33f, type: 2}
+    - {fileID: 11400000, guid: 729d0ba32a4084b41bf188c3df3c916a, type: 2}
+    - {fileID: 11400000, guid: 96f7c309221631d4e9ecc0f9aa2f3586, type: 2}
+    - {fileID: 11400000, guid: 328d340c314145a4b82f9055bedea80d, type: 2}
+    - {fileID: 11400000, guid: 35d45d6a486257c4995ab0cd7ca3e5c8, type: 2}
+  <ReinforcementCount>k__BackingField: 7
+  <BossTimeDelay>k__BackingField: 20
+  <LevelBoss>k__BackingField: {fileID: 11400000, guid: 2cc206fdec47e1b47a4ef923de4a5616,
+    type: 2}
+  ConfigsForPool: []

@@ -58,6 +58,12 @@ namespace BigBalls.Factories
 
             var collisions = new List<ICollisionStrategy>(strategies);
 
+            foreach (var collision in collisions)
+            {
+                _objectResolver.Inject(collision);
+            }
+
+
             if (type == EntityType.Player)
             {
                 ball.EventHandler.Died += OnReturnToPlayer;

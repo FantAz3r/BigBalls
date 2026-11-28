@@ -37,6 +37,8 @@ namespace BigBalls.Factories
         public event Action<IEntity> Died;
         public event Action<IEntity> Killed;
         public event Action BossKilled;
+        public int AliveCount { get; private set;}
+        public bool HasAliveEnemies => AliveCount > 0;
         public int KillCount { get; private set; }
         public int DiedCount { get; private set; }
         public int SuisidedCount { get; private set; }
@@ -77,6 +79,7 @@ namespace BigBalls.Factories
             enemy.ColorChanger?.Init(statHolder[StatType.Health]);
             enemy.ShieldView?.Init(statHolder[StatType.Shield]);
 
+            AliveCount++;
             return enemy;
         }
 
@@ -120,9 +123,13 @@ namespace BigBalls.Factories
             }
 
             _poolService.Release(enemy);
+
+            if (AliveCount > 0)
+                AliveCount--;
+
             Died?.Invoke(enemy);
 
-            if (enemy.Config.Type == EntityType.Boss && enemy.Config.Type == EntityType.LevelBoss)
+            if (enemy.Config.Type == EntityType.Boss || enemy.Config.Type == EntityType.LevelBoss)
                 BossKilled?.Invoke();
         }
 

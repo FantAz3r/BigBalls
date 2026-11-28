@@ -10,7 +10,7 @@ namespace BigBalls.UI
     {
         public Button Button { get; private set; }
 
-        private void Awake ()
+        protected virtual void Awake ()
         {
             Button = GetComponent<Button>();
             Button?.onClick.AddListener(OnClick);

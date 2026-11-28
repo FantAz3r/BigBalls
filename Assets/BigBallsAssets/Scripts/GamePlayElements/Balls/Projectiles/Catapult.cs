@@ -43,11 +43,14 @@ public class Catapult : Enemy
     {
         _damageStat = StatHolder[StatType.Damage];
         _attackSpeedStat = StatHolder[StatType.AttackSpeed];
+        _canShoot = true;
         _coroutine = _coroutineRunner.StartCoroutine(AttackLoop());
     }
 
     private void OnDisable ()
     {
+        _canShoot = false;
+
         if (_coroutineRunner != null && _coroutine != null)
             _coroutineRunner.StopCoroutine(_coroutine);
     }
@@ -72,6 +75,7 @@ public class Catapult : Enemy
             yield return new WaitForSeconds(_shotTime);
         }
     }
+
     private Tween AnimateReload (float duration)
     {
         _leverTransform.localRotation = Quaternion.Euler(_leverStartAngle, 0, 0);
@@ -112,7 +116,7 @@ public class Catapult : Enemy
 
     private void OnProjectileReturn (CatapultProjectile projectile)
     {
-        _poolService.Release(projectile);
         projectile.OnProjectileReturned -= OnProjectileReturn;
+        _poolService.Release(projectile);
     }
 }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6946698625075108210}
   - component: {fileID: 8328455747566281374}
   - component: {fileID: 326971947519998698}
+  - component: {fileID: 5189716885667722949}
   m_Layer: 3
   m_Name: Enemy 0.3.0
   m_TagString: Untagged
@@ -76,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityTrigger>k__BackingField: {fileID: 4346313290156338898}
-  <EntityCollision>k__BackingField: {fileID: 0}
+  <EntityCollision>k__BackingField: {fileID: 331650579570379583}
   <ColorChanger>k__BackingField: {fileID: 326971947519998698}
   <EnemySpawnAnimation>k__BackingField:
     _underlyingValue: {fileID: 8328455747566281374}
@@ -185,6 +186,18 @@ MonoBehaviour:
   _totalDuration: 0.2
   <Renderers>k__BackingField:
   - {fileID: 8559043579672839913}
+--- !u!114 &5189716885667722949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607657493800126267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47d1685af5981a4fb80ec9d423044aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3520186824221851109
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +646,7 @@ PrefabInstance:
     - target: {fileID: 1854890193157298992, guid: f3d6a89df2a165f40b70528462019dea,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2833642328247596453, guid: f3d6a89df2a165f40b70528462019dea,
         type: 3}
@@ -744,6 +757,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6580531563041309715, guid: f3d6a89df2a165f40b70528462019dea,
+        type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7917647230061202818, guid: f3d6a89df2a165f40b70528462019dea,
         type: 3}

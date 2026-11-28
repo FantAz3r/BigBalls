@@ -1,7 +1,7 @@
-﻿using BigBalls.Infrastructure;
+﻿using BigBalls.Configs;
 
 public interface ILouseService
 {
     void SetLouseReason(ILouser louser);
-    void SetLevel(LevelID level);
+    void SetLevelConfig (LevelConfig levelConfig);
 }

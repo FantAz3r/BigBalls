@@ -1,4 +1,4 @@
-﻿using BigBalls.Infrastructure;
+﻿using BigBalls.Configs;
 using UnityEngine;
 
 namespace BigBalls.UI
@@ -7,10 +7,10 @@ namespace BigBalls.UI
     {
         [SerializeField] private LevelButton _levelButton;
 
-        public void LevelFailed (LevelID level, int compliteWaves)
+        public void LevelFailed (LevelConfig levelConfig, int compliteWaves)
         {
-            ApplyResult(level, compliteWaves, _levelButton);
-            _levelButton.Set(level);
+            ApplyResult(levelConfig, compliteWaves, _levelButton);
+            _levelButton.Set(levelConfig.Level);
         }
     }
 }

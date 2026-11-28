@@ -1,8 +1,8 @@
-﻿using BigBalls.Infrastructure;
+﻿using BigBalls.Configs;
 
 public interface IWinService
 {
     void OnWin();
-    void SetLevel(LevelID level);
+    void SetLevelConfig(LevelConfig config);
     void SetWinReason(IWinReason winReason);
 }
